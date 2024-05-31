@@ -1,0 +1,24 @@
+﻿@model javo2.ViewModels.Operaciones.Clientes.ClientesViewModel
+
+@{
+    ViewBag.Title = "editar Cliente";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<form asp-action="Create" method="post">
+    <partial name="_ClientesForm" model="Model" />
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+
+@section Scripts {
+    <script>
+        $(function () {
+            console.debug("Scripts for Agregar Cliente loaded");
+        });
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

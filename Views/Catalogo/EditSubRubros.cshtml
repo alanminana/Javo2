@@ -1,0 +1,82 @@
+﻿@model javo2.ViewModels.Operaciones.Productos.EditSubRubrosViewModel
+
+@{
+    ViewBag.Title = "Editar SubRubros";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<form asp-action="EditSubRubros" method="post">
+    <input type="hidden" asp-for="RubroId" />
+    <div class="form-group">
+        <label asp-for="RubroNombre" class="control-label"></label>
+        <input asp-for="RubroNombre" class="form-control" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="NewSubRubroNombre" class="control-label">Nuevo SubRubro</label>
+        <input id="newSubRubro" class="form-control" />
+        <button type="button" id="addSubRubro" class="btn btn-secondary mt-2">Agregar SubRubro</button>
+    </div>
+    <div class="form-group">
+        <label for="existingSubRubros" class="control-label">SubRubros Existentes</label>
+        <table class="table table-striped table-bordered" id="subRubrosTable">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Subrubro</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.SubRubros.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            <input type="hidden" asp-for="SubRubros[i].Id" />
+                            <input asp-for="SubRubros[i].Nombre" class="form-control" />
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-sm delete-subrubro">Eliminar</button>
+                            <input type="hidden" asp-for="SubRubros[i].IsDeleted" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Guardar" class="btn btn-primary" />
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            $('#addSubRubro').click(function () {
+                var newSubRubroName = $('#newSubRubro').val();
+                if (newSubRubroName) {
+                    var index = $('#subRubrosTable tbody tr').length;
+                    var newRow = `
+                                        <tr>
+                                            <td>
+                                                <input type="hidden" name="SubRubros[${index}].Id" value="0" />
+                                                <input type="text" name="SubRubros[${index}].Nombre" class="form-control" value="${newSubRubroName}" />
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-danger btn-sm delete-subrubro">Eliminar</button>
+                                                <input type="hidden" name="SubRubros[${index}].IsDeleted" value="false" />
+                                            </td>
+                                        </tr>`;
+                    $('#subRubrosTable tbody').append(newRow);
+                    $('#newSubRubro').val('');
+                }
+            });
+
+            $(document).on('click', '.delete-subrubro', function () {
+                var row = $(this).closest('tr');
+                row.find('input[name$=".IsDeleted"]').val(true);
+                row.hide();
+            });
+        });
+    </script>
+}

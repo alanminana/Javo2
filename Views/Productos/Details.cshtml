@@ -1,0 +1,58 @@
+﻿@model javo2.ViewModels.Operaciones.Productos.ProductosViewModel
+
+@{
+    ViewBag.Title = "Detalles del Producto";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <h4>Producto</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ProductoID)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ProductoID)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Descripcion)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PCosto)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PCosto)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PContado)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PContado)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PLista)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PLista)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PorcentajeIva)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PorcentajeIva)
+        </dd>
+    </dl>
+    <a asp-action="Edit" asp-route-id="@Model.ProductoID" class="btn btn-primary">Editar</a>
+    <a asp-action="Index" class="btn btn-secondary">Volver al listado</a>
+</div>

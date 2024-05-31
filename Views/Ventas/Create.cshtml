@@ -1,0 +1,219 @@
+﻿@model javo2.ViewModels.Operaciones.Ventas.VentasViewModel
+
+@{
+    ViewBag.Title = "Crear Venta";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<form asp-action="Create">
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <partial name="_VentasForm" model="Model" />
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Crear" class="btn btn-primary" />
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            console.log("Document ready, initializing script.");
+
+            function agregarProductoATabla(producto) {
+                var newRow = `
+                                    <tr>
+                                        <td>${producto.codBarra}</td>
+                                        <td>${producto.productoIDAlfa}</td>
+                                        <td>${producto.nombreProducto}</td>
+                                        <td><input type="number" class="form-control" value="1" /></td>
+                                        <td>${producto.PLista || ''}</td>
+                                        <td>${producto.PCosto || ''}</td>
+                                        <td>${producto.marca || ''}</td>
+                                        <td>${producto.precioLista || ''}</td>
+                                        <td>${producto.precioTotal || ''}</td>
+                                        <td><button type="button" class="btn btn-danger btn-sm eliminar-producto">Eliminar</button></td>
+                                    </tr>`;
+                $("#productosTable tbody").append(newRow);
+            }
+
+            function mostrarProductosPopup(productos) {
+                var productosList = $("#productosList");
+                productosList.empty();
+                productos.forEach(function (producto) {
+                    var listItem = `<li class="list-group-item">
+                                                        <span>${producto.nombreProducto}</span>
+                                                        <button type="button" class="btn btn-primary btn-sm float-right seleccionar-producto" data-producto='${JSON.stringify(producto)}'>Seleccionar</button>
+                                                    </li>`;
+                    productosList.append(listItem);
+                });
+                $("#productosModal").modal('show');
+            }
+
+            // Autocompletar Rubro
+            $("#rubroProducto").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '@Url.Action("AutocompleteRubro", "Ventas")',
+                        data: { term: request.term },
+                        success: function (data) {
+                            response(data);
+                        }
+                    });
+                },
+                minLength: 2
+            });
+
+            // Buscar Cliente
+            $("#buscarCliente").click(function () {
+                var dniCliente = $("#DniCliente").val();
+                console.log("Buscar Cliente por DNI:", dniCliente);
+                $.ajax({
+                    url: '@Url.Action("BuscarClientePorDNI", "Ventas")',
+                    type: 'POST',
+                    data: { dni: dniCliente },
+                    success: function (response) {
+                        console.log("Respuesta de buscarCliente:", response);
+                        if (response.success) {
+                            var cliente = response.data;
+                            $("#NombreCliente").val(cliente.nombre);
+                            $("#TelefonoCliente").val(cliente.telefono);
+                            $("#DomicilioCliente").val(cliente.calle);
+                            $("#LocalidadCliente").val(cliente.localidad);
+                            $("#CelularCliente").val(cliente.celular);
+                            $("#LimiteCreditoCliente").val(cliente.limiteCredito);
+                            $("#SaldoCliente").val(cliente.saldo);
+                            $("#SaldoDisponibleCliente").val(cliente.saldoDisponible);
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error al buscar el cliente:", error);
+                    }
+                });
+            });
+
+            // Buscar Producto por Código
+            $("#buscarProducto").click(function () {
+                var codigoProducto = $("#codigoProducto").val();
+                console.log("Buscar Producto por Código:", codigoProducto);
+                $.ajax({
+                    url: '@Url.Action("BuscarProducto", "Ventas")',
+                    type: 'POST',
+                    data: { codigoProducto: codigoProducto },
+                    success: function (response) {
+                        console.log("Respuesta de buscarProducto:", response);
+                        if (response.success) {
+                            agregarProductoATabla(response.data);
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error al buscar el producto:", error);
+                    }
+                });
+            });
+
+            // Buscar Producto por Nombre
+            $("#buscarProductoPorNombre").click(function () {
+                var nombreProducto = $("#nombreProducto").val();
+                console.log("Buscar Producto por Nombre:", nombreProducto);
+                $.ajax({
+                    url: '@Url.Action("BuscarProductoPorNombre", "Ventas")',
+                    type: 'POST',
+                    data: { nombreProducto: nombreProducto },
+                    success: function (response) {
+                        console.log("Respuesta de buscarProductoPorNombre:", response);
+                        if (response.success) {
+                            agregarProductoATabla(response.data);
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error al buscar el producto por nombre:", error);
+                    }
+                });
+            });
+
+            // Buscar Producto por Rubro
+            $("#buscarProductoPorRubro").click(function () {
+                var rubroProducto = $("#rubroProducto").val();
+                console.log("Buscar Producto por Rubro:", rubroProducto);
+                $.ajax({
+                    url: '@Url.Action("BuscarProductosPorRubro", "Ventas")',
+                    type: 'POST',
+                    data: { rubroProducto: rubroProducto },
+                    success: function (response) {
+                        console.log("Respuesta de buscarProductoPorRubro:", response);
+                        if (response.success) {
+                            mostrarProductosPopup(response.data);
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error al buscar productos por rubro:", error);
+                    }
+                });
+            });
+
+            // Seleccionar producto del popup
+            $(document).on("click", ".seleccionar-producto", function () {
+                var producto = $(this).data('producto');
+                console.log("Producto seleccionado:", producto);
+                agregarProductoATabla(producto);
+                $("#productosModal").modal('hide');
+            });
+
+            // Eliminar producto de la tabla
+            $(document).on("click", ".eliminar-producto", function () {
+                console.log("Eliminar producto de la tabla");
+                $(this).closest("tr").remove();
+            });
+
+            // Habilitar y deshabilitar campos en función de la forma de pago seleccionada
+            $("#FormaPago").change(function () {
+                var formaPago = $(this).val();
+                console.log("Forma de pago seleccionada:", formaPago);
+
+                // Ocultar todos los campos al inicio
+                $("#bancoContainer, #tipoTarjetaContainer, #cuotasContainer, #entidadElectronicaContainer, #planFinanciamientoContainer").addClass("d-none");
+
+                switch (formaPago) {
+                    case "Tarjeta de crédito":
+                        $("#bancoContainer").removeClass("d-none");
+                        $("#bancoContainer select").change(function () {
+                            $("#tipoTarjetaContainer").removeClass("d-none");
+                        });
+                        $("#tipoTarjetaContainer select").change(function () {
+                            $("#cuotasContainer").removeClass("d-none");
+                        });
+                        break;
+                    case "Efectivo":
+                    case "Transferencia":
+                        // No habilita otros campos
+                        break;
+                    case "Débito":
+                        $("#tipoTarjetaContainer").removeClass("d-none");
+                        break;
+                    case "Pago Virtual":
+                        $("#entidadElectronicaContainer").removeClass("d-none");
+                        break;
+                    case "Crédito Personal":
+                        $("#cuotasContainer").removeClass("d-none");
+                        $("#planFinanciamientoContainer").removeClass("d-none");
+                        break;
+                }
+            }).change(); // Trigger change event to set initial state
+
+            console.log("Script de manejo de productos y autocompletado inicializado.");
+        });
+    </script>
+}

@@ -1,0 +1,20 @@
+﻿@model javo2.ViewModels.Operaciones.Productos.ProductosViewModel
+
+@{
+    ViewBag.Title = "Crear Producto";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<form asp-action="Create">
+    @Html.AntiForgeryToken()
+    @await Html.PartialAsync("_ProductoForm", Model)
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

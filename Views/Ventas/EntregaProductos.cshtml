@@ -1,0 +1,29 @@
+﻿@model IEnumerable<javo2.ViewModels.Operaciones.Ventas.VentasViewModel>
+
+<h1>Ventas Pendientes de Entrega</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Factura</th>
+            <th>Cliente</th>
+            <th>Total</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var venta in Model)
+        {
+            <tr>
+                <td>@venta.FechaVenta.ToShortDateString()</td>
+                <td>@venta.NumeroFactura</td>
+                <td>@venta.NombreCliente</td>
+                <td>@venta.PrecioTotal</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@venta.VentaID" class="btn btn-info btn-sm">Detalles</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

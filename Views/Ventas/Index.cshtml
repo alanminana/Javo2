@@ -1,0 +1,87 @@
+﻿@model IEnumerable<javo2.ViewModels.Operaciones.Ventas.VentasViewModel>
+
+@{
+    ViewBag.Title = "Ventas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Crear Nueva Venta</a>
+    <a asp-action="Autorizaciones" class="btn btn-success">Autorizaciones</a>
+    <a asp-action="EntregaProductos" class="btn btn-warning">Entrega de Productos</a>
+</p>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <label for="fechaInicio">Buscar ventas desde el:</label>
+        <input type="date" class="form-control" id="fechaInicio">
+    </div>
+    <div class="col-md-3">
+        <label for="fechaFin">hasta el:</label>
+        <input type="date" class="form-control" id="fechaFin">
+    </div>
+    <div class="col-md-3">
+        <input type="text" class="form-control" id="filterName" placeholder="Filtrar por nombre del cliente">
+    </div>
+    <div class="col-md-3">
+        <button class="btn btn-primary" id="applyFilters">Aplicar Filtros</button>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Factura</th>
+            <th>Cliente</th>
+            <th>Total</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody id="ventasTableBody">
+        @foreach (var venta in Model)
+        {
+            <tr>
+                <td>@venta.FechaVenta.ToShortDateString()</td>
+                <td>@venta.NumeroFactura</td>
+                <td>@venta.NombreCliente</td>
+                <td>@venta.PrecioTotal</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@venta.VentaID" class="btn btn-warning btn-sm">Editar</a>
+                    <a asp-action="Details" asp-route-id="@venta.VentaID" class="btn btn-info btn-sm">Detalles</a>
+                    <a asp-action="Delete" asp-route-id="@venta.VentaID" class="btn btn-danger btn-sm">Eliminar</a>
+                    <a asp-action="Reimprimir" asp-route-id="@venta.VentaID" class="btn btn-secondary btn-sm">Re-imprimir</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#applyFilters').click(function () {
+                var filterName = $('#filterName').val().toLowerCase();
+                var fechaInicio = $('#fechaInicio').val();
+                var fechaFin = $('#fechaFin').val();
+
+                $('#ventasTableBody tr').filter(function () {
+                    var textMatch = $(this).text().toLowerCase().indexOf(filterName) > -1;
+                    var dateMatch = true;
+                    var ventaFecha = new Date($(this).find('td:first').text());
+
+                    if (fechaInicio) {
+                        dateMatch = dateMatch && (ventaFecha >= new Date(fechaInicio));
+                    }
+                    if (fechaFin) {
+                        dateMatch = dateMatch && (ventaFecha <= new Date(fechaFin));
+                    }
+
+                    $(this).toggle(textMatch && dateMatch);
+                });
+            });
+        });
+    </script>
+}

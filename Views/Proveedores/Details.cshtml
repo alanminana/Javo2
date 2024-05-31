@@ -1,0 +1,20 @@
+﻿@model javo2.ViewModels.Operaciones.Proveedores.ProveedoresViewModel
+
+@{
+    ViewBag.Title = "Detalles del Proveedor";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <h4>@Model.Nombre</h4>
+    <h5>Productos:</h5>
+    <ul>
+        @foreach (var producto in Model.ProductosSeleccionados)
+        {
+            <li>@producto</li>
+        }
+    </ul>
+</div>
+
+<a href="@Url.Action("Index")" class="btn btn-secondary">Volver</a>

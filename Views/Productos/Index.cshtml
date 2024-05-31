@@ -1,0 +1,56 @@
+﻿@model IEnumerable<javo2.ViewModels.Operaciones.Productos.ProductosViewModel>
+
+@{
+    ViewBag.Title = "Productos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <input type="text" class="form-control" id="filterName" placeholder="Filtrar por nombre">
+    </div>
+    <div class="col-md-3">
+        <button class="btn btn-primary" id="applyFilters">Aplicar Filtros</button>
+    </div>
+</div>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Agregar Producto</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.First().Nombre)</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody id="productosTableBody">
+        @foreach (var producto in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => producto.Nombre)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@producto.ProductoID" class="btn btn-sm btn-warning">Editar</a>
+                    <a asp-action="Details" asp-route-id="@producto.ProductoID" class="btn btn-sm btn-info">Detalles</a>
+                    <a asp-action="Delete" asp-route-id="@producto.ProductoID" class="btn btn-sm btn-danger">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#applyFilters').click(function () {
+                var filterName = $('#filterName').val().toLowerCase();
+                $('#productosTableBody tr').filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(filterName) > -1)
+                });
+            });
+        });
+    </script>
+}
