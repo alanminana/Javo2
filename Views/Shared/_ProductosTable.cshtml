@@ -1,0 +1,16 @@
+﻿@model IEnumerable<Javo2.ViewModels.Operaciones.Productos.ProductosViewModel>
+
+@foreach (var producto in Model)
+{
+    <tr>
+        <td><input type="checkbox" name="productoIds" value="@producto.ProductoID" /></td>
+        <td>@producto.Nombre</td>
+        <td>@producto.PCosto</td>
+        <td>@producto.PContado</td>
+        <td>@producto.PLista</td>
+        <td>
+            <a asp-action="Edit" asp-route-id="@producto.ProductoID" class="btn btn-sm btn-warning">Editar</a>
+            <a asp-action="Delete" asp-route-id="@producto.ProductoID" class="btn btn-sm btn-danger">Eliminar</a>
+        </td>
+    </tr>
+}

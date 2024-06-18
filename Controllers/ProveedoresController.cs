@@ -1,11 +1,12 @@
-﻿using javo2.Services;
-using javo2.ViewModels.Operaciones.Proveedores;
+﻿using Javo2.IServices;
+using Javo2.Services;
+using Javo2.ViewModels.Operaciones.Proveedores;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace javo2.Controllers
+namespace Javo2.Controllers
 {
     public class ProveedoresController : Controller
     {

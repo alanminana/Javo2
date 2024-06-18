@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using javo2.ViewModels.Operaciones.Clientes;
-using javo2.ViewModels.Operaciones.Productos;
-using javo2.ViewModels.Operaciones.Proveedores;
-using javo2.ViewModels.Operaciones.Ventas;
+using Javo2.ViewModels.Operaciones.Clientes;
+using Javo2.ViewModels.Operaciones.Productos;
+using Javo2.ViewModels.Operaciones.Proveedores;
+using Javo2.ViewModels.Operaciones.Ventas;
 
-namespace javo2
+namespace Javo2
 {
     public class AutoMapperProfile : Profile
     {
@@ -14,7 +14,6 @@ namespace javo2
             CreateMap<ProductosViewModel, ProductosViewModel>().ReverseMap();
             CreateMap<VentasViewModel, VentasViewModel>().ReverseMap();
             CreateMap<ProveedoresViewModel, ProveedoresViewModel>().ReverseMap();
-
         }
     }
 }

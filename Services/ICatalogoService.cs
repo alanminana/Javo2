@@ -1,9 +1,9 @@
-﻿using javo2.ViewModels.Operaciones.Productos;
+﻿using Javo2.ViewModels.Operaciones.Catalogo;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace javo2.IServices
+namespace Javo2.IServices
 {
     public interface ICatalogoService
     {
@@ -16,14 +16,16 @@ namespace javo2.IServices
         Task CreateRubroAsync(RubroViewModel model);
         Task CreateSubRubroAsync(SubRubroViewModel model);
         Task CreateMarcaAsync(MarcaViewModel model);
-        Task UpdateRubroAsync(RubroViewModel model);
-        Task UpdateSubRubroAsync(SubRubroViewModel model);
-        Task UpdateMarcaAsync(MarcaViewModel model);
-        Task DeleteRubroAsync(int id);
-        Task DeleteSubRubroAsync(int id);
-        Task DeleteMarcaAsync(int id);
         Task<RubroViewModel?> GetRubroByIdAsync(int id);
         Task<SubRubroViewModel?> GetSubRubroByIdAsync(int id);
         Task<MarcaViewModel?> GetMarcaByIdAsync(int id);
+        Task UpdateRubroAsync(RubroViewModel model); // Este es el método que falta implementar
+        Task UpdateSubRubroAsync(SubRubroViewModel model);
+        Task UpdateMarcaAsync(MarcaViewModel model);
+        Task DeleteRubroAsync(int id);
+        Task DeleteMarcaAsync(int id);
+        Task DeleteSubRubroAsync(int id);
+        Task<IEnumerable<RubroViewModel>> FilterRubrosAsync(CatalogoFilterDto filters);
+        Task<IEnumerable<MarcaViewModel>> FilterMarcasAsync(CatalogoFilterDto filters);
     }
 }

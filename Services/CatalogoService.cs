@@ -1,11 +1,11 @@
-﻿using javo2.IServices;
-using javo2.ViewModels.Operaciones.Productos;
+﻿using Javo2.IServices;
+using Javo2.ViewModels.Operaciones.Catalogo;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace javo2.Services
+namespace Javo2.Services
 {
     public class CatalogoService : ICatalogoService
     {
@@ -50,42 +50,42 @@ namespace javo2.Services
             return Task.FromResult<IEnumerable<MarcaViewModel>>(_marcas);
         }
 
-        public async Task<IEnumerable<SelectListItem>> GetRubrosAsync()
+        public Task<IEnumerable<SelectListItem>> GetRubrosAsync()
         {
             var rubros = _rubros.Select(r => new SelectListItem { Value = r.Id.ToString(), Text = r.Nombre });
-            return await Task.FromResult(rubros);
+            return Task.FromResult(rubros);
         }
 
-        public async Task<IEnumerable<SelectListItem>> GetSubRubrosAsync()
+        public Task<IEnumerable<SelectListItem>> GetSubRubrosAsync()
         {
             var subRubros = _subRubros.Select(sr => new SelectListItem { Value = sr.Id.ToString(), Text = sr.Nombre });
-            return await Task.FromResult(subRubros);
+            return Task.FromResult(subRubros);
         }
 
-        public async Task<IEnumerable<SelectListItem>> GetMarcasAsync()
+        public Task<IEnumerable<SelectListItem>> GetMarcasAsync()
         {
             var marcas = _marcas.Select(m => new SelectListItem { Value = m.Id.ToString(), Text = m.Nombre });
-            return await Task.FromResult(marcas);
+            return Task.FromResult(marcas);
         }
 
-        public async Task<IEnumerable<SelectListItem>> GetSubRubrosByRubroAsync(string rubroNombre)
+        public Task<IEnumerable<SelectListItem>> GetSubRubrosByRubroAsync(string rubroNombre)
         {
             var subRubros = _subRubros
                 .Where(sr => sr.RubroNombre == rubroNombre)
                 .Select(sr => new SelectListItem { Value = sr.Id.ToString(), Text = sr.Nombre });
-            return await Task.FromResult(subRubros);
+            return Task.FromResult(subRubros);
         }
 
         public Task CreateRubroAsync(RubroViewModel model)
         {
-            model.Id = _rubros.Max(r => r.Id) + 1;
+            model.Id = _rubros.Any() ? _rubros.Max(r => r.Id) + 1 : 1;
             _rubros.Add(model);
             return Task.CompletedTask;
         }
 
         public Task CreateSubRubroAsync(SubRubroViewModel model)
         {
-            model.Id = _subRubros.Max(sr => sr.Id) + 1;
+            model.Id = _subRubros.Any() ? _subRubros.Max(sr => sr.Id) + 1 : 1;
             var rubro = _rubros.FirstOrDefault(r => r.Nombre == model.RubroNombre);
             if (rubro != null)
             {
@@ -97,7 +97,7 @@ namespace javo2.Services
 
         public Task CreateMarcaAsync(MarcaViewModel model)
         {
-            model.Id = _marcas.Max(m => m.Id) + 1;
+            model.Id = _marcas.Any() ? _marcas.Max(m => m.Id) + 1 : 1;
             _marcas.Add(model);
             return Task.CompletedTask;
         }
@@ -136,19 +136,22 @@ namespace javo2.Services
             if (subRubro != null)
             {
                 subRubro.Nombre = model.Nombre;
-
-                // Reflejar el cambio en el rubro correspondiente
-                var rubro = _rubros.FirstOrDefault(r => r.Nombre == subRubro.RubroNombre);
-                if (rubro != null)
-                {
-                    var rubroSubRubro = rubro.SubRubros.FirstOrDefault(sr => sr.Id == model.Id);
-                    if (rubroSubRubro != null)
-                    {
-                        rubroSubRubro.Nombre = model.Nombre;
-                    }
-                }
+                UpdateSubRubroInRubro(subRubro);
             }
             return Task.CompletedTask;
+        }
+
+        private void UpdateSubRubroInRubro(SubRubroViewModel subRubro)
+        {
+            var rubro = _rubros.FirstOrDefault(r => r.Nombre == subRubro.RubroNombre);
+            if (rubro != null)
+            {
+                var rubroSubRubro = rubro.SubRubros.FirstOrDefault(sr => sr.Id == subRubro.Id);
+                if (rubroSubRubro != null)
+                {
+                    rubroSubRubro.Nombre = subRubro.Nombre;
+                }
+            }
         }
 
         public Task UpdateMarcaAsync(MarcaViewModel model)
@@ -187,18 +190,49 @@ namespace javo2.Services
             if (subRubro != null)
             {
                 _subRubros.Remove(subRubro);
-
-                var rubro = _rubros.FirstOrDefault(r => r.Nombre == subRubro.RubroNombre);
-                if (rubro != null)
-                {
-                    var rubroSubRubro = rubro.SubRubros.FirstOrDefault(sr => sr.Id == id);
-                    if (rubroSubRubro != null)
-                    {
-                        rubro.SubRubros.Remove(rubroSubRubro);
-                    }
-                }
+                RemoveSubRubroFromRubro(subRubro);
             }
             return Task.CompletedTask;
         }
+
+        private void RemoveSubRubroFromRubro(SubRubroViewModel subRubro)
+        {
+            var rubro = _rubros.FirstOrDefault(r => r.Nombre == subRubro.RubroNombre);
+            if (rubro != null)
+            {
+                var rubroSubRubro = rubro.SubRubros.FirstOrDefault(sr => sr.Id == subRubro.Id);
+                if (rubroSubRubro != null)
+                {
+                    rubro.SubRubros.Remove(rubroSubRubro);
+                }
+            }
+        }
+
+        public Task<IEnumerable<RubroViewModel>> FilterRubrosAsync(CatalogoFilterDto filters)
+        {
+
+            var rubros = _rubros.AsQueryable();
+
+            if (!string.IsNullOrEmpty(filters.Rubro))
+            {
+                rubros = rubros.Where(r => r.Nombre.Contains(filters.Rubro, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return Task.FromResult(rubros.ToList().AsEnumerable());
+        }
+
+        public Task<IEnumerable<MarcaViewModel>> FilterMarcasAsync(CatalogoFilterDto filters)
+        {
+
+            var marcas = _marcas.AsQueryable();
+
+            if (!string.IsNullOrEmpty(filters.Marca))
+            {
+                marcas = marcas.Where(m => m.Nombre.Contains(filters.Marca, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return Task.FromResult(marcas.ToList().AsEnumerable());
+        }
+
     }
 }

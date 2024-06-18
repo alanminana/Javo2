@@ -1,4 +1,4 @@
-﻿@model javo2.ViewModels.Operaciones.Proveedores.ProveedoresViewModel
+﻿@model Javo2.ViewModels.Operaciones.Proveedores.ProveedoresViewModel
 
 @{
     ViewBag.Title = "Agregar Proveedor";
@@ -10,6 +10,8 @@
 <form asp-action="Create" method="post">
     <partial name="_ProveedoresForm" model="Model" />
     <button type="submit" class="btn btn-primary mt-3">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+
 </form>
 
 @section Scripts {
@@ -20,26 +22,24 @@
             var productosDisponibles = @Html.Raw(Json.Serialize(Model.ProductosDisponibles));
             console.log("Productos disponibles:", productosDisponibles);
 
-            // Verificar la estructura de productosDisponibles antes de mapearlos
             productosDisponibles.forEach((producto, index) => {
                 console.log(`Producto ${index} - ID: ${producto.productoID}, Nombre: ${producto.nombre}`);
             });
 
             var productosAutocompletar = productosDisponibles.map(p => ({
-                label: p.nombre,  // Asegurarse de que 'nombre' es la propiedad correcta
-                value: p.nombre   // Asegurarse de que 'nombre' es la propiedad correcta
+                label: p.nombre,
+                value: p.nombre
             }));
             console.log("Productos para autocompletar:", productosAutocompletar);
 
             var productosSeleccionados = @Html.Raw(Json.Serialize(Model.ProductosSeleccionados));
             console.log("Productos seleccionados inicialmente:", productosSeleccionados);
 
-            // Renderizar productos seleccionados inicialmente
             productosSeleccionados.forEach(function (selectedProduct) {
                 $("#selectedProductos").append(`
-                            <input type="hidden" name="ProductosSeleccionados" value="${selectedProduct}" />
-                            <span class="badge bg-primary m-1">${selectedProduct} <a href="#" class="text-white remove-product">x</a></span>
-                        `);
+                                    <input type="hidden" name="ProductosSeleccionados" value="${selectedProduct}" />
+                                    <span class="badge bg-primary m-1">${selectedProduct} <a href="#" class="text-white remove-product">x</a></span>
+                                `);
             });
 
             $("#productoAutocomplete").autocomplete({
@@ -50,9 +50,9 @@
                     if (!productosSeleccionados.includes(selectedProduct)) {
                         productosSeleccionados.push(selectedProduct);
                         $("#selectedProductos").append(`
-                                    <input type="hidden" name="ProductosSeleccionados" value="${selectedProduct}" />
-                                    <span class="badge bg-primary m-1">${selectedProduct} <a href="#" class="text-white remove-product">x</a></span>
-                                `);
+                                            <input type="hidden" name="ProductosSeleccionados" value="${selectedProduct}" />
+                                            <span class="badge bg-primary m-1">${selectedProduct} <a href="#" class="text-white remove-product">x</a></span>
+                                        `);
                         console.log("Producto añadido a la lista:", selectedProduct);
                     } else {
                         console.log("Producto ya está en la lista:", selectedProduct);

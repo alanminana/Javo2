@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using javo2.ViewModels.Operaciones.Productos;
+using Javo2.ViewModels.Operaciones.Productos;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace javo2.ViewModels.Operaciones.Ventas
+namespace Javo2.ViewModels.Operaciones.Ventas
 {
     public enum EstadoVenta
     {

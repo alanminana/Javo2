@@ -1,4 +1,4 @@
-﻿@model IEnumerable<javo2.ViewModels.Operaciones.Clientes.ClientesViewModel>
+﻿@model IEnumerable<Javo2.ViewModels.Operaciones.Clientes.ClientesViewModel>
 
 @{
     ViewBag.Title = "Clientes";
@@ -9,10 +9,15 @@
 
 <div class="row mb-4">
     <div class="col-md-3">
-        <input type="text" class="form-control" id="filterName" placeholder="Filtrar por nombre">
+        <select class="form-control" id="filterField">
+            <option value="nombre">Nombre</option>
+            <option value="apellido">Apellido</option>
+            <option value="dni">DNI</option>
+            <option value="email">Email</option>
+        </select>
     </div>
     <div class="col-md-3">
-        <button class="btn btn-primary" id="applyFilters">Aplicar Filtros</button>
+        <input type="text" class="form-control" id="filterValue" placeholder="Ingrese valor del filtro">
     </div>
 </div>
 
@@ -21,22 +26,14 @@
         <tr>
             <th>ID</th>
             <th>Nombre</th>
+            <th>Apellido</th>
+            <th>DNI</th>
+            <th>Email</th>
             <th>Acciones</th>
         </tr>
     </thead>
     <tbody id="clientesTableBody">
-        @foreach (var cliente in Model)
-        {
-            <tr>
-                <td>@cliente.ClienteID</td>
-                <td>@cliente.Nombre</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@cliente.ClienteID" class="btn btn-primary">Editar</a>
-                    <a asp-action="Details" asp-route-id="@cliente.ClienteID" class="btn btn-info">Detalles</a>
-                    <a asp-action="Delete" asp-route-id="@cliente.ClienteID" class="btn btn-danger">Eliminar</a>
-                </td>
-            </tr>
-        }
+        @await Html.PartialAsync("_ClientesTable", Model)
     </tbody>
 </table>
 
@@ -45,11 +42,23 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            $('#applyFilters').click(function () {
-                var filterName = $('#filterName').val().toLowerCase();
-                $('#clientesTableBody tr').filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(filterName) > -1)
+            var filters = {};
+
+            function applyFilters() {
+                $.get('@Url.Action("Filter", "Clientes")', filters, function (data) {
+                    $('#clientesTableBody').html(data);
                 });
+            }
+
+            $('#filterField, #filterValue').on('input', function () {
+                var field = $('#filterField').val();
+                var value = $('#filterValue').val();
+                if (field && value) {
+                    filters[field] = value;
+                } else {
+                    delete filters[field];
+                }
+                applyFilters();
             });
         });
     </script>

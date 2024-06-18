@@ -1,4 +1,5 @@
-﻿@model javo2.ViewModels.Operaciones.Productos.EditSubRubrosViewModel
+﻿@using Javo2.ViewModels.Operaciones.Catalogo
+@model EditSubRubrosViewModel
 
 @{
     ViewBag.Title = "Editar SubRubros";
@@ -49,7 +50,7 @@
 </form>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    @await Html.PartialAsync("_ValidationScriptsPartial")
     <script>
         $(document).ready(function () {
             $('#addSubRubro').click(function () {
@@ -57,16 +58,16 @@
                 if (newSubRubroName) {
                     var index = $('#subRubrosTable tbody tr').length;
                     var newRow = `
-                                        <tr>
-                                            <td>
-                                                <input type="hidden" name="SubRubros[${index}].Id" value="0" />
-                                                <input type="text" name="SubRubros[${index}].Nombre" class="form-control" value="${newSubRubroName}" />
-                                            </td>
-                                            <td>
-                                                <button type="button" class="btn btn-danger btn-sm delete-subrubro">Eliminar</button>
-                                                <input type="hidden" name="SubRubros[${index}].IsDeleted" value="false" />
-                                            </td>
-                                        </tr>`;
+                                                <tr>
+                                                    <td>
+                                                        <input type="hidden" name="SubRubros[${index}].Id" value="0" />
+                                                        <input type="text" name="SubRubros[${index}].Nombre" class="form-control" value="${newSubRubroName}" />
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-danger btn-sm delete-subrubro">Eliminar</button>
+                                                        <input type="hidden" name="SubRubros[${index}].IsDeleted" value="false" />
+                                                    </td>
+                                                </tr>`;
                     $('#subRubrosTable tbody').append(newRow);
                     $('#newSubRubro').val('');
                 }

@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Javo2.ViewModels.Operaciones.Proveedores.ProveedoresViewModel>
+
+<tbody>
+    @foreach (var proveedor in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => proveedor.Nombre)</td>
+            <td>
+                @if (proveedor.ProductosSeleccionados != null && proveedor.ProductosSeleccionados.Any())
+                {
+                    <ul>
+                        @foreach (var producto in proveedor.ProductosSeleccionados)
+                        {
+                            <li>@producto</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <span>No hay productos seleccionados</span>
+                }
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@proveedor.ProveedorID" class="btn btn-sm btn-warning">Editar</a>
+                <a asp-action="Details" asp-route-id="@proveedor.ProveedorID" class="btn btn-sm btn-info">Detalles</a>
+                <a asp-action="Delete" asp-route-id="@proveedor.ProveedorID" class="btn btn-sm btn-danger">Eliminar</a>
+            </td>
+        </tr>
+    }
+</tbody>

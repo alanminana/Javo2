@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
-namespace javo2.ViewModels.Operaciones.Productos
+namespace Javo2.ViewModels.Operaciones.Productos
 {
     public class ProductosViewModel
     {

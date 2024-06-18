@@ -1,4 +1,4 @@
-﻿@model IEnumerable<javo2.ViewModels.Operaciones.Ventas.VentasViewModel>
+﻿@model IEnumerable<Javo2.ViewModels.Operaciones.Ventas.VentasViewModel>
 
 @{
     ViewBag.Title = "Ventas";
@@ -13,22 +13,24 @@
     <a asp-action="EntregaProductos" class="btn btn-warning">Entrega de Productos</a>
 </p>
 
-<div class="row mb-4">
-    <div class="col-md-3">
-        <label for="fechaInicio">Buscar ventas desde el:</label>
-        <input type="date" class="form-control" id="fechaInicio">
+<form method="get" asp-action="Index">
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <label for="fechaInicio">Buscar ventas desde el:</label>
+            <input type="date" class="form-control" id="fechaInicio" name="fechaInicio" value="@Context.Request.Query["fechaInicio"]">
+        </div>
+        <div class="col-md-3">
+            <label for="fechaFin">hasta el:</label>
+            <input type="date" class="form-control" id="fechaFin" name="fechaFin" value="@Context.Request.Query["fechaFin"]">
+        </div>
+        <div class="col-md-3">
+            <input type="text" class="form-control" id="filterName" placeholder="Filtrar por nombre del cliente">
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary" style="margin-top: 24px;">Aplicar Filtros</button>
+        </div>
     </div>
-    <div class="col-md-3">
-        <label for="fechaFin">hasta el:</label>
-        <input type="date" class="form-control" id="fechaFin">
-    </div>
-    <div class="col-md-3">
-        <input type="text" class="form-control" id="filterName" placeholder="Filtrar por nombre del cliente">
-    </div>
-    <div class="col-md-3">
-        <button class="btn btn-primary" id="applyFilters">Aplicar Filtros</button>
-    </div>
-</div>
+</form>
 
 <table class="table">
     <thead>
@@ -40,7 +42,7 @@
             <th>Acciones</th>
         </tr>
     </thead>
-    <tbody id="ventasTableBody">
+    <tbody>
         @foreach (var venta in Model)
         {
             <tr>
@@ -58,6 +60,7 @@
         }
     </tbody>
 </table>
+
 
 @section Scripts {
     <script>

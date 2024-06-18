@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace javo2.ViewModels.Operaciones.Productos
+namespace Javo2.ViewModels.Operaciones.Catalogo
 {
     public class RubroViewModel
     {

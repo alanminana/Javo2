@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using javo2.ViewModels.Operaciones.Productos;
+using Javo2.ViewModels.Operaciones.Productos;
 
-namespace javo2.ViewModels.Operaciones.Proveedores
+namespace Javo2.ViewModels.Operaciones.Proveedores
 {
     public class ProveedoresViewModel
     {

@@ -1,8 +1,8 @@
-﻿using javo2.ViewModels.Operaciones.Clientes;
+﻿using Javo2.ViewModels.Operaciones.Clientes;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace javo2.Services
+namespace Javo2.Services
 {
     public interface IClienteService
     {
@@ -12,5 +12,8 @@ namespace javo2.Services
         Task CreateClienteAsync(ClientesViewModel clienteViewModel);
         Task UpdateClienteAsync(ClientesViewModel clienteViewModel);
         Task DeleteClienteAsync(int id);
+        Task<IEnumerable<ClientesViewModel>> FilterClientesAsync(ClienteFilterDto filters);
+        
+
     }
 }

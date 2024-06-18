@@ -1,9 +1,9 @@
-﻿using javo2.ViewModels.Operaciones.Proveedores;
-using javo2.ViewModels.Operaciones.Productos;
+﻿using Javo2.ViewModels.Operaciones.Proveedores;
+using Javo2.ViewModels.Operaciones.Productos;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace javo2.Services
+namespace Javo2.Services
 {
     public interface IProveedorService
     {

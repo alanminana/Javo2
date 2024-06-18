@@ -1,24 +1,26 @@
-using javo2.Services;
-using javo2.IServices;
+using Javo2.Services;
+using Javo2.IServices;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
 builder.Services.AddControllersWithViews();
+builder.Services.AddAutoMapper(typeof(Javo2.AutoMapperProfile));
 
-// Registrar AutoMapper
-builder.Services.AddAutoMapper(typeof(javo2.AutoMapperProfile)); // Asegúrate de usar el espacio de nombres correcto
-
-// Registrar servicios de la aplicación como singleton
 builder.Services.AddSingleton<IProductoService, ProductoService>();
 builder.Services.AddSingleton<IProveedorService, ProveedorService>();
 builder.Services.AddSingleton<IClienteService, ClienteService>();
 builder.Services.AddSingleton<IVentaService, VentaService>();
 builder.Services.AddSingleton<ICatalogoService, CatalogoService>();
+builder.Services.AddSingleton<IProvinciaService, ProvinciaService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");

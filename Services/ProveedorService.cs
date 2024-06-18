@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using javo2.ViewModels.Operaciones.Proveedores;
-using javo2.ViewModels.Operaciones.Productos;
+using Javo2.ViewModels.Operaciones.Proveedores;
+using Javo2.ViewModels.Operaciones.Productos;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
-using javo2.IServices;
+using Javo2.IServices;
 
-namespace javo2.Services
+namespace Javo2.Services
 {
     public class ProveedorService : IProveedorService
     {

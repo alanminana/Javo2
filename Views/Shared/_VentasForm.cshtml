@@ -1,4 +1,4 @@
-﻿@model javo2.ViewModels.Operaciones.Ventas.VentasViewModel
+﻿@model Javo2.ViewModels.Operaciones.Ventas.VentasViewModel
 
 @Html.AntiForgeryToken()
 <input type="hidden" asp-for="VentaID" />
@@ -207,7 +207,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var producto in Model.ProductosPresupuesto ?? new List<javo2.ViewModels.Operaciones.Productos.ProductoPresupuestoViewModel>())
+                @foreach (var producto in Model.ProductosPresupuesto ?? new List<Javo2.ViewModels.Operaciones.Productos.ProductoPresupuestoViewModel>())
                 {
                     <tr>
                         <td>@producto.Codigo</td>

@@ -1,5 +1,5 @@
-﻿using javo2.IServices;
-using javo2.ViewModels.Operaciones.Productos;
+﻿using Javo2.IServices;
+using Javo2.ViewModels.Operaciones.Productos;
 using AutoMapper;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 
-namespace javo2.Services
+namespace Javo2.Services
 {
     public class ProductoService : IProductoService
     {

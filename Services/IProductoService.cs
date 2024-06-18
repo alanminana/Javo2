@@ -1,9 +1,9 @@
-﻿using javo2.ViewModels.Operaciones.Productos;
+﻿using Javo2.ViewModels.Operaciones.Productos;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace javo2.IServices
+namespace Javo2.IServices
 {
     public interface IProductoService
     {
@@ -23,5 +23,6 @@ namespace javo2.IServices
         Task<IEnumerable<string>> GetProductosAutocompleteAsync(string term);
         string GenerarProductoIDAlfa();
         string GenerarCodBarraProducto();
+
     }
 }

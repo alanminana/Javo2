@@ -1,5 +1,5 @@
-﻿@model javo2.ViewModels.Operaciones.Productos.MarcaViewModel
-
+﻿@using Javo2.ViewModels.Operaciones.Catalogo
+@model MarcaViewModel
 @{
     ViewBag.Title = "Agregar Marca";
 }
@@ -14,5 +14,11 @@
     </div>
     <div class="form-group">
         <input type="submit" value="Agregar" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+
     </div>
 </form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

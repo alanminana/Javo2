@@ -9,179 +9,199 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Javo2
 build_property.RootNamespace = Javo2
-build_property.ProjectDir = E:\Javo2\
+build_property.ProjectDir = E:\git\Javo2\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = E:\Javo2
+build_property.MSBuildProjectDirectory = E:\git\Javo2
 build_property._RazorSourceGeneratorDebug = 
 
-[E:/Javo2/Views/Catalogo/CreateMarca.cshtml]
+[E:/git/Javo2/Views/Catalogo/CreateMarca.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29cQ3JlYXRlTWFyY2EuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Catalogo/CreateRubro.cshtml]
+[E:/git/Javo2/Views/Catalogo/CreateRubro.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29cQ3JlYXRlUnVicm8uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Catalogo/DeleteMarca.cshtml]
+[E:/git/Javo2/Views/Catalogo/DeleteMarca.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29cRGVsZXRlTWFyY2EuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Catalogo/DeleteRubro.cshtml]
+[E:/git/Javo2/Views/Catalogo/DeleteRubro.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29cRGVsZXRlUnVicm8uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Catalogo/Details.cshtml]
+[E:/git/Javo2/Views/Catalogo/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29cRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Catalogo/EditMarca.cshtml]
+[E:/git/Javo2/Views/Catalogo/EditMarca.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29cRWRpdE1hcmNhLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Catalogo/EditRubro.cshtml]
+[E:/git/Javo2/Views/Catalogo/EditRubro.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29cRWRpdFJ1YnJvLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Catalogo/EditSubRubros.cshtml]
+[E:/git/Javo2/Views/Catalogo/EditSubRubros.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29cRWRpdFN1YlJ1YnJvcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Catalogo/Index.cshtml]
+[E:/git/Javo2/Views/Catalogo/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Clientes/Create.cshtml]
+[E:/git/Javo2/Views/Clientes/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZXNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Clientes/Delete.cshtml]
+[E:/git/Javo2/Views/Clientes/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZXNcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Clientes/Details.cshtml]
+[E:/git/Javo2/Views/Clientes/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZXNcRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Clientes/Edit.cshtml]
+[E:/git/Javo2/Views/Clientes/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZXNcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Clientes/Index.cshtml]
+[E:/git/Javo2/Views/Clientes/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZXNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Home/Index.cshtml]
+[E:/git/Javo2/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Home/Privacy.cshtml]
+[E:/git/Javo2/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Productos/Create.cshtml]
+[E:/git/Javo2/Views/Productos/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdG9zXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Productos/Delete.cshtml]
+[E:/git/Javo2/Views/Productos/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdG9zXERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Productos/Details.cshtml]
+[E:/git/Javo2/Views/Productos/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdG9zXERldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Productos/Edit.cshtml]
+[E:/git/Javo2/Views/Productos/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdG9zXEVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Productos/Index.cshtml]
+[E:/git/Javo2/Views/Productos/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdG9zXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Proveedores/Create.cshtml]
+[E:/git/Javo2/Views/Proveedores/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmVlZG9yZXNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Proveedores/Delete.cshtml]
+[E:/git/Javo2/Views/Proveedores/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmVlZG9yZXNcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Proveedores/Details.cshtml]
+[E:/git/Javo2/Views/Proveedores/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmVlZG9yZXNcRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Proveedores/Edit.cshtml]
+[E:/git/Javo2/Views/Proveedores/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmVlZG9yZXNcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Proveedores/Index.cshtml]
+[E:/git/Javo2/Views/Proveedores/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmVlZG9yZXNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Shared/Error.cshtml]
+[E:/git/Javo2/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Shared/_ClientesForm.cshtml]
+[E:/git/Javo2/Views/Shared/_CatalogoTable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9DYXRhbG9nb1RhYmxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/git/Javo2/Views/Shared/_ClientesForm.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9DbGllbnRlc0Zvcm0uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Shared/_ProductoForm.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Qcm9kdWN0b0Zvcm0uY3NodG1s
+[E:/git/Javo2/Views/Shared/_ClientesTable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9DbGllbnRlc1RhYmxlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Shared/_ProveedoresForm.cshtml]
+[E:/git/Javo2/Views/Shared/_ProductosForm.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Qcm9kdWN0b3NGb3JtLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/git/Javo2/Views/Shared/_ProductosTable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Qcm9kdWN0b3NUYWJsZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/git/Javo2/Views/Shared/_ProveedoresForm.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Qcm92ZWVkb3Jlc0Zvcm0uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Shared/_ValidationScriptsPartial.cshtml]
+[E:/git/Javo2/Views/Shared/_ProveedoresTable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Qcm92ZWVkb3Jlc1RhYmxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/git/Javo2/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Shared/_VentasForm.cshtml]
+[E:/git/Javo2/Views/Shared/_VentasForm.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WZW50YXNGb3JtLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Ventas/Autorizaciones.cshtml]
+[E:/git/Javo2/Views/Shared/_VentasTable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WZW50YXNUYWJsZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/git/Javo2/Views/Ventas/Autorizaciones.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVudGFzXEF1dG9yaXphY2lvbmVzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Ventas/Create.cshtml]
+[E:/git/Javo2/Views/Ventas/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVudGFzXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Ventas/Delete.cshtml]
+[E:/git/Javo2/Views/Ventas/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVudGFzXERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Ventas/Details.cshtml]
+[E:/git/Javo2/Views/Ventas/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVudGFzXERldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Ventas/Edit.cshtml]
+[E:/git/Javo2/Views/Ventas/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVudGFzXEVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Ventas/EntregaProductos.cshtml]
+[E:/git/Javo2/Views/Ventas/EntregaProductos.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVudGFzXEVudHJlZ2FQcm9kdWN0b3MuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Ventas/Index.cshtml]
+[E:/git/Javo2/Views/Ventas/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVudGFzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/_ViewImports.cshtml]
+[E:/git/Javo2/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/_ViewStart.cshtml]
+[E:/git/Javo2/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Javo2/Views/Shared/_Layout.cshtml]
+[E:/git/Javo2/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-00ej754aq7

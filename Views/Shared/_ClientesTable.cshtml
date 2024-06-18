@@ -1,0 +1,17 @@
+﻿@model IEnumerable<Javo2.ViewModels.Operaciones.Clientes.ClientesViewModel>
+
+@foreach (var cliente in Model)
+{
+    <tr>
+        <td>@cliente.ClienteID</td>
+        <td>@cliente.Nombre</td>
+        <td>@cliente.Apellido</td>
+        <td>@cliente.DNI</td>
+        <td>@cliente.Email</td>
+        <td>
+            <a asp-action="Edit" asp-route-id="@cliente.ClienteID" class="btn btn-primary">Editar</a>
+            <a asp-action="Details" asp-route-id="@cliente.ClienteID" class="btn btn-info">Detalles</a>
+            <a asp-action="Delete" asp-route-id="@cliente.ClienteID" class="btn btn-danger">Eliminar</a>
+        </td>
+    </tr>
+}

@@ -1,22 +1,23 @@
-﻿using AutoMapper;
-using javo2.ViewModels.Operaciones.Clientes;
+﻿
+using AutoMapper;
+using Javo2.ViewModels.Operaciones.Clientes;
 using Microsoft.Extensions.Logging;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace javo2.Services
+namespace Javo2.Services
 {
     public class ClienteService : IClienteService
     {
         private readonly IMapper _mapper;
         private readonly ILogger<ClienteService> _logger;
 
-        // Lista estática para simular una base de datos
-        private static readonly List<ClientesViewModel> _clientes = new()
+        private static readonly ConcurrentDictionary<int, ClientesViewModel> _clientes = new()
         {
-            new() { ClienteID = 1, Nombre = "Juan", Apellido = "Perez", DNI = 12345678 },
-            new() { ClienteID = 2, Nombre = "Maria", Apellido = "Gomez", DNI = 87654321 }
+            [1] = new ClientesViewModel { ClienteID = 1, Nombre = "Juan", Apellido = "Perez", DNI = 12345678, Email = "juan.perez@example.com" },
+            [2] = new ClientesViewModel { ClienteID = 2, Nombre = "Maria", Apellido = "Gomez", DNI = 87654321, Email = "maria.gomez@example.com" }
         };
 
         public ClienteService(IMapper mapper, ILogger<ClienteService> logger)
@@ -28,40 +29,37 @@ namespace javo2.Services
         public async Task<IEnumerable<ClientesViewModel>> GetAllClientesAsync()
         {
             _logger.LogInformation("GetAllClientesAsync called");
-            return await Task.FromResult(_clientes);
+            return await Task.FromResult(_clientes.Values);
         }
 
         public async Task<ClientesViewModel?> GetClienteByIdAsync(int id)
         {
             _logger.LogInformation("GetClienteByIdAsync called with ID: {Id}", id);
-            var cliente = _clientes.FirstOrDefault(p => p.ClienteID == id);
+            _clientes.TryGetValue(id, out var cliente);
             return await Task.FromResult(cliente);
         }
 
         public async Task<ClientesViewModel?> GetClienteByDniAsync(int dni)
         {
             _logger.LogInformation("GetClienteByDniAsync called with DNI: {Dni}", dni);
-            var cliente = _clientes.FirstOrDefault(p => p.DNI == dni);
+            var cliente = _clientes.Values.FirstOrDefault(p => p.DNI == dni);
             return await Task.FromResult(cliente);
         }
 
         public async Task CreateClienteAsync(ClientesViewModel clienteViewModel)
         {
             _logger.LogInformation("CreateClienteAsync called with Cliente: {Cliente}", clienteViewModel.Nombre);
-            clienteViewModel.ClienteID = _clientes.Count > 0 ? _clientes.Max(p => p.ClienteID) + 1 : 1;
-            _clientes.Add(clienteViewModel);
-            _logger.LogInformation("Cliente created with ID: {Id}", clienteViewModel.ClienteID);
+            clienteViewModel.ClienteID = _clientes.Keys.DefaultIfEmpty(0).Max() + 1;
+            _clientes[clienteViewModel.ClienteID] = clienteViewModel;
             await Task.CompletedTask;
         }
 
         public async Task UpdateClienteAsync(ClientesViewModel clienteViewModel)
         {
             _logger.LogInformation("UpdateClienteAsync called with Cliente: {Cliente}", clienteViewModel.Nombre);
-            var cliente = _clientes.FirstOrDefault(p => p.ClienteID == clienteViewModel.ClienteID);
-            if (cliente != null)
+            if (_clientes.ContainsKey(clienteViewModel.ClienteID))
             {
-                _mapper.Map(clienteViewModel, cliente);
-                _logger.LogInformation("Cliente updated with ID: {Id}", clienteViewModel.ClienteID);
+                _clientes[clienteViewModel.ClienteID] = clienteViewModel;
             }
             await Task.CompletedTask;
         }
@@ -69,13 +67,25 @@ namespace javo2.Services
         public async Task DeleteClienteAsync(int id)
         {
             _logger.LogInformation("DeleteClienteAsync called with ID: {Id}", id);
-            var cliente = _clientes.FirstOrDefault(p => p.ClienteID == id);
-            if (cliente != null)
-            {
-                _clientes.Remove(cliente);
-                _logger.LogInformation("Cliente deleted with ID: {Id}", id);
-            }
+            _clientes.TryRemove(id, out _);
             await Task.CompletedTask;
+        }
+
+        public async Task<IEnumerable<ClientesViewModel>> FilterClientesAsync(ClienteFilterDto filters)
+        {
+            _logger.LogInformation("FilterClientesAsync called with filters");
+            var clientes = _clientes.Values.AsQueryable();
+
+            if (!string.IsNullOrEmpty(filters.Nombre))
+                clientes = clientes.Where(c => c.Nombre.Contains(filters.Nombre, StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrEmpty(filters.Apellido))
+                clientes = clientes.Where(c => c.Apellido.Contains(filters.Apellido, StringComparison.OrdinalIgnoreCase));
+            if (filters.Dni.HasValue)
+                clientes = clientes.Where(c => c.DNI == filters.Dni.Value);
+            if (!string.IsNullOrEmpty(filters.Email))
+                clientes = clientes.Where(c => c.Email.Contains(filters.Email, StringComparison.OrdinalIgnoreCase));
+
+            return await Task.FromResult(clientes.ToList());
         }
     }
 }

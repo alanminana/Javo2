@@ -1,11 +1,11 @@
-﻿using javo2.IServices;
-using javo2.ViewModels.Operaciones.Productos;
+﻿using Javo2.IServices;
+using Javo2.ViewModels.Operaciones.Productos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace javo2.Controllers
+namespace Javo2.Controllers
 {
     public class ProductosController : Controller
     {
@@ -226,6 +226,31 @@ namespace javo2.Controllers
             };
             _logger.LogInformation("Initialized new product view model: {@Model}", model);
             return model;
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> IncrementarPrecios(string productoIds, decimal porcentaje)
+        {
+            if (string.IsNullOrEmpty(productoIds))
+            {
+                return Json(new { success = false, message = "Datos inválidos." });
+            }
+
+            var ids = productoIds.Split(',').Select(int.Parse).ToArray();
+            foreach (var id in ids)
+            {
+                var producto = await _productoService.GetProductoByIdAsync(id);
+                if (producto != null)
+                {
+                    producto.PCosto += producto.PCosto * (porcentaje / 100);
+                    producto.PContado += producto.PContado * (porcentaje / 100);
+                    producto.PLista += producto.PLista * (porcentaje / 100);
+
+                    await _productoService.UpdateProductoAsync(producto);
+                }
+            }
+
+            return Json(new { success = true });
         }
     }
 }

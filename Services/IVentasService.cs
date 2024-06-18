@@ -1,8 +1,8 @@
-﻿using javo2.ViewModels.Operaciones.Ventas;
+﻿using Javo2.ViewModels.Operaciones.Ventas;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace javo2.Services
+namespace Javo2.Services
 {
     public interface IVentaService
     {
@@ -13,5 +13,6 @@ namespace javo2.Services
         Task DeleteVentaAsync(int id);
         Task<IEnumerable<VentasViewModel>> GetVentasByEstadoAsync(EstadoVenta estado);
         Task UpdateEstadoVentaAsync(int id, EstadoVenta estado);
+        Task<IEnumerable<VentasViewModel>> GetVentasByFechaAsync(DateTime? fechaInicio, DateTime? fechaFin); // Nuevo método
     }
 }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<javo2.ViewModels.Operaciones.Productos.ProductosViewModel>
+﻿@model IEnumerable<Javo2.ViewModels.Operaciones.Productos.ProductosViewModel>
 
 @{
     ViewBag.Title = "Productos";
@@ -6,50 +6,126 @@
 }
 
 <h2>@ViewBag.Title</h2>
+@Html.AntiForgeryToken()
 
 <div class="row mb-4">
     <div class="col-md-3">
-        <input type="text" class="form-control" id="filterName" placeholder="Filtrar por nombre">
+        <select id="filterType" class="form-control">
+            <option value="Nombre">Nombre</option>
+            <option value="Codigo">Código</option>
+            <option value="Rubro">Rubro</option>
+            <option value="SubRubro">SubRubro</option>
+            <option value="Marca">Marca</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <input type="text" class="form-control" id="filterValue" placeholder="Escriba para filtrar">
     </div>
     <div class="col-md-3">
         <button class="btn btn-primary" id="applyFilters">Aplicar Filtros</button>
     </div>
+    <div class="col-md-3">
+        <input type="checkbox" id="adjustPricesSwitch" /> Ajustar precios
+        <input type="number" class="form-control d-none" id="pricePercentage" placeholder="Porcentaje (use valores positivos o negativos)" />
+        <button class="btn btn-primary d-none" id="adjustPricesButton">Aplicar</button>
+    </div>
 </div>
-
-<p>
-    <a asp-action="Create" class="btn btn-primary">Agregar Producto</a>
-</p>
-
+<div class="row mb-4">
+    <div class="col-md-12 text-right">
+        <a asp-action="Create" class="btn btn-success">Crear Producto</a>
+    </div>
+</div>
 <table class="table">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(model => model.First().Nombre)</th>
+            <th></th>
+            <th>Nombre</th>
+            <th>Precio Costo</th>
+            <th>Precio Contado</th>
+            <th>Precio Lista</th>
             <th>Acciones</th>
         </tr>
     </thead>
-    <tbody id="productosTableBody">
-        @foreach (var producto in Model)
-        {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => producto.Nombre)</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@producto.ProductoID" class="btn btn-sm btn-warning">Editar</a>
-                    <a asp-action="Details" asp-route-id="@producto.ProductoID" class="btn btn-sm btn-info">Detalles</a>
-                    <a asp-action="Delete" asp-route-id="@producto.ProductoID" class="btn btn-sm btn-danger">Eliminar</a>
-                </td>
-            </tr>
-        }
+    <tbody id="productosTable">
+        @await Html.PartialAsync("_ProductosTable", Model)
     </tbody>
 </table>
 
 @section Scripts {
     <script>
         $(document).ready(function () {
-            $('#applyFilters').click(function () {
-                var filterName = $('#filterName').val().toLowerCase();
-                $('#productosTableBody tr').filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(filterName) > -1)
+            function applyFilters() {
+                var filterType = $('#filterType').val();
+                var filterValue = $('#filterValue').val();
+                var data = {
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                };
+                data[filterType] = filterValue;
+
+                $.ajax({
+                    url: '@Url.Action("Filter", "Productos")',
+                    type: 'POST',
+                    data: data,
+                    success: function (data) {
+                        $('#productosTable').html($(data).find('#productosTable').html());
+                    },
+                    error: function () {
+                        alert('Error al aplicar los filtros.');
+                    }
                 });
+            }
+
+            $('#filterType, #filterValue').on('input', function () {
+                applyFilters();
+            });
+
+            $('#adjustPricesSwitch').change(function () {
+                var isChecked = $(this).is(':checked');
+                if (isChecked) {
+                    $('#pricePercentage').removeClass('d-none');
+                    $('#adjustPricesButton').removeClass('d-none');
+                } else {
+                    $('#pricePercentage').addClass('d-none');
+                    $('#adjustPricesButton').addClass('d-none');
+                }
+            });
+
+            $('#adjustPricesButton').click(function () {
+                var selectedProductIds = $('input[name="productoIds"]:checked').map(function () {
+                    return $(this).val();
+                }).get().join(',');
+
+                var percentage = parseFloat($('#pricePercentage').val());
+                if (isNaN(percentage)) {
+                    alert('Por favor, ingrese un porcentaje válido.');
+                    return;
+                }
+
+                var actionText = percentage > 0 ? 'incrementar' : 'disminuir';
+                var confirmar = confirm(`¿Deseas ${actionText} los precios en ${Math.abs(percentage)}%?`);
+
+                if (confirmar) {
+                    $.ajax({
+                        url: '@Url.Action("IncrementarPrecios", "Productos")',
+                        type: 'POST',
+                        data: {
+                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+                            productoIds: selectedProductIds,
+                            porcentaje: percentage
+                        },
+                        success: function (data) {
+                            if (data.success) {
+                                alert('Precios ajustados correctamente');
+                                location.reload();
+                            } else {
+                                alert('Error al ajustar precios: ' + data.message);
+                            }
+                        },
+                        error: function () {
+                            alert('Error al ajustar precios.');
+                        }
+                    });
+                }
             });
         });
     </script>

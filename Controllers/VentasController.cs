@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using javo2.Services;
+using Javo2.Services;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using System.Linq;
-using javo2.ViewModels.Operaciones.Ventas;
-using javo2.IServices;
+using Javo2.ViewModels.Operaciones.Ventas;
+using Javo2.IServices;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace javo2.Controllers
+namespace Javo2.Controllers
 {
     public class VentasController : Controller
     {
@@ -24,31 +24,37 @@ namespace javo2.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> Index()
+        // Acción para mostrar la lista de ventas filtradas por fecha
+        public async Task<IActionResult> Index(DateTime? fechaInicio, DateTime? fechaFin)
         {
-            _logger.LogInformation("Index action called");
-            var ventas = await _ventaService.GetAllVentasAsync();
+            _logger.LogInformation("Index action called with fechaInicio: {FechaInicio}, fechaFin: {FechaFin}", fechaInicio, fechaFin);
+            var ventas = await _ventaService.GetVentasByFechaAsync(fechaInicio, fechaFin);
             _logger.LogInformation("Ventas retrieved: {VentasCount}", ventas.Count());
             return View(ventas);
         }
 
+        // Acción GET para mostrar el formulario de creación de ventas
         public async Task<IActionResult> Create()
         {
             _logger.LogInformation("Create GET action called");
             var model = new VentasViewModel
             {
                 FechaVenta = DateTime.Now,
-                NumeroFactura = GenerateNumeroFactura(), // Asegúrate de tener un método para generar el número de factura
+                NumeroFactura = GenerateNumeroFactura(),
                 Usuario = "cosmefulanito",
                 Vendedor = "cosmefulanito"
             };
             await PopulateDropdownsAsync(model);
             return View(model);
         }
+
+        // Método para generar un número de factura (Ejemplo)
         private string GenerateNumeroFactura()
         {
             return "F001"; // Ejemplo: lógica estática para propósitos de demostración
         }
+
+        // Acción POST para manejar la creación de una nueva venta
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(VentasViewModel model)
@@ -66,6 +72,7 @@ namespace javo2.Controllers
             return View(model);
         }
 
+        // Acción GET para mostrar el formulario de edición de ventas
         public async Task<IActionResult> Edit(int id)
         {
             _logger.LogInformation("Edit GET action called with ID: {Id}", id);
@@ -79,6 +86,7 @@ namespace javo2.Controllers
             return View(venta);
         }
 
+        // Acción POST para manejar la edición de una venta existente
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(VentasViewModel model)
@@ -96,6 +104,7 @@ namespace javo2.Controllers
             return View(model);
         }
 
+        // Acción GET para mostrar la confirmación de eliminación de una venta
         public async Task<IActionResult> Delete(int id)
         {
             _logger.LogInformation("Delete GET action called with ID: {Id}", id);
@@ -108,6 +117,7 @@ namespace javo2.Controllers
             return View(venta);
         }
 
+        // Acción POST para manejar la eliminación de una venta
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -118,6 +128,7 @@ namespace javo2.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // Acción GET para mostrar los detalles de una venta
         public async Task<IActionResult> Details(int id)
         {
             _logger.LogInformation("Details action called with ID: {Id}", id);
@@ -130,6 +141,7 @@ namespace javo2.Controllers
             return View(venta);
         }
 
+        // Acción POST para buscar un cliente por su DNI
         [HttpPost]
         public async Task<JsonResult> BuscarClientePorDNI(int dni)
         {
@@ -158,6 +170,7 @@ namespace javo2.Controllers
             });
         }
 
+        // Acción POST para buscar un producto por su código
         [HttpPost]
         public async Task<JsonResult> BuscarProducto(string codigoProducto)
         {
@@ -184,14 +197,7 @@ namespace javo2.Controllers
             });
         }
 
-        [HttpGet]
-        public async Task<JsonResult> AutocompleteRubro(string term)
-        {
-            _logger.LogInformation("AutocompleteRubro action called with term: {Term}", term);
-            var rubros = await _productoService.GetRubrosAutocompleteAsync(term);
-            return Json(rubros);
-        }
-
+        // Acción POST para buscar un producto por su nombre
         [HttpPost]
         public async Task<JsonResult> BuscarProductoPorNombre(string nombreProducto)
         {
@@ -218,6 +224,7 @@ namespace javo2.Controllers
             });
         }
 
+        // Acción POST para buscar productos por rubro
         [HttpPost]
         public async Task<JsonResult> BuscarProductosPorRubro(string rubroProducto)
         {
@@ -244,6 +251,17 @@ namespace javo2.Controllers
             });
         }
 
+        // Acción GET para autocompletar rubros
+        [HttpGet]
+        public async Task<JsonResult> AutocompleteRubro(string term)
+        {
+            _logger.LogInformation("AutocompleteRubro action called with term: {Term}", term);
+            var rubros = await _productoService.GetRubrosAutocompleteAsync(term);
+            return Json(rubros);
+        }
+
+
+        // Acción GET para autocompletar marcas
         [HttpGet]
         public async Task<JsonResult> AutocompleteMarca(string term)
         {
@@ -252,6 +270,7 @@ namespace javo2.Controllers
             return Json(marcas);
         }
 
+        // Acción para mostrar la lista de ventas pendientes de entrega
         public async Task<IActionResult> EntregaProductos()
         {
             _logger.LogInformation("EntregaProductos action called");
@@ -259,6 +278,7 @@ namespace javo2.Controllers
             return View(ventas);
         }
 
+        // Acción para mostrar la lista de ventas pendientes de autorización
         public async Task<IActionResult> Autorizaciones()
         {
             _logger.LogInformation("Autorizaciones action called");
@@ -266,6 +286,7 @@ namespace javo2.Controllers
             return View(ventas);
         }
 
+        // Acción POST para aprobar una venta pendiente de autorización
         [HttpPost]
         public async Task<IActionResult> Aprobar(int id)
         {
@@ -274,6 +295,7 @@ namespace javo2.Controllers
             return RedirectToAction(nameof(Autorizaciones));
         }
 
+        // Acción POST para rechazar una venta pendiente de autorización
         [HttpPost]
         public async Task<IActionResult> Rechazar(int id)
         {
@@ -282,6 +304,7 @@ namespace javo2.Controllers
             return RedirectToAction(nameof(Autorizaciones));
         }
 
+        // Método para poblar los dropdowns en el modelo de vista de ventas
         private static async Task PopulateDropdownsAsync(VentasViewModel model)
         {
             model.FormasPago = await Task.FromResult(new List<SelectListItem>

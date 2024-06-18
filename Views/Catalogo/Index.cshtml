@@ -1,4 +1,5 @@
-﻿@model Tuple<IEnumerable<javo2.ViewModels.Operaciones.Productos.RubroViewModel>, IEnumerable<javo2.ViewModels.Operaciones.Productos.MarcaViewModel>>
+﻿@using Javo2.ViewModels.Operaciones.Catalogo
+@model Tuple<IEnumerable<RubroViewModel>, IEnumerable<MarcaViewModel>>
 
 @{
     ViewBag.Title = "Catálogo";
@@ -11,58 +12,37 @@
     <a asp-action="CreateMarca" class="btn btn-success">Agregar Marca</a>
 </p>
 
-<h3>Rubros y SubRubros</h3>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Rubro</th>
-            <th>SubRubros</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var rubro in Model.Item1)
-        {
-            <tr>
-                <td>@rubro.Nombre</td>
-                <td>
-                    <ul>
-                        @foreach (var subRubro in rubro.SubRubros)
-                        {
-                            <li>
-                                @subRubro.Nombre
-                            </li>
-                        }
-                    </ul>
-                </td>
-                <td>
-                    <a asp-action="EditRubro" asp-route-id="@rubro.Id" class="btn btn-sm btn-warning">Editar Rubro</a>
-                    <a asp-action="EditSubRubros" asp-route-rubroId="@rubro.Id" class="btn btn-sm btn-secondary">Editar SubRubros</a>
-                    <a asp-action="DeleteRubro" asp-route-id="@rubro.Id" class="btn btn-sm btn-danger">Eliminar Rubro</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<h3>Filtrar Catálogo</h3>
+<form id="filterForm">
+    <div class="form-group">
+        <label for="Rubro">Nombre del Rubro</label>
+        <input type="text" class="form-control" id="Rubro" name="Rubro" />
+    </div>
+    <div class="form-group">
+        <label for="Marca">Nombre de la Marca</label>
+        <input type="text" class="form-control" id="Marca" name="Marca" />
+    </div>
+</form>
 
-<h3>Marcas</h3>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Marca</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var marca in Model.Item2)
-        {
-            <tr>
-                <td>@marca.Nombre</td>
-                <td>
-                    <a asp-action="EditMarca" asp-route-id="@marca.Id" class="btn btn-sm btn-warning">Editar</a>
-                    <a asp-action="DeleteMarca" asp-route-id="@marca.Id" class="btn btn-sm btn-danger">Eliminar</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+
+<div id="catalogoTable">
+    <partial name="_CatalogoTable" model="Model" />
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $('#Rubro, #Marca').on('input', function () {
+                $.ajax({
+                    url: '@Url.Action("Filter", "Catalogo")',
+                    data: $('#filterForm').serialize(),
+                    type: 'get',
+                    success: function (data) {
+                        $('#catalogoTable').html(data);
+                    }
+                });
+            });
+        });
+    </script>
+
+}
