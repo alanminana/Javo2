@@ -1,28 +1,32 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿// Archivo: ViewModels/Operaciones/Ventas/ProductoPresupuestoViewModel.cs
+using System.ComponentModel.DataAnnotations;
 
-namespace Javo2.ViewModels.Operaciones.Productos
+namespace Javo2.ViewModels.Operaciones.Ventas
 {
     public class ProductoPresupuestoViewModel
     {
-        [Required]
-        public string Codigo { get; set; } = string.Empty;
+        public int ProductoPresupuestoID { get; set; }
+
+        public int VentaID { get; set; }
+
+        public int ProductoID { get; set; }
 
         [Required]
-        public string CodigoAlfa { get; set; } = string.Empty;
+        [StringLength(100)]
+        public string NombreProducto { get; set; } = string.Empty;
+
+        public string DescripcionProducto { get; set; } = string.Empty;
 
         [Required]
-        public string Detalle { get; set; } = string.Empty;
-
+        [Range(1, int.MaxValue)]
         public int Cantidad { get; set; }
 
-        public int Cuotas { get; set; }
+        [Required]
+        [Range(0, double.MaxValue)]
+        public decimal PrecioUnitario { get; set; }
 
-        public decimal ImporteCuotaSinInteres { get; set; }
-
-        public string Marca { get; set; } = string.Empty;
-
-        public decimal PrecioLista { get; set; }
-
-        public decimal PrecioTotal { get; set; }
+        [Required]
+        [Range(0, double.MaxValue)]
+        public decimal SubTotal { get; set; }
     }
 }

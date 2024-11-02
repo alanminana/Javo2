@@ -1,36 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections.Generic;
+﻿// ViewModels/Operaciones/Catalogo/CatalogoViewModels.cs
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace Javo2.ViewModels.Operaciones.Catalogo
 {
     public class RubroViewModel
     {
         public int Id { get; set; }
-
-        [Required]
+        [Required(ErrorMessage = "El nombre del rubro es obligatorio.")]
         public string Nombre { get; set; } = string.Empty;
-
-        public ICollection<SubRubroViewModel> SubRubros { get; set; } = new List<SubRubroViewModel>();
+        public List<SubRubroViewModel> SubRubros { get; set; } = new List<SubRubroViewModel>();
     }
-
     public class SubRubroViewModel
     {
         public int Id { get; set; }
-
-        [Required]
+        [Required(ErrorMessage = "El nombre del subrubro es obligatorio.")]
         public string Nombre { get; set; } = string.Empty;
-
-        [Required]
-        public string RubroNombre { get; set; } = string.Empty;
-        public IEnumerable<SelectListItem> Rubros { get; set; } = new List<SelectListItem>();
+        public int RubroId { get; set; }
     }
+
 
     public class MarcaViewModel
     {
         public int Id { get; set; }
-
-        [Required]
+        [Required(ErrorMessage = "El nombre de la marca es obligatorio.")]
         public string Nombre { get; set; } = string.Empty;
     }
 
@@ -39,13 +32,13 @@ namespace Javo2.ViewModels.Operaciones.Catalogo
         public int RubroId { get; set; }
         public string RubroNombre { get; set; } = string.Empty;
         public List<SubRubroEditViewModel> SubRubros { get; set; } = new List<SubRubroEditViewModel>();
-        public string NewSubRubroNombre { get; set; } = string.Empty;
     }
 
     public class SubRubroEditViewModel
     {
         public int Id { get; set; }
+        [Required(ErrorMessage = "El nombre del subrubro es obligatorio.")]
         public string Nombre { get; set; } = string.Empty;
-        public bool IsDeleted { get; set; } = false;
+        public bool IsDeleted { get; set; }
     }
 }

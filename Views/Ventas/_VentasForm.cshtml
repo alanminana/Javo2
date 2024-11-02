@@ -1,0 +1,241 @@
+﻿@model Javo2.ViewModels.Operaciones.Ventas.VentasViewModel
+
+@Html.AntiForgeryToken()
+<input type="hidden" asp-for="VentaID" />
+
+<div class="container">
+    <fieldset class="mb-4">
+        <legend>Datos de la Venta</legend>
+        <div class="row g-3">
+            <div class="col-md-6 form-group">
+                <label asp-for="FechaVenta" class="form-label">Fecha:</label>
+                <input asp-for="FechaVenta" class="form-control" type="date" />
+                <span asp-validation-for="FechaVenta" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 form-group">
+                <label asp-for="NumeroFactura" class="form-label">Factura:</label>
+                <input asp-for="NumeroFactura" class="form-control" readonly />
+                <span asp-validation-for="NumeroFactura" class="text-danger"></span>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="mb-4">
+        <legend>Datos del Cliente</legend>
+        <div class="row g-3">
+            <div class="col-md-6 form-group">
+                <label asp-for="ClienteID" class="form-label">DNI:</label>
+                <input type="text" id="DniCliente" class="form-control" />
+                <button type="button" id="buscarCliente" class="btn btn-primary mt-2">Buscar</button>
+                <span asp-validation-for="ClienteID" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 form-group">
+                <label asp-for="NombreCliente" class="form-label">Nombre o razón social:</label>
+                <input asp-for="NombreCliente" class="form-control" readonly />
+                <span asp-validation-for="NombreCliente" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-6 form-group">
+                <label asp-for="TelefonoCliente" class="form-label">Teléfono:</label>
+                <input asp-for="TelefonoCliente" class="form-control" readonly />
+                <span asp-validation-for="TelefonoCliente" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 form-group">
+                <label asp-for="DomicilioCliente" class="form-label">Domicilio:</label>
+                <input asp-for="DomicilioCliente" class="form-control" readonly />
+                <span asp-validation-for="DomicilioCliente" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 form-group">
+                <label asp-for="LocalidadCliente" class="form-label">Localidad:</label>
+                <input asp-for="LocalidadCliente" class="form-control" readonly />
+                <span asp-validation-for="LocalidadCliente" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 form-group">
+                <label asp-for="CelularCliente" class="form-label">Celular:</label>
+                <input asp-for="CelularCliente" class="form-control" readonly />
+                <span asp-validation-for="CelularCliente" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 form-group">
+                <label asp-for="LimiteCreditoCliente" class="form-label">Límite de Crédito:</label>
+                <input asp-for="LimiteCreditoCliente" class="form-control" readonly />
+                <span asp-validation-for="LimiteCreditoCliente" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 form-group">
+                <label asp-for="SaldoCliente" class="form-label">Saldo:</label>
+                <input asp-for="SaldoCliente" class="form-control" readonly />
+                <span asp-validation-for="SaldoCliente" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 form-group">
+                <label asp-for="SaldoDisponibleCliente" class="form-label">Saldo Disponible:</label>
+                <input asp-for="SaldoDisponibleCliente" class="form-control" readonly />
+                <span asp-validation-for="SaldoDisponibleCliente" class="text-danger"></span>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="mb-4">
+        <legend>Forma de Pago</legend>
+        <div class="row g-3">
+            <div class="col-md-6 form-group">
+                <label asp-for="FormaPago" class="form-label">Forma de Pago:</label>
+                <select asp-for="FormaPago" class="form-select" asp-items="Model.FormasPago"></select>
+                <span asp-validation-for="FormaPago" class="text-danger"></span>
+            </div>
+            <div id="bancoContainer" class="col-md-6 form-group d-none">
+                <label asp-for="Banco" class="form-label">Banco:</label>
+                <select asp-for="Banco" class="form-select" asp-items="Model.Bancos"></select>
+                <span asp-validation-for="Banco" class="text-danger"></span>
+            </div>
+            <div id="tipoTarjetaContainer" class="col-md-6 form-group d-none">
+                <label asp-for="TipoTarjeta" class="form-label">Tipo de Tarjeta:</label>
+                <select asp-for="TipoTarjeta" class="form-select" asp-items="Model.TipoTarjeta"></select>
+                <span asp-validation-for="TipoTarjeta" class="text-danger"></span>
+            </div>
+            <div id="cuotasContainer" class="col-md-6 form-group d-none">
+                <label asp-for="Cuotas" class="form-label">Cuotas:</label>
+                <select asp-for="Cuotas" class="form-select" asp-items="Model.Cuotas"></select>
+                <span asp-validation-for="Cuotas" class="text-danger"></span>
+            </div>
+            <div id="entidadElectronicaContainer" class="col-md-6 form-group d-none">
+                <label asp-for="EntidadElectronica" class="form-label">Entidad Electrónica:</label>
+                <select asp-for="EntidadElectronica" class="form-select" asp-items="Model.EntidadesElectronicas"></select>
+                <span asp-validation-for="EntidadElectronica" class="text-danger"></span>
+            </div>
+            <div id="planFinanciamientoContainer" class="col-md-6 form-group d-none">
+                <label asp-for="PlanFinanciamiento" class="form-label">Plan de Financiamiento:</label>
+                <select asp-for="PlanFinanciamiento" class="form-select" asp-items="Model.PlanesFinanciamiento"></select>
+                <span asp-validation-for="PlanFinanciamiento" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-12 form-group">
+                <label asp-for="Observaciones" class="form-label">Observaciones:</label>
+                <textarea asp-for="Observaciones" class="form-control"></textarea>
+                <span asp-validation-for="Observaciones" class="text-danger"></span>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="mb-4">
+        <legend>Anticipo</legend>
+        <div class="row g-3">
+            <div class="col-md-4 form-group">
+                <label asp-for="AdelantoDinero" class="form-label">Adelanto de Dinero:</label>
+                <input asp-for="AdelantoDinero" class="form-control" />
+                <span asp-validation-for="AdelantoDinero" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 form-group">
+                <label asp-for="DineroContado" class="form-label">Dinero Contado:</label>
+                <input asp-for="DineroContado" class="form-control" />
+                <span asp-validation-for="DineroContado" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 form-group">
+                <label asp-for="MontoCheque" class="form-label">Monto del Cheque:</label>
+                <input asp-for="MontoCheque" class="form-control" />
+                <span asp-validation-for="MontoCheque" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 form-group">
+                <label asp-for="NumeroCheque" class="form-label">Número del Cheque:</label>
+                <input asp-for="NumeroCheque" class="form-control" />
+                <span asp-validation-for="NumeroCheque" class="text-danger"></span>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="mb-4">
+        <legend>Crédito Personal</legend>
+        <div class="row g-3">
+            <div class="col-md-6 form-group">
+                <label asp-for="Condiciones" class="form-label">Condiciones:</label>
+                <input asp-for="Condiciones" class="form-control" />
+                <span asp-validation-for="Condiciones" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 form-group">
+                <label asp-for="Credito" class="form-label">Crédito:</label>
+                <input asp-for="Credito" class="form-control" />
+                <span asp-validation-for="Credito" class="text-danger"></span>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="mb-4">
+        <legend>Agregar Producto</legend>
+        <div class="row g-3">
+            <div class="col-md-4 form-group">
+                <label for="codigoProducto" class="form-label">Código del Producto:</label>
+                <input type="text" id="codigoProducto" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-primary mt-4" id="buscarProducto">Buscar</button>
+            </div>
+            <div class="col-md-4 form-group">
+                <label for="nombreProducto" class="form-label">Nombre del Producto:</label>
+                <input type="text" id="nombreProducto" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-primary mt-4" id="buscarProductoPorNombre">Buscar por Nombre</button>
+            </div>
+            <div class="col-md-4 form-group">
+                <label for="rubroProducto" class="form-label">Rubro del Producto:</label>
+                <input type="text" id="rubroProducto" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-primary mt-4" id="buscarProductoPorRubro">Buscar por Rubro</button>
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-success mt-4" id="agregarProducto">Agregar</button>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="mb-4">
+        <legend>Detalles del Presupuesto</legend>
+        <table class="table table-striped table-bordered" id="productosTable">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Código</th>
+                    <th>Código Alfa</th>
+                    <th>Detalle</th>
+                    <th>Cantidad</th>
+                    <th>Cuotas</th>
+                    <th>Importe Cuota sin Interés</th>
+                    <th>Marca</th>
+                    <th>Precio de Lista</th>
+                    <th>Precio Total</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+    </fieldset>
+
+    <div class="text-right">
+        <h4>Total de Productos: @Model.TotalProductos</h4>
+        <h4>Precio Total: @Model.PrecioTotal</h4>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="productosModal" tabindex="-1" role="dialog" aria-labelledby="productosModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productosModalLabel">Seleccionar Producto</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul id="productosList" class="list-group">
+                    <!-- Productos encontrados serán listados aquí -->
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

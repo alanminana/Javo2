@@ -1,179 +1,238 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Javo2.Services;
+﻿// Controllers/ClientesController.cs
+using Microsoft.AspNetCore.Mvc;
 using Javo2.ViewModels.Operaciones.Clientes;
-using Microsoft.Extensions.Logging;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using AutoMapper;
-using System.Collections.Generic;
+using Javo2.Controllers.Base;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Javo2.IServices;
+using Javo2.IServices.Common;
+using Javo2.Models;
+using Javo2.Helpers;
 
 namespace Javo2.Controllers
 {
-    public class ClientesController : Controller
+    public class ClientesController : BaseController
     {
         private readonly IClienteService _clienteService;
-        private readonly ILogger<ClientesController> _logger;
-        private readonly IProvinciaService _provinciaService;
         private readonly IMapper _mapper;
+        private readonly IDropdownService _dropdownService;
+        private readonly IProvinciaService _provinciaService;
 
-        public ClientesController(IClienteService clienteService, IProvinciaService provinciaService, IMapper mapper, ILogger<ClientesController> logger)
+        public ClientesController(
+            IClienteService clienteService,
+            IMapper mapper,
+            IDropdownService dropdownService,
+            IProvinciaService provinciaService,
+            ILogger<ClientesController> logger)
+            : base(logger)
         {
             _clienteService = clienteService;
-            _logger = logger;
-            _provinciaService = provinciaService;
             _mapper = mapper;
+            _dropdownService = dropdownService;
+            _provinciaService = provinciaService;
         }
 
-        private void LogModelStateErrors()
-        {
-            foreach (var state in ModelState)
-            {
-                var key = state.Key;
-                var errors = state.Value.Errors.Select(e => e.ErrorMessage).ToArray();
-                _logger.LogError("ModelState Error for {Key}: {Errors}", key, string.Join(", ", errors));
-            }
-        }
 
-        private void PopulateDropdowns(ClientesViewModel model)
+        /// <summary>
+        /// Pobla las listas desplegables de Provincias y Ciudades en el ViewModel.
+        /// </summary>
+        /// <returns>Tarea asincrónica.</returns>
+        private async Task PopulateDropdownsAsync(ClientesViewModel model)
         {
-            model.Provincias = _provinciaService.GetAllProvincias().Select(p => new SelectListItem
+            var provincias = await _dropdownService.GetProvinciasAsync();
+            model.Provincias = provincias.Select(p => new SelectListItem
             {
                 Value = p.ProvinciaID.ToString(),
                 Text = p.Nombre
             }).ToList();
 
-            model.Ciudades = model.ProvinciaID > 0
-                ? _provinciaService.GetCiudadesByProvinciaId(model.ProvinciaID).Select(c => new SelectListItem
+            if (model.ProvinciaID > 0)
+            {
+                var ciudades = await _dropdownService.GetCiudadesByProvinciaIdAsync(model.ProvinciaID);
+                model.Ciudades = ciudades.Select(c => new SelectListItem
                 {
                     Value = c.CiudadID.ToString(),
                     Text = c.Nombre
-                }).ToList()
-                : new List<SelectListItem>();
+                }).ToList();
+            }
+            else
+            {
+                model.Ciudades = new List<SelectListItem>();
+            }
         }
 
-        public async Task<IActionResult> Index()
+
+
+        public async Task<IActionResult> Index(string? filtroValor, string? filtroTipo)
         {
-            _logger.LogInformation("Index action called");
             var clientes = await _clienteService.GetAllClientesAsync();
-            _logger.LogInformation("Clientes retrieved: {ClientesCount}", clientes.Count());
-            return View(clientes);
+
+            if (!string.IsNullOrEmpty(filtroValor) && !string.IsNullOrEmpty(filtroTipo))
+            {
+                clientes = filtroTipo switch
+                {
+                    "Nombre" => clientes.Where(c => c.Nombre.Contains(filtroValor, StringComparison.OrdinalIgnoreCase)),
+                    "Apellido" => clientes.Where(c => c.Apellido.Contains(filtroValor, StringComparison.OrdinalIgnoreCase)),
+                    "DNI" => clientes.Where(c => c.DNI.ToString().Contains(filtroValor)),
+                    "Email" => clientes.Where(c => c.Email.Contains(filtroValor, StringComparison.OrdinalIgnoreCase)),
+                    _ => clientes
+                };
+            }
+
+            var model = _mapper.Map<IEnumerable<ClientesViewModel>>(clientes);
+            return View(model);
         }
 
-        public async Task<IActionResult> Filter(ClienteFilterDto filters)
-        {
-            _logger.LogInformation("Filter action called with filters: {Filters}", filters);
-            var clientes = await _clienteService.FilterClientesAsync(filters);
-            return PartialView("_ClientesTable", clientes);
-        }
-
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var model = new ClientesViewModel
             {
-                ModificadoPor = "cosmefulanito",
-                Provincias = _provinciaService.GetAllProvincias().Select(p => new SelectListItem
-                {
-                    Value = p.ProvinciaID.ToString(),
-                    Text = p.Nombre
-                }).ToList(),
-                Ciudades = new List<SelectListItem>()
+                ModificadoPor = User.Identity?.Name ?? "UsuarioDesconocido"
             };
-            return View(model);
+            await PopulateDropdownsAsync(model);
+            return View("Form", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ClientesViewModel model)
         {
-            _logger.LogInformation("Create POST action called with Cliente: {Cliente}", model.Nombre);
+            // Establecer ModificadoPor y remover del ModelState
+            model.ModificadoPor = User.Identity?.Name ?? "UsuarioDesconocido";
+            ModelState.Remove(nameof(model.ModificadoPor));
+
+            _logger.LogInformation("Intentando crear un cliente con los siguientes datos: {@Model}", model);
 
             if (!ModelState.IsValid)
             {
-                LogModelStateErrors();
-                PopulateDropdowns(model);
-                _logger.LogWarning("Model state is invalid. Errors: {Errors}", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
-                return View(model);
+                _logger.LogWarning("ModelState no es válido. Errores: {@Errors}", ModelState.Values.SelectMany(v => v.Errors));
+                await PopulateDropdownsAsync(model);
+                return View("Form", model);
             }
 
-            await _clienteService.CreateClienteAsync(model);
-            _logger.LogInformation("Cliente created successfully");
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                var cliente = _mapper.Map<Cliente>(model);
+                _logger.LogInformation("Cliente mapeado: {@Cliente}", cliente);
+
+                await _clienteService.CreateClienteAsync(cliente);
+
+                _logger.LogInformation("Cliente creado exitosamente con ID: {ClienteID}", cliente.ClienteID);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al crear el Cliente: {ErrorMessage}", ex.Message);
+                ModelState.AddModelError(string.Empty, ex.Message);
+                await PopulateDropdownsAsync(model);
+                return View("Form", model);
+            }
         }
 
+        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            _logger.LogInformation("Edit GET action called with ID: {Id}", id);
             var cliente = await _clienteService.GetClienteByIdAsync(id);
             if (cliente == null)
             {
-                _logger.LogWarning("Cliente with ID {Id} not found", id);
                 return NotFound();
             }
-
             var model = _mapper.Map<ClientesViewModel>(cliente);
-            PopulateDropdowns(model);
-            return View(model);
+            await PopulateDropdownsAsync(model);
+            return View("Form", model); // Cambiado a "Form"
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ClientesViewModel model)
         {
-            _logger.LogInformation("Edit POST action called with Cliente: {Cliente}", model.Nombre);
+            // Establecer el valor de ModificadoPor
+            model.ModificadoPor = User.Identity?.Name ?? "UsuarioDesconocido";
+
+            // Remover el estado del modelo para ModificadoPor
+            ModelState.Remove(nameof(model.ModificadoPor));
 
             if (!ModelState.IsValid)
             {
                 LogModelStateErrors();
-                PopulateDropdowns(model);
-                _logger.LogWarning("Model state is invalid. Errors: {Errors}", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
-                return View(model);
+                await PopulateDropdownsAsync(model);
+                return View("Form", model);
             }
 
-            await _clienteService.UpdateClienteAsync(model);
-            _logger.LogInformation("Cliente updated successfully");
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                var cliente = _mapper.Map<Cliente>(model);
+                await _clienteService.UpdateClienteAsync(cliente);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is KeyNotFoundException)
+            {
+                _logger.LogError(ex, "Error al actualizar el Cliente: {ErrorMessage}", ex.Message);
+                ModelState.AddModelError(string.Empty, ex.Message);
+                await PopulateDropdownsAsync(model);
+                return View("Form", model);
+            }
         }
+
 
         public async Task<IActionResult> Delete(int id)
         {
-            _logger.LogInformation("Delete GET action called with ID: {Id}", id);
             var cliente = await _clienteService.GetClienteByIdAsync(id);
             if (cliente == null)
             {
-                _logger.LogWarning("Cliente with ID {Id} not found", id);
+                _logger.LogWarning("Cliente con ID {Id} no encontrado", id);
                 return NotFound();
             }
-            return View(cliente);
+            var model = _mapper.Map<ClientesViewModel>(cliente);
+            return View(model);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            _logger.LogInformation("Delete POST action called with ID: {Id}", id);
-            await _clienteService.DeleteClienteAsync(id);
-            _logger.LogInformation("Cliente deleted successfully");
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _clienteService.DeleteClienteAsync(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (KeyNotFoundException ex)
+            {
+                _logger.LogError(ex, "Error al eliminar el Cliente: {Error}", ex.Message);
+                return NotFound();
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogError(ex, "Error al eliminar el Cliente: {Error}", ex.Message);
+                ModelState.AddModelError(string.Empty, "Ocurrió un error al eliminar el cliente.");
+                return View();
+            }
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetCiudades(int provinciaId)
+        {
+            var ciudades = await _dropdownService.GetCiudadesByProvinciaIdAsync(provinciaId);
+            var ciudadesList = ciudades.Select(c => new SelectListItem
+            {
+                Value = c.CiudadID.ToString(),
+                Text = c.Nombre
+            }).ToList();
+            return Json(ciudadesList);
         }
 
         public async Task<IActionResult> Details(int id)
         {
-            _logger.LogInformation("Details action called with ID: {Id}", id);
             var cliente = await _clienteService.GetClienteByIdAsync(id);
             if (cliente == null)
             {
-                _logger.LogWarning("Cliente with ID {Id} not found", id);
+                _logger.LogWarning("Cliente con ID {Id} no encontrado", id);
                 return NotFound();
             }
-            return View(cliente);
-        }
-
-        [HttpGet]
-        public IActionResult GetCiudades(int provinciaId)
-        {
-            var ciudades = _provinciaService.GetCiudadesByProvinciaId(provinciaId);
-            return Json(ciudades.Select(c => new { c.CiudadID, c.Nombre }));
+            var model = _mapper.Map<ClientesViewModel>(cliente);
+            return View(model);
         }
     }
 }

@@ -1,91 +1,190 @@
-﻿
+﻿using Javo2.IServices;
+using Javo2.Models;
 using AutoMapper;
-using Javo2.ViewModels.Operaciones.Clientes;
 using Microsoft.Extensions.Logging;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Javo2.ViewModels.Operaciones.Clientes;
 
 namespace Javo2.Services
 {
     public class ClienteService : IClienteService
     {
-        private readonly IMapper _mapper;
         private readonly ILogger<ClienteService> _logger;
+        private readonly List<Cliente> _clientes;
+        private readonly IMapper _mapper;
 
-        private static readonly ConcurrentDictionary<int, ClientesViewModel> _clientes = new()
+        public ClienteService(ILogger<ClienteService> logger, IMapper mapper)
         {
-            [1] = new ClientesViewModel { ClienteID = 1, Nombre = "Juan", Apellido = "Perez", DNI = 12345678, Email = "juan.perez@example.com" },
-            [2] = new ClientesViewModel { ClienteID = 2, Nombre = "Maria", Apellido = "Gomez", DNI = 87654321, Email = "maria.gomez@example.com" }
-        };
-
-        public ClienteService(IMapper mapper, ILogger<ClienteService> logger)
-        {
-            _mapper = mapper;
             _logger = logger;
+            _mapper = mapper;
+            _clientes = new List<Cliente>();
+
+            // Datos de ejemplo
+            SeedData();
         }
 
-        public async Task<IEnumerable<ClientesViewModel>> GetAllClientesAsync()
+        private void SeedData()
         {
-            _logger.LogInformation("GetAllClientesAsync called");
-            return await Task.FromResult(_clientes.Values);
-        }
-
-        public async Task<ClientesViewModel?> GetClienteByIdAsync(int id)
-        {
-            _logger.LogInformation("GetClienteByIdAsync called with ID: {Id}", id);
-            _clientes.TryGetValue(id, out var cliente);
-            return await Task.FromResult(cliente);
-        }
-
-        public async Task<ClientesViewModel?> GetClienteByDniAsync(int dni)
-        {
-            _logger.LogInformation("GetClienteByDniAsync called with DNI: {Dni}", dni);
-            var cliente = _clientes.Values.FirstOrDefault(p => p.DNI == dni);
-            return await Task.FromResult(cliente);
-        }
-
-        public async Task CreateClienteAsync(ClientesViewModel clienteViewModel)
-        {
-            _logger.LogInformation("CreateClienteAsync called with Cliente: {Cliente}", clienteViewModel.Nombre);
-            clienteViewModel.ClienteID = _clientes.Keys.DefaultIfEmpty(0).Max() + 1;
-            _clientes[clienteViewModel.ClienteID] = clienteViewModel;
-            await Task.CompletedTask;
-        }
-
-        public async Task UpdateClienteAsync(ClientesViewModel clienteViewModel)
-        {
-            _logger.LogInformation("UpdateClienteAsync called with Cliente: {Cliente}", clienteViewModel.Nombre);
-            if (_clientes.ContainsKey(clienteViewModel.ClienteID))
+            _clientes.Add(new Cliente
             {
-                _clientes[clienteViewModel.ClienteID] = clienteViewModel;
+                ClienteID = 1,
+                Nombre = "Juan",
+                Apellido = "Perez",
+                DNI = 12345678,
+                Email = "juan.perez@example.com",
+                Activo = true
+            });
+
+            _clientes.Add(new Cliente
+            {
+                ClienteID = 2,
+                Nombre = "María",
+                Apellido = "Gómez",
+                DNI = 87654321,
+                Email = "maria.gomez@example.com",
+                Activo = true
+            });
+        }
+
+        public Task<IEnumerable<Cliente>> GetAllClientesAsync()
+        {
+            return Task.FromResult(_clientes.AsEnumerable());
+        }
+
+        public Task<Cliente?> GetClienteByIdAsync(int id)
+        {
+            var cliente = _clientes.FirstOrDefault(c => c.ClienteID == id);
+            return Task.FromResult(cliente);
+        }
+
+        public Task<Cliente?> GetClienteByDniAsync(int dni)
+        {
+            var cliente = _clientes.FirstOrDefault(c => c.DNI == dni);
+            return Task.FromResult(cliente);
+        }
+
+
+        public Task<Cliente?> GetClienteByEmailAsync(string email)
+        {
+            var cliente = _clientes.FirstOrDefault(c => c.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+            return Task.FromResult(cliente);
+        }
+        public async Task CreateClienteAsync(Cliente cliente)
+        {
+            try
+            {
+                _logger.LogInformation("Creando cliente en el servicio: {@Cliente}", cliente);
+
+                // Validar que no exista un cliente con el mismo DNI
+                var existingByDni = await GetClienteByDniAsync(cliente.DNI);
+                if (existingByDni != null)
+                {
+                    throw new ArgumentException($"Ya existe un cliente con el DNI {cliente.DNI}.");
+                }
+
+                // Validar que no exista un cliente con el mismo Email
+                var existingByEmail = await GetClienteByEmailAsync(cliente.Email);
+                if (existingByEmail != null)
+                {
+                    throw new ArgumentException($"Ya existe un cliente con el email {cliente.Email}.");
+                }
+
+                cliente.ClienteID = _clientes.Any() ? _clientes.Max(c => c.ClienteID) + 1 : 1;
+                _clientes.Add(cliente);
+
+                _logger.LogInformation("Cliente agregado a la lista. Total de clientes: {Count}", _clientes.Count);
             }
-            await Task.CompletedTask;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al crear el Cliente: {ErrorMessage}", ex.Message);
+                throw;
+            }
         }
 
-        public async Task DeleteClienteAsync(int id)
+
+        public async Task UpdateClienteAsync(Cliente cliente)
         {
-            _logger.LogInformation("DeleteClienteAsync called with ID: {Id}", id);
-            _clientes.TryRemove(id, out _);
-            await Task.CompletedTask;
+            try
+            {
+                var existingCliente = _clientes.FirstOrDefault(c => c.ClienteID == cliente.ClienteID);
+
+                if (existingCliente == null)
+                {
+                    throw new KeyNotFoundException($"Cliente con ID {cliente.ClienteID} no encontrado.");
+                }
+
+                // Validar que no exista otro cliente con el mismo DNI
+                var existingByDni = _clientes.FirstOrDefault(c => c.DNI == cliente.DNI && c.ClienteID != cliente.ClienteID);
+                if (existingByDni != null)
+                {
+                    throw new ArgumentException($"Ya existe otro cliente con el DNI {cliente.DNI}.");
+                }
+
+                // Validar que no exista otro cliente con el mismo Email
+                var existingByEmail = _clientes.FirstOrDefault(c => c.Email.Equals(cliente.Email, StringComparison.OrdinalIgnoreCase) && c.ClienteID != cliente.ClienteID);
+                if (existingByEmail != null)
+                {
+                    throw new ArgumentException($"Ya existe otro cliente con el email {cliente.Email}.");
+                }
+
+                // Actualizar propiedades
+                existingCliente.Nombre = cliente.Nombre;
+                existingCliente.Apellido = cliente.Apellido;
+                existingCliente.DNI = cliente.DNI;
+                existingCliente.Email = cliente.Email;
+                existingCliente.Telefono = cliente.Telefono;
+                existingCliente.Celular = cliente.Celular;
+                existingCliente.TelefonoTrabajo = cliente.TelefonoTrabajo;
+                existingCliente.Calle = cliente.Calle;
+                existingCliente.NumeroCalle = cliente.NumeroCalle;
+                existingCliente.NumeroPiso = cliente.NumeroPiso;
+                existingCliente.Dpto = cliente.Dpto;
+                existingCliente.Localidad = cliente.Localidad;
+                existingCliente.CodigoPostal = cliente.CodigoPostal;
+                existingCliente.DescripcionDomicilio = cliente.DescripcionDomicilio;
+                existingCliente.ProvinciaID = cliente.ProvinciaID;
+                existingCliente.CiudadID = cliente.CiudadID;
+                existingCliente.ModificadoPor = cliente.ModificadoPor;
+                existingCliente.Activo = cliente.Activo;
+                existingCliente.FechaModificacion = DateTime.UtcNow;
+
+                // Actualizar otras propiedades según sea necesario
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is KeyNotFoundException)
+            {
+                _logger.LogError(ex, "Error al actualizar el Cliente: {ErrorMessage}", ex.Message);
+                throw;
+            }
         }
 
-        public async Task<IEnumerable<ClientesViewModel>> FilterClientesAsync(ClienteFilterDto filters)
+        public Task DeleteClienteAsync(int id)
         {
-            _logger.LogInformation("FilterClientesAsync called with filters");
-            var clientes = _clientes.Values.AsQueryable();
+            var cliente = _clientes.FirstOrDefault(c => c.ClienteID == id);
+            if (cliente == null)
+            {
+                throw new KeyNotFoundException($"Cliente con ID {id} no encontrado.");
+            }
+
+            _clientes.Remove(cliente);
+            return Task.CompletedTask;
+        }
+
+        public Task<IEnumerable<Cliente>> FilterClientesAsync(ClienteFilterDtoViewModel filters)
+        {
+            var clientes = _clientes.AsQueryable();
 
             if (!string.IsNullOrEmpty(filters.Nombre))
                 clientes = clientes.Where(c => c.Nombre.Contains(filters.Nombre, StringComparison.OrdinalIgnoreCase));
+
             if (!string.IsNullOrEmpty(filters.Apellido))
                 clientes = clientes.Where(c => c.Apellido.Contains(filters.Apellido, StringComparison.OrdinalIgnoreCase));
+
             if (filters.Dni.HasValue)
                 clientes = clientes.Where(c => c.DNI == filters.Dni.Value);
+
             if (!string.IsNullOrEmpty(filters.Email))
                 clientes = clientes.Where(c => c.Email.Contains(filters.Email, StringComparison.OrdinalIgnoreCase));
 
-            return await Task.FromResult(clientes.ToList());
+            return Task.FromResult(clientes.AsEnumerable());
         }
     }
 }

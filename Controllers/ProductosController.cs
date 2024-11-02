@@ -1,23 +1,31 @@
-﻿using Javo2.IServices;
+﻿// Archivo: Controllers/ProductosController.cs
+using Javo2.Controllers.Base;
+using Javo2.DTOs;
+using Javo2.Helpers;
+using Javo2.IServices;
+using Javo2.IServices.Common;
+using Javo2.Models;
 using Javo2.ViewModels.Operaciones.Productos;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Javo2.Controllers
 {
-    public class ProductosController : Controller
+    public class ProductosController : BaseController
     {
         private readonly IProductoService _productoService;
-        private readonly ICatalogoService _catalogoService;
-        private readonly ILogger<ProductosController> _logger;
+        private readonly IDropdownService _dropdownService;
 
-        public ProductosController(IProductoService productoService, ICatalogoService catalogoService, ILogger<ProductosController> logger)
+        public ProductosController(
+            IProductoService productoService,
+            IDropdownService dropdownService,
+            ILogger<ProductosController> logger)
+            : base(logger)
         {
             _productoService = productoService;
-            _catalogoService = catalogoService;
-            _logger = logger;
+            _dropdownService = dropdownService;
         }
 
         public async Task<IActionResult> Index()
@@ -25,13 +33,64 @@ namespace Javo2.Controllers
             _logger.LogInformation("Index action called");
             var productos = await _productoService.GetAllProductosAsync();
             _logger.LogInformation("Productos retrieved: {ProductosCount}", productos.Count());
-            return View(productos);
+
+            // Mapear entidades Producto a ProductosViewModel
+            var productosViewModel = productos.Select(p => new ProductosViewModel
+            {
+                ProductoID = p.ProductoID,
+                Nombre = p.Nombre,
+                Descripcion = p.Descripcion,
+                PCosto = p.PCosto,
+                PContado = p.PContado,
+                PLista = p.PLista,
+                PorcentajeIva = p.PorcentajeIva,
+                // Mapear otras propiedades según sea necesario
+            }).ToList();
+
+            return View(productosViewModel);
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            _logger.LogInformation("Details action called with ID: {Id}", id);
+            var producto = await _productoService.GetProductoByIdAsync(id);
+            if (producto == null)
+            {
+                _logger.LogWarning("Producto with ID {Id} not found", id);
+                return NotFound();
+            }
+
+            // Mapear Producto a ProductosViewModel
+            var productoViewModel = new ProductosViewModel
+            {
+                ProductoID = producto.ProductoID,
+                Nombre = producto.Nombre,
+                Descripcion = producto.Descripcion,
+                PCosto = producto.PCosto,
+                PContado = producto.PContado,
+                PLista = producto.PLista,
+                PorcentajeIva = producto.PorcentajeIva,
+                // Mapear otras propiedades según sea necesario
+            };
+
+            return View(productoViewModel);
         }
 
         public async Task<IActionResult> Create()
         {
             _logger.LogInformation("Create GET action called");
-            var model = await InitializeNewProductViewModelAsync();
+            var producto = await InitializeNewProductAsync();
+
+            // Mapear Producto a ProductosViewModel
+            var model = new ProductosViewModel
+            {
+                PorcentajeIva = producto.PorcentajeIva,
+                Rubros = await _dropdownService.GetRubrosAsync(),
+                Marcas = await _dropdownService.GetMarcasAsync(),
+                SubRubros = new List<SelectListItem>(),
+                // Inicializar otras propiedades según sea necesario
+            };
+
             _logger.LogInformation("Initial model data: {@Model}", model);
             return View(model);
         }
@@ -41,36 +100,43 @@ namespace Javo2.Controllers
         public async Task<IActionResult> Create(ProductosViewModel model)
         {
             _logger.LogInformation("Create POST action called with Producto: {Producto}", model.Nombre);
-            _logger.LogInformation("Model data received: {@Model}", model);
 
-            // Asignar valores generados antes de la validación del modelo
-            model.ProductoIDAlfa = _productoService.GenerarProductoIDAlfa();
-            model.CodBarra = _productoService.GenerarCodBarraProducto();
+            await DropdownHelper.PopulateProductDropdownsAsync(_dropdownService, model);
 
-            _logger.LogInformation("Generated values: ProductoIDAlfa: {ProductoIDAlfa}, CodBarra: {CodBarra}", model.ProductoIDAlfa, model.CodBarra);
-
-            // Inicializar listas desplegables
-            await PopulateDropDownListsAsync(model);
-
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _logger.LogInformation("Model state is valid. Proceeding to create product.");
-                    await _productoService.CreateProductoAsync(model);
-                    _logger.LogInformation("Producto created successfully");
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError("Error creating Producto: {Error}", ex.Message);
-                    ModelState.AddModelError(string.Empty, "An error occurred while creating the product.");
-                }
+                _logger.LogWarning("Model state is invalid. Errors: {Errors}",
+                    ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
+                return View(model);
             }
 
-            _logger.LogWarning("Model state is invalid. Errors: {Errors}", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
-            LogModelStateErrors();
-            return View(model);
+            try
+            {
+                // Mapear ProductosViewModel a entidad Producto
+                var producto = new Producto
+                {
+                    Nombre = model.Nombre,
+                    Descripcion = model.Descripcion,
+                    PCosto = model.PCosto,
+                    PContado = model.PContado,
+                    PLista = model.PLista,
+                    PorcentajeIva = model.PorcentajeIva,
+                    RubroId = model.SelectedRubroId,
+                    SubRubroId = model.SelectedSubRubroId,
+                    MarcaId = model.SelectedMarcaId,
+                    // Asignar otras propiedades según sea necesario
+                };
+
+                await _productoService.CreateProductoAsync(producto);
+                _logger.LogInformation("Producto created successfully");
+                return RedirectToAction(nameof(Index));
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogError("Error creating Producto: {Error}", ex.Message);
+                ModelState.AddModelError(string.Empty, "Ocurrió un error al crear el producto.");
+                return View(model);
+            }
         }
 
         public async Task<IActionResult> Edit(int id)
@@ -83,9 +149,27 @@ namespace Javo2.Controllers
                 return NotFound();
             }
 
-            await PopulateDropDownListsAsync(producto ?? new ProductosViewModel());
-            _logger.LogInformation("Model data for Edit GET: {@Model}", producto);
-            return View(producto);
+            // Mapear Producto a ProductosViewModel
+            var model = new ProductosViewModel
+            {
+                ProductoID = producto.ProductoID,
+                Nombre = producto.Nombre,
+                Descripcion = producto.Descripcion,
+                PCosto = producto.PCosto,
+                PContado = producto.PContado,
+                PLista = producto.PLista,
+                PorcentajeIva = producto.PorcentajeIva,
+                SelectedRubroId = producto.RubroId,
+                SelectedSubRubroId = producto.SubRubroId,
+                SelectedMarcaId = producto.MarcaId,
+                Rubros = await _dropdownService.GetRubrosAsync(),
+                Marcas = await _dropdownService.GetMarcasAsync(),
+                SubRubros = await _dropdownService.GetSubRubrosAsync(producto.RubroId),
+                // Mapear otras propiedades según sea necesario
+            };
+
+            _logger.LogInformation("Model data for Edit GET: {@Model}", model);
+            return View(model);
         }
 
         [HttpPost]
@@ -93,41 +177,44 @@ namespace Javo2.Controllers
         public async Task<IActionResult> Edit(ProductosViewModel model)
         {
             _logger.LogInformation("Edit POST action called with Producto: {Producto}", model.Nombre);
-            _logger.LogInformation("Model data received: {@Model}", model);
 
-            // Inicializar listas desplegables
-            await PopulateDropDownListsAsync(model);
+            await DropdownHelper.PopulateProductDropdownsAsync(_dropdownService, model);
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    await _productoService.UpdateProductoAsync(model);
-                    _logger.LogInformation("Producto updated successfully");
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError("Error updating Producto: {Error}", ex.Message);
-                    ModelState.AddModelError(string.Empty, "An error occurred while updating the product.");
-                }
+                _logger.LogWarning("Model state is invalid. Errors: {Errors}",
+                    ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
+                return View(model);
             }
 
-            _logger.LogWarning("Model state is invalid. Errors: {Errors}", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
-            LogModelStateErrors();
-            return View(model);
-        }
-
-        public async Task<IActionResult> Details(int id)
-        {
-            _logger.LogInformation("Details action called with ID: {Id}", id);
-            var producto = await _productoService.GetProductoByIdAsync(id);
-            if (producto == null)
+            try
             {
-                _logger.LogWarning("Producto with ID {Id} not found", id);
-                return NotFound();
+                // Mapear ProductosViewModel a entidad Producto
+                var producto = new Producto
+                {
+                    ProductoID = model.ProductoID,
+                    Nombre = model.Nombre,
+                    Descripcion = model.Descripcion,
+                    PCosto = model.PCosto,
+                    PContado = model.PContado,
+                    PLista = model.PLista,
+                    PorcentajeIva = model.PorcentajeIva,
+                    RubroId = model.SelectedRubroId,
+                    SubRubroId = model.SelectedSubRubroId,
+                    MarcaId = model.SelectedMarcaId,
+                    // Asignar otras propiedades según sea necesario
+                };
+
+                await _productoService.UpdateProductoAsync(producto);
+                _logger.LogInformation("Producto updated successfully");
+                return RedirectToAction(nameof(Index));
             }
-            return View(producto);
+            catch (ArgumentException ex)
+            {
+                _logger.LogError("Error updating Producto: {Error}", ex.Message);
+                ModelState.AddModelError(string.Empty, "Ocurrió un error al actualizar el producto.");
+                return View(model);
+            }
         }
 
         public async Task<IActionResult> Delete(int id)
@@ -139,7 +226,17 @@ namespace Javo2.Controllers
                 _logger.LogWarning("Producto with ID {Id} not found", id);
                 return NotFound();
             }
-            return View(producto);
+
+            // Mapear Producto a ProductosViewModel
+            var model = new ProductosViewModel
+            {
+                ProductoID = producto.ProductoID,
+                Nombre = producto.Nombre,
+                Descripcion = producto.Descripcion,
+                // Mapear otras propiedades según sea necesario
+            };
+
+            return View(model);
         }
 
         [HttpPost, ActionName("Delete")]
@@ -151,86 +248,73 @@ namespace Javo2.Controllers
             {
                 await _productoService.DeleteProductoAsync(id);
                 _logger.LogInformation("Producto deleted successfully");
+                return RedirectToAction(nameof(Index));
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 _logger.LogError("Error deleting Producto: {Error}", ex.Message);
-                ModelState.AddModelError(string.Empty, "An error occurred while deleting the product.");
+                ModelState.AddModelError(string.Empty, "Ocurrió un error al eliminar el producto.");
                 var producto = await _productoService.GetProductoByIdAsync(id);
-                return View(producto);
-            }
-            return RedirectToAction(nameof(Index));
-        }
 
-        private async Task PopulateDropDownListsAsync(ProductosViewModel model)
-        {
-            model.Rubros = await _catalogoService.GetRubrosAsync();
-            model.SubRubros = await _catalogoService.GetSubRubrosAsync();
-            model.Marcas = await _catalogoService.GetMarcasAsync();
-            _logger.LogInformation("PopulateDropDownListsAsync called. Rubros: {RubrosCount}, SubRubros: {SubRubrosCount}, Marcas: {MarcasCount}",
-                model.Rubros.Count(), model.SubRubros.Count(), model.Marcas.Count());
-        }
-
-        private void LogModelStateErrors()
-        {
-            foreach (var key in ModelState.Keys)
-            {
-                var state = ModelState[key];
-                if (state?.Errors != null)
+                // Mapear Producto a ProductosViewModel
+                var model = new ProductosViewModel
                 {
-                    var errors = state.Errors.Select(e => e.ErrorMessage).ToList();
-                    if (errors.Count > 0)
-                    {
-                        _logger.LogWarning("Model state errors for key '{Key}': {Errors}", key, string.Join(", ", errors));
-                    }
-                }
+                    ProductoID = producto.ProductoID,
+                    Nombre = producto.Nombre,
+                    Descripcion = producto.Descripcion,
+                    // Mapear otras propiedades según sea necesario
+                };
+
+                return View(model);
             }
         }
 
-        private void LogModelData(ProductosViewModel model)
+        [HttpGet]
+        public async Task<IActionResult> GetSubRubros(int rubroId)
         {
-            _logger.LogInformation("Model data: {Model}", new
-            {
-                model.ProductoID,
-                model.ProductoIDAlfa,
-                model.CodBarra,
-                model.Nombre,
-                model.Descripcion,
-                model.PCosto,
-                model.PContado,
-                model.PLista,
-                model.PorcentajeIva,
-                model.SelectedRubroId,
-                model.SelectedSubRubroId,
-                model.SelectedMarcaId,
-                model.Rubros,
-                model.SubRubros,
-                model.Marcas
-            });
+            _logger.LogInformation("GetSubRubros called with RubroId: {RubroId}", rubroId);
+            var subRubros = await _dropdownService.GetSubRubrosAsync(rubroId);
+            return Json(subRubros);
         }
 
-        private async Task<ProductosViewModel> InitializeNewProductViewModelAsync()
+        [HttpGet]
+        public async Task<IActionResult> Filter(string Nombre, string Codigo, string Rubro, string SubRubro, string Marca)
         {
-            var model = new ProductosViewModel
+            _logger.LogInformation("Filter action called with parameters: Nombre={Nombre}, Codigo={Codigo}, Rubro={Rubro}, SubRubro={SubRubro}, Marca={Marca}", Nombre, Codigo, Rubro, SubRubro, Marca);
+
+            var filters = new ProductoFilterDto
             {
-                ProductoIDAlfa = _productoService.GenerarProductoIDAlfa(),
-                CodBarra = _productoService.GenerarCodBarraProducto(),
-                PorcentajeIva = 21,
-                Usuario = "cosmefulanito",
-                EstadoComentario = "test",
-                DeudaTotal = 0,
-                ModificadoPor = "cosmefulanito",
-                Rubros = await _catalogoService.GetRubrosAsync(),
-                SubRubros = await _catalogoService.GetSubRubrosAsync(),
-                Marcas = await _catalogoService.GetMarcasAsync()
+                Nombre = Nombre,
+                Codigo = Codigo,
+                Rubro = Rubro,
+                SubRubro = SubRubro,
+                Marca = Marca
             };
-            _logger.LogInformation("Initialized new product view model: {@Model}", model);
-            return model;
+
+            var productos = await _productoService.FilterProductosAsync(filters);
+
+            // Mapear entidades Producto a ProductosViewModel
+            var productosViewModel = productos.Select(p => new ProductosViewModel
+            {
+                ProductoID = p.ProductoID,
+                Nombre = p.Nombre,
+                Descripcion = p.Descripcion,
+                PCosto = p.PCosto,
+                PContado = p.PContado,
+                PLista = p.PLista,
+                PorcentajeIva = p.PorcentajeIva,
+                // Mapear otras propiedades según sea necesario
+            }).ToList();
+
+            return PartialView("_ProductosTable", productosViewModel);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> IncrementarPrecios(string productoIds, decimal porcentaje)
         {
+            _logger.LogInformation("IncrementarPrecios called with ProductoIds: {ProductoIds} and Porcentaje: {Porcentaje}", productoIds, porcentaje);
+
             if (string.IsNullOrEmpty(productoIds))
             {
                 return Json(new { success = false, message = "Datos inválidos." });
@@ -251,6 +335,11 @@ namespace Javo2.Controllers
             }
 
             return Json(new { success = true });
+        }
+
+        private async Task<Producto> InitializeNewProductAsync()
+        {
+            return await Task.FromResult(new Producto());
         }
     }
 }

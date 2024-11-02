@@ -1,17 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿// Archivo: ViewModels/ProductosViewModel.cs
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+
 namespace Javo2.ViewModels.Operaciones.Productos
 {
     public class ProductosViewModel
     {
+        public ProductosViewModel()
+        {
+            Rubros = new List<SelectListItem>();
+            SubRubros = new List<SelectListItem>();
+            Marcas = new List<SelectListItem>();
+        }
 
         public int ProductoID { get; set; } = 0; // Auto-incremental y no editable
-
 
         [Display(Name = "ID Alfa del Producto")]
         public string ProductoIDAlfa { get; set; } = string.Empty; // No editable y autogenerado
 
-        [StringLength(100)]
         [Display(Name = "Código de Barra")]
         public string CodBarra { get; set; } = string.Empty; // No editable y autogenerado
 
@@ -59,46 +67,25 @@ namespace Javo2.ViewModels.Operaciones.Productos
         [Display(Name = "Fecha de Stock")]
         public DateTime FechaStock { get; set; }
 
-        [StringLength(100)]
-        [Display(Name = "Usuario")]
-        public string Usuario { get; set; } = "cosmefulanito"; // No editable
-
-        [StringLength(500)]
-        [Display(Name = "Comentario de Estado")]
-        public string EstadoComentario { get; set; } = "test"; // No editable
-
-        [Range(0, double.MaxValue)]
-        [Display(Name = "Deuda Total")]
-        public decimal DeudaTotal { get; set; } = 0; // No editable
-
-        [StringLength(100)]
-        [Display(Name = "Modificado Por")]
-        public string ModificadoPor { get; set; } = "cosmefulanito"; // No editable
-
         [Display(Name = "Rubros")]
-        public IEnumerable<SelectListItem> Rubros { get; set; } = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> Rubros { get; set; }
 
         [Required]
         [Display(Name = "Rubro Seleccionado")]
         public int SelectedRubroId { get; set; }
 
         [Display(Name = "SubRubros")]
-        public IEnumerable<SelectListItem> SubRubros { get; set; } = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> SubRubros { get; set; }
 
         [Required]
         [Display(Name = "SubRubro Seleccionado")]
         public int SelectedSubRubroId { get; set; }
 
         [Display(Name = "Marcas")]
-        public IEnumerable<SelectListItem> Marcas { get; set; } = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> Marcas { get; set; }
 
         [Required]
         [Display(Name = "Marca Seleccionada")]
         public int SelectedMarcaId { get; set; }
-
-        // Propiedad para almacenar el nombre de la marca
-        [StringLength(100)]
-        [Display(Name = "Marca")]
-        public string Marca { get; set; } = string.Empty;
     }
 }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "E+Pp+SUHsbGw1ol0tiVlic5gfluNqDB4v3IGfvlRRsOEbXofpHIGtMWEQh+WpXAZZHs+ZJmcVXJJN99bvoqeWA==",
+  "dgSpecHash": "GkHahXQ6pg4=",
   "success": true,
-  "projectFilePath": "E:\\git\\Javo2\\Javo2.csproj",
+  "projectFilePath": "E:\\github\\Javo2\\Javo2.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\xh4ac\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\xh4ac\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

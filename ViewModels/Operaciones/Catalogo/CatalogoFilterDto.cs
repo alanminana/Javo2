@@ -1,4 +1,5 @@
-﻿namespace Javo2.ViewModels.Operaciones.Catalogo
+﻿// ViewModels/Operaciones/Catalogo/CatalogoFilterDto.cs
+namespace Javo2.ViewModels.Operaciones.Catalogo
 {
     public class CatalogoFilterDto
     {

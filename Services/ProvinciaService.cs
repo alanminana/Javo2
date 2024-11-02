@@ -1,41 +1,37 @@
-﻿using Javo2.Services;
-using Javo2.ViewModels.Operaciones.Clientes;
-using Microsoft.Extensions.Logging;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Javo2.IServices;
+using Javo2.Models;
 
 public class ProvinciaService : IProvinciaService
 {
-    private readonly ILogger<ProvinciaService> _logger;
+    private readonly List<Provincia> _provincias;
+    private readonly List<Ciudad> _ciudades;
 
-    public ProvinciaService(ILogger<ProvinciaService> logger)
+    public ProvinciaService()
     {
-        _logger = logger;
+        // Datos de ejemplo
+        _provincias = new List<Provincia>
+        {
+            new Provincia { ProvinciaID = 1, Nombre = "Provincia 1" },
+            new Provincia { ProvinciaID = 2, Nombre = "Provincia 2" }
+        };
+
+        _ciudades = new List<Ciudad>
+        {
+            new Ciudad { CiudadID = 1, Nombre = "Ciudad A", ProvinciaID = 1 },
+            new Ciudad { CiudadID = 2, Nombre = "Ciudad B", ProvinciaID = 1 },
+            new Ciudad { CiudadID = 3, Nombre = "Ciudad C", ProvinciaID = 2 },
+            new Ciudad { CiudadID = 4, Nombre = "Ciudad D", ProvinciaID = 2 }
+        };
     }
 
-    private static readonly ConcurrentDictionary<int, ProvinciaViewModel> _provincias = new()
+    public Task<IEnumerable<Provincia>> GetAllProvinciasAsync()
     {
-        [1] = new ProvinciaViewModel { ProvinciaID = 1, Nombre = "Buenos Aires" },
-        [2] = new ProvinciaViewModel { ProvinciaID = 2, Nombre = "Córdoba" }
-    };
-
-    private static readonly ConcurrentBag<CiudadViewModel> _ciudades = new()
-    {
-        new CiudadViewModel { CiudadID = 1, Nombre = "Lanús", ProvinciaID = 1 },
-        new CiudadViewModel { CiudadID = 2, Nombre = "La Plata", ProvinciaID = 1 },
-        new CiudadViewModel { CiudadID = 3, Nombre = "Córdoba Capital", ProvinciaID = 2 }
-    };
-
-    public IEnumerable<ProvinciaViewModel> GetAllProvincias()
-    {
-        _logger.LogInformation("GetAllProvincias called");
-        return _provincias.Values;
+        return Task.FromResult(_provincias.AsEnumerable());
     }
 
-    public IEnumerable<CiudadViewModel> GetCiudadesByProvinciaId(int provinciaId)
+    public Task<IEnumerable<Ciudad>> GetCiudadesByProvinciaIdAsync(int provinciaId)
     {
-        _logger.LogInformation("GetCiudadesByProvinciaId called with ProvinciaID: {ProvinciaID}", provinciaId);
-        return _ciudades.Where(c => c.ProvinciaID == provinciaId);
+        var ciudades = _ciudades.Where(c => c.ProvinciaID == provinciaId);
+        return Task.FromResult(ciudades.AsEnumerable());
     }
 }

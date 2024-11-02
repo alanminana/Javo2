@@ -1,47 +1,57 @@
-﻿using Javo2.IServices;
-using Javo2.ViewModels.Operaciones.Catalogo;
-using Javo2.ViewModels.Operaciones.Catalogo;
+﻿// Models/CatalogoController.cs
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
+using Javo2.IServices;
+using Javo2.Models;
+using Javo2.ViewModels.Operaciones.Catalogo;
 using System.Linq;
 using System.Threading.Tasks;
+using Javo2.Controllers.Base;
+using AutoMapper;
 
 namespace Javo2.Controllers
 {
-    public class CatalogoController : Controller
+    public class CatalogoController : BaseController
     {
         private readonly ICatalogoService _catalogoService;
-        private readonly ILogger<CatalogoController> _logger;
+        private readonly IMapper _mapper;
 
-        public CatalogoController(ICatalogoService catalogoService, ILogger<CatalogoController> logger)
+        public CatalogoController(
+            ICatalogoService catalogoService,
+            IMapper mapper,
+            ILogger<CatalogoController> logger)
+            : base(logger)
         {
             _catalogoService = catalogoService;
-            _logger = logger;
-        }
-
-        private void LogModelStateErrors()
-        {
-            foreach (var key in ModelState.Keys)
-            {
-                var state = ModelState[key];
-                if (state?.Errors != null)
-                {
-                    var errors = state.Errors.Select(e => e.ErrorMessage).ToList();
-                    if (errors.Count > 0)
-                    {
-                        _logger.LogWarning("Model state errors for key '{Key}': {Errors}", key, string.Join(", ", errors));
-                    }
-                }
-            }
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
         {
             _logger.LogInformation("Index action called");
-            var rubros = await _catalogoService.GetRubroViewModelsAsync();
-            var marcas = await _catalogoService.GetMarcaViewModelsAsync();
-            var model = new Tuple<IEnumerable<RubroViewModel>, IEnumerable<MarcaViewModel>>(rubros, marcas);
+            var rubros = await _catalogoService.GetRubrosAsync();
+            var marcas = await _catalogoService.GetMarcasAsync();
+
+            var model = new CatalogoIndexViewModel
+            {
+                Rubros = rubros.Select(r => new RubroViewModel
+                {
+                    Id = r.Id,
+                    Nombre = r.Nombre,
+                    SubRubros = r.SubRubros.Select(sr => new SubRubroViewModel
+                    {
+                        Id = sr.Id,
+                        Nombre = sr.Nombre,
+                        RubroId = sr.RubroId
+                    }).ToList()
+                }).ToList(),
+                Marcas = marcas.Select(m => new MarcaViewModel
+                {
+                    Id = m.Id,
+                    Nombre = m.Nombre
+                }).ToList()
+            };
+
             _logger.LogInformation("Rubros and Marcas retrieved");
             return View(model);
         }
@@ -74,48 +84,14 @@ namespace Javo2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditSubRubros(EditSubRubrosViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                foreach (var subRubro in model.SubRubros)
-                {
-                    if (subRubro.IsDeleted)
-                    {
-                        await _catalogoService.DeleteSubRubroAsync(subRubro.Id);
-                    }
-                    else if (subRubro.Id == 0)
-                    {
-                        await CreateSubRubroAsync(subRubro.Nombre, model.RubroNombre);
-                    }
-                    else
-                    {
-                        await _catalogoService.UpdateSubRubroAsync(new SubRubroViewModel
-                        {
-                            Id = subRubro.Id,
-                            Nombre = subRubro.Nombre,
-                            RubroNombre = model.RubroNombre
-                        });
-                    }
-                }
-
-                if (!string.IsNullOrWhiteSpace(model.NewSubRubroNombre))
-                {
-                    await CreateSubRubroAsync(model.NewSubRubroNombre, model.RubroNombre);
-                }
-
-                return RedirectToAction(nameof(Index));
+                LogModelStateErrors(); // Asegúrate de implementar este método si lo necesitas
+                return View(model);
             }
 
-            LogModelStateErrors();
-            return View(model);
-        }
-
-        private async Task CreateSubRubroAsync(string nombre, string rubroNombre)
-        {
-            await _catalogoService.CreateSubRubroAsync(new SubRubroViewModel
-            {
-                Nombre = nombre,
-                RubroNombre = rubroNombre
-            });
+            await _catalogoService.UpdateSubRubrosAsync(model);
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult CreateRubro()
@@ -127,12 +103,28 @@ namespace Javo2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateRubro(RubroViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _catalogoService.CreateRubroAsync(model);
+                LogModelStateErrors();
+                return View(model);
+            }
+
+            var rubro = new Rubro
+            {
+                Nombre = model.Nombre
+            };
+
+            try
+            {
+                await _catalogoService.CreateRubroAsync(rubro);
                 return RedirectToAction(nameof(Index));
             }
-            return View(model);
+            catch (System.Exception ex)
+            {
+                _logger.LogError(ex, "Error al crear el Rubro");
+                ModelState.AddModelError(string.Empty, "Ocurrió un error al crear el rubro.");
+                return View(model);
+            }
         }
 
         public IActionResult CreateMarca()
@@ -144,12 +136,19 @@ namespace Javo2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateMarca(MarcaViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _catalogoService.CreateMarcaAsync(model);
-                return RedirectToAction(nameof(Index));
+                LogModelStateErrors();
+                return View(model);
             }
-            return View(model);
+
+            var marca = new Marca
+            {
+                Nombre = model.Nombre
+            };
+
+            await _catalogoService.CreateMarcaAsync(marca);
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> EditRubro(int id)
@@ -161,19 +160,34 @@ namespace Javo2.Controllers
                 _logger.LogWarning("Rubro with ID {Id} not found", id);
                 return NotFound();
             }
-            return View(rubro);
+
+            var model = new RubroViewModel
+            {
+                Id = rubro.Id,
+                Nombre = rubro.Nombre
+            };
+
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditRubro(RubroViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _catalogoService.UpdateRubroAsync(model);
-                return RedirectToAction(nameof(Index));
+                LogModelStateErrors();
+                return View(model);
             }
-            return View(model);
+
+            var rubro = new Rubro
+            {
+                Id = model.Id,
+                Nombre = model.Nombre
+            };
+
+            await _catalogoService.UpdateRubroAsync(rubro);
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> EditMarca(int id)
@@ -185,19 +199,34 @@ namespace Javo2.Controllers
                 _logger.LogWarning("Marca with ID {Id} not found", id);
                 return NotFound();
             }
-            return View(marca);
+
+            var model = new MarcaViewModel
+            {
+                Id = marca.Id,
+                Nombre = marca.Nombre
+            };
+
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditMarca(MarcaViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _catalogoService.UpdateMarcaAsync(model);
-                return RedirectToAction(nameof(Index));
+                LogModelStateErrors();
+                return View(model);
             }
-            return View(model);
+
+            var marca = new Marca
+            {
+                Id = model.Id,
+                Nombre = model.Nombre
+            };
+
+            await _catalogoService.UpdateMarcaAsync(marca);
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> DeleteRubro(int id)
@@ -209,16 +238,32 @@ namespace Javo2.Controllers
                 _logger.LogWarning("Rubro with ID {Id} not found", id);
                 return NotFound();
             }
-            return View(rubro);
+
+            var model = new RubroViewModel
+            {
+                Id = rubro.Id,
+                Nombre = rubro.Nombre
+            };
+
+            return View(model);
         }
 
         [HttpPost, ActionName("DeleteRubro")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteRubroConfirmed(int id)
         {
-            await _catalogoService.DeleteRubroAsync(id);
-            _logger.LogInformation("Rubro with ID {Id} deleted successfully", id);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _catalogoService.DeleteRubroAsync(id);
+                _logger.LogInformation("Rubro with ID {Id} deleted successfully", id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar el Rubro con ID {Id}", id);
+                ModelState.AddModelError(string.Empty, "Ocurrió un error al eliminar el rubro.");
+                return RedirectToAction("DeleteRubro", new { id });
+            }
         }
 
         public async Task<IActionResult> DeleteMarca(int id)
@@ -230,24 +275,66 @@ namespace Javo2.Controllers
                 _logger.LogWarning("Marca with ID {Id} not found", id);
                 return NotFound();
             }
-            return View(marca);
+
+            var model = new MarcaViewModel
+            {
+                Id = marca.Id,
+                Nombre = marca.Nombre
+            };
+
+            return View(model);
         }
 
         [HttpPost, ActionName("DeleteMarca")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteMarcaConfirmed(int id)
         {
-            await _catalogoService.DeleteMarcaAsync(id);
-            _logger.LogInformation("Marca with ID {Id} deleted successfully", id);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _catalogoService.DeleteMarcaAsync(id);
+                _logger.LogInformation("Marca with ID {Id} deleted successfully", id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar la Marca con ID {Id}", id);
+                ModelState.AddModelError(string.Empty, "Ocurrió un error al eliminar la marca.");
+                return RedirectToAction("DeleteMarca", new { id });
+            }
         }
 
+        [HttpGet]
         public async Task<IActionResult> Filter(CatalogoFilterDto filters)
         {
             _logger.LogInformation("Filter action called with filters: {Filters}", filters);
             var rubros = await _catalogoService.FilterRubrosAsync(filters);
             var marcas = await _catalogoService.FilterMarcasAsync(filters);
-            var model = new Tuple<IEnumerable<RubroViewModel>, IEnumerable<MarcaViewModel>>(rubros, marcas);
+
+            var rubrosViewModel = rubros.Select(r => new RubroViewModel
+            {
+                Id = r.Id,
+                Nombre = r.Nombre,
+                SubRubros = r.SubRubros.Select(sr => new SubRubroViewModel
+                {
+                    Id = sr.Id,
+                    Nombre = sr.Nombre,
+                    RubroId = sr.RubroId
+                }).ToList()
+            }).ToList();
+
+            var marcasViewModel = marcas.Select(m => new MarcaViewModel
+            {
+                Id = m.Id,
+                Nombre = m.Nombre
+            }).ToList();
+
+            var model = new CatalogoIndexViewModel
+            {
+                Rubros = rubrosViewModel,
+                Marcas = marcasViewModel
+            };
+
+            // Devolvemos la vista parcial con el modelo filtrado
             return PartialView("_CatalogoTable", model);
         }
     }

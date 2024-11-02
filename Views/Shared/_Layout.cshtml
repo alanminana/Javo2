@@ -1,57 +1,98 @@
-﻿<!DOCTYPE html>
-<html>
+﻿@* Views/Shared/_Layout.cshtml *@
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title</title>
+    <title>@ViewBag.Title - The BuryCode</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- jQuery UI CSS -->
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-
+    <!-- Sitio CSS Personalizado -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Main navigation">
-        <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">The Bury<span>Code.</span></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav">
-                    <!-- Menú Operaciones -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="operationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">Operaciones</a>
-                        <ul class="dropdown-menu" aria-labelledby="operationsDropdown">
-                            <li><a class="dropdown-item" asp-controller="Clientes" asp-action="Index">Clientes</a></li>
-                            <li><a class="dropdown-item" asp-controller="Proveedores" asp-action="Index">Proveedores</a></li>
-                            <li><a class="dropdown-item" asp-controller="Productos" asp-action="Index">Productos</a></li>
-                            <li><a class="dropdown-item" asp-controller="Ventas" asp-action="Index">Ventas</a></li>
-                            <li><a class="dropdown-item" asp-controller="Catalogo" asp-action="Index">Catalogo</a></li>
-
-
-
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+    <!-- Barra Lateral (Sidebar) -->
+    <nav class="sidebar d-flex flex-column p-3">
+        <a asp-controller="Home" asp-action="Index" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none">
+            <span class="fs-4">The Bury<span>Code.</span></span>
+        </a>
+        <hr class="text-secondary">
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a asp-controller="Clientes" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Clientes" ? "active" : "")">
+                    <i class="bi bi-people-fill me-2"></i>
+                    Clientes
+                </a>
+            </li>
+            <li>
+                <a asp-controller="Ventas" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Ventas" ? "active" : "")">
+                    <i class="bi bi-cart-fill me-2"></i>
+                    Ventas
+                </a>
+            </li>
+            <li>
+                <a asp-controller="Productos" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Productos" ? "active" : "")">
+                    <i class="bi bi-box-seam me-2"></i>
+                    Productos
+                </a>
+            </li>
+            <li>
+                <a asp-controller="Catalogo" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Catalogo" ? "active" : "")">
+                    <i class="bi bi-bookmark-fill me-2"></i>
+                    Catálogo
+                </a>
+            </li>
+            <li>
+                <a asp-controller="Proveedores" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Proveedores" ? "active" : "")">
+                    <i class="bi bi-truck-flatbed me-2"></i>
+                    Proveedores
+                </a>
+            </li>
+        </ul>
+        <hr class="text-secondary">
+        <div class="dropdown">
+            <a asp-controller="Account" asp-action="Logout" class="d-flex align-items-center text-decoration-none text-white">
+                <i class="bi bi-box-arrow-right me-2"></i>
+                <strong>Salir</strong>
+            </a>
         </div>
     </nav>
 
-    <div class="container-fluid">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+    <!-- Contenido Principal -->
+    <div class="content">
+        <div class="container-fluid">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+
+        <!-- Pie de Página -->
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; @DateTime.Now.Year - Javo2 - <a asp-controller="Home" asp-action="Privacy">Privacidad</a>
+            </div>
+        </footer>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - Javo2 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-
+    <!-- Scripts de Bootstrap y Dependencias -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <!-- jQuery y jQuery UI -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <!-- Scripts Personalizados -->
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

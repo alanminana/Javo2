@@ -1,21 +1,23 @@
-﻿@using Javo2.ViewModels.Operaciones.Productos
-@model Javo2.ViewModels.Operaciones.Proveedores.ProveedoresViewModel
+﻿@using Javo2.ViewModels.Operaciones.Proveedores
+@model ProveedoresViewModel
 
 @{
+    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Detalles del Proveedor";
 }
 
-<h2>@ViewBag.Title</h2>
+<h2 class="mb-4">@ViewBag.Title</h2>
 
-<div>
-    <h4>@Model.Nombre</h4>
-    <h5>Productos:</h5>
-    <ul>
-        @foreach (var producto in Model.ProductosSeleccionados)
-        {
-            <li>@producto</li>
-        }
-    </ul>
+<div class="card p-4">
+    <dl class="row">
+        <dt class="col-sm-3">ID</dt>
+        <dd class="col-sm-9">@Model.ProveedorID</dd>
+
+        <dt class="col-sm-3">Nombre</dt>
+        <dd class="col-sm-9">@Model.Nombre</dd>
+
+        <!-- Añadir más detalles según sea necesario -->
+    </dl>
 </div>
 
-<a href="@Url.Action("Index")" class="btn btn-secondary">Volver</a>
+<a asp-action="Index" class="btn btn-secondary mt-3">Volver al Listado</a>

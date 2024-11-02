@@ -5,51 +5,70 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>@ViewBag.Title</h2>
-@Html.AntiForgeryToken()
+<h2 class="mb-4">@ViewBag.Title</h2>
 
-<div class="row mb-4">
-    <div class="col-md-3">
-        <select id="filterType" class="form-control">
-            <option value="Nombre">Nombre</option>
-            <option value="Codigo">Código</option>
-            <option value="Rubro">Rubro</option>
-            <option value="SubRubro">SubRubro</option>
-            <option value="Marca">Marca</option>
-        </select>
+<!-- Tarjetas de Resumen (opcional, si deseas incluirlas) -->
+<div class="summary-cards mb-4">
+    <div class="summary-card">
+        <h5>Total de Productos</h5>
+        <p>@Model.Count()</p>
     </div>
-    <div class="col-md-3">
-        <input type="text" class="form-control" id="filterValue" placeholder="Escriba para filtrar">
-    </div>
-    <div class="col-md-3">
-        <button class="btn btn-primary" id="applyFilters">Aplicar Filtros</button>
-    </div>
-    <div class="col-md-3">
-        <input type="checkbox" id="adjustPricesSwitch" /> Ajustar precios
-        <input type="number" class="form-control d-none" id="pricePercentage" placeholder="Porcentaje (use valores positivos o negativos)" />
-        <button class="btn btn-primary d-none" id="adjustPricesButton">Aplicar</button>
+    <!-- Puedes añadir más tarjetas si es necesario -->
+</div>
+
+<!-- Formulario de Filtrado -->
+<div class="card mb-4 p-4">
+    <form id="filterForm" class="row g-3">
+        <div class="col-md-3">
+            <label for="filterType" class="form-label">Tipo de Filtro</label>
+            <select id="filterType" class="form-select">
+                <option value="Nombre">Nombre</option>
+                <option value="Codigo">Código</option>
+                <option value="Rubro">Rubro</option>
+                <option value="SubRubro">SubRubro</option>
+                <option value="Marca">Marca</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="filterValue" class="form-label">Valor del Filtro</label>
+            <input type="text" class="form-control" id="filterValue" placeholder="Escriba para filtrar">
+        </div>
+        <div class="col-md-6 align-self-end">
+            <button type="button" class="btn btn-primary me-2" id="applyFilters">
+                <i class="bi bi-filter me-2"></i> Aplicar Filtros
+            </button>
+            <button type="button" class="btn btn-secondary" id="clearFilters">
+                <i class="bi bi-x-circle me-2"></i> Limpiar Filtros
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Tabla de Productos -->
+<div class="card p-3">
+    <div class="table-responsive">
+        <table class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Nombre</th>
+                    <th>Precio Costo</th>
+                    <th>Precio Contado</th>
+                    <th>Precio Lista</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="productosTable">
+                @await Html.PartialAsync("_ProductosTable", Model)
+            </tbody>
+        </table>
     </div>
 </div>
-<div class="row mb-4">
-    <div class="col-md-12 text-right">
-        <a asp-action="Create" class="btn btn-success">Crear Producto</a>
-    </div>
-</div>
-<table class="table">
-    <thead>
-        <tr>
-            <th></th>
-            <th>Nombre</th>
-            <th>Precio Costo</th>
-            <th>Precio Contado</th>
-            <th>Precio Lista</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody id="productosTable">
-        @await Html.PartialAsync("_ProductosTable", Model)
-    </tbody>
-</table>
+
+<!-- Botón para Crear Producto -->
+<a asp-action="Create" class="btn btn-success mt-3">
+    <i class="bi bi-plus-circle me-2"></i> Crear Producto
+</a>
 
 @section Scripts {
     <script>
@@ -57,17 +76,16 @@
             function applyFilters() {
                 var filterType = $('#filterType').val();
                 var filterValue = $('#filterValue').val();
-                var data = {
-                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-                };
+
+                var data = {};
                 data[filterType] = filterValue;
 
                 $.ajax({
                     url: '@Url.Action("Filter", "Productos")',
-                    type: 'POST',
+                    type: 'GET',
                     data: data,
                     success: function (data) {
-                        $('#productosTable').html($(data).find('#productosTable').html());
+                        $('#productosTable').html(data);
                     },
                     error: function () {
                         alert('Error al aplicar los filtros.');
@@ -75,57 +93,14 @@
                 });
             }
 
-            $('#filterType, #filterValue').on('input', function () {
+            $('#applyFilters').click(function () {
                 applyFilters();
             });
 
-            $('#adjustPricesSwitch').change(function () {
-                var isChecked = $(this).is(':checked');
-                if (isChecked) {
-                    $('#pricePercentage').removeClass('d-none');
-                    $('#adjustPricesButton').removeClass('d-none');
-                } else {
-                    $('#pricePercentage').addClass('d-none');
-                    $('#adjustPricesButton').addClass('d-none');
-                }
-            });
-
-            $('#adjustPricesButton').click(function () {
-                var selectedProductIds = $('input[name="productoIds"]:checked').map(function () {
-                    return $(this).val();
-                }).get().join(',');
-
-                var percentage = parseFloat($('#pricePercentage').val());
-                if (isNaN(percentage)) {
-                    alert('Por favor, ingrese un porcentaje válido.');
-                    return;
-                }
-
-                var actionText = percentage > 0 ? 'incrementar' : 'disminuir';
-                var confirmar = confirm(`¿Deseas ${actionText} los precios en ${Math.abs(percentage)}%?`);
-
-                if (confirmar) {
-                    $.ajax({
-                        url: '@Url.Action("IncrementarPrecios", "Productos")',
-                        type: 'POST',
-                        data: {
-                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
-                            productoIds: selectedProductIds,
-                            porcentaje: percentage
-                        },
-                        success: function (data) {
-                            if (data.success) {
-                                alert('Precios ajustados correctamente');
-                                location.reload();
-                            } else {
-                                alert('Error al ajustar precios: ' + data.message);
-                            }
-                        },
-                        error: function () {
-                            alert('Error al ajustar precios.');
-                        }
-                    });
-                }
+            $('#clearFilters').click(function () {
+                $('#filterType').val('Nombre');
+                $('#filterValue').val('');
+                applyFilters();
             });
         });
     </script>

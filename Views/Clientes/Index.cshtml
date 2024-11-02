@@ -5,61 +5,78 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>@ViewBag.Title</h2>
+<h2 class="mb-4">@ViewBag.Title</h2>
 
-<div class="row mb-4">
-    <div class="col-md-3">
-        <select class="form-control" id="filterField">
-            <option value="nombre">Nombre</option>
-            <option value="apellido">Apellido</option>
-            <option value="dni">DNI</option>
-            <option value="email">Email</option>
-        </select>
+<!-- Tarjetas de Resumen -->
+<div class="summary-cards mb-4">
+    <div class="summary-card">
+        <h5>Total de Clientes</h5>
+        <p>@Model.Count()</p>
     </div>
-    <div class="col-md-3">
-        <input type="text" class="form-control" id="filterValue" placeholder="Ingrese valor del filtro">
+    <div class="summary-card">
+        <h5>Clientes Activos</h5>
+        <p>@Model.Count(c => c.Activo)</p>
+    </div>
+    <div class="summary-card">
+        <h5>Clientes Inactivos</h5>
+        <p>@Model.Count(c => !c.Activo)</p>
     </div>
 </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>DNI</th>
-            <th>Email</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody id="clientesTableBody">
-        @await Html.PartialAsync("_ClientesTable", Model)
-    </tbody>
-</table>
+<!-- Formulario de Filtrado -->
+<form method="get" asp-action="Index" class="mb-4">
+    <div class="row g-3">
+        <div class="col-md-3">
+            <input type="text" name="filtroValor" class="form-control" placeholder="Buscar...">
+        </div>
+        <div class="col-md-3">
+            <select name="filtroTipo" class="form-select">
+                <option value="Nombre">Nombre</option>
+                <option value="Apellido">Apellido</option>
+                <option value="DNI">DNI</option>
+                <option value="Email">Email</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+            <a href="@Url.Action("Index")" class="btn btn-secondary">Limpiar</a>
+        </div>
+    </div>
+</form>
 
-<a asp-action="Create" class="btn btn-success">Agregar Cliente</a>
-
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            var filters = {};
-
-            function applyFilters() {
-                $.get('@Url.Action("Filter", "Clientes")', filters, function (data) {
-                    $('#clientesTableBody').html(data);
-                });
-            }
-
-            $('#filterField, #filterValue').on('input', function () {
-                var field = $('#filterField').val();
-                var value = $('#filterValue').val();
-                if (field && value) {
-                    filters[field] = value;
-                } else {
-                    delete filters[field];
+<!-- Tabla de Clientes -->
+<div class="card p-3">
+    <div class="table-responsive">
+        <table class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>DNI</th>
+                    <th>Email</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var cliente in Model)
+                {
+                    <tr>
+                        <td>@cliente.Nombre</td>
+                        <td>@cliente.Apellido</td>
+                        <td>@cliente.DNI</td>
+                        <td>@cliente.Email</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@cliente.ClienteID" class="btn btn-sm btn-primary">Editar</a>
+                            <a asp-action="Delete" asp-route-id="@cliente.ClienteID" class="btn btn-sm btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
                 }
-                applyFilters();
-            });
-        });
-    </script>
-}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Botón para Agregar Cliente -->
+<a asp-action="Create" class="btn btn-success mt-3">
+    <i class="bi bi-plus-circle me-2"></i> Agregar Cliente
+</a>
