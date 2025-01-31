@@ -1,4 +1,4 @@
-﻿// Archivo: Models/AuditoriaRegistro.cs
+﻿// Models/AuditoriaRegistro.cs
 using System;
 
 namespace Javo2.Models
@@ -8,7 +8,6 @@ namespace Javo2.Models
         public int ID { get; set; }
         public DateTime FechaHora { get; set; }
         public string Usuario { get; set; } = "";
-
         public string Entidad { get; set; } = "";
         public string Accion { get; set; } = "";
         public string LlavePrimaria { get; set; } = "";

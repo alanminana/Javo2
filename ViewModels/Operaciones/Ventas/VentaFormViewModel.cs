@@ -1,4 +1,5 @@
-﻿using Javo2.Models;
+﻿// ViewModels/Operaciones/Ventas/VentaFormViewModel.cs
+using Javo2.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -72,68 +73,63 @@ namespace Javo2.ViewModels.Operaciones.Ventas
         // Estado
         public string Estado { get; set; } = string.Empty;
 
-        // Validación condicional
+        // Promociones
+        public int? PromocionID { get; set; }
+        public IEnumerable<SelectListItem> Promociones { get; set; } = new List<SelectListItem>();
+
+        // Relación con Estados de Entrega
+        public List<EstadoEntregaProductoViewModel> EstadosEntregaProductos { get; set; } = new List<EstadoEntregaProductoViewModel>();
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            Console.WriteLine("Iniciando validación...");
-
-            // 1) Tarjeta de Crédito => TipoTarjeta
+            // Validaciones existentes
             if (FormaPagoID == 2 && string.IsNullOrEmpty(TipoTarjeta))
             {
-                Console.WriteLine("Validación fallida: TipoTarjeta es requerido para Tarjeta de Crédito.");
                 yield return new ValidationResult(
                     "El campo 'TipoTarjeta' es requerido para Tarjeta de Crédito.",
                     new[] { nameof(TipoTarjeta) }
                 );
             }
-            else
-            {
-                Console.WriteLine("Validación exitosa: TipoTarjeta no es requerido o está presente.");
-            }
 
-            // 2) Pago Virtual => EntidadElectronica
             if (FormaPagoID == 5 && string.IsNullOrEmpty(EntidadElectronica))
             {
-                Console.WriteLine("Validación fallida: EntidadElectronica es requerido para Pago Virtual.");
                 yield return new ValidationResult(
                     "El campo 'EntidadElectronica' es requerido para Pago Virtual.",
                     new[] { nameof(EntidadElectronica) }
                 );
             }
-            else
-            {
-                Console.WriteLine("Validación exitosa: EntidadElectronica no es requerido o está presente.");
-            }
 
-            // 3) Crédito Personal => PlanFinanciamiento
             if (FormaPagoID == 6 && string.IsNullOrEmpty(PlanFinanciamiento))
             {
-                Console.WriteLine("Validación fallida: PlanFinanciamiento es requerido para Crédito Personal.");
                 yield return new ValidationResult(
                     "El campo 'PlanFinanciamiento' es requerido para Crédito Personal.",
                     new[] { nameof(PlanFinanciamiento) }
                 );
             }
-            else
-            {
-                Console.WriteLine("Validación exitosa: PlanFinanciamiento no es requerido o está presente.");
-            }
 
-            // 4) Al menos un producto
             if (ProductosPresupuesto == null || ProductosPresupuesto.Count == 0)
             {
-                Console.WriteLine("Validación fallida: Debe agregar al menos un producto al presupuesto.");
                 yield return new ValidationResult(
                     "Debe agregar al menos un producto al presupuesto.",
                     new[] { nameof(ProductosPresupuesto) }
                 );
             }
-            else
-            {
-                Console.WriteLine("Validación exitosa: Al menos un producto está presente en el presupuesto.");
-            }
 
-            Console.WriteLine("Validación completada.");
+            // Validaciones adicionales
+            if (FormaPagoID == 6 && (Cuotas == null || Cuotas <= 0))
+            {
+                yield return new ValidationResult(
+                    "Debe especificar una cantidad válida de cuotas para compras a crédito.",
+                    new[] { nameof(Cuotas) }
+                );
+            }
         }
+    }
+
+    public class EstadoEntregaProductoViewModel
+    {
+        public int ProductoID { get; set; }
+        public string NombreProducto { get; set; } = string.Empty;
+        public EstadoFlujo EstadoFlujo { get; set; }
     }
 }

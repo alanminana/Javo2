@@ -30,7 +30,14 @@ builder.Services.AddSingleton<IProvinciaService, ProvinciaService>();
 builder.Services.AddSingleton<IStockService, StockService>();
 builder.Services.AddSingleton<IClienteService, ClienteService>();
 builder.Services.AddSingleton<IPromocionesService, PromocionesService>();
-
+builder.Services.AddSingleton<IAuditoriaService, AuditoriaService>();
+builder.Services.AddSingleton<IVentaService, VentaService>();
+builder.Services.AddSingleton<IProductoService, ProductoService>();
+builder.Services.AddSingleton<ICotizacionService, CotizacionService>();
+builder.Services.AddSingleton<IStockService, StockService>();
+builder.Services.AddSingleton<IPromocionService, PromocionService>();
+builder.Services.AddSingleton<IUserService, UserService>();
+builder.Services.AddSingleton<IReporteService, ReporteService>();
 // Servicios con ciclo de vida Scoped
 builder.Services.AddScoped<IVentaService, VentaService>();
 builder.Services.AddScoped<IDropdownService, DropdownService>();

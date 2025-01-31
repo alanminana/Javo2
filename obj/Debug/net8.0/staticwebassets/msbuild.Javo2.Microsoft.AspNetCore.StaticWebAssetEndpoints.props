@@ -40,13 +40,13 @@
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\Javo2.7nl0ao6cgz.bundle.scp.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"7nl0ao6cgz"},{"Name":"integrity","Value":"sha256-bYhuNzILut/RqIw0sC/0vJrVG2V9AFTc/OLxeld9Ylk="},{"Name":"label","Value":"_content/Javo2/Javo2.bundle.scp.css"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"3380"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022bYhuNzILut/RqIw0sC/0vJrVG2V9AFTc/OLxeld9Ylk=\u0022"},{"Name":"Last-Modified","Value":"Wed, 22 Jan 2025 00:49:32 GMT"}]]]></ResponseHeaders>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"3380"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022bYhuNzILut/RqIw0sC/0vJrVG2V9AFTc/OLxeld9Ylk=\u0022"},{"Name":"Last-Modified","Value":"Fri, 31 Jan 2025 05:52:57 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/Javo2/Javo2.bundle.scp.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\Javo2.7nl0ao6cgz.bundle.scp.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-bYhuNzILut/RqIw0sC/0vJrVG2V9AFTc/OLxeld9Ylk="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"3380"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022bYhuNzILut/RqIw0sC/0vJrVG2V9AFTc/OLxeld9Ylk=\u0022"},{"Name":"Last-Modified","Value":"Wed, 22 Jan 2025 00:49:32 GMT"}]]]></ResponseHeaders>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"3380"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022bYhuNzILut/RqIw0sC/0vJrVG2V9AFTc/OLxeld9Ylk=\u0022"},{"Name":"Last-Modified","Value":"Fri, 31 Jan 2025 05:52:57 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/Javo2/js/site.js">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\js\site.js'))</AssetFile>

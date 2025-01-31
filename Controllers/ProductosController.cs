@@ -1,5 +1,4 @@
-﻿// Archivo: Controllers/ProductosController.cs
-using AutoMapper;
+﻿using AutoMapper;
 using Javo2.Controllers.Base;
 using Javo2.DTOs;
 using Javo2.IServices;
@@ -22,6 +21,8 @@ namespace Javo2.Controllers
         private readonly IDropdownService _dropdownService;
         private readonly ICatalogoService _catalogoService;
         private readonly IMapper _mapper;
+
+        // Se usa ahora para registrar auditoría de creaciones/ediciones/borrados
         private readonly IAuditoriaService _auditoriaService;
 
         public ProductosController(
@@ -29,7 +30,7 @@ namespace Javo2.Controllers
             IDropdownService dropdownService,
             ICatalogoService catalogoService,
             IMapper mapper,
-            IAuditoriaService auditoriaService,
+            IAuditoriaService auditoriaService,     // <-- Inyección
             ILogger<ProductosController> logger
         ) : base(logger)
         {
@@ -37,7 +38,7 @@ namespace Javo2.Controllers
             _dropdownService = dropdownService;
             _catalogoService = catalogoService;
             _mapper = mapper;
-            _auditoriaService = auditoriaService;
+            _auditoriaService = auditoriaService;   // <-- Asignación
         }
 
         // GET: Productos
@@ -99,24 +100,15 @@ namespace Javo2.Controllers
             var rubro = await _catalogoService.GetRubroByIDAsync(model.SelectedRubroID);
             var subRubro = await _catalogoService.GetSubRubroByIDAsync(model.SelectedSubRubroID);
 
-            if (marca == null)
+            if (marca == null || rubro == null || subRubro == null)
             {
-                _logger.LogWarning("Marca con ID={ID} no encontrada", model.SelectedMarcaID);
-                ModelState.AddModelError(string.Empty, "Marca inválida.");
-                await PopulateDropdownsAsync(model);
-                return View("Form", model);
-            }
-            if (rubro == null)
-            {
-                _logger.LogWarning("Rubro con ID={ID} no encontrado", model.SelectedRubroID);
-                ModelState.AddModelError(string.Empty, "Rubro inválido.");
-                await PopulateDropdownsAsync(model);
-                return View("Form", model);
-            }
-            if (subRubro == null)
-            {
-                _logger.LogWarning("SubRubro con ID={ID} no encontrado", model.SelectedSubRubroID);
-                ModelState.AddModelError(string.Empty, "SubRubro inválido.");
+                if (marca == null)
+                    ModelState.AddModelError(string.Empty, "Marca inválida.");
+                if (rubro == null)
+                    ModelState.AddModelError(string.Empty, "Rubro inválido.");
+                if (subRubro == null)
+                    ModelState.AddModelError(string.Empty, "SubRubro inválido.");
+
                 await PopulateDropdownsAsync(model);
                 return View("Form", model);
             }
@@ -133,6 +125,20 @@ namespace Javo2.Controllers
             {
                 await _productoService.CreateProductoAsync(producto);
                 _logger.LogInformation("Producto creado exitosamente con ID={ID}", producto.ProductoID);
+
+                // -----------------------------------
+                // Registro de auditoría: Creación
+                // -----------------------------------
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = User.Identity?.Name ?? "Desconocido",
+                    Entidad = "Producto",
+                    Accion = "Create",
+                    LlavePrimaria = producto.ProductoID.ToString(),
+                    Detalle = $"Nombre={producto.Nombre}, Rubro={rubro.Nombre}, Marca={marca.Nombre}"
+                });
+
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -184,11 +190,25 @@ namespace Javo2.Controllers
             try
             {
                 var producto = _mapper.Map<Producto>(model);
+
                 _logger.LogInformation("Actualizando producto ID={ID}, Nombre={Nombre}",
                     producto.ProductoID, producto.Nombre);
 
                 await _productoService.UpdateProductoAsync(producto);
                 _logger.LogInformation("Producto ID={ID} actualizado correctamente", producto.ProductoID);
+
+                // -----------------------------------
+                // Registro de auditoría: Update
+                // -----------------------------------
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = User.Identity?.Name ?? "Desconocido",
+                    Entidad = "Producto",
+                    Accion = "Update",
+                    LlavePrimaria = producto.ProductoID.ToString(),
+                    Detalle = $"Nombre={producto.Nombre}"
+                });
 
                 return RedirectToAction(nameof(Index));
             }
@@ -209,8 +229,30 @@ namespace Javo2.Controllers
             _logger.LogInformation("ProductosController: Delete POST => ID={ID}", id);
             try
             {
+                // Guardar el producto para detalle en la auditoría
+                var producto = await _productoService.GetProductoByIDAsync(id);
+                if (producto == null)
+                {
+                    _logger.LogWarning("Producto ID={ID} no encontrado para eliminar", id);
+                    return NotFound();
+                }
+
+                // Eliminar producto
                 await _productoService.DeleteProductoAsync(id);
                 _logger.LogInformation("Producto ID={ID} eliminado con éxito", id);
+
+                // -----------------------------------
+                // Registro de auditoría: Delete
+                // -----------------------------------
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = User.Identity?.Name ?? "Desconocido",
+                    Entidad = "Producto",
+                    Accion = "Delete",
+                    LlavePrimaria = producto.ProductoID.ToString(),
+                    Detalle = $"Nombre={producto.Nombre}"
+                });
             }
             catch (Exception ex)
             {
@@ -255,5 +297,40 @@ namespace Javo2.Controllers
                 .ToList();
             _logger.LogWarning("ModelState inválido => {Errors}", string.Join(" | ", errors));
         }
+
+     
+        // EJEMPLO OPCIONAL: Ajustar precios en lote
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AdjustPrices(int[] productIDs, decimal porcentaje, bool isAumento)
+        {
+            _logger.LogInformation("AdjustPrices POST => ProductIDs={@ProductIDs}, Porcentaje={Porc}, Aumento={IsAumento}",
+                productIDs, porcentaje, isAumento);
+            try
+            {
+                await _productoService.AdjustPricesAsync(productIDs, porcentaje, isAumento);
+
+                // Registrar auditoría de ajuste masivo
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = User.Identity?.Name ?? "Desconocido",
+                    Entidad = "Producto",
+                    Accion = "UpdatePrices",
+                    LlavePrimaria = string.Join(",", productIDs),
+                    Detalle = $"Ajuste de precios en {porcentaje}% (Aumento={isAumento})"
+                });
+
+                TempData["Success"] = "Precios ajustados exitosamente.";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al ajustar precios masivamente");
+                TempData["Error"] = "No se pudo ajustar los precios.";
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+ 
     }
 }

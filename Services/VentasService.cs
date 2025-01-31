@@ -2,289 +2,352 @@
 using Javo2.IServices;
 using Javo2.Models;
 using Javo2.ViewModels.Operaciones.Ventas;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Javo2.Helpers;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Javo2.Services
 {
     public class VentaService : IVentaService
     {
-        private static readonly List<Venta> _ventas = new();  // Lista estática en memoria
-
         private readonly ILogger<VentaService> _logger;
-        private readonly IStockService _stockService;
+        private readonly IAuditoriaService _auditoriaService;
 
-        // Datos simulados para combos
-        private static readonly List<FormaPago> _formasPago = new()
-        {
-            new FormaPago { FormaPagoID = 1, Nombre = "Efectivo" },
-            new FormaPago { FormaPagoID = 2, Nombre = "Tarjeta de crédito" },
-            new FormaPago { FormaPagoID = 3, Nombre = "Tarjeta de débito" },
-            new FormaPago { FormaPagoID = 4, Nombre = "Transferencia" },
-            new FormaPago { FormaPagoID = 5, Nombre = "Pago Virtual" },
-            new FormaPago { FormaPagoID = 6, Nombre = "Crédito Personal" }
-        };
+        private static List<Venta> _ventas = new();
+        private static int _nextVentaID = 1;
+        private readonly string _jsonFilePath = "Data/ventas.json";
+        private static readonly object _lock = new();
 
-        private static readonly List<Banco> _bancos = new()
-        {
-            new Banco { BancoID = 1, Nombre = "Banco Santander" },
-            new Banco { BancoID = 2, Nombre = "BBVA" },
-            new Banco { BancoID = 3, Nombre = "Banco Galicia" }
-        };
-
-        private static readonly List<SelectListItem> _tipoTarjetaOptions = new()
-        {
-            new SelectListItem { Value = "Visa", Text = "Visa" },
-            new SelectListItem { Value = "MasterCard", Text = "MasterCard" },
-            new SelectListItem { Value = "Amex", Text = "American Express" }
-        };
-
-        private static readonly List<SelectListItem> _cuotasOptions = Enumerable.Range(1, 12)
-            .Select(i => new SelectListItem { Value = i.ToString(), Text = $"{i} Cuotas" })
-            .ToList();
-
-        private static readonly List<SelectListItem> _entidadesElectronicas = new()
-        {
-            new SelectListItem { Value = "MercadoPago", Text = "MercadoPago" },
-            new SelectListItem { Value = "PayPal", Text = "PayPal" },
-            new SelectListItem { Value = "Stripe", Text = "Stripe" }
-        };
-
-        private static readonly List<SelectListItem> _planesFinanciamiento = new()
-        {
-            new SelectListItem { Value = "Plan A", Text = "Plan A" },
-            new SelectListItem { Value = "Plan B", Text = "Plan B" },
-            new SelectListItem { Value = "Plan C", Text = "Plan C" }
-        };
-
-        public VentaService(ILogger<VentaService> logger, IStockService stockService)
+        public VentaService(ILogger<VentaService> logger, IAuditoriaService auditoriaService)
         {
             _logger = logger;
-            _stockService = stockService;
+            _auditoriaService = auditoriaService;
+            CargarDesdeJson();
         }
 
-        // ===================== Lógica extra =====================
-        public async Task<IEnumerable<Venta>> GetVentasAsync(VentaFilterDto filter)
+        // =============== Métodos CRUD ===============
+        public Task<IEnumerable<Venta>> GetAllVentasAsync()
         {
-            _logger.LogInformation("GetVentasAsync con filtro: {@Filter}", filter);
-            return await GetVentasFilteredAsync(filter);
-        }
-
-        public async Task<string> GenerarNumeroFacturaAsync()
-        {
-            var correlativo = _ventas.Count + 1;
-            var numero = $"FAC-{correlativo:00000}";
-            _logger.LogInformation("GenerarNumeroFactura => {Numero}", numero);
-            return await Task.FromResult(numero);
-        }
-
-        public async Task<IEnumerable<Venta>> GetVentasPendientesDeEntregaAsync()
-        {
-            return await GetVentasByEstadoAsync(EstadoVenta.PendienteDeEntrega);
-        }
-
-        public async Task<IEnumerable<FormaPago>> GetFormasPagoAsync()
-        {
-            return await Task.FromResult(_formasPago.AsEnumerable());
-        }
-
-        public async Task<IEnumerable<Banco>> GetBancosAsync()
-        {
-            return await Task.FromResult(_bancos.AsEnumerable());
-        }
-
-        // ===================== CRUD =====================
-        public async Task<IEnumerable<Venta>> GetAllVentasAsync()
-        {
-            return await Task.FromResult(_ventas);
-        }
-
-        public async Task<Venta?> GetVentaByIDAsync(int id)
-        {
-            var venta = _ventas.FirstOrDefault(v => v.VentaID == id);
-            return await Task.FromResult(venta);
-        }
-
-        public async Task CreateVentaAsync(Venta venta)
-        {
-            _logger.LogInformation("[VentaService] CreateVentaAsync llamado con Venta={Venta}", venta);
-
-            venta.VentaID = _ventas.Any() ? _ventas.Max(v => v.VentaID) + 1 : 1;
-            _ventas.Add(venta);
-            await Task.CompletedTask;
-        }
-
-        public async Task UpdateVentaAsync(Venta venta)
-        {
-            var existing = _ventas.FirstOrDefault(v => v.VentaID == venta.VentaID);
-            if (existing != null)
+            lock (_lock)
             {
-                // Actualizamos campos relevantes
-                existing.FechaVenta = venta.FechaVenta;
-                existing.NumeroFactura = venta.NumeroFactura;
-                existing.NombreCliente = venta.NombreCliente;
-                existing.TelefonoCliente = venta.TelefonoCliente;
-                existing.DomicilioCliente = venta.DomicilioCliente;
-                existing.LocalidadCliente = venta.LocalidadCliente;
-                existing.CelularCliente = venta.CelularCliente;
-                existing.LimiteCreditoCliente = venta.LimiteCreditoCliente;
-                existing.SaldoCliente = venta.SaldoCliente;
-                existing.SaldoDisponibleCliente = venta.SaldoDisponibleCliente;
-                existing.FormaPagoID = venta.FormaPagoID;
-                existing.BancoID = venta.BancoID;
-                existing.EntidadElectronica = venta.EntidadElectronica;
-                existing.PlanFinanciamiento = venta.PlanFinanciamiento;
-                existing.AdelantoDinero = venta.AdelantoDinero;
-                existing.DineroContado = venta.DineroContado;
-                existing.MontoCheque = venta.MontoCheque;
-                existing.NumeroCheque = venta.NumeroCheque;
-                existing.Observaciones = venta.Observaciones;
-                existing.Condiciones = venta.Condiciones;
-                existing.Credito = venta.Credito;
-                existing.Estado = venta.Estado;
-                existing.EstadoEntrega = venta.EstadoEntrega;
-                existing.ProductosPresupuesto = venta.ProductosPresupuesto;
-                existing.PrecioTotal = venta.PrecioTotal;
-                existing.FechaModificacion = DateTime.UtcNow;
+                return Task.FromResult(_ventas.AsEnumerable());
             }
-            await Task.CompletedTask;
         }
 
-        public async Task DeleteVentaAsync(int id)
+        public Task<Venta?> GetVentaByIDAsync(int id)
         {
-            var venta = _ventas.FirstOrDefault(v => v.VentaID == id);
-            if (venta != null) _ventas.Remove(venta);
-            await Task.CompletedTask;
-        }
-
-        // ===================== FILTRADO =====================
-        public async Task<IEnumerable<Venta>> GetVentasByEstadoAsync(EstadoVenta estado)
-        {
-            var result = _ventas.Where(v => v.Estado == estado);
-            return await Task.FromResult(result);
-        }
-
-        public async Task<IEnumerable<Venta>> GetVentasByFechaAsync(DateTime? fechaInicio, DateTime? fechaFin)
-        {
-            var result = _ventas.AsEnumerable();
-            if (fechaInicio.HasValue)
-                result = result.Where(v => v.FechaVenta.Date >= fechaInicio.Value.Date);
-            if (fechaFin.HasValue)
-                result = result.Where(v => v.FechaVenta.Date <= fechaFin.Value.Date);
-
-            return await Task.FromResult(result);
-        }
-
-        public async Task<IEnumerable<Venta>> GetVentasByClienteIDAsync(int clienteID)
-        {
-            var result = _ventas.Where(v => v.ClienteID == clienteID);
-            return await Task.FromResult(result);
-        }
-
-        public async Task<IEnumerable<Venta>> GetVentasFilteredAsync(VentaFilterDto filterDto)
-        {
-            var result = _ventas.AsEnumerable();
-            if (!string.IsNullOrEmpty(filterDto.NombreCliente))
+            lock (_lock)
             {
-                result = result.Where(v => v.NombreCliente.Contains(filterDto.NombreCliente, StringComparison.OrdinalIgnoreCase));
+                var venta = _ventas.FirstOrDefault(v => v.VentaID == id);
+                return Task.FromResult<Venta?>(venta);
             }
-
-            if (filterDto.FechaInicio.HasValue)
-            {
-                result = result.Where(v => v.FechaVenta.Date >= filterDto.FechaInicio.Value.Date);
-            }
-
-            if (filterDto.FechaFin.HasValue)
-            {
-                result = result.Where(v => v.FechaVenta.Date <= filterDto.FechaFin.Value.Date);
-            }
-
-            if (!string.IsNullOrEmpty(filterDto.NumeroFactura))
-            {
-                result = result.Where(v => v.NumeroFactura.Contains(filterDto.NumeroFactura, StringComparison.OrdinalIgnoreCase));
-            }
-
-            return await Task.FromResult(result);
         }
 
-        // ===================== PROCESAMIENTO =====================
-        public async Task ProcessVentaAsync(int VentaID)
+        public Task CreateVentaAsync(Venta venta)
         {
-            var venta = _ventas.FirstOrDefault(v => v.VentaID == VentaID);
-            if (venta == null) return;
-
-            // Descontar stock, etc. (depende de tu lógica con _stockService)
-            foreach (var item in venta.ProductosPresupuesto)
+            lock (_lock)
             {
-                var movimiento = new MovimientoStock
+                venta.VentaID = _nextVentaID++;
+                _ventas.Add(venta);
+                GuardarEnJson();
+                _logger.LogInformation("Venta creada: {@Venta}", venta);
+            }
+            return Task.CompletedTask;
+        }
+
+        public Task UpdateVentaAsync(Venta venta)
+        {
+            lock (_lock)
+            {
+                var existing = _ventas.FirstOrDefault(v => v.VentaID == venta.VentaID);
+                if (existing != null)
                 {
-                    ProductoID = item.ProductoID,
-                    Cantidad = item.Cantidad,
-                    TipoMovimiento = "Salida",
-                    Motivo = $"Venta #{venta.VentaID}"
-                };
-                await _stockService.RegistrarMovimientoAsync(movimiento);
-            }
+                    // Actualiza campos relevantes
+                    existing.FechaVenta = venta.FechaVenta;
+                    existing.NumeroFactura = venta.NumeroFactura;
+                    existing.NombreCliente = venta.NombreCliente;
+                    existing.TelefonoCliente = venta.TelefonoCliente;
+                    existing.DomicilioCliente = venta.DomicilioCliente;
+                    existing.LocalidadCliente = venta.LocalidadCliente;
+                    existing.CelularCliente = venta.CelularCliente;
+                    existing.LimiteCreditoCliente = venta.LimiteCreditoCliente;
+                    existing.SaldoCliente = venta.SaldoCliente;
+                    existing.SaldoDisponibleCliente = venta.SaldoDisponibleCliente;
+                    existing.FormaPagoID = venta.FormaPagoID;
+                    existing.BancoID = venta.BancoID;
+                    existing.TipoTarjeta = venta.TipoTarjeta;
+                    existing.Cuotas = venta.Cuotas;
+                    existing.EntidadElectronica = venta.EntidadElectronica;
+                    existing.PlanFinanciamiento = venta.PlanFinanciamiento;
+                    existing.Observaciones = venta.Observaciones;
+                    existing.Condiciones = venta.Condiciones;
+                    existing.Credito = venta.Credito;
+                    existing.ProductosPresupuesto = venta.ProductosPresupuesto;
+                    existing.PrecioTotal = venta.PrecioTotal;
+                    existing.TotalProductos = venta.TotalProductos;
+                    existing.AdelantoDinero = venta.AdelantoDinero;
+                    existing.DineroContado = venta.DineroContado;
+                    existing.MontoCheque = venta.MontoCheque;
+                    existing.NumeroCheque = venta.NumeroCheque;
+                    existing.Estado = venta.Estado;
 
-            venta.Estado = EstadoVenta.Completada;
-            await Task.CompletedTask;
+                    GuardarEnJson();
+                    _logger.LogInformation("Venta ID={ID} actualizada", venta.VentaID);
+                }
+            }
+            return Task.CompletedTask;
         }
 
-        public async Task UpdateEstadoVentaAsync(int id, EstadoVenta estado)
+        public Task DeleteVentaAsync(int id)
         {
-            var venta = _ventas.FirstOrDefault(v => v.VentaID == id);
-            if (venta != null)
+            lock (_lock)
             {
-                venta.Estado = estado;
+                var existing = _ventas.FirstOrDefault(v => v.VentaID == id);
+                if (existing != null)
+                {
+                    _ventas.Remove(existing);
+                    GuardarEnJson();
+                    _logger.LogInformation("Venta ID={ID} eliminada", id);
+                }
             }
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
-        // ===================== COMBOS (Opcional) =====================
+        // =============== Métodos de Filtrado ===============
+        public Task<IEnumerable<Venta>> GetVentasByEstadoAsync(EstadoVenta estado)
+        {
+            lock (_lock)
+            {
+                var result = _ventas.Where(v => v.Estado == estado);
+                return Task.FromResult(result);
+            }
+        }
+
+        public Task<IEnumerable<Venta>> GetVentasByFechaAsync(DateTime? fechaInicio, DateTime? fechaFin)
+        {
+            lock (_lock)
+            {
+                var result = _ventas.AsEnumerable();
+                if (fechaInicio.HasValue)
+                    result = result.Where(v => v.FechaVenta >= fechaInicio.Value);
+                if (fechaFin.HasValue)
+                    result = result.Where(v => v.FechaVenta <= fechaFin.Value);
+                return Task.FromResult(result);
+            }
+        }
+
+        public Task<IEnumerable<Venta>> GetVentasByClienteIDAsync(int clienteID)
+        {
+            lock (_lock)
+            {
+                // asumiendo que almacenarías un ClienteID en la venta
+                var result = _ventas.Where(v => v.ClienteID == clienteID);
+                return Task.FromResult(result);
+            }
+        }
+
+        public Task<IEnumerable<Venta>> GetVentasFilteredAsync(VentaFilterDto filterDto)
+        {
+            // depende de cómo quieras filtrar...
+            lock (_lock)
+            {
+                var query = _ventas.AsEnumerable();
+                if (!string.IsNullOrEmpty(filterDto.NombreCliente))
+                {
+                    query = query.Where(v => v.NombreCliente.Contains(filterDto.NombreCliente, StringComparison.OrdinalIgnoreCase));
+                }
+                if (filterDto.FechaInicio.HasValue)
+                {
+                    query = query.Where(v => v.FechaVenta >= filterDto.FechaInicio.Value);
+                }
+                if (filterDto.FechaFin.HasValue)
+                {
+                    query = query.Where(v => v.FechaVenta <= filterDto.FechaFin.Value);
+                }
+                if (!string.IsNullOrEmpty(filterDto.NumeroFactura))
+                {
+                    query = query.Where(v => v.NumeroFactura.Contains(filterDto.NumeroFactura, StringComparison.OrdinalIgnoreCase));
+                }
+                return Task.FromResult(query);
+            }
+        }
+
+        // =============== Método específico: GetVentasAsync ===============
+        public Task<IEnumerable<Venta>> GetVentasAsync(VentaFilterDto filter)
+        {
+            // Reutiliza la lógica de GetVentasFilteredAsync o similar
+            return GetVentasFilteredAsync(filter);
+        }
+
+        // =============== Generar Número de Factura ===============
+        public Task<string> GenerarNumeroFacturaAsync()
+        {
+            lock (_lock)
+            {
+                var numero = $"FAC-{DateTime.Now:yyyyMMdd}-{_nextVentaID}";
+                return Task.FromResult(numero);
+            }
+        }
+
+        // =============== Ventas Pendientes de Entrega ===============
+        public Task<IEnumerable<Venta>> GetVentasPendientesDeEntregaAsync()
+        {
+            lock (_lock)
+            {
+                var result = _ventas.Where(v => v.Estado == EstadoVenta.PendienteDeEntrega);
+                return Task.FromResult(result);
+            }
+        }
+
+        public Task<IEnumerable<FormaPago>> GetFormasPagoAsync()
+        {
+            var formas = new List<FormaPago>
+            {
+                new FormaPago { FormaPagoID = 1, Nombre = "Contado" },
+                new FormaPago { FormaPagoID = 2, Nombre = "Tarjeta de Crédito" },
+                new FormaPago { FormaPagoID = 3, Nombre = "Tarjeta de Débito" },
+                new FormaPago { FormaPagoID = 4, Nombre = "Transferencia" },
+                new FormaPago { FormaPagoID = 5, Nombre = "Pago Virtual" },
+                new FormaPago { FormaPagoID = 6, Nombre = "Crédito Personal" }
+            };
+            return Task.FromResult<IEnumerable<FormaPago>>(formas);
+        }
+
+        public Task<IEnumerable<Banco>> GetBancosAsync()
+        {
+            var bancos = new List<Banco>
+            {
+                new Banco { BancoID = 1, Nombre = "Banco Santander" },
+                new Banco { BancoID = 2, Nombre = "BBVA" },
+                new Banco { BancoID = 3, Nombre = "Banco Galicia" }
+            };
+            return Task.FromResult<IEnumerable<Banco>>(bancos);
+        }
+
+        // =============== Procesamiento de la Venta ===============
+        public Task ProcessVentaAsync(int VentaID)
+        {
+            lock (_lock)
+            {
+                var venta = _ventas.FirstOrDefault(v => v.VentaID == VentaID);
+                if (venta == null)
+                {
+                    throw new ArgumentException("Venta no encontrada");
+                }
+
+                // Lógica de verificación de stock, etc.
+                // Cambiar estado a PendienteDeEntrega, etc.
+                // Actualizar y guardar
+                venta.Estado = EstadoVenta.PendienteDeEntrega;
+                GuardarEnJson();
+                _logger.LogInformation("Venta ID={ID} procesada -> PendienteDeEntrega", VentaID);
+            }
+            return Task.CompletedTask;
+        }
+
+        public Task UpdateEstadoVentaAsync(int id, EstadoVenta estado)
+        {
+            lock (_lock)
+            {
+                var venta = _ventas.FirstOrDefault(v => v.VentaID == id);
+                if (venta != null)
+                {
+                    venta.Estado = estado;
+                    GuardarEnJson();
+                    _logger.LogInformation("Venta ID={ID} estado actualizado a {Estado}", id, estado);
+                }
+            }
+            return Task.CompletedTask;
+        }
+
+        // =============== Listas para combos (si se usan) ===============
+        // Estos métodos devuelven opciones de SelectListItem, si tu MVC lo requiere.
         public IEnumerable<SelectListItem> GetFormasPagoSelectList()
         {
-            return _formasPago.Select(fp => new SelectListItem
-            {
-                Value = fp.FormaPagoID.ToString(),
-                Text = fp.Nombre
-            });
+            var formas = GetFormasPagoAsync().Result; // Ojo con .Result en prod
+            return formas.Select(fp => new SelectListItem { Value = fp.FormaPagoID.ToString(), Text = fp.Nombre });
         }
 
         public IEnumerable<SelectListItem> GetBancosSelectList()
         {
-            return _bancos.Select(b => new SelectListItem
-            {
-                Value = b.BancoID.ToString(),
-                Text = b.Nombre
-            });
+            var bancos = GetBancosAsync().Result;
+            return bancos.Select(b => new SelectListItem { Value = b.BancoID.ToString(), Text = b.Nombre });
         }
 
         public IEnumerable<SelectListItem> GetTipoTarjetaSelectList()
         {
-            return _tipoTarjetaOptions;
+            // Ejemplo de tipos de tarjeta
+            var tipos = new List<string> { "Visa", "MasterCard", "Amex" };
+            return tipos.Select(t => new SelectListItem { Value = t, Text = t });
         }
 
         public IEnumerable<SelectListItem> GetCuotasSelectList()
         {
-            return _cuotasOptions;
+            var cuotas = Enumerable.Range(1, 12).Select(c => c.ToString()).ToList();
+            return cuotas.Select(c => new SelectListItem { Value = c, Text = $"{c} cuotas" });
         }
 
         public IEnumerable<SelectListItem> GetEntidadesElectronicasSelectList()
         {
-            return _entidadesElectronicas;
+            var entidades = new List<string> { "PayPal", "MercadoPago", "Stripe" };
+            return entidades.Select(e => new SelectListItem { Value = e, Text = e });
         }
 
         public IEnumerable<SelectListItem> GetPlanesFinanciamientoSelectList()
         {
-            return _planesFinanciamiento;
+            var planes = new List<string> { "Plan A", "Plan B", "Plan C" };
+            return planes.Select(p => new SelectListItem { Value = p, Text = p });
         }
-        public async Task<Venta?> GetVentaByIdAsync(int id)
+
+        // Extra: Método duplicado en la interfaz, lo mantengo por compatibilidad
+        public Task<Venta?> GetVentaByIdAsync(int id)
         {
-            return await GetVentaByIDAsync(id);
+            // Reutilizamos
+            return GetVentaByIDAsync(id);
+        }
+
+        // =============== Métodos internos ===============
+        private void CargarDesdeJson()
+        {
+            lock (_lock)
+            {
+                try
+                {
+                    var data = JsonFileHelper.LoadFromJsonFile<List<Venta>>(_jsonFilePath);
+                    _ventas = data ?? new List<Venta>();
+                    if (_ventas.Any())
+                    {
+                        _nextVentaID = _ventas.Max(v => v.VentaID) + 1;
+                    }
+                    _logger.LogInformation("VentaService: {Count} ventas cargadas desde {File}", _ventas.Count, _jsonFilePath);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error al cargar ventas desde JSON");
+                    _ventas = new List<Venta>();
+                    _nextVentaID = 1;
+                }
+            }
+        }
+
+        private void GuardarEnJson()
+        {
+            lock (_lock)
+            {
+                try
+                {
+                    JsonFileHelper.SaveToJsonFile(_jsonFilePath, _ventas);
+                    _logger.LogInformation("VentaService: {Count} ventas guardadas en {File}", _ventas.Count, _jsonFilePath);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error al guardar ventas en JSON");
+                }
+            }
         }
     }
 }

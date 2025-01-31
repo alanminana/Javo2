@@ -20,12 +20,16 @@ namespace Javo2.Controllers
         private readonly IClienteService _clienteService;
         private readonly IProductoService _productoService;
 
+        // NUEVO: Para registrar auditoría de ventas
+        private readonly IAuditoriaService _auditoriaService;
+
         public VentasController(
             IVentaService ventaService,
             IMapper mapper,
             ILogger<VentasController> logger,
             IClienteService clienteService,
-            IProductoService productoService
+            IProductoService productoService,
+            IAuditoriaService auditoriaService    // <-- se inyecta la auditoría
         )
         {
             _ventaService = ventaService;
@@ -33,6 +37,7 @@ namespace Javo2.Controllers
             _logger = logger;
             _clienteService = clienteService;
             _productoService = productoService;
+            _auditoriaService = auditoriaService; // <-- asignación
         }
 
         // GET: Ventas/Index
@@ -83,29 +88,19 @@ namespace Javo2.Controllers
             // Validación condicional
             if (model.FormaPagoID == 2 && string.IsNullOrEmpty(model.TipoTarjeta))
             {
-                _logger.LogWarning("[VentasController] Validación fallida: TipoTarjeta es requerido para Tarjeta de Crédito.");
                 ModelState.AddModelError(nameof(model.TipoTarjeta), "El campo 'TipoTarjeta' es requerido para Tarjeta de Crédito.");
             }
             if (model.FormaPagoID == 5 && string.IsNullOrEmpty(model.EntidadElectronica))
             {
-                _logger.LogWarning("[VentasController] Validación fallida: EntidadElectronica es requerido para Pago Virtual.");
                 ModelState.AddModelError(nameof(model.EntidadElectronica), "El campo 'EntidadElectronica' es requerido para Pago Virtual.");
             }
             if (model.FormaPagoID == 6 && string.IsNullOrEmpty(model.PlanFinanciamiento))
             {
-                _logger.LogWarning("[VentasController] Validación fallida: PlanFinanciamiento es requerido para Crédito Personal.");
                 ModelState.AddModelError(nameof(model.PlanFinanciamiento), "El campo 'PlanFinanciamiento' es requerido para Crédito Personal.");
             }
 
             if (!ModelState.IsValid)
             {
-                var allErrors = ModelState.Values
-                    .SelectMany(v => v.Errors)
-                    .Select(e => e.ErrorMessage)
-                    .ToList();
-
-                _logger.LogWarning("[VentasController] ModelState inválido => Errores: {Errors}", string.Join(" | ", allErrors));
-
                 // Recargar combos si falla la validación
                 model.FormasPago = await ObtenerFormasPago();
                 model.Bancos = await ObtenerBancos();
@@ -114,7 +109,7 @@ namespace Javo2.Controllers
                 model.EntidadesElectronicas = await ObtenerEntidadesElectronicas();
                 model.PlanesFinanciamiento = await ObtenerPlanesFinanciamiento();
 
-                // Log de cada error de ModelState (opcional)
+                // Log de cada error
                 foreach (var state in ModelState)
                 {
                     foreach (var error in state.Value.Errors)
@@ -126,7 +121,6 @@ namespace Javo2.Controllers
                 return View("Form", model);
             }
 
-            // Mapeo a la entidad de dominio
             var venta = _mapper.Map<Venta>(model);
             venta.Usuario = User.Identity?.Name ?? "Desconocido";
             venta.Vendedor = User.Identity?.Name ?? "Desconocido";
@@ -135,7 +129,7 @@ namespace Javo2.Controllers
             venta.PrecioTotal = venta.ProductosPresupuesto.Sum(p => p.PrecioTotal);
             _logger.LogInformation("[VentasController] PrecioTotal calculado: {Total}", venta.PrecioTotal);
 
-            // Estado si Finalizar=true => Pendiente; sino Borrador
+            // Estado de la venta según si se finaliza
             if (!string.IsNullOrEmpty(Finalizar) && Finalizar.Equals("true", StringComparison.OrdinalIgnoreCase))
             {
                 venta.Estado = EstadoVenta.PendienteDeAutorizacion;
@@ -150,6 +144,51 @@ namespace Javo2.Controllers
             // Crear en servicio
             await _ventaService.CreateVentaAsync(venta);
             _logger.LogInformation("[VentasController] Venta creada con ID={ID}", venta.VentaID);
+
+            // -----------------------------------
+            // Registrar auditoría de la creación
+            // -----------------------------------
+            await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+            {
+                FechaHora = DateTime.Now,
+                Usuario = User.Identity?.Name ?? "Desconocido",
+                Entidad = "Venta",
+                Accion = "Create",
+                LlavePrimaria = venta.VentaID.ToString(),
+                Detalle = $"Cliente={venta.NombreCliente}, Total={venta.PrecioTotal}, Estado={venta.Estado}"
+            });
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // Nuevo ejemplo: Acción para “procesar” la venta (descontar stock, cambiar estado, etc.)
+        [HttpPost]
+        public async Task<IActionResult> Process(int id)
+        {
+            _logger.LogInformation("[VentasController] Process => ID={ID}", id);
+            try
+            {
+                await _ventaService.ProcessVentaAsync(id);
+                _logger.LogInformation("[VentasController] Venta ID={ID} procesada (stock descontado, etc.)", id);
+
+                // Registrar auditoría
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = User.Identity?.Name ?? "Desconocido",
+                    Entidad = "Venta",
+                    Accion = "Process",
+                    LlavePrimaria = id.ToString(),
+                    Detalle = "Venta completada y stock descontado"
+                });
+
+                TempData["Success"] = $"La venta {id} fue procesada correctamente.";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "[VentasController] Error al procesar la venta ID={ID}", id);
+                TempData["Error"] = "No se pudo procesar la venta.";
+            }
 
             return RedirectToAction(nameof(Index));
         }
@@ -193,8 +232,6 @@ namespace Javo2.Controllers
             {
                 return Json(new { success = false, message = "Producto no encontrado." });
             }
-
-            _logger.LogInformation("[VentasController] Producto encontrado => {Nombre}", producto.Nombre);
 
             return Json(new
             {
@@ -271,7 +308,7 @@ namespace Javo2.Controllers
             return Json(new { success = true, data = dataList });
         }
 
-        // ============== Métodos auxiliares para combos (forma de pago, bancos, etc.) ==============
+        // Otras funciones auxiliares para combos
         private async Task<IEnumerable<SelectListItem>> ObtenerFormasPago()
         {
             var formasPago = await _ventaService.GetFormasPagoAsync();

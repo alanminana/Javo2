@@ -1,4 +1,4 @@
-﻿// Archivo: ViewModels/Operaciones/Ventas/VentaListViewModel.cs
+﻿// ViewModels/Operaciones/Ventas/VentaListViewModel.cs
 using System;
 
 namespace Javo2.ViewModels.Operaciones.Ventas
