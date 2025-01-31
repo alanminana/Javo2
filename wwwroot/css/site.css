@@ -1,0 +1,175 @@
+/* site.css */
+
+/* --- Global Body --- */
+body.bg-dark {
+    background-color: #212529 !important;
+    color: #f8f9fa !important;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+}
+
+a,
+a.nav-link {
+    color: #bbb;
+    text-decoration: none;
+}
+
+    a:hover {
+        color: #fff;
+    }
+
+/* --- Sidebar --- */
+.sidebar {
+    /* El position: fixed se definió inline en _Layout, 
+       pero podrías moverlo aquí si prefieres. */
+    background-color: #1c1f23;
+    padding: 1rem;
+}
+
+    .sidebar .nav-link {
+        border-radius: 5px;
+        margin-bottom: 0.3rem;
+    }
+
+        .sidebar .nav-link.active {
+            background-color: #495057;
+            color: #fff !important;
+        }
+
+/* --- Content Container --- */
+.content {
+    /* margin-left: 250px (inline en _Layout) */
+    background-color: #2b2b2b;
+    /* ajusta si quieres distinto color */
+}
+
+/* --- Footer --- */
+.footer {
+    border-top: 1px solid #444;
+    color: #aaa;
+}
+
+    .footer a.text-white:hover {
+        color: #fff;
+        text-decoration: underline;
+    }
+
+/* --- Cards --- */
+.card {
+    background-color: #343a40;
+    border: none;
+    border-radius: 8px;
+}
+
+    .card .card-title,
+    .card .card-text,
+    .card h5 {
+        color: #f8f9fa;
+    }
+
+/* --- Table (oscuro) --- */
+.table {
+    background-color: #343a40;
+    color: #f8f9fa;
+}
+
+    .table thead th {
+        background-color: #495057;
+        border-color: #565e64;
+    }
+
+    .table tbody tr {
+        border-color: #495057;
+    }
+
+        .table tbody tr:nth-of-type(odd) {
+            background-color: rgba(255, 255, 255, 0.03);
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.07);
+        }
+
+/* --- Form Controls --- */
+.form-control,
+.form-select,
+textarea {
+    background-color: #343a40;
+    color: #fff;
+    border: 1px solid #495057;
+}
+
+.form-label {
+    color: #f8f9fa;
+}
+
+input.form-control:focus,
+select.form-select:focus,
+textarea.form-control:focus {
+    background-color: #3c4247;
+    color: #fff;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(32, 39, 46, 0.25);
+}
+
+/* --- Buttons --- */
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+    .btn-primary:hover {
+        background-color: #0b5ed7;
+    }
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+    .btn-secondary:hover {
+        background-color: #5c636a;
+    }
+
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+    .btn-danger:hover {
+        background-color: #bb2d3b;
+    }
+
+/* --- Dashboard Summary Cards --- */
+.summary-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.summary-card {
+    flex: 1 1 200px;
+    background-color: #343a40;
+    border: 1px solid #495057;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+}
+
+    .summary-card h5 {
+        color: #f8f9fa;
+        margin-bottom: 0.5rem;
+    }
+
+    .summary-card p {
+        color: #ccc;
+        font-size: 1.2rem;
+    }
+
+/* --- Chart Container --- */
+.chart-container {
+    min-height: 250px;
+    /* background-color: transparent; */
+}

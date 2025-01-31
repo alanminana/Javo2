@@ -1,0 +1,36 @@
+﻿@using Javo2.ViewModels.Operaciones.Ventas
+@model IEnumerable<VentaListViewModel>
+    ción</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Factura</th>
+            <th>Cliente</th>
+            <th>Total</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var venta in Model)
+        {
+            <tr>
+                <td>@venta.FechaVenta.ToShortDateString()</td>
+                <td>@venta.NumeroFactura</td>
+                <td>@venta.NombreCliente</td>
+                <td>@venta.PrecioTotal</td>
+                <td>
+                    <form asp-action="Aprobar" method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@venta.VentaID" />
+                        <button type="submit" class="btn btn-success btn-sm">Aprobar</button>
+                    </form>
+                    <form asp-action="Rechazar" method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@venta.VentaID" />
+                        <button type="submit" class="btn btn-danger btn-sm">Rechazar</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

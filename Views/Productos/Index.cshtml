@@ -1,0 +1,204 @@
+﻿@model IEnumerable<Javo2.ViewModels.Operaciones.Productos.ProductosViewModel>
+
+@using Microsoft.AspNetCore.Antiforgery
+@inject IAntiforgery Xsrf
+
+@{
+    ViewBag.Title = "Productos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mb-4">@ViewBag.Title</h2>
+
+<!-- (Opcional) Tarjetas de resumen -->
+<div class="summary-cards mb-4">
+    <div class="summary-card">
+        <h5>Total de Productos</h5>
+        <p>@Model.Count()</p>
+    </div>
+</div>
+
+<!-- Formulario de Filtrado -->
+<div class="card mb-4 p-4">
+    <form id="filterForm" class="row g-3">
+        <div class="col-md-3">
+            <label for="filterType" class="form-label">Tipo de Filtro</label>
+            <select id="filterType" class="form-select">
+                <option value="Nombre">Nombre</option>
+                <option value="Codigo">Código</option>
+                <option value="Rubro">Rubro</option>
+                <option value="SubRubro">SubRubro</option>
+                <option value="Marca">Marca</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="filterValue" class="form-label">Valor del Filtro</label>
+            <input type="text" class="form-control" id="filterValue" placeholder="Escriba para filtrar...">
+        </div>
+        <div class="col-md-6 align-self-end">
+            <button type="button" class="btn btn-primary me-2" id="applyFilters">
+                <i class="bi bi-filter me-2"></i> Aplicar Filtros
+            </button>
+            <button type="button" class="btn btn-secondary" id="clearFilters">
+                <i class="bi bi-x-circle me-2"></i> Limpiar Filtros
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Tabla de Productos -->
+<div class="card p-3">
+    <div class="table-responsive">
+        <table class="table table-dark table-striped" id="productosTable">
+            <thead>
+                <tr>
+                    <!-- Checkbox para "seleccionar todo" -->
+                    <th>
+                        <input type="checkbox" id="checkAll" />
+                    </th>
+                    <th>Nombre</th>
+                    <th>Precio Costo</th>
+                    <th>Precio Contado</th>
+                    <th>Precio Lista</th>
+                    <th>Stock Disponible</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="productosTableBody">
+                <!-- Se renderiza la partial con la lista de productos -->
+                @await Html.PartialAsync("_ProductosTable", Model)
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Sección para Ajustar Precios (Aumentar/Disminuir) -->
+<div class="card mt-3 p-3">
+    <div class="row g-3 align-items-center">
+        <div class="col-md-2">
+            <label for="porcentaje" class="form-label">Porcentaje:</label>
+            <input type="number" step="0.01" class="form-control" id="porcentaje" placeholder="Ej: 10 => +10%">
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Operación:</label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="ajusteTipo" value="true" id="radioAumento" checked>
+                <label class="form-check-label" for="radioAumento">Aumentar</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="ajusteTipo" value="false" id="radioDisminuir">
+                <label class="form-check-label" for="radioDisminuir">Disminuir</label>
+            </div>
+        </div>
+        <div class="col-md-3 align-self-end">
+            <button type="button" class="btn btn-success" id="btnAdjustPrices">
+                <i class="bi bi-arrow-up-down me-1"></i> Ajustar Precios
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Botón para Crear Producto -->
+<a asp-action="Create" class="btn btn-success mt-3">
+    <i class="bi bi-plus-circle me-2"></i> Crear Producto
+</a>
+
+<!-- Hidden input con el token Anti-Forgery -->
+<input type="hidden" id="__RequestVerificationToken"
+       value="@Xsrf.GetAndStoreTokens(ViewContext.HttpContext).RequestToken" />
+
+@section Scripts {
+    @* Scripts para filtrar y ajustar precios *@
+    <script>
+        $(document).ready(function () {
+
+            // ----- Filtros -----
+            function applyFilters() {
+                var filterType = $('#filterType').val();
+                var filterValue = $('#filterValue').val();
+
+                var data = {};
+                data[filterType] = filterValue;
+
+                $.ajax({
+                    url: '@Url.Action("Filter", "Productos")',
+                    type: 'GET',
+                    data: data,
+                    success: function (response) {
+                        $('#productosTableBody').html(response);
+                    },
+                    error: function () {
+                        alert('Error al aplicar los filtros.');
+                    }
+                });
+            }
+
+            $('#applyFilters').click(function () {
+                applyFilters();
+            });
+
+            $('#clearFilters').click(function () {
+                $('#filterType').val('Nombre');
+                $('#filterValue').val('');
+                applyFilters();
+            });
+
+            // ----- Check/Uncheck All -----
+            $('#checkAll').on('change', function () {
+                $('input[name="ProductoIDs"]').prop('checked', this.checked);
+            });
+
+            // ----- Ajustar Precios -----
+            $('#btnAdjustPrices').click(function () {
+                // Recolectar IDs seleccionados
+                var selectedIDs = [];
+                $('input[name="ProductoIDs"]:checked').each(function () {
+                    selectedIDs.push($(this).val());
+                });
+
+                if (selectedIDs.length === 0) {
+                    alert("Seleccione al menos un producto.");
+                    return;
+                }
+
+                // Leer porcentaje
+                var porcentaje = parseFloat($('#porcentaje').val());
+                if (isNaN(porcentaje)) {
+                    alert("Ingrese un porcentaje válido (ej. 10 para +10%).");
+                    return;
+                }
+
+                // Saber si es Aumento (true) o Disminuir (false)
+                var isAumento = $('input[name="ajusteTipo"]:checked').val() === "true";
+
+                // Token antiforgery
+                var token = $('#__RequestVerificationToken').val();
+
+                // Llamada AJAX
+                $.ajax({
+                    url: '@Url.Action("IncrementarPrecios", "Productos")',
+                    type: 'POST',
+                    data: {
+                        ProductoIDs: selectedIDs.join(','),
+                        porcentaje: porcentaje,
+                        isAumento: isAumento
+                    },
+                    headers: {
+                        'RequestVerificationToken': token
+                    },
+                    success: function (resp) {
+                        if (resp.success) {
+                            alert("Precios ajustados con éxito.");
+                            location.reload();
+                        } else {
+                            alert("Ocurrió un error: " + resp.message);
+                        }
+                    },
+                    error: function () {
+                        alert("Error al ajustar precios.");
+                    }
+                });
+            });
+        });
+    </script>
+}

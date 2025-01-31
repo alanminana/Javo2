@@ -1,0 +1,92 @@
+﻿@using Javo2.ViewModels.Operaciones.Ventas
+@model IEnumerable<VentaListViewModel>
+
+@{
+    ViewBag.Title = "Ventas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mb-4">@ViewBag.Title</h2>
+
+<!-- Barra de Acciones -->
+<p>
+    <a asp-action="Create" class="btn btn-primary me-2">
+        <i class="bi bi-plus-circle me-1"></i> Crear Nueva Venta
+    </a>
+    <a asp-action="Autorizaciones" class="btn btn-success me-2">
+        <i class="bi bi-check2-square me-1"></i> Autorizaciones
+    </a>
+    <a asp-action="EntregaProductos" class="btn btn-warning">
+        <i class="bi bi-truck me-1"></i> Entrega de Productos
+    </a>
+</p>
+
+<!-- Filtros de Búsqueda -->
+<form method="get" asp-action="Index" class="row g-3 mb-4">
+    <div class="col-md-3">
+        <label for="FechaInicio" class="form-label">Desde:</label>
+        <input type="date" class="form-control" id="FechaInicio" name="FechaInicio"
+               value="@(Model.Any() ? Model.First().FechaVenta.ToString("yyyy-MM-dd") : "")" />
+    </div>
+    <div class="col-md-3">
+        <label for="FechaFin" class="form-label">Hasta:</label>
+        <input type="date" class="form-control" id="FechaFin" name="FechaFin"
+               value="@(Model.Any() ? Model.First().FechaVenta.ToString("yyyy-MM-dd") : "")" />
+    </div>
+    <div class="col-md-3">
+        <label for="NombreCliente" class="form-label">Cliente:</label>
+        <input type="text" class="form-control" id="NombreCliente" name="NombreCliente" placeholder="Nombre cliente" />
+    </div>
+    <div class="col-md-3 align-self-end">
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-search me-1"></i> Buscar
+        </button>
+    </div>
+</form>
+
+
+<!-- Tabla de Ventas -->
+<div class="card p-3">
+    <div class="table-responsive">
+        <table class="table table-dark table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Factura</th>
+                    <th>Cliente</th>
+                    <th>Total</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var venta in Model)
+                {
+                    <tr>
+                        <td>@venta.FechaVenta.ToShortDateString()</td>
+                        <td>@venta.NumeroFactura</td>
+                        <td>@venta.NombreCliente</td>
+                        <td>@venta.PrecioTotal.ToString("C")</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@venta.VentaID"
+                               class="btn btn-warning btn-sm me-1">
+                                <i class="bi bi-pencil-square"></i> Editar
+                            </a>
+                            <a asp-action="Details" asp-route-id="@venta.VentaID"
+                               class="btn btn-info btn-sm me-1">
+                                <i class="bi bi-eye"></i> Detalles
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@venta.VentaID"
+                               class="btn btn-danger btn-sm me-1">
+                                <i class="bi bi-trash"></i> Eliminar
+                            </a>
+                            <a asp-action="Reimprimir" asp-route-id="@venta.VentaID"
+                               class="btn btn-secondary btn-sm">
+                                <i class="bi bi-printer"></i> Re-imprimir
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

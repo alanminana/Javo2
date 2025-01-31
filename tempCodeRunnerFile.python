@@ -1,0 +1,62 @@
+import requests
+import time
+from datetime import datetime
+
+# Configuración de la API
+API_URL = 'https://bds.beygoo.me/v1/empresa/alertas/'
+PARAMS = {
+    'nombre': 'Nombre Alerta'  # Puedes cambiar el nombre de la alerta aquí
+}
+HEADERS = {
+    'accept': 'application/json',
+    'BG-ID': '1612',
+    'BG-KEY': 'd504793976f2f70c2ab27267d5635a9f7be22bccee7aa1f62c99319e5fd9d3e7',
+    'BG-EMPRESA-ID': 'd504793976f2f70c2ab27267d5635a9f7be22bccee7aa1f62c99319e5fd9d3e7'
+}
+
+# Intervalo de tiempo entre solicitudes (en segundos)
+INTERVAL = 360  # 60 segundos
+
+def obtener_alertas():
+    """
+    Realiza una solicitud GET a la API y devuelve la lista de alertas.
+    """
+    try:
+        response = requests.get(API_URL, headers=HEADERS, params=PARAMS)
+        response.raise_for_status()  # Lanza una excepción para códigos de estado HTTP 4xx/5xx
+        data = response.json()
+        return data.get('datos', [])
+    except requests.exceptions.RequestException as e:
+        print(f"[{datetime.now()}] Error al conectar con la API: {e}")
+        return []
+
+def main():
+    print("Iniciando el monitor de alertas...")
+    alertas_vistas = set()
+
+    while True:
+        alertas = obtener_alertas()
+        nuevas_alertas = []
+
+        for alerta in alertas:
+            # Asumiendo que cada alerta tiene un campo único 'id'. 
+            # Si el campo único es diferente, ajusta 'id' por el campo correspondiente.
+            alerta_id = alerta.get('id')
+            if alerta_id and alerta_id not in alertas_vistas:
+                alertas_vistas.add(alerta_id)
+                nuevas_alertas.append(alerta)
+
+        if nuevas_alertas:
+            for alerta in nuevas_alertas:
+                # Personaliza el mensaje según la estructura real de las alertas
+                mensaje = f"Nueva alerta recibida a las {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}: {alerta}"
+                print(mensaje)
+                # Aquí puedes agregar otras formas de notificación, como enviar un correo electrónico
+
+        else:
+            print(f"[{datetime.now()}] No hay nuevas alertas.")
+
+        time.sleep(INTERVAL)
+
+if __name__ == "__main__":
+    main()

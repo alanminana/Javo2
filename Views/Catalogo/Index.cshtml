@@ -1,0 +1,133 @@
+﻿@model CatalogoIndexViewModel
+@{
+    ViewBag.Title = "Catálogo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mb-4">@ViewBag.Title</h2>
+
+<!-- Tarjetas de Resumen -->
+<div class="summary-cards mb-4">
+    <div class="summary-card">
+        <h5>Total de Rubros</h5>
+        <p>@Model.Rubros.Count()</p>
+    </div>
+    <div class="summary-card">
+        <h5>Total de Marcas</h5>
+        <p>@Model.Marcas.Count()</p>
+    </div>
+    <div class="summary-card">
+        <h5>Total de SubRubros</h5>
+        <p>@Model.Rubros.SelectMany(r => r.SubRubros).Count()</p>
+    </div>
+</div>
+
+<!-- Formulario de Filtrado -->
+@* Podríamos hacerlo Partial, pero lo dejamos inline. *@
+<div class="card mb-4 p-4">
+    <form id="filterForm" class="row g-3">
+        <div class="col-md-3">
+            <label for="filterField" class="form-label">Campo de Filtro</label>
+            <select class="form-select" id="filterField" name="filterField">
+                <option value="rubro">Rubro</option>
+                <option value="subrubro">SubRubro</option>
+                <option value="marca">Marca</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="filterValue" class="form-label">Valor del Filtro</label>
+            <input type="text" class="form-control" id="filterValue" name="filterValue" placeholder="Ingrese valor del filtro" autocomplete="off">
+        </div>
+        <div class="col-md-6 align-self-end">
+            <button type="button" class="btn btn-primary me-2" id="applyFilter">
+                <i class="bi bi-filter me-2"></i> Aplicar Filtro
+            </button>
+            <button type="button" class="btn btn-secondary" id="clearFilter">
+                <i class="bi bi-x-circle me-2"></i> Limpiar Filtro
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Tablas de Datos -->
+<div class="card p-3">
+    <h3 class="card-title mb-3">Rubros y SubRubros</h3>
+    <div class="table-responsive">
+        <table class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th>Rubro</th>
+                    <th>SubRubros</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="rubrosTableBody">
+                @await Html.PartialAsync("_RubrosTable", Model.Rubros)
+            </tbody>
+        </table>
+    </div>
+
+    <hr />
+
+    <h3 class="card-title mt-3 mb-3">Marcas</h3>
+    <div class="table-responsive">
+        <table class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th>Marca</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="marcasTableBody">
+                @await Html.PartialAsync("_MarcasTable", Model.Marcas)
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Botones para Agregar Rubro y Marca -->
+<a asp-action="CreateRubro" class="btn btn-success mt-3 me-2">
+    <i class="bi bi-plus-circle me-2"></i> Agregar Rubro
+</a>
+<a asp-action="CreateMarca" class="btn btn-success mt-3">
+    <i class="bi bi-plus-circle me-2"></i> Agregar Marca
+</a>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var filters = {};
+
+            function applyFilters() {
+                $.ajax({
+                    url: '@Url.Action("FilterAsync", "Catalogo")',
+                    type: 'GET',
+                    data: filters,
+                    success: function (data) {
+                        $('#rubrosTableBody').html(data.rubrosPartial);
+                        $('#marcasTableBody').html(data.marcasPartial);
+                    },
+                    error: function () {
+                        alert("Ocurrió un error al aplicar los filtros.");
+                    }
+                });
+            }
+
+            $('#applyFilter').click(function () {
+                var field = $('#filterField').val();
+                var value = $('#filterValue').val().trim();
+
+                filters = {};
+                if (value) filters.Nombre = value; // Como tu lógica anterior
+                applyFilters();
+            });
+
+            $('#clearFilter').click(function () {
+                $('#filterField').val('rubro');
+                $('#filterValue').val('');
+                filters = {};
+                applyFilters();
+            });
+        });
+    </script>
+}

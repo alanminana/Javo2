@@ -1,0 +1,92 @@
+﻿@using Javo2.ViewModels.Operaciones.Catalogo
+@model EditSubRubrosViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Editar SubRubros";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<form asp-action="EditSubRubros" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="RubroID" />
+    <div class="form-group">
+        <label asp-for="RubroNombre" class="control-label"></label>
+        <input asp-for="RubroNombre" class="form-control" readonly />
+    </div>
+
+    <div class="form-group">
+        <label class="control-label">SubRubros Existentes</label>
+        <table class="table table-striped table-bordered" id="subRubrosTable">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Subrubro</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.SubRubros.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            <input type="hidden" asp-for="SubRubros[i].ID" />
+                            <input asp-for="SubRubros[i].Nombre" class="form-control" />
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-sm delete-subrubro">Eliminar</button>
+                            <input type="hidden" asp-for="SubRubros[i].IsDeleted" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Sección para Agregar Nuevos SubRubros -->
+    <div class="form-group">
+        <label for="newSubRubro">Agregar Nuevo SubRubro</label>
+        <input type="text" id="newSubRubro" class="form-control" />
+        <button type="button" id="addSubRubro" class="btn btn-success mt-2">Agregar</button>
+    </div>
+
+    <div class="form-group mt-3">
+        <input type="submit" value="Guardar" class="btn btn-primary me-2" />
+        <a asp-action="Index" class="btn btn-secondary">Volver al Listado</a>
+    </div>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        $(document).ready(function () {
+            var subRubrosCounter = @Model.SubRubros.Count;
+
+            $('#addSubRubro').click(function () {
+                var newSubRubroName = $('#newSubRubro').val();
+                if (newSubRubroName) {
+                    var index = subRubrosCounter++;
+                    var newRow = `
+                        <tr>
+                            <td>
+                                <input type="hidden" name="SubRubros[${index}].ID" value="0" />
+                                <input type="text" name="SubRubros[${index}].Nombre" class="form-control" value="${newSubRubroName}" />
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger btn-sm delete-subrubro">Eliminar</button>
+                                <input type="hidden" name="SubRubros[${index}].IsDeleted" value="false" />
+                            </td>
+                        </tr>`;
+                    $('#subRubrosTable tbody').append(newRow);
+                    $('#newSubRubro').val('');
+                }
+            });
+
+            $(document).on('click', '.delete-subrubro', function () {
+                var row = $(this).closest('tr');
+                row.find('input[name$=".IsDeleted"]').val(true);
+                row.hide();
+            });
+        });
+    </script>
+}

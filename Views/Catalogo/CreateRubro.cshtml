@@ -1,0 +1,30 @@
+﻿@model Javo2.ViewModels.Operaciones.Catalogo.RubroViewModel
+@{
+    ViewBag.Title = "Agregar Rubro";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mb-4">@ViewBag.Title</h2>
+
+<div class="card p-4">
+    <form asp-action="CreateRubro" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label asp-for="Nombre" class="form-label"></label>
+            <input asp-for="Nombre" class="form-control" />
+            <span asp-validation-for="Nombre" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary me-2">
+            <i class="bi bi-plus-circle me-1"></i> Crear
+        </button>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left-circle me-1"></i> Volver
+        </a>
+    </form>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

@@ -1,0 +1,16 @@
+﻿@model IEnumerable<Javo2.ViewModels.Operaciones.Catalogo.MarcaViewModel>
+
+@foreach (var marca in Model)
+{
+    <tr>
+        <td>@marca.Nombre</td>
+        <td>
+            <a asp-action="EditMarca" asp-route-id="@marca.ID" class="btn btn-sm btn-warning me-1">
+                <i class="bi bi-pencil-square"></i>
+            </a>
+            <a asp-action="DeleteMarca" asp-route-id="@marca.ID" class="btn btn-sm btn-danger">
+                <i class="bi bi-trash"></i>
+            </a>
+        </td>
+    </tr>
+}

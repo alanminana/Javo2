@@ -1,0 +1,60 @@
+﻿@using Javo2.ViewModels.Operaciones.Catalogo
+@model CatalogoIndexViewModel
+
+<div>
+    <h3>Rubros y SubRubros</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Rubro</th>
+                <th>SubRubros</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var rubro in Model.Rubros)
+            {
+                <tr>
+                    <td>@rubro.Nombre</td>
+                    <td>
+                        <ul>
+                            @foreach (var subRubro in rubro.SubRubros)
+                            {
+                                <li>@subRubro.Nombre</li>
+                            }
+                        </ul>
+                    </td>
+                    <td>
+                        <a asp-action="EditRubro" asp-route-id="@rubro.ID" class="btn btn-sm btn-warning">Editar Rubro</a>
+                        <a asp-action="EditSubRubros" asp-route-rubroId="@rubro.ID" class="btn btn-sm btn-secondary">Editar SubRubros</a>
+                        <a asp-action="DeleteRubro" asp-route-id="@rubro.ID" class="btn btn-sm btn-danger">Eliminar Rubro</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h3>Marcas</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Marca</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var marca in Model.Marcas)
+            {
+                <tr>
+                    <td>@marca.Nombre</td>
+                    <td>
+                        <a asp-action="EditMarca" asp-route-id="@marca.ID" class="btn btn-sm btn-warning">Editar</a>
+                        <a asp-action="DeleteMarca" asp-route-id="@marca.ID" class="btn btn-sm btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+

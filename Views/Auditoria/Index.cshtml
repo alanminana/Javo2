@@ -1,0 +1,97 @@
+﻿@model IEnumerable<Javo2.Models.AuditoriaRegistro>
+
+@{
+    ViewBag.Title = "Auditoría - Historial de Cambios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mb-4">@ViewBag.Title</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<table class="table table-dark table-striped">
+    <thead>
+        <tr>
+            <th>Fecha/Hora</th>
+            <th>Usuario</th>
+            <th>Entidad</th>
+            <th>Acción</th>
+            <th>Llave</th>
+            <th>Detalle</th>
+            <th>Rollback</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var reg in Model)
+        {
+            var changesHtml = reg.Detalle; // Por defecto, se ve tal cual
+            if (reg.Entidad == "Producto" && reg.Accion == "UpdatePrices")
+            {
+                // Opcional: parsear a HTML más amigable
+                changesHtml = ParseDetalleToHtml(reg.Detalle);
+            }
+
+            <tr>
+                <td>@reg.FechaHora</td>
+                <td>@reg.Usuario</td>
+                <td>@reg.Entidad</td>
+                <td>@reg.Accion</td>
+                <td>@reg.LlavePrimaria</td>
+                <td>
+                    <pre class="text-white">@Html.Raw(changesHtml)</pre>
+                </td>
+                <td>
+                    @if (reg.EsRevertido)
+                    {
+                        <span class="badge bg-info text-dark">Revertido por @reg.RollbackUser (@reg.RollbackFecha.Value.ToShortDateString())</span>
+                    }
+                    else if (reg.Entidad == "Producto" && reg.Accion == "UpdatePrices")
+                    {
+                        <form asp-action="Rollback" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@reg.ID" />
+                            <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('¿Desea revertir este cambio?');">
+                                Revertir
+                            </button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@functions {
+    private string ParseDetalleToHtml(string detalle)
+    {
+        // "101:PCosto=100->110;PContado=150->165;PLista=200->220|102:PCosto=50->55;PContado=60->66;..."
+        var parts = detalle.Split('|', StringSplitOptions.RemoveEmptyEntries);
+        var html = "<ul>";
+        foreach (var p in parts)
+        {
+            var sub = p.Split(':');
+            var prodID = sub[0];
+            var cambios = sub[1].Split(';');
+
+            html += $"<li><strong>ProductoID {prodID}:</strong><ul>";
+            foreach (var c in cambios)
+            {
+                // "PCosto=100->110"
+                var eq = c.Split('=');
+                var campo = eq[0];
+                var vals = eq[1].Split("->");
+                html += $"<li>{campo}: {vals[0]} → {vals[1]}</li>";
+            }
+            html += "</ul></li>";
+        }
+        html += "</ul>";
+        return html;
+    }
+}

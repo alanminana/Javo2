@@ -1,0 +1,27 @@
+﻿@model IEnumerable<dynamic>
+@{
+    ViewBag.Title = "Reporte de Stock";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<table class="table table-dark table-striped">
+    <thead>
+        <tr>
+            <th>ProductoID</th>
+            <th>Nombre</th>
+            <th>Stock Disponible</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.ProductoID</td>
+                <td>@p.Nombre</td>
+                <td>@p.Stock</td>
+            </tr>
+        }
+    </tbody>
+</table>

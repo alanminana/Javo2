@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "Reportes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Reportes</h2>
+
+<div class="mt-3">
+    <a asp-action="RankingVentas" class="btn btn-primary me-2">
+        <i class="bi bi-list-ol"></i> Ranking de Ventas
+    </a>
+    <a asp-action="ExportVentasToExcel" class="btn btn-success me-2">
+        <i class="bi bi-file-earmark-excel"></i> Exportar Ventas a Excel
+    </a>
+    <a asp-action="ReporteStock" class="btn btn-warning">
+        <i class="bi bi-card-checklist"></i> Reporte de Stock
+    </a>
+</div>

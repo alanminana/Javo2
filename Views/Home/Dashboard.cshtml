@@ -1,0 +1,249 @@
+﻿@* Views/Home/Dashboard.cshtml *@
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="mb-4">Dashboard</h1>
+
+<!-- Tarjetas de Resumen (ejemplo) -->
+<div class="summary-cards">
+    <div class="summary-card">
+        <h5>Cantidad de Ventas</h5>
+        <p>1,23222224</p>
+    </div>
+    <div class="summary-card">
+        <h5>Ventas Pendientes</h5>
+        <p>56</p>
+    </div>
+    <div class="summary-card">
+        <h5>Pedidos a Proveedores Pendientes</h5>
+        <p>12</p>
+    </div>
+</div>
+
+<!-- EJEMPLO NUEVO: Contenedor para los datos del dólar -->
+<div class="row mt-4" id="dolar-container">
+    <h3 class="mb-3">Cotización del Dólar (dolarapi.com)</h3>
+    <!-- Se crearán varias tarjetas dentro de este contenedor desde JS -->
+    <div id="card-container" class="d-flex flex-wrap"></div>
+</div>
+
+<!-- Gráficos -->
+<div class="row mt-4">
+    <!-- Gráfico de Clientes -->
+    <div class="col-lg-6 mb-4">
+        <div class="card p-3">
+            <h5 class="card-title">Clientes</h5>
+            <div class="chart-container" style="height: 300px;">
+                <canvas id="clientesChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <!-- Gráfico de Ventas -->
+    <div class="col-lg-6 mb-4">
+        <div class="card p-3">
+            <h5 class="card-title">Ventas</h5>
+            <div class="chart-container" style="height: 300px;">
+                <canvas id="ventasChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <!-- Gráfico de Productos -->
+    <div class="col-lg-6 mb-4">
+        <div class="card p-3">
+            <h5 class="card-title">Productos</h5>
+            <div class="chart-container" style="height: 300px;">
+                <canvas id="productosChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <!-- Gráfico de Proveedores -->
+    <div class="col-lg-6 mb-4">
+        <div class="card p-3">
+            <h5 class="card-title">Proveedores</h5>
+            <div class="chart-container" style="height: 300px;">
+                <canvas id="proveedoresChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // ==========================
+        //   1) COTIZACIÓN DEL DÓLAR
+        // ==========================
+        fetch("https://dolarapi.com/v1/dolares")
+            .then(response => response.json())
+            .then(data => {
+                // Contenedor donde se insertarán las tarjetas
+                const container = document.getElementById('card-container');
+
+                data.forEach(dolar => {
+                    // Creamos un div con clase 'card m-2 p-3' (Bootstrap) para cada dólar
+                    const card = document.createElement('div');
+                    card.className = 'card bg-secondary text-white m-2 p-3';
+                    card.style.minWidth = '200px'; // Opcional, para que no quede muy chica
+
+                    // Agregamos contenido
+                    card.innerHTML = `
+                        <h5 class="card-title">${dolar.nombre}</h5>
+                        <p class="card-text mb-1">Compra: ${dolar.compra}</p>
+                        <p class="card-text mb-1">Venta: ${dolar.venta}</p>
+                        <small>Fecha: ${dolar.fecha}</small>
+                    `;
+
+                    container.appendChild(card);
+                });
+            })
+            .catch(error => {
+                console.error('Error al obtener los datos del dólar:', error);
+            });
+
+
+        // ==========================
+        //   2) GRÁFICOS EXISTENTES
+        // ==========================
+        document.addEventListener('DOMContentLoaded', function () {
+            // Gráfico de Clientes
+            const ctxClientes = document.getElementById('clientesChart').getContext('2d');
+            const clientesChart = new Chart(ctxClientes, {
+                type: 'bar',
+                data: {
+                    labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio'],
+                    datasets: [{
+                        label: 'Nuevos Clientes',
+                        data: [50, 60, 70, 80, 90, 100],
+                        backgroundColor: 'rgba(255, 87, 34, 0.8)',
+                        borderColor: 'rgba(255, 87, 34, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#f0f0f0' }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#f0f0f0' },
+                            grid: { color: 'rgba(240, 240, 240, 0.1)' }
+                        },
+                        y: {
+                            ticks: { color: '#f0f0f0' },
+                            grid: { color: 'rgba(240, 240, 240, 0.1)' }
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de Ventas
+            const ctxVentas = document.getElementById('ventasChart').getContext('2d');
+            const ventasChart = new Chart(ctxVentas, {
+                type: 'line',
+                data: {
+                    labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio'],
+                    datasets: [{
+                        label: 'Ventas',
+                        data: [2000, 3000, 4000, 3500, 5000, 6000],
+                        backgroundColor: 'rgba(76, 175, 80, 0.4)',
+                        borderColor: 'rgba(76, 175, 80, 1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#f0f0f0' }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#f0f0f0' },
+                            grid: { color: 'rgba(240, 240, 240, 0.1)' }
+                        },
+                        y: {
+                            ticks: { color: '#f0f0f0' },
+                            grid: { color: 'rgba(240, 240, 240, 0.1)' }
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de Productos
+            const ctxProductos = document.getElementById('productosChart').getContext('2d');
+            const productosChart = new Chart(ctxProductos, {
+                type: 'pie',
+                data: {
+                    labels: ['Electrónica', 'Ropa', 'Hogar', 'Juguetes'],
+                    datasets: [{
+                        label: 'Productos',
+                        data: [40, 25, 20, 15],
+                        backgroundColor: [
+                            'rgba(33, 150, 243, 0.8)',
+                            'rgba(255, 193, 7, 0.8)',
+                            'rgba(156, 39, 176, 0.8)',
+                            'rgba(255, 152, 0, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(33, 150, 243, 1)',
+                            'rgba(255, 193, 7, 1)',
+                            'rgba(156, 39, 176, 1)',
+                            'rgba(255, 152, 0, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#f0f0f0' }
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de Proveedores
+            const ctxProveedores = document.getElementById('proveedoresChart').getContext('2d');
+            const proveedoresChart = new Chart(ctxProveedores, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Local', 'Internacional'],
+                    datasets: [{
+                        label: 'Proveedores',
+                        data: [70, 30],
+                        backgroundColor: [
+                            'rgba(0, 188, 212, 0.8)',
+                            'rgba(233, 30, 99, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(0, 188, 212, 1)',
+                            'rgba(233, 30, 99, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#f0f0f0' }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+}
