@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Ruta: Models/Cliente.cs
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -57,12 +58,11 @@ namespace Javo2.Models
         // Relaciones
         [Required(ErrorMessage = "La provincia es obligatoria.")]
         public int ProvinciaID { get; set; }
-        public Provincia Provincia { get; set; } // sin [Required]
+        public Provincia Provincia { get; set; } = null!;  // con !, o declárala como Provincia?
 
         [Required(ErrorMessage = "La ciudad es obligatoria.")]
         public int CiudadID { get; set; }
-        public Ciudad Ciudad { get; set; }       // sin [Required]
-
+        public Ciudad Ciudad { get; set; } = null!;        // con !, o Ciudad?
 
         // Otros campos
         public decimal SaldoInicial { get; set; }
@@ -76,9 +76,9 @@ namespace Javo2.Models
         public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
         public DateTime? FechaModificacion { get; set; }
 
-        // Colecciones (sin [Required], no es obligatorio tener ventas)
-        public ICollection<Venta> Ventas { get; set; } = new List<Venta>();
-        public ICollection<Compra> Compras { get; set; } = new List<Compra>();
+        // Colecciones
+        public ICollection<Venta>? Ventas { get; set; }       // si usas Ventas
+        public ICollection<Compra>? Compras { get; set; }     // si usas compras/historial
 
         // Calculado
         [NotMapped]
