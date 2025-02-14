@@ -1,4 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// Archivo: Controllers/CatalogoController.cs
+// Cambios realizados:
+// - Se ha envuelto la mayoría de las acciones (GET) en bloques try/catch para capturar y registrar excepciones, 
+//   retornando una vista de error ("Error") en caso de fallo.
+// - Se han agregado try/catch en acciones que retornan datos (como Filter y EditSubRubros GET) para una mayor robustez.
+
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Javo2.IServices;
 using Javo2.Models;
@@ -45,58 +51,82 @@ namespace Javo2.Controllers
 
         public async Task<IActionResult> Index()
         {
-            _logger.LogInformation("Index action called");
-            var rubros = await _catalogoService.GetRubrosAsync();
-            var marcas = await _catalogoService.GetMarcasAsync();
-
-            var model = new CatalogoIndexViewModel
+            try // Se agregó try/catch para manejo de excepciones en Index
             {
-                Rubros = _mapper.Map<List<RubroViewModel>>(rubros),
-                Marcas = _mapper.Map<List<MarcaViewModel>>(marcas)
-            };
+                _logger.LogInformation("Index action called");
+                var rubros = await _catalogoService.GetRubrosAsync();
+                var marcas = await _catalogoService.GetMarcasAsync();
 
-            _logger.LogInformation("Rubros and Marcas retrieved");
-            await PopulateTotalStockForRubrosAndMarcas(model);
+                var model = new CatalogoIndexViewModel
+                {
+                    Rubros = _mapper.Map<List<RubroViewModel>>(rubros),
+                    Marcas = _mapper.Map<List<MarcaViewModel>>(marcas)
+                };
 
-            return View(model);
+                _logger.LogInformation("Rubros and Marcas retrieved");
+                await PopulateTotalStockForRubrosAndMarcas(model);
+
+                return View(model);
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError(ex, "Error in Index action of CatalogoController");
+                return View("Error");
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> Filter(CatalogoFilterDto filters)
         {
-            _logger.LogInformation("Filter action called with filters: {Filters}", filters);
-            var rubros = await _catalogoService.FilterRubrosAsync(filters);
-            var marcas = await _catalogoService.FilterMarcasAsync(filters);
-
-            var model = new CatalogoIndexViewModel
+            try // Se agregó try/catch en Filter
             {
-                Rubros = _mapper.Map<List<RubroViewModel>>(rubros),
-                Marcas = _mapper.Map<List<MarcaViewModel>>(marcas)
-            };
+                _logger.LogInformation("Filter action called with filters: {Filters}", filters);
+                var rubros = await _catalogoService.FilterRubrosAsync(filters);
+                var marcas = await _catalogoService.FilterMarcasAsync(filters);
 
-            await PopulateTotalStockForRubrosAndMarcas(model);
+                var model = new CatalogoIndexViewModel
+                {
+                    Rubros = _mapper.Map<List<RubroViewModel>>(rubros),
+                    Marcas = _mapper.Map<List<MarcaViewModel>>(marcas)
+                };
 
-            return View("Index", model);
+                await PopulateTotalStockForRubrosAndMarcas(model);
+
+                return View("Index", model);
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError(ex, "Error in Filter action of CatalogoController");
+                return View("Error");
+            }
         }
 
         public async Task<IActionResult> EditSubRubros(int rubroId)
         {
-            _logger.LogInformation("EditSubRubros action called with RubroID: {RubroID}", rubroId);
-            var rubro = await _catalogoService.GetRubroByIDAsync(rubroId);
-            if (rubro == null)
+            try // Se agregó try/catch en EditSubRubros GET
             {
-                _logger.LogWarning("Rubro with ID {RubroID} not found", rubroId);
-                return NotFound();
+                _logger.LogInformation("EditSubRubros action called with RubroID: {RubroID}", rubroId);
+                var rubro = await _catalogoService.GetRubroByIDAsync(rubroId);
+                if (rubro == null)
+                {
+                    _logger.LogWarning("Rubro with ID {RubroID} not found", rubroId);
+                    return NotFound();
+                }
+
+                var model = new EditSubRubrosViewModel
+                {
+                    RubroID = rubro.ID,
+                    RubroNombre = rubro.Nombre,
+                    SubRubros = _mapper.Map<List<SubRubroEditViewModel>>(rubro.SubRubros)
+                };
+
+                return View(model);
             }
-
-            var model = new EditSubRubrosViewModel
+            catch (System.Exception ex)
             {
-                RubroID = rubro.ID,
-                RubroNombre = rubro.Nombre,
-                SubRubros = _mapper.Map<List<SubRubroEditViewModel>>(rubro.SubRubros)
-            };
-
-            return View(model);
+                _logger.LogError(ex, "Error in EditSubRubros GET action of CatalogoController");
+                return View("Error");
+            }
         }
 
         [HttpPost]
@@ -116,9 +146,9 @@ namespace Javo2.Controllers
                 _logger.LogInformation("SubRubros updated successfully for RubroID: {RubroID}", model.RubroID);
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar los SubRubros para RubroID: {RubroID}", model.RubroID);
+                _logger.LogError(ex, "Error updating SubRubros for RubroID: {RubroID}", model.RubroID);
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al actualizar los subrubros.");
                 return View(model);
             }
@@ -126,6 +156,7 @@ namespace Javo2.Controllers
 
         public IActionResult CreateRubro()
         {
+            // Simple action, no se requiere try/catch
             return View(new RubroViewModel());
         }
 
@@ -148,9 +179,9 @@ namespace Javo2.Controllers
                 _logger.LogInformation("Rubro created successfully with Name: {Nombre}", model.Nombre);
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
-                _logger.LogError(ex, "Error al crear el Rubro con Name: {Nombre}", model.Nombre);
+                _logger.LogError(ex, "Error creating Rubro with Name: {Nombre}", model.Nombre);
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al crear el rubro.");
                 return View(model);
             }
@@ -158,6 +189,7 @@ namespace Javo2.Controllers
 
         public IActionResult CreateMarca()
         {
+            // Simple action, no se requiere try/catch
             return View(new MarcaViewModel());
         }
 
@@ -180,9 +212,9 @@ namespace Javo2.Controllers
                 _logger.LogInformation("Marca created successfully with Name: {Nombre}", model.Nombre);
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
-                _logger.LogError(ex, "Error al crear la Marca con Name: {Nombre}", model.Nombre);
+                _logger.LogError(ex, "Error creating Marca with Name: {Nombre}", model.Nombre);
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al crear la marca.");
                 return View(model);
             }
@@ -190,16 +222,24 @@ namespace Javo2.Controllers
 
         public async Task<IActionResult> EditRubro(int id)
         {
-            _logger.LogInformation("EditRubro action called with ID: {ID}", id);
-            var rubro = await _catalogoService.GetRubroByIDAsync(id);
-            if (rubro == null)
+            try // Se agregó try/catch en EditRubro GET
             {
-                _logger.LogWarning("Rubro with ID {ID} not found", id);
-                return NotFound();
-            }
+                _logger.LogInformation("EditRubro action called with ID: {ID}", id);
+                var rubro = await _catalogoService.GetRubroByIDAsync(id);
+                if (rubro == null)
+                {
+                    _logger.LogWarning("Rubro with ID {ID} not found", id);
+                    return NotFound();
+                }
 
-            var model = _mapper.Map<RubroViewModel>(rubro);
-            return View(model);
+                var model = _mapper.Map<RubroViewModel>(rubro);
+                return View(model);
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError(ex, "Error in EditRubro GET action of CatalogoController");
+                return View("Error");
+            }
         }
 
         [HttpPost]
@@ -221,9 +261,9 @@ namespace Javo2.Controllers
                 _logger.LogInformation("Rubro updated successfully with ID: {ID}", model.ID);
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar el Rubro con ID {ID}", model.ID);
+                _logger.LogError(ex, "Error updating Rubro with ID: {ID}", model.ID);
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al actualizar el rubro.");
                 return View(model);
             }
@@ -231,16 +271,24 @@ namespace Javo2.Controllers
 
         public async Task<IActionResult> EditMarca(int id)
         {
-            _logger.LogInformation("EditMarca action called with ID: {ID}", id);
-            var marca = await _catalogoService.GetMarcaByIDAsync(id);
-            if (marca == null)
+            try // Se agregó try/catch en EditMarca GET
             {
-                _logger.LogWarning("Marca with ID {ID} not found", id);
-                return NotFound();
-            }
+                _logger.LogInformation("EditMarca action called with ID: {ID}", id);
+                var marca = await _catalogoService.GetMarcaByIDAsync(id);
+                if (marca == null)
+                {
+                    _logger.LogWarning("Marca with ID {ID} not found", id);
+                    return NotFound();
+                }
 
-            var model = _mapper.Map<MarcaViewModel>(marca);
-            return View(model);
+                var model = _mapper.Map<MarcaViewModel>(marca);
+                return View(model);
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError(ex, "Error in EditMarca GET action of CatalogoController");
+                return View("Error");
+            }
         }
 
         [HttpPost]
@@ -262,9 +310,9 @@ namespace Javo2.Controllers
                 _logger.LogInformation("Marca updated successfully with ID: {ID}", model.ID);
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar la Marca con ID {ID}", model.ID);
+                _logger.LogError(ex, "Error updating Marca with ID: {ID}", model.ID);
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al actualizar la marca.");
                 return View(model);
             }
@@ -272,16 +320,24 @@ namespace Javo2.Controllers
 
         public async Task<IActionResult> DeleteRubro(int id)
         {
-            _logger.LogInformation("DeleteRubro action called with ID: {ID}", id);
-            var rubro = await _catalogoService.GetRubroByIDAsync(id);
-            if (rubro == null)
+            try // Se agregó try/catch en DeleteRubro GET
             {
-                _logger.LogWarning("Rubro with ID {ID} not found", id);
-                return NotFound();
-            }
+                _logger.LogInformation("DeleteRubro action called with ID: {ID}", id);
+                var rubro = await _catalogoService.GetRubroByIDAsync(id);
+                if (rubro == null)
+                {
+                    _logger.LogWarning("Rubro with ID {ID} not found", id);
+                    return NotFound();
+                }
 
-            var model = _mapper.Map<RubroViewModel>(rubro);
-            return View(model);
+                var model = _mapper.Map<RubroViewModel>(rubro);
+                return View(model);
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError(ex, "Error in DeleteRubro GET action of CatalogoController");
+                return View("Error");
+            }
         }
 
         [HttpPost, ActionName("DeleteRubro")]
@@ -295,9 +351,9 @@ namespace Javo2.Controllers
                 _logger.LogInformation("Rubro deleted successfully with ID: {ID}", id);
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar el Rubro con ID {ID}", id);
+                _logger.LogError(ex, "Error deleting Rubro with ID: {ID}", id);
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al eliminar el rubro.");
                 return RedirectToAction(nameof(DeleteRubro), new { id });
             }
@@ -305,16 +361,24 @@ namespace Javo2.Controllers
 
         public async Task<IActionResult> DeleteMarca(int id)
         {
-            _logger.LogInformation("DeleteMarca action called with ID: {ID}", id);
-            var marca = await _catalogoService.GetMarcaByIDAsync(id);
-            if (marca == null)
+            try // Se agregó try/catch en DeleteMarca GET
             {
-                _logger.LogWarning("Marca with ID {ID} not found", id);
-                return NotFound();
-            }
+                _logger.LogInformation("DeleteMarca action called with ID: {ID}", id);
+                var marca = await _catalogoService.GetMarcaByIDAsync(id);
+                if (marca == null)
+                {
+                    _logger.LogWarning("Marca with ID {ID} not found", id);
+                    return NotFound();
+                }
 
-            var model = _mapper.Map<MarcaViewModel>(marca);
-            return View(model);
+                var model = _mapper.Map<MarcaViewModel>(marca);
+                return View(model);
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError(ex, "Error in DeleteMarca GET action of CatalogoController");
+                return View("Error");
+            }
         }
 
         [HttpPost, ActionName("DeleteMarca")]
@@ -328,9 +392,9 @@ namespace Javo2.Controllers
                 _logger.LogInformation("Marca deleted successfully with ID: {ID}", id);
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar la Marca con ID {ID}", id);
+                _logger.LogError(ex, "Error deleting Marca with ID: {ID}", id);
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al eliminar la marca.");
                 return RedirectToAction(nameof(DeleteMarca), new { id });
             }
@@ -339,14 +403,22 @@ namespace Javo2.Controllers
         [HttpGet]
         public async Task<IActionResult> FilterAsync([FromQuery] CatalogoFilterDto filters)
         {
-            _logger.LogInformation("Filter action called with filters: {@Filters}", filters);
+            try // Se agregó try/catch en FilterAsync GET
+            {
+                _logger.LogInformation("FilterAsync action called with filters: {@Filters}", filters);
 
-            var rubros = await _catalogoService.FilterRubrosAsync(filters);
-            var marcas = await _catalogoService.FilterMarcasAsync(filters);
+                var rubros = await _catalogoService.FilterRubrosAsync(filters);
+                var marcas = await _catalogoService.FilterMarcasAsync(filters);
 
-            var partials = await GenerateRubrosMarcasPartialsAsync(rubros, marcas);
+                var partials = await GenerateRubrosMarcasPartialsAsync(rubros, marcas);
 
-            return Json(partials);
+                return Json(partials);
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError(ex, "Error in FilterAsync action of CatalogoController");
+                return Json(new { rubrosPartial = "", marcasPartial = "" });
+            }
         }
 
         private async Task PopulateTotalStockForRubrosAndMarcas(CatalogoIndexViewModel model)

@@ -1,6 +1,8 @@
-﻿using Javo2.IServices;
+﻿// File: Services/ProveedorService.cs
+using Javo2.IServices;
 using Javo2.Models;
 using Microsoft.Extensions.Logging;
+using Javo2.Helpers; // Para utilizar JsonFileHelper
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,20 +13,49 @@ namespace Javo2.Services
     public class ProveedorService : IProveedorService
     {
         private readonly ILogger<ProveedorService> _logger;
-        private static readonly List<Proveedor> _proveedores = new();
+        private List<Proveedor> _proveedores;
         private readonly IStockService _stockService;
         private readonly IProductoService _productoService;
         private static readonly object _lock = new();
+        private readonly string _jsonFilePath = "Data/proveedores.json";
+        private ProveedorData _proveedorData;
 
         public ProveedorService(ILogger<ProveedorService> logger, IStockService stockService, IProductoService productoService)
         {
             _logger = logger;
             _stockService = stockService;
             _productoService = productoService;
-
-            if (!_proveedores.Any())
+            LoadData();
+            if (_proveedorData == null || !_proveedorData.Proveedores.Any())
             {
                 SeedData();
+            }
+            else
+            {
+                _proveedores = _proveedorData.Proveedores;
+            }
+        }
+
+        private void LoadData()
+        {
+            lock (_lock)
+            {
+                _proveedorData = JsonFileHelper.LoadFromJsonFile<ProveedorData>(_jsonFilePath);
+                if (_proveedorData == null)
+                {
+                    _proveedorData = new ProveedorData();
+                }
+                _logger.LogInformation("Proveedor data loaded from {File}.", _jsonFilePath);
+            }
+        }
+
+        private void SaveData()
+        {
+            lock (_lock)
+            {
+                _proveedorData.Proveedores = _proveedores;
+                JsonFileHelper.SaveToJsonFile(_jsonFilePath, _proveedorData);
+                _logger.LogInformation("Proveedor data saved to {File}.", _jsonFilePath);
             }
         }
 
@@ -32,7 +63,7 @@ namespace Javo2.Services
         {
             lock (_lock)
             {
-                _proveedores.AddRange(new List<Proveedor>
+                _proveedores = new List<Proveedor>
                 {
                     new Proveedor
                     {
@@ -54,8 +85,10 @@ namespace Javo2.Services
                         CondicionesPago = "15 días",
                         ProductosAsignados = new List<int> { 3 }
                     }
-                });
+                };
                 _logger.LogInformation("Seed data added for Proveedores");
+                _proveedorData = new ProveedorData { Proveedores = _proveedores };
+                SaveData();
             }
         }
 
@@ -95,6 +128,7 @@ namespace Javo2.Services
                 _logger.LogInformation("Assigned ProveedorID: {ProveedorID}", proveedor.ProveedorID);
                 _proveedores.Add(proveedor);
                 _logger.LogInformation("Proveedor created with ID: {ID}", proveedor.ProveedorID);
+                SaveData();
             }
             await Task.CompletedTask;
         }
@@ -119,6 +153,7 @@ namespace Javo2.Services
                 existingProveedor.CondicionesPago = proveedor.CondicionesPago;
                 existingProveedor.ProductosAsignados = proveedor.ProductosAsignados;
                 _logger.LogInformation("Proveedor updated with ID: {ID}", proveedor.ProveedorID);
+                SaveData();
             }
             await Task.CompletedTask;
         }
@@ -137,12 +172,11 @@ namespace Javo2.Services
 
                 _proveedores.Remove(proveedor);
                 _logger.LogInformation("Proveedor deleted with ID: {ID}", id);
+                SaveData();
             }
             await Task.CompletedTask;
         }
 
-
-        // Archivo: Services/ProveedorService.cs
         public async Task RegistrarCompraAsync(int proveedorID, int ProductoID, int cantidad)
         {
             _logger.LogInformation("RegistrarCompraAsync called with ProveedorID: {ProveedorID}, ProductoID: {ProductoID}, Cantidad: {Cantidad}",

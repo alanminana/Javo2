@@ -1,4 +1,4 @@
-﻿// Archivo: Controllers/ReportesController.cs
+﻿// File: Controllers/ReportesController.cs
 using Javo2.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -19,8 +19,7 @@ namespace Javo2.Controllers
         public ReportesController(
             IVentaService ventaService,
             IProductoService productoService,
-            ILogger<ReportesController> logger
-        )
+            ILogger<ReportesController> logger)
         {
             _ventaService = ventaService;
             _productoService = productoService;
@@ -36,7 +35,6 @@ namespace Javo2.Controllers
         public async Task<IActionResult> RankingVentas()
         {
             var ventas = await _ventaService.GetAllVentasAsync();
-            // Agrupamos por cliente
             var ranking = ventas
                 .GroupBy(v => v.NombreCliente)
                 .Select(g => new {
@@ -44,10 +42,10 @@ namespace Javo2.Controllers
                     SumaTotal = g.Sum(x => x.PrecioTotal)
                 })
                 .OrderByDescending(x => x.SumaTotal)
-                .Take(10) // top 10
+                .Take(10)
                 .ToList();
 
-            return View(ranking); // Generar vista "Views/Reportes/RankingVentas.cshtml"
+            return View(ranking);
         }
 
         // EJEMPLO 2: Exportar Ventas a Excel
@@ -92,9 +90,6 @@ namespace Javo2.Controllers
         public async Task<IActionResult> ReporteStock()
         {
             var productos = await _productoService.GetAllProductosAsync();
-            // Por cada producto, tomar p.StockItem?.CantidadDisponible
-            // Mostrar un ranking o algo similar
-
             var data = productos
                 .Select(p => new {
                     p.ProductoID,
@@ -104,7 +99,7 @@ namespace Javo2.Controllers
                 .OrderByDescending(x => x.Stock)
                 .ToList();
 
-            return View(data); // "Views/Reportes/ReporteStock.cshtml"
+            return View(data);
         }
     }
 }

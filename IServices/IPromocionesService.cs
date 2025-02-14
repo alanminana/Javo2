@@ -1,4 +1,7 @@
-﻿using Javo2.Models;
+﻿// File: IServices/IPromocionesService.cs
+using Javo2.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Javo2.IServices
 {
@@ -9,8 +12,6 @@ namespace Javo2.IServices
         Task CreatePromocionAsync(Promocion promocion);
         Task UpdatePromocionAsync(Promocion promocion);
         Task DeletePromocionAsync(int id);
-
-        // Método para obtener todas las promociones activas aplicables a un producto dado
         Task<IEnumerable<Promocion>> GetPromocionesAplicablesAsync(Producto producto);
     }
 }

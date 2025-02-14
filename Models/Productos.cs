@@ -1,4 +1,5 @@
-﻿using System;
+﻿// File: Models/Producto.cs
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -38,9 +39,17 @@ namespace Javo2.Models
         [Display(Name = "Precio de Lista")]
         public decimal PLista { get; set; } = 0;
 
+        // Se agregan las propiedades de clasificación:
+        public int RubroID { get; set; }
+        public Rubro Rubro { get; set; } = new Rubro();
+        public int SubRubroID { get; set; }
+        public SubRubro SubRubro { get; set; } = new SubRubro();
+        public int MarcaID { get; set; }
+        public Marca? Marca { get; set; }
+
         [Range(0, 100)]
         [Display(Name = "Porcentaje de IVA")]
-        public decimal PorcentajeIva { get; set; } = 21; // Siempre es 21
+        public decimal PorcentajeIva { get; set; } = 21;
 
         [Display(Name = "Fecha de Modificación")]
         public DateTime FechaMod { get; set; } = DateTime.UtcNow;
@@ -49,48 +58,13 @@ namespace Javo2.Models
         public DateTime FechaModPrecio { get; set; } = DateTime.UtcNow;
 
         [Display(Name = "Entregable")]
-        public bool Entregable { get; set; } = false; // Checkbox
+        public bool Entregable { get; set; } = false;
 
         [Display(Name = "No Listar")]
-        public bool NoListar { get; set; } = false; // Checkbox
+        public bool NoListar { get; set; } = false;
 
-        [Display(Name = "Fecha de Stock")]
-        public DateTime FechaStock { get; set; }
-
-        [StringLength(100)]
-        [Display(Name = "Usuario")]
-        public string Usuario { get; set; } = "cosmefulanito"; // No editable
-
-        [StringLength(500)]
-        [Display(Name = "Comentario de Estado")]
-        public string EstadoComentario { get; set; } = "test"; // No editable
-
-        [Range(0, double.MaxValue)]
-        [Display(Name = "Deuda Total")]
-        public decimal DeudaTotal { get; set; } = 0; // No editable
-
-        [StringLength(100)]
-        [Display(Name = "Modificado Por")]
-        public string ModificadoPor { get; set; } = "cosmefulanito"; // No editable
-
-        // Relaciones
-        [Required]
-        [Display(Name = "Rubro")]
-        public int RubroID { get; set; }
-        public Rubro Rubro { get; set; }
-
-        [Required]
-        [Display(Name = "SubRubro")]
-        public int SubRubroID { get; set; }
-        public SubRubro SubRubro { get; set; }
-
-        [Required]
-        [Display(Name = "Marca")]
-        public int MarcaID { get; set; }
-        public Marca Marca { get; set; }
-
-        [Display(Name = "Fecha de Stock")]
-        public Proveedor Proveedor { get; set; }
+        [Display(Name = "Proveedor")]
+        public Proveedor Proveedor { get; set; } = new Proveedor();
 
         public enum EstadoProducto
         {
@@ -98,8 +72,9 @@ namespace Javo2.Models
             Inactivo,
             Descontinuado
         }
-        public StockItem StockItem { get; set; }
-
         public EstadoProducto Estado { get; set; } = EstadoProducto.Activo;
+
+        // Relación con Stock
+        public StockItem? StockItem { get; set; }
     }
 }

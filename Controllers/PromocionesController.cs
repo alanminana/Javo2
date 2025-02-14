@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿// File: Controllers/PromocionesController.cs
+using AutoMapper;
 using Javo2.Controllers.Base;
 using Javo2.IServices;
 using Javo2.Models;

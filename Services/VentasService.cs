@@ -1,4 +1,4 @@
-﻿// Ruta: Services/VentaService.cs
+﻿// File: Services/VentaService.cs
 using Javo2.IServices;
 using Javo2.Models;
 using Javo2.ViewModels.Operaciones.Ventas;
@@ -17,24 +17,24 @@ namespace Javo2.Services
         private readonly ILogger<VentaService> _logger;
         private readonly IAuditoriaService _auditoriaService;
 
-        private static List<Venta> _ventas = new();
+        private static List<Venta> _ventas = new List<Venta>();
         private static int _nextVentaID = 1;
         private readonly string _jsonFilePath = "Data/ventas.json";
-        private static readonly object _lock = new();
+        private static readonly object _lock = new object();
 
         public VentaService(ILogger<VentaService> logger, IAuditoriaService auditoriaService)
         {
             _logger = logger;
             _auditoriaService = auditoriaService;
-            CargarDesdeJson();
+            // Cargar ventas de forma asíncrona utilizando el método asíncrono del helper
+            CargarDesdeJsonAsync().GetAwaiter().GetResult();
         }
 
-        // =============== Métodos CRUD ===============
-        public Task<IEnumerable<Venta>> GetAllVentasAsync()
+        public async Task<IEnumerable<Venta>> GetAllVentasAsync()
         {
             lock (_lock)
             {
-                return Task.FromResult(_ventas.AsEnumerable());
+                return _ventas.ToList();
             }
         }
 
@@ -47,19 +47,18 @@ namespace Javo2.Services
             }
         }
 
-        public Task CreateVentaAsync(Venta venta)
+        public async Task CreateVentaAsync(Venta venta)
         {
             lock (_lock)
             {
                 venta.VentaID = _nextVentaID++;
                 _ventas.Add(venta);
-                GuardarEnJson();
-                _logger.LogInformation("Venta creada: {@Venta}", venta);
             }
-            return Task.CompletedTask;
+            await GuardarEnJsonAsync();
+            _logger.LogInformation("Venta creada: {@Venta}", venta);
         }
 
-        public Task UpdateVentaAsync(Venta venta)
+        public async Task UpdateVentaAsync(Venta venta)
         {
             lock (_lock)
             {
@@ -94,15 +93,13 @@ namespace Javo2.Services
                     existing.MontoCheque = venta.MontoCheque;
                     existing.NumeroCheque = venta.NumeroCheque;
                     existing.Estado = venta.Estado;
-
-                    GuardarEnJson();
-                    _logger.LogInformation("Venta ID={ID} actualizada", venta.VentaID);
                 }
             }
-            return Task.CompletedTask;
+            await GuardarEnJsonAsync();
+            _logger.LogInformation("Venta ID={ID} actualizada", venta.VentaID);
         }
 
-        public Task DeleteVentaAsync(int id)
+        public async Task DeleteVentaAsync(int id)
         {
             lock (_lock)
             {
@@ -110,14 +107,12 @@ namespace Javo2.Services
                 if (existing != null)
                 {
                     _ventas.Remove(existing);
-                    GuardarEnJson();
-                    _logger.LogInformation("Venta ID={ID} eliminada", id);
                 }
             }
-            return Task.CompletedTask;
+            await GuardarEnJsonAsync();
+            _logger.LogInformation("Venta ID={ID} eliminada", id);
         }
 
-        // =============== Métodos de Filtrado ===============
         public Task<IEnumerable<Venta>> GetVentasByEstadoAsync(EstadoVenta estado)
         {
             lock (_lock)
@@ -144,46 +139,33 @@ namespace Javo2.Services
         {
             lock (_lock)
             {
-                // asumiendo que almacenarías un ClienteID en la venta
-                var result = _ventas.Where(v => v.ClienteID == clienteID);
+                var result = _ventas.Where(v => v.DniCliente == clienteID);
                 return Task.FromResult(result);
             }
         }
 
         public Task<IEnumerable<Venta>> GetVentasFilteredAsync(VentaFilterDto filterDto)
         {
-            // depende de cómo quieras filtrar...
             lock (_lock)
             {
                 var query = _ventas.AsEnumerable();
                 if (!string.IsNullOrEmpty(filterDto.NombreCliente))
-                {
                     query = query.Where(v => v.NombreCliente.Contains(filterDto.NombreCliente, StringComparison.OrdinalIgnoreCase));
-                }
                 if (filterDto.FechaInicio.HasValue)
-                {
                     query = query.Where(v => v.FechaVenta >= filterDto.FechaInicio.Value);
-                }
                 if (filterDto.FechaFin.HasValue)
-                {
                     query = query.Where(v => v.FechaVenta <= filterDto.FechaFin.Value);
-                }
                 if (!string.IsNullOrEmpty(filterDto.NumeroFactura))
-                {
                     query = query.Where(v => v.NumeroFactura.Contains(filterDto.NumeroFactura, StringComparison.OrdinalIgnoreCase));
-                }
                 return Task.FromResult(query);
             }
         }
 
-        // =============== Método específico: GetVentasAsync ===============
         public Task<IEnumerable<Venta>> GetVentasAsync(VentaFilterDto filter)
         {
-            // Reutiliza la lógica de GetVentasFilteredAsync o similar
             return GetVentasFilteredAsync(filter);
         }
 
-        // =============== Generar Número de Factura ===============
         public Task<string> GenerarNumeroFacturaAsync()
         {
             lock (_lock)
@@ -193,7 +175,6 @@ namespace Javo2.Services
             }
         }
 
-        // =============== Ventas Pendientes de Entrega ===============
         public Task<IEnumerable<Venta>> GetVentasPendientesDeEntregaAsync()
         {
             lock (_lock)
@@ -228,7 +209,6 @@ namespace Javo2.Services
             return Task.FromResult<IEnumerable<Banco>>(bancos);
         }
 
-        // =============== Procesamiento de la Venta ===============
         public Task ProcessVentaAsync(int VentaID)
         {
             lock (_lock)
@@ -238,10 +218,6 @@ namespace Javo2.Services
                 {
                     throw new ArgumentException("Venta no encontrada");
                 }
-
-                // Lógica de verificación de stock, etc.
-                // Cambiar estado a PendienteDeEntrega, etc.
-                // Actualizar y guardar
                 venta.Estado = EstadoVenta.PendienteDeEntrega;
                 GuardarEnJson();
                 _logger.LogInformation("Venta ID={ID} procesada -> PendienteDeEntrega", VentaID);
@@ -264,11 +240,9 @@ namespace Javo2.Services
             return Task.CompletedTask;
         }
 
-        // =============== Listas para combos (si se usan) ===============
-        // Estos métodos devuelven opciones de SelectListItem, si tu MVC lo requiere.
         public IEnumerable<SelectListItem> GetFormasPagoSelectList()
         {
-            var formas = GetFormasPagoAsync().Result; // Ojo con .Result en prod
+            var formas = GetFormasPagoAsync().Result;
             return formas.Select(fp => new SelectListItem { Value = fp.FormaPagoID.ToString(), Text = fp.Nombre });
         }
 
@@ -280,7 +254,6 @@ namespace Javo2.Services
 
         public IEnumerable<SelectListItem> GetTipoTarjetaSelectList()
         {
-            // Ejemplo de tipos de tarjeta
             var tipos = new List<string> { "Visa", "MasterCard", "Amex" };
             return tipos.Select(t => new SelectListItem { Value = t, Text = t });
         }
@@ -303,21 +276,18 @@ namespace Javo2.Services
             return planes.Select(p => new SelectListItem { Value = p, Text = p });
         }
 
-        // Extra: Método duplicado en la interfaz, lo mantengo por compatibilidad
         public Task<Venta?> GetVentaByIdAsync(int id)
         {
-            // Reutilizamos
             return GetVentaByIDAsync(id);
         }
 
-        // =============== Métodos internos ===============
-        private void CargarDesdeJson()
+        private async Task CargarDesdeJsonAsync()
         {
-            lock (_lock)
+            try
             {
-                try
+                var data = await JsonFileHelper.LoadFromJsonFileAsync<List<Venta>>(_jsonFilePath);
+                lock (_lock)
                 {
-                    var data = JsonFileHelper.LoadFromJsonFile<List<Venta>>(_jsonFilePath);
                     _ventas = data ?? new List<Venta>();
                     if (_ventas.Any())
                     {
@@ -325,15 +295,37 @@ namespace Javo2.Services
                     }
                     _logger.LogInformation("VentaService: {Count} ventas cargadas desde {File}", _ventas.Count, _jsonFilePath);
                 }
-                catch (Exception ex)
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cargar ventas desde JSON");
+                lock (_lock)
                 {
-                    _logger.LogError(ex, "Error al cargar ventas desde JSON");
                     _ventas = new List<Venta>();
                     _nextVentaID = 1;
                 }
             }
         }
 
+        private async Task GuardarEnJsonAsync()
+        {
+            List<Venta> snapshot;
+            lock (_lock)
+            {
+                snapshot = _ventas.ToList();
+            }
+            try
+            {
+                await JsonFileHelper.SaveToJsonFileAsync(_jsonFilePath, snapshot);
+                _logger.LogInformation("VentaService: guardados {Count} ventas en {File}", snapshot.Count, _jsonFilePath);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al guardar ventas en JSON");
+            }
+        }
+
+        // Método síncrono para uso en métodos que lo requieran.
         private void GuardarEnJson()
         {
             lock (_lock)
@@ -341,7 +333,7 @@ namespace Javo2.Services
                 try
                 {
                     JsonFileHelper.SaveToJsonFile(_jsonFilePath, _ventas);
-                    _logger.LogInformation("VentaService: {Count} ventas guardadas en {File}", _ventas.Count, _jsonFilePath);
+                    _logger.LogInformation("VentaService: guardados {Count} ventas en {File}", _ventas.Count, _jsonFilePath);
                 }
                 catch (Exception ex)
                 {

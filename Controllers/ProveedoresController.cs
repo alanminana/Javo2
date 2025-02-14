@@ -1,4 +1,10 @@
-﻿using AutoMapper;
+﻿// Archivo: Controllers/ProveedoresController.cs
+// Cambios realizados:
+// - Se agregaron bloques try/catch en las acciones GET (Index, Filter, Create, Edit, Details, Delete) para manejar excepciones.
+// - Se retornan vistas de error ("Error") en caso de excepciones, siguiendo el mismo criterio que en otros módulos.
+// - Esto mejora la robustez y trazabilidad en el manejo de errores.
+
+using AutoMapper;
 using Javo2.Controllers.Base;
 using Javo2.IServices;
 using Javo2.IServices.Common;
@@ -39,52 +45,76 @@ namespace Javo2.Controllers
 
         public async Task<IActionResult> Index()
         {
-            _logger.LogInformation("Index action called");
-            var proveedores = await _proveedorService.GetProveedoresAsync();
-            var proveedoresViewModel = _mapper.Map<IEnumerable<ProveedoresViewModel>>(proveedores);
+            try // Se agregó try/catch en Index GET
+            {
+                _logger.LogInformation("Index action called");
+                var proveedores = await _proveedorService.GetProveedoresAsync();
+                var proveedoresViewModel = _mapper.Map<IEnumerable<ProveedoresViewModel>>(proveedores);
 
-            await PopulateProductosAsignadosInfo(proveedoresViewModel);
+                await PopulateProductosAsignadosInfo(proveedoresViewModel);
 
-            return View(proveedoresViewModel);
+                return View(proveedoresViewModel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Index action of ProveedoresController");
+                return View("Error");
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> Filter(string filterField, string filterValue)
         {
-            _logger.LogInformation("Filter action called with filterField: {FilterField}, filterValue: {FilterValue}", filterField, filterValue);
-            var proveedores = await _proveedorService.GetProveedoresAsync();
-            var proveedoresViewModel = _mapper.Map<IEnumerable<ProveedoresViewModel>>(proveedores);
-
-            await PopulateProductosAsignadosInfo(proveedoresViewModel);
-
-            if (!string.IsNullOrEmpty(filterValue))
+            try // Se agregó try/catch en Filter GET
             {
-                if (filterField == "nombre")
-                {
-                    proveedoresViewModel = proveedoresViewModel.Where(p => p.Nombre.Contains(filterValue, StringComparison.OrdinalIgnoreCase));
-                }
-                else if (filterField == "producto")
-                {
-                    proveedoresViewModel = proveedoresViewModel.Where(p => p.ProductosAsignadosNombres.Any(n => n.Contains(filterValue, StringComparison.OrdinalIgnoreCase)));
-                }
-                else if (filterField == "marca")
-                {
-                    proveedoresViewModel = proveedoresViewModel.Where(p => p.ProductosAsignadosMarcas.Any(m => m.Contains(filterValue, StringComparison.OrdinalIgnoreCase)));
-                }
-                else if (filterField == "submarca")
-                {
-                    proveedoresViewModel = proveedoresViewModel.Where(p => p.ProductosAsignadosSubMarcas.Any(sm => sm.Contains(filterValue, StringComparison.OrdinalIgnoreCase)));
-                }
-            }
+                _logger.LogInformation("Filter action called with filterField: {FilterField}, filterValue: {FilterValue}", filterField, filterValue);
+                var proveedores = await _proveedorService.GetProveedoresAsync();
+                var proveedoresViewModel = _mapper.Map<IEnumerable<ProveedoresViewModel>>(proveedores);
 
-            return PartialView("_ProveedoresTable", proveedoresViewModel);
+                await PopulateProductosAsignadosInfo(proveedoresViewModel);
+
+                if (!string.IsNullOrEmpty(filterValue))
+                {
+                    if (filterField == "nombre")
+                    {
+                        proveedoresViewModel = proveedoresViewModel.Where(p => p.Nombre.Contains(filterValue, StringComparison.OrdinalIgnoreCase));
+                    }
+                    else if (filterField == "producto")
+                    {
+                        proveedoresViewModel = proveedoresViewModel.Where(p => p.ProductosAsignadosNombres.Any(n => n.Contains(filterValue, StringComparison.OrdinalIgnoreCase)));
+                    }
+                    else if (filterField == "marca")
+                    {
+                        proveedoresViewModel = proveedoresViewModel.Where(p => p.ProductosAsignadosMarcas.Any(m => m.Contains(filterValue, StringComparison.OrdinalIgnoreCase)));
+                    }
+                    else if (filterField == "submarca")
+                    {
+                        proveedoresViewModel = proveedoresViewModel.Where(p => p.ProductosAsignadosSubMarcas.Any(sm => sm.Contains(filterValue, StringComparison.OrdinalIgnoreCase)));
+                    }
+                }
+
+                return PartialView("_ProveedoresTable", proveedoresViewModel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Filter action of ProveedoresController");
+                return PartialView("_ProveedoresTable", new List<ProveedoresViewModel>());
+            }
         }
 
         public async Task<IActionResult> Create()
         {
-            _logger.LogInformation("Create GET action called");
-            var viewModel = await InitializeProveedorViewModelAsync();
-            return View("Form", viewModel);
+            try // Se agregó try/catch en Create GET
+            {
+                _logger.LogInformation("Create GET action called");
+                var viewModel = await InitializeProveedorViewModelAsync();
+                return View("Form", viewModel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Create GET action of ProveedoresController");
+                return View("Error");
+            }
         }
 
         [HttpPost]
@@ -113,7 +143,7 @@ namespace Javo2.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error creating Proveedor: {Error}", ex.Message);
+                _logger.LogError(ex, "Error creating Proveedor");
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al crear el proveedor.");
                 return View("Form", proveedorViewModel);
             }
@@ -121,34 +151,42 @@ namespace Javo2.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            _logger.LogInformation("Edit GET action called with ID: {ID}", id);
-            var proveedor = await _proveedorService.GetProveedorByIDAsync(id);
-            if (proveedor == null)
+            try // Se agregó try/catch en Edit GET
             {
-                _logger.LogWarning("Proveedor with ID {ID} not found", id);
-                return NotFound();
+                _logger.LogInformation("Edit GET action called with ID: {ID}", id);
+                var proveedor = await _proveedorService.GetProveedorByIDAsync(id);
+                if (proveedor == null)
+                {
+                    _logger.LogWarning("Proveedor with ID {ID} not found", id);
+                    return NotFound();
+                }
+
+                var proveedorViewModel = _mapper.Map<ProveedoresViewModel>(proveedor);
+
+                proveedorViewModel.ProductosAsignadosNombres = new List<string>();
+                foreach (var ProductoID in proveedor.ProductosAsignados)
+                {
+                    var producto = await _productoService.GetProductoByIDAsync(ProductoID);
+                    if (producto != null)
+                    {
+                        proveedorViewModel.ProductosAsignadosNombres.Add(producto.Nombre);
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Producto con ID {ProductoID} no encontrado", ProductoID);
+                    }
+                }
+
+                await PopulateDropDownListsAsync(proveedorViewModel);
+                await PopulateProductosAsignadosStocks(new List<ProveedoresViewModel> { proveedorViewModel });
+
+                return View("Form", proveedorViewModel);
             }
-
-            var proveedorViewModel = _mapper.Map<ProveedoresViewModel>(proveedor);
-
-            proveedorViewModel.ProductosAsignadosNombres = new List<string>();
-            foreach (var ProductoID in proveedor.ProductosAsignados)
+            catch (Exception ex)
             {
-                var producto = await _productoService.GetProductoByIDAsync(ProductoID);
-                if (producto != null)
-                {
-                    proveedorViewModel.ProductosAsignadosNombres.Add(producto.Nombre);
-                }
-                else
-                {
-                    _logger.LogWarning("Producto con ID {ProductoID} no encontrado", ProductoID);
-                }
+                _logger.LogError(ex, "Error in Edit GET action of ProveedoresController");
+                return View("Error");
             }
-
-            await PopulateDropDownListsAsync(proveedorViewModel);
-            await PopulateProductosAsignadosStocks(new List<ProveedoresViewModel> { proveedorViewModel });
-
-            return View("Form", proveedorViewModel);
         }
 
         [HttpPost]
@@ -176,7 +214,7 @@ namespace Javo2.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error updating Proveedor: {Error}", ex.Message);
+                _logger.LogError(ex, "Error updating Proveedor");
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al actualizar el proveedor.");
                 return View("Form", proveedorViewModel);
             }
@@ -184,48 +222,64 @@ namespace Javo2.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            _logger.LogInformation("Details action called with ID: {ID}", id);
-            var proveedor = await _proveedorService.GetProveedorByIDAsync(id);
-            if (proveedor == null)
+            try // Se agregó try/catch en Details GET
             {
-                _logger.LogWarning("Proveedor with ID {ID} not found", id);
-                return NotFound();
+                _logger.LogInformation("Details action called with ID: {ID}", id);
+                var proveedor = await _proveedorService.GetProveedorByIDAsync(id);
+                if (proveedor == null)
+                {
+                    _logger.LogWarning("Proveedor with ID {ID} not found", id);
+                    return NotFound();
+                }
+
+                var proveedorViewModel = _mapper.Map<ProveedoresViewModel>(proveedor);
+
+                proveedorViewModel.ProductosAsignadosNombres = new List<string>();
+                foreach (var ProductoID in proveedor.ProductosAsignados)
+                {
+                    var producto = await _productoService.GetProductoByIDAsync(ProductoID);
+                    if (producto != null)
+                    {
+                        proveedorViewModel.ProductosAsignadosNombres.Add(producto.Nombre);
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Producto con ID {ProductoID} no encontrado", ProductoID);
+                    }
+                }
+
+                await PopulateProductosAsignadosStocks(new List<ProveedoresViewModel> { proveedorViewModel });
+
+                return View(proveedorViewModel);
             }
-
-            var proveedorViewModel = _mapper.Map<ProveedoresViewModel>(proveedor);
-
-            proveedorViewModel.ProductosAsignadosNombres = new List<string>();
-            foreach (var ProductoID in proveedor.ProductosAsignados)
+            catch (Exception ex)
             {
-                var producto = await _productoService.GetProductoByIDAsync(ProductoID);
-                if (producto != null)
-                {
-                    proveedorViewModel.ProductosAsignadosNombres.Add(producto.Nombre);
-                }
-                else
-                {
-                    _logger.LogWarning("Producto con ID {ProductoID} no encontrado", ProductoID);
-                }
+                _logger.LogError(ex, "Error in Details GET action of ProveedoresController");
+                return View("Error");
             }
-
-            await PopulateProductosAsignadosStocks(new List<ProveedoresViewModel> { proveedorViewModel });
-
-            return View(proveedorViewModel);
         }
 
         public async Task<IActionResult> Delete(int id)
         {
-            _logger.LogInformation("Delete GET action called with ID: {ID}", id);
-            var proveedor = await _proveedorService.GetProveedorByIDAsync(id);
-            if (proveedor == null)
+            try // Se agregó try/catch en Delete GET
             {
-                _logger.LogWarning("Proveedor with ID {ID} not found", id);
-                return NotFound();
+                _logger.LogInformation("Delete GET action called with ID: {ID}", id);
+                var proveedor = await _proveedorService.GetProveedorByIDAsync(id);
+                if (proveedor == null)
+                {
+                    _logger.LogWarning("Proveedor with ID {ID} not found", id);
+                    return NotFound();
+                }
+
+                var proveedorViewModel = _mapper.Map<ProveedoresViewModel>(proveedor);
+
+                return View(proveedorViewModel);
             }
-
-            var proveedorViewModel = _mapper.Map<ProveedoresViewModel>(proveedor);
-
-            return View(proveedorViewModel);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Delete GET action of ProveedoresController");
+                return View("Error");
+            }
         }
 
         [HttpPost, ActionName("Delete")]
@@ -241,7 +295,7 @@ namespace Javo2.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error deleting Proveedor: {Error}", ex.Message);
+                _logger.LogError(ex, "Error deleting Proveedor");
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al eliminar el proveedor.");
                 var proveedor = await _proveedorService.GetProveedorByIDAsync(id);
                 var proveedorViewModel = _mapper.Map<ProveedoresViewModel>(proveedor);
@@ -252,13 +306,21 @@ namespace Javo2.Controllers
         [HttpGet]
         public async Task<IActionResult> SearchProducts(string term)
         {
-            var products = await _productoService.GetProductosByTermAsync(term);
-            var result = products.Select(p => new
+            try // Se agregó try/catch en SearchProducts GET
             {
-                label = $"{p.Nombre} - {p.Marca?.Nombre ?? "Sin Marca"} {p.SubRubro?.Nombre ?? "Sin SubRubro"}",
-                value = p.ProductoID
-            }).ToList();
-            return Json(result);
+                var products = await _productoService.GetProductosByTermAsync(term);
+                var result = products.Select(p => new
+                {
+                    label = $"{p.Nombre} - {p.Marca?.Nombre ?? "Sin Marca"} {p.SubRubro?.Nombre ?? "Sin SubRubro"}",
+                    value = p.ProductoID
+                }).ToList();
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in SearchProducts action of ProveedoresController");
+                return Json(new List<object>());
+            }
         }
 
         private async Task PopulateDropDownListsAsync(ProveedoresViewModel model)

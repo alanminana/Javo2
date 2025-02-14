@@ -180,7 +180,7 @@
               "RelativeDocumentMoniker": "Views\\Productos\\Form.cshtml",
               "ToolTip": "E:\\github\\Javo2\\Views\\Productos\\Form.cshtml",
               "RelativeToolTip": "Views\\Productos\\Form.cshtml",
-              "ViewState": "AgIAABQAAAAAAAAAAAAhwCMAAAA8AAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-01-23T23:23:34.2Z",
               "EditorCaption": ""
@@ -195,8 +195,7 @@
               "RelativeToolTip": "Views\\Home\\Index.cshtml",
               "ViewState": "AgIAAOEAAAAAAAAAAAAowPgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-01-23T23:21:24.426Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-23T23:21:24.426Z"
             },
             {
               "$type": "Document",
@@ -208,8 +207,7 @@
               "RelativeToolTip": "Views\\Home\\Dashboard.cshtml",
               "ViewState": "AgIAAOoAAAAAAAAAAAAAAGYAAABBAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-01-23T23:19:36.908Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-23T23:19:36.908Z"
             },
             {
               "$type": "Document",
@@ -221,8 +219,7 @@
               "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
               "ViewState": "AgIAAGoAAAAAAAAAAAAowIEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-01-23T23:19:01.735Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-23T23:19:01.735Z"
             },
             {
               "$type": "Document",
@@ -234,8 +231,7 @@
               "RelativeToolTip": "Views\\Shared\\_ValidationScriptsPartial.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-01-23T23:19:01.011Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-23T23:19:01.011Z"
             },
             {
               "$type": "Document",
@@ -259,8 +255,7 @@
               "RelativeToolTip": "Models\\AuditoriaRegistro.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-22T01:43:57.548Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-22T01:43:57.548Z"
             },
             {
               "$type": "Document",
@@ -272,8 +267,7 @@
               "RelativeToolTip": "Views\\Ventas\\Form.cshtml",
               "ViewState": "AgIAAFUAAAAAAAAAAAAUwGMAAABNAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-01-22T01:43:44.654Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-22T01:43:44.654Z"
             },
             {
               "$type": "Document",
@@ -297,8 +291,7 @@
               "RelativeToolTip": "Controllers\\VentasController.cs",
               "ViewState": "AgIAADcAAAAAAAAAAAAYwD4AAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-22T01:44:16.098Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-22T01:44:16.098Z"
             },
             {
               "$type": "Document",
@@ -406,8 +399,7 @@
               "RelativeToolTip": "IServices\\Common\\IDropdownService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-22T01:44:15.284Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-22T01:44:15.284Z"
             },
             {
               "$type": "Document",

@@ -1,4 +1,11 @@
-﻿using AutoMapper;
+﻿// Archivo: Controllers/ProductosController.cs
+// Cambios realizados:
+// - Se agregó manejo de excepciones (try/catch) en los métodos GET (Index, Details, Create, Edit y GetSubRubros)
+//   para mejorar la robustez del controlador.
+// - Se agregó el retorno de una vista de error ("Error") en caso de excepción.
+// - Se mantuvieron los try/catch existentes en los métodos POST y se agregó manejo en GetSubRubros.
+
+using AutoMapper;
 using Javo2.Controllers.Base;
 using Javo2.DTOs;
 using Javo2.IServices;
@@ -21,8 +28,6 @@ namespace Javo2.Controllers
         private readonly IDropdownService _dropdownService;
         private readonly ICatalogoService _catalogoService;
         private readonly IMapper _mapper;
-
-        // Se usa ahora para registrar auditoría de creaciones/ediciones/borrados
         private readonly IAuditoriaService _auditoriaService;
 
         public ProductosController(
@@ -30,7 +35,7 @@ namespace Javo2.Controllers
             IDropdownService dropdownService,
             ICatalogoService catalogoService,
             IMapper mapper,
-            IAuditoriaService auditoriaService,     // <-- Inyección
+            IAuditoriaService auditoriaService,     // Inyección de auditoría
             ILogger<ProductosController> logger
         ) : base(logger)
         {
@@ -38,40 +43,64 @@ namespace Javo2.Controllers
             _dropdownService = dropdownService;
             _catalogoService = catalogoService;
             _mapper = mapper;
-            _auditoriaService = auditoriaService;   // <-- Asignación
+            _auditoriaService = auditoriaService;
         }
 
         // GET: Productos
         public async Task<IActionResult> Index()
         {
-            _logger.LogInformation("ProductosController: Index GET");
-            var productos = await _productoService.GetAllProductosAsync();
-            var model = _mapper.Map<List<ProductosViewModel>>(productos);
-            return View(model);
+            try // Cambio: Agregado manejo de excepciones en GET Index
+            {
+                _logger.LogInformation("ProductosController: Index GET");
+                var productos = await _productoService.GetAllProductosAsync();
+                var model = _mapper.Map<List<ProductosViewModel>>(productos);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en Index GET de Productos");
+                return View("Error");
+            }
         }
 
         // GET: Productos/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            _logger.LogInformation("ProductosController: Details GET con ID={ID}", id);
-            var producto = await _productoService.GetProductoByIDAsync(id);
-            if (producto == null)
+            try // Cambio: Agregado manejo de excepciones en GET Details
             {
-                _logger.LogWarning("Producto con ID={ID} no encontrado en Details", id);
-                return NotFound();
+                _logger.LogInformation("ProductosController: Details GET con ID={ID}", id);
+                var producto = await _productoService.GetProductoByIDAsync(id);
+                if (producto == null)
+                {
+                    _logger.LogWarning("Producto con ID={ID} no encontrado en Details", id);
+                    return NotFound();
+                }
+                var model = _mapper.Map<ProductosViewModel>(producto);
+                return View(model);
             }
-            var model = _mapper.Map<ProductosViewModel>(producto);
-            return View(model);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en Details GET de Productos");
+                return View("Error");
+            }
         }
 
         // GET: Productos/Create
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            _logger.LogInformation("ProductosController: Create GET");
-            var model = new ProductosViewModel();
-            await PopulateDropdownsAsync(model);
-            return View("Form", model);
+            try // Cambio: Agregado manejo de excepciones en GET Create
+            {
+                _logger.LogInformation("ProductosController: Create GET");
+                var model = new ProductosViewModel();
+                await PopulateDropdownsAsync(model);
+                return View("Form", model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en Create GET de Productos");
+                return View("Error");
+            }
         }
 
         // POST: Productos/Create
@@ -84,13 +113,12 @@ namespace Javo2.Controllers
 
             // Rellenar usuario
             model.ModificadoPor = User.Identity?.Name ?? "UsuarioDesconocido";
-            ModelState.Remove(nameof(model.ModificadoPor)); // Para no invalidar
+            ModelState.Remove(nameof(model.ModificadoPor)); // Evita invalidación por este campo
 
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("ModelState inválido en Create => Errores: {Errors}",
+                _logger.LogWarning("ModelState inválido en Create POST => Errores: {Errors}",
                     string.Join(" | ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
-
                 await PopulateDropdownsAsync(model);
                 return View("Form", model);
             }
@@ -126,9 +154,7 @@ namespace Javo2.Controllers
                 await _productoService.CreateProductoAsync(producto);
                 _logger.LogInformation("Producto creado exitosamente con ID={ID}", producto.ProductoID);
 
-                // -----------------------------------
                 // Registro de auditoría: Creación
-                // -----------------------------------
                 await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
                 {
                     FechaHora = DateTime.Now,
@@ -154,17 +180,25 @@ namespace Javo2.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            _logger.LogInformation("ProductosController: Edit GET con ID={ID}", id);
-            var producto = await _productoService.GetProductoByIDAsync(id);
-            if (producto == null)
+            try // Cambio: Agregado manejo de excepciones en GET Edit
             {
-                _logger.LogWarning("Producto ID={ID} no encontrado al Editar", id);
-                return NotFound();
-            }
+                _logger.LogInformation("ProductosController: Edit GET con ID={ID}", id);
+                var producto = await _productoService.GetProductoByIDAsync(id);
+                if (producto == null)
+                {
+                    _logger.LogWarning("Producto ID={ID} no encontrado al Editar", id);
+                    return NotFound();
+                }
 
-            var model = _mapper.Map<ProductosViewModel>(producto);
-            await PopulateDropdownsAsync(model);
-            return View("Form", model);
+                var model = _mapper.Map<ProductosViewModel>(producto);
+                await PopulateDropdownsAsync(model);
+                return View("Form", model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en Edit GET de Productos");
+                return View("Error");
+            }
         }
 
         // POST: Productos/Edit/5
@@ -180,9 +214,8 @@ namespace Javo2.Controllers
 
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("ModelState inválido al Editar => Errores: {Errors}",
+                _logger.LogWarning("ModelState inválido al Editar POST => Errores: {Errors}",
                     string.Join(" | ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
-
                 await PopulateDropdownsAsync(model);
                 return View("Form", model);
             }
@@ -197,9 +230,7 @@ namespace Javo2.Controllers
                 await _productoService.UpdateProductoAsync(producto);
                 _logger.LogInformation("Producto ID={ID} actualizado correctamente", producto.ProductoID);
 
-                // -----------------------------------
                 // Registro de auditoría: Update
-                // -----------------------------------
                 await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
                 {
                     FechaHora = DateTime.Now,
@@ -229,7 +260,6 @@ namespace Javo2.Controllers
             _logger.LogInformation("ProductosController: Delete POST => ID={ID}", id);
             try
             {
-                // Guardar el producto para detalle en la auditoría
                 var producto = await _productoService.GetProductoByIDAsync(id);
                 if (producto == null)
                 {
@@ -237,13 +267,10 @@ namespace Javo2.Controllers
                     return NotFound();
                 }
 
-                // Eliminar producto
                 await _productoService.DeleteProductoAsync(id);
                 _logger.LogInformation("Producto ID={ID} eliminado con éxito", id);
 
-                // -----------------------------------
                 // Registro de auditoría: Delete
-                // -----------------------------------
                 await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
                 {
                     FechaHora = DateTime.Now,
@@ -253,22 +280,32 @@ namespace Javo2.Controllers
                     LlavePrimaria = producto.ProductoID.ToString(),
                     Detalle = $"Nombre={producto.Nombre}"
                 });
+
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al eliminar producto ID={ID}", id);
                 ModelState.AddModelError(string.Empty, $"Error al eliminar producto: {ex.Message}");
+                return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
         public async Task<IActionResult> GetSubRubros(int rubroId)
         {
-            _logger.LogInformation("GetSubRubros GET => rubroId={rubroId}", rubroId);
-            var subRubros = await _dropdownService.GetSubRubrosAsync(rubroId);
-            _logger.LogInformation("SubRubros encontrados: {Count}", subRubros.Count);
-            return Json(subRubros);
+            try // Cambio: Agregado manejo de excepciones en GetSubRubros
+            {
+                _logger.LogInformation("GetSubRubros GET => rubroId={rubroId}", rubroId);
+                var subRubros = await _dropdownService.GetSubRubrosAsync(rubroId);
+                _logger.LogInformation("SubRubros encontrados: {Count}", subRubros.Count);
+                return Json(subRubros);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en GetSubRubros GET");
+                return Json(new List<SelectListItem>());
+            }
         }
 
         private async Task PopulateDropdownsAsync(ProductosViewModel model)
@@ -298,7 +335,6 @@ namespace Javo2.Controllers
             _logger.LogWarning("ModelState inválido => {Errors}", string.Join(" | ", errors));
         }
 
-     
         // EJEMPLO OPCIONAL: Ajustar precios en lote
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -331,6 +367,5 @@ namespace Javo2.Controllers
 
             return RedirectToAction(nameof(Index));
         }
- 
     }
 }

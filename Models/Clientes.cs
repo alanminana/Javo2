@@ -1,4 +1,8 @@
-﻿// Ruta: Models/Cliente.cs
+﻿// Archivo: Models/Cliente.cs
+// Cambios realizados:
+// - Se modificaron las propiedades de navegación Provincia y Ciudad para permitir valores nulos (tipo nullable).
+//   Esto mejora la flexibilidad en el mapeo y manejo de relaciones, en caso de que no estén asignadas en algún escenario.
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -58,11 +62,11 @@ namespace Javo2.Models
         // Relaciones
         [Required(ErrorMessage = "La provincia es obligatoria.")]
         public int ProvinciaID { get; set; }
-        public Provincia Provincia { get; set; } = null!;  // con !, o declárala como Provincia?
+        public Provincia? Provincia { get; set; } // Cambiado: se permite null en la propiedad de navegación
 
         [Required(ErrorMessage = "La ciudad es obligatoria.")]
         public int CiudadID { get; set; }
-        public Ciudad Ciudad { get; set; } = null!;        // con !, o Ciudad?
+        public Ciudad? Ciudad { get; set; } // Cambiado: se permite null en la propiedad de navegación
 
         // Otros campos
         public decimal SaldoInicial { get; set; }
@@ -77,8 +81,8 @@ namespace Javo2.Models
         public DateTime? FechaModificacion { get; set; }
 
         // Colecciones
-        public ICollection<Venta>? Ventas { get; set; }       // si usas Ventas
-        public ICollection<Compra>? Compras { get; set; }     // si usas compras/historial
+        public ICollection<Venta>? Ventas { get; set; }
+        public ICollection<Compra>? Compras { get; set; }
 
         // Calculado
         [NotMapped]

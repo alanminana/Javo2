@@ -1,4 +1,5 @@
-﻿using System;
+﻿// File: ViewModels/Operaciones/Promociones/PromocionViewModel.cs
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Javo2.ViewModels.Operaciones.Promociones

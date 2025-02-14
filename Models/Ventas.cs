@@ -1,4 +1,4 @@
-﻿// Models/Venta.cs
+﻿// File: Models/Ventas.cs
 using System;
 using System.Collections.Generic;
 
@@ -22,7 +22,7 @@ namespace Javo2.Models
         public string Usuario { get; set; } = string.Empty;
         public string Vendedor { get; set; } = string.Empty;
 
-        // Datos del Cliente
+        // Datos del Cliente (se usan propiedades existentes)
         public int DniCliente { get; set; }
         public string NombreCliente { get; set; } = string.Empty;
         public string TelefonoCliente { get; set; } = string.Empty;
@@ -35,6 +35,7 @@ namespace Javo2.Models
 
         // Forma de Pago
         public int FormaPagoID { get; set; }
+        // Para promociones, se usa un listado (ya definido en PromocionAplicada)
         public IEnumerable<PromocionAplicada> PromocionesAplicadas { get; set; } = new List<PromocionAplicada>();
 
         public int? BancoID { get; set; }
@@ -43,12 +44,12 @@ namespace Javo2.Models
         public string EntidadElectronica { get; set; } = string.Empty;
         public string PlanFinanciamiento { get; set; } = string.Empty;
 
-        // Otros
+        // Otros datos
         public string Observaciones { get; set; } = string.Empty;
         public string Condiciones { get; set; } = string.Empty;
         public decimal Credito { get; set; }
 
-        // Productos
+        // Productos de la venta (o presupuesto)
         public List<DetalleVenta> ProductosPresupuesto { get; set; } = new List<DetalleVenta>();
 
         // Totales
@@ -67,7 +68,7 @@ namespace Javo2.Models
         // Para ventas a crédito
         public List<Cuota> CuotasPagas { get; set; } = new List<Cuota>();
 
-        // Relación con estados de entrega por producto
+        // Estados de entrega por producto (opcional, si se usa)
         public List<EstadoEntregaProducto> EstadosEntregaProductos { get; set; } = new List<EstadoEntregaProducto>();
     }
 

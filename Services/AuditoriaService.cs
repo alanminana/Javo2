@@ -1,4 +1,4 @@
-﻿// Services/AuditoriaService.cs
+﻿// File: Services/AuditoriaService.cs
 using Javo2.IServices;
 using Javo2.Models;
 using Microsoft.Extensions.Logging;
@@ -6,32 +6,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
-using Javo2.Helpers; // Para usar JsonFileHelper
+using Javo2.Helpers;
 
 namespace Javo2.Services
 {
     public class AuditoriaService : IAuditoriaService
     {
         private readonly ILogger<AuditoriaService> _logger;
-
-        // Lista en memoria de registros de auditoría
         private static List<AuditoriaRegistro> _registros = new();
-        
-        // Counter para asignar ID autoincrementable
         private static int _nextID = 1;
-
-        // Ruta donde guardamos los registros de auditoría en JSON
         private readonly string _jsonFilePath = "Data/auditoria.json";
-
-        // Lock para concurrencia
         private static readonly object _lock = new();
 
         public AuditoriaService(ILogger<AuditoriaService> logger)
         {
             _logger = logger;
-
-            // Al instanciar el servicio, cargamos lo que haya en el archivo JSON
-            CargarDesdeJson();
+            CargarDesdeJsonAsync().GetAwaiter().GetResult();
         }
 
         public Task RegistrarCambioAsync(AuditoriaRegistro registro)
@@ -40,14 +30,11 @@ namespace Javo2.Services
             {
                 registro.ID = _nextID++;
                 registro.FechaHora = DateTime.Now;
-
                 _registros.Add(registro);
                 _logger.LogInformation("Se registró auditoría: {@Registro}", registro);
-
-                // Guardamos inmediatamente en JSON (opcional)
-                GuardarEnJson();
             }
-            return Task.CompletedTask;
+            // Guardamos de forma asíncrona
+            return GuardarEnJsonAsync();
         }
 
         public Task<IEnumerable<AuditoriaRegistro>> GetAllRegistrosAsync()
@@ -69,32 +56,25 @@ namespace Javo2.Services
 
         public Task ForceSaveAsync()
         {
-            // Permite forzar manualmente el guardado
-            lock (_lock)
-            {
-                GuardarEnJson();
-            }
-            return Task.CompletedTask;
+            return GuardarEnJsonAsync();
         }
 
-        // =====================
-        // Métodos internos
-        // =====================
-        private void CargarDesdeJson()
+        private async Task CargarDesdeJsonAsync()
         {
             lock (_lock)
             {
                 try
                 {
                     _registros = JsonFileHelper.LoadFromJsonFile<List<AuditoriaRegistro>>(_jsonFilePath);
-                    // Si la lista viene vacía, _registros se mantiene new() o con data
-                    if (_registros.Count > 0)
+                    if (_registros == null)
                     {
-                        // Ajustamos _nextID al valor más alto actual + 1
+                        _registros = new List<AuditoriaRegistro>();
+                    }
+                    if (_registros.Any())
+                    {
                         _nextID = _registros.Max(r => r.ID) + 1;
                     }
-                    _logger.LogInformation("AuditoriaService: cargados {Count} registros de {File}",
-                        _registros.Count, _jsonFilePath);
+                    _logger.LogInformation("AuditoriaService: cargados {Count} registros de {File}", _registros.Count, _jsonFilePath);
                 }
                 catch (Exception ex)
                 {
@@ -103,23 +83,24 @@ namespace Javo2.Services
                     _nextID = 1;
                 }
             }
+            await Task.CompletedTask;
         }
 
-        private void GuardarEnJson()
+        private async Task GuardarEnJsonAsync()
         {
             lock (_lock)
             {
                 try
                 {
                     JsonFileHelper.SaveToJsonFile(_jsonFilePath, _registros);
-                    _logger.LogInformation("AuditoriaService: guardados {Count} registros en {File}",
-                        _registros.Count, _jsonFilePath);
+                    _logger.LogInformation("AuditoriaService: guardados {Count} registros en {File}", _registros.Count, _jsonFilePath);
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error al guardar auditoría en JSON");
                 }
             }
+            await Task.CompletedTask;
         }
     }
 }

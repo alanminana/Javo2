@@ -1,19 +1,65 @@
-﻿using Javo2.IServices;
+﻿// File: Services/StockService.cs
+using Javo2.IServices;
 using Javo2.Models;
 using Microsoft.Extensions.Logging;
+using Javo2.Helpers; // Para utilizar JsonFileHelper
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System;
 
 namespace Javo2.Services
 {
     public class StockService : IStockService
     {
         private readonly ILogger<StockService> _logger;
-        private static readonly List<StockItem> _stockItems = new();
-        private static readonly List<MovimientoStock> _movimientos = new();
+        private List<StockItem> _stockItems;
+        private List<MovimientoStock> _movimientos;
         private static readonly object _lock = new();
+
+        private readonly string _stockFilePath = "Data/stock.json";
+        private readonly string _movimientosFilePath = "Data/movimientosStock.json";
 
         public StockService(ILogger<StockService> logger)
         {
             _logger = logger;
+            LoadData();
+        }
+
+        private void LoadData()
+        {
+            lock (_lock)
+            {
+                _stockItems = JsonFileHelper.LoadFromJsonFile<List<StockItem>>(_stockFilePath) ?? new List<StockItem>();
+                _movimientos = JsonFileHelper.LoadFromJsonFile<List<MovimientoStock>>(_movimientosFilePath) ?? new List<MovimientoStock>();
+                _logger.LogInformation("Stock data loaded: {Count} items and {MovCount} movimientos.", _stockItems.Count, _movimientos.Count);
+            }
+        }
+
+        private void SaveStockData()
+        {
+            try
+            {
+                JsonFileHelper.SaveToJsonFile(_stockFilePath, _stockItems);
+                _logger.LogInformation("Stock data saved to {File}.", _stockFilePath);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving stock data.");
+            }
+        }
+
+        private void SaveMovimientosData()
+        {
+            try
+            {
+                JsonFileHelper.SaveToJsonFile(_movimientosFilePath, _movimientos);
+                _logger.LogInformation("Movimientos data saved to {File}.", _movimientosFilePath);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving movimientos data.");
+            }
         }
 
         public Task<StockItem?> GetStockItemByProductoIDAsync(int ProductoID)
@@ -29,13 +75,13 @@ namespace Javo2.Services
         {
             lock (_lock)
             {
-                // Asignar un ID único si es necesario
                 if (stockItem.StockItemID == 0)
                 {
                     stockItem.StockItemID = _stockItems.Any() ? _stockItems.Max(s => s.StockItemID) + 1 : 1;
                 }
                 _stockItems.Add(stockItem);
                 _logger.LogInformation("StockItem creado para ProductoID {ProductoID} con Cantidad {Cantidad}", stockItem.ProductoID, stockItem.CantidadDisponible);
+                SaveStockData();
             }
             return Task.CompletedTask;
         }
@@ -51,6 +97,7 @@ namespace Javo2.Services
                 }
                 existing.CantidadDisponible = stockItem.CantidadDisponible;
                 _logger.LogInformation("StockItem con ID {StockItemID} actualizado. Nueva Cantidad: {Cantidad}", stockItem.StockItemID, stockItem.CantidadDisponible);
+                SaveStockData();
             }
             return Task.CompletedTask;
         }
@@ -66,6 +113,7 @@ namespace Javo2.Services
                 }
                 _stockItems.Remove(existing);
                 _logger.LogInformation("StockItem con ID {StockItemID} eliminado.", stockItemID);
+                SaveStockData();
             }
             return Task.CompletedTask;
         }
@@ -74,7 +122,6 @@ namespace Javo2.Services
         {
             lock (_lock)
             {
-                // Validar que exista el StockItem
                 var stockItem = _stockItems.FirstOrDefault(s => s.ProductoID == movimiento.ProductoID);
                 if (stockItem == null)
                 {
@@ -82,7 +129,6 @@ namespace Javo2.Services
                 }
 
                 // Actualizar CantidadDisponible según el tipo de movimiento
-                // Asumimos: "Entrada" suma, "Salida" resta, "Ajuste" puede ser más complejo
                 if (movimiento.TipoMovimiento.Equals("Entrada", StringComparison.OrdinalIgnoreCase))
                 {
                     stockItem.CantidadDisponible += movimiento.Cantidad;
@@ -97,21 +143,21 @@ namespace Javo2.Services
                 }
                 else if (movimiento.TipoMovimiento.Equals("Ajuste", StringComparison.OrdinalIgnoreCase))
                 {
-                    // Ajuste puede ser positivo o negativo, se espera que Cantidad sea positiva o negativa según corresponda
                     stockItem.CantidadDisponible += movimiento.Cantidad;
-                    // Validar que no quede negativo
                     if (stockItem.CantidadDisponible < 0)
                     {
                         throw new InvalidOperationException("El ajuste resultó en stock negativo, lo cual no es válido.");
                     }
                 }
 
-                // Generar un ID para el movimiento
                 movimiento.MovimientoStockID = _movimientos.Any() ? _movimientos.Max(m => m.MovimientoStockID) + 1 : 1;
                 movimiento.Fecha = DateTime.UtcNow;
                 _movimientos.Add(movimiento);
 
                 _logger.LogInformation("Movimiento de Stock registrado: {Tipo}, ProductoID {ProductoID}, Cantidad {Cantidad}", movimiento.TipoMovimiento, movimiento.ProductoID, movimiento.Cantidad);
+
+                SaveStockData();
+                SaveMovimientosData();
             }
             return Task.CompletedTask;
         }

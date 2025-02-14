@@ -1,4 +1,5 @@
-﻿using Javo2.IServices;
+﻿// File: Services/CatalogoService.cs
+using Javo2.IServices;
 using Javo2.Models;
 using Javo2.ViewModels.Operaciones.Catalogo;
 using Javo2.DTOs;
@@ -7,26 +8,85 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Javo2.Helpers;  // Para usar JsonFileHelper
 
 namespace Javo2.Services
 {
     public class CatalogoService : ICatalogoService
     {
-        private readonly List<Rubro> _rubros = new();
-        private readonly List<Marca> _marcas = new();
-        private int _nextRubroID = 1;
-        private int _nextSubRubroID = 1;
-        private int _nextMarcaID = 1;
+        private List<Rubro> _rubros;
+        private List<Marca> _marcas;
+        private int _nextRubroID;
+        private int _nextSubRubroID;
+        private int _nextMarcaID;
         private readonly ILogger<CatalogoService> _logger;
+        private readonly string _jsonFilePath = "Data/catalogo.json";
+        private CatalogoData _catalogoData;
 
         public CatalogoService(ILogger<CatalogoService> logger)
         {
             _logger = logger;
-            SeedData();
+            LoadCatalogoData();
+            if (_catalogoData == null || !_catalogoData.Rubros.Any() || !_catalogoData.Marcas.Any())
+            {
+                SeedData();
+            }
+            else
+            {
+                // Asignar valores cargados
+                _rubros = _catalogoData.Rubros;
+                _marcas = _catalogoData.Marcas;
+                _nextRubroID = _catalogoData.NextRubroID;
+                _nextSubRubroID = _catalogoData.NextSubRubroID;
+                _nextMarcaID = _catalogoData.NextMarcaID;
+            }
+        }
+
+        private void LoadCatalogoData()
+        {
+            try
+            {
+                _catalogoData = JsonFileHelper.LoadFromJsonFile<CatalogoData>(_jsonFilePath);
+                if (_catalogoData == null)
+                {
+                    _catalogoData = new CatalogoData();
+                }
+                _logger.LogInformation("Catalogo data loaded from {File}.", _jsonFilePath);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error loading catalogo data from JSON.");
+                _catalogoData = new CatalogoData();
+            }
+        }
+
+        private void SaveCatalogoData()
+        {
+            try
+            {
+                // Actualizar _catalogoData con los valores actuales
+                _catalogoData.Rubros = _rubros;
+                _catalogoData.Marcas = _marcas;
+                _catalogoData.NextRubroID = _nextRubroID;
+                _catalogoData.NextSubRubroID = _nextSubRubroID;
+                _catalogoData.NextMarcaID = _nextMarcaID;
+                JsonFileHelper.SaveToJsonFile(_jsonFilePath, _catalogoData);
+                _logger.LogInformation("Catalogo data saved to {File}.", _jsonFilePath);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving catalogo data to JSON.");
+            }
         }
 
         private void SeedData()
         {
+            _rubros = new List<Rubro>();
+            _marcas = new List<Marca>();
+            _nextRubroID = 1;
+            _nextSubRubroID = 1;
+            _nextMarcaID = 1;
+
             var rubro1 = new Rubro { ID = _nextRubroID++, Nombre = "Electrónica" };
             var rubro2 = new Rubro { ID = _nextRubroID++, Nombre = "Hogar" };
             _rubros.AddRange(new[] { rubro1, rubro2 });
@@ -41,6 +101,17 @@ namespace Javo2.Services
             _marcas.Add(new Marca { ID = _nextMarcaID++, Nombre = "Marca B" });
 
             _logger.LogInformation("SeedData completed in CatalogoService");
+
+            // Inicializar _catalogoData y guardar
+            _catalogoData = new CatalogoData
+            {
+                Rubros = _rubros,
+                Marcas = _marcas,
+                NextRubroID = _nextRubroID,
+                NextSubRubroID = _nextSubRubroID,
+                NextMarcaID = _nextMarcaID
+            };
+            SaveCatalogoData();
         }
 
         public Task<IEnumerable<Rubro>> GetRubrosAsync() => Task.FromResult<IEnumerable<Rubro>>(_rubros);
@@ -56,6 +127,7 @@ namespace Javo2.Services
             rubro.ID = _nextRubroID++;
             _rubros.Add(rubro);
             _logger.LogInformation("Rubro creado: {@Rubro}", rubro);
+            SaveCatalogoData();
             return Task.CompletedTask;
         }
 
@@ -69,6 +141,7 @@ namespace Javo2.Services
 
                 existingRubro.Nombre = rubro.Nombre;
                 _logger.LogInformation("Rubro actualizado: {@Rubro}", rubro);
+                SaveCatalogoData();
             }
             return Task.CompletedTask;
         }
@@ -80,6 +153,7 @@ namespace Javo2.Services
             {
                 _rubros.Remove(rubro);
                 _logger.LogInformation("Rubro eliminado: {@Rubro}", rubro);
+                SaveCatalogoData();
             }
             return Task.CompletedTask;
         }
@@ -116,6 +190,7 @@ namespace Javo2.Services
             {
                 rubro.SubRubros.Add(subRubro);
                 _logger.LogInformation("SubRubro creado: {@SubRubro}", subRubro);
+                SaveCatalogoData();
             }
             return Task.CompletedTask;
         }
@@ -133,6 +208,7 @@ namespace Javo2.Services
                 {
                     existingSubRubro.Nombre = subRubro.Nombre;
                     _logger.LogInformation("SubRubro actualizado: {@SubRubro}", subRubro);
+                    SaveCatalogoData();
                 }
             }
             return Task.CompletedTask;
@@ -147,6 +223,7 @@ namespace Javo2.Services
                 {
                     rubro.SubRubros.Remove(subRubro);
                     _logger.LogInformation("SubRubro eliminado: {@SubRubro}", subRubro);
+                    SaveCatalogoData();
                     break;
                 }
             }
@@ -189,6 +266,7 @@ namespace Javo2.Services
                         _logger.LogInformation("SubRubro creado: {@SubRubro}", newSubRubro);
                     }
                 }
+                SaveCatalogoData();
             }
 
             return Task.CompletedTask;
@@ -213,6 +291,7 @@ namespace Javo2.Services
             marca.ID = _nextMarcaID++;
             _marcas.Add(marca);
             _logger.LogInformation("Marca creada: {@Marca}", marca);
+            SaveCatalogoData();
             return Task.CompletedTask;
         }
 
@@ -226,6 +305,7 @@ namespace Javo2.Services
 
                 existingMarca.Nombre = marca.Nombre;
                 _logger.LogInformation("Marca actualizada: {@Marca}", marca);
+                SaveCatalogoData();
             }
             return Task.CompletedTask;
         }
@@ -237,6 +317,7 @@ namespace Javo2.Services
             {
                 _marcas.Remove(marca);
                 _logger.LogInformation("Marca eliminada: {@Marca}", marca);
+                SaveCatalogoData();
             }
             return Task.CompletedTask;
         }
