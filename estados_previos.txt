@@ -1,0 +1,6 @@
+17/02/2025 13:45 - Pieza en manos del Transportista
+17/02/2025 16:05 - En camino
+18/02/2025 14:37 - En Agencia Destino
+20/02/2025 09:08 - En Camino
+02/12/2025 08:45 - Pieza a retirar en Cliente
+02/12/2025 08:45 - En Agencia Origen
