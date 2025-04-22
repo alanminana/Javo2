@@ -183,6 +183,9 @@
     @section Scripts {
         <script>
         $(document).ready(function() {
+            // Obtener el token anti-falsificación
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
             // Autorizar venta
             $('.autorizar-venta').click(function() {
                 const ventaId = $(this).data('id');
@@ -191,9 +194,9 @@
                     $.ajax({
                         url: '@Url.Action("Autorizar", "Ventas")',
                         type: 'POST',
-                        data: {
-                            id: ventaId,
-                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                        data: { id: ventaId },
+                        headers: {
+                            'RequestVerificationToken': token
                         },
                         success: function(response) {
                             if (response.success) {
@@ -202,8 +205,9 @@
                                 alert(response.message || 'Error al autorizar la venta.');
                             }
                         },
-                        error: function() {
-                            alert('Error al procesar la solicitud.');
+                        error: function(xhr, status, error) {
+                            console.error("Error:", xhr, status, error);
+                            alert('Error al procesar la solicitud. Consulte la consola para más detalles.');
                         }
                     });
                 }
@@ -217,9 +221,9 @@
                     $.ajax({
                         url: '@Url.Action("Rechazar", "Ventas")',
                         type: 'POST',
-                        data: {
-                            id: ventaId,
-                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                        data: { id: ventaId },
+                        headers: {
+                            'RequestVerificationToken': token
                         },
                         success: function(response) {
                             if (response.success) {
@@ -228,34 +232,9 @@
                                 alert(response.message || 'Error al rechazar la venta.');
                             }
                         },
-                        error: function() {
-                            alert('Error al procesar la solicitud.');
-                        }
-                    });
-                }
-            });
-
-            // Eliminar venta
-            $('.eliminar-venta').click(function() {
-                const ventaId = $(this).data('id');
-
-                if (confirm('¿Está seguro que desea eliminar esta venta? Esta acción no se puede deshacer.')) {
-                    $.ajax({
-                        url: '@Url.Action("Delete", "Ventas")',
-                        type: 'POST',
-                        data: {
-                            id: ventaId,
-                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-                        },
-                        success: function(response) {
-                            if (response.success) {
-                                location.reload();
-                            } else {
-                                alert(response.message || 'Error al eliminar la venta.');
-                            }
-                        },
-                        error: function() {
-                            alert('Error al procesar la solicitud.');
+                        error: function(xhr, status, error) {
+                            console.error("Error:", xhr, status, error);
+                            alert('Error al procesar la solicitud. Consulte la consola para más detalles.');
                         }
                     });
                 }

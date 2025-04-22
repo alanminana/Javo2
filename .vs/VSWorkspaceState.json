@@ -11,6 +11,6 @@
     "\\Views",
     "\\Views\\Ventas"
   ],
-  "SelectedNode": "\\ViewModels\\Operaciones\\Ventas\\VentaListViewModel.cs",
+  "SelectedNode": "\\Views\\Ventas\\Index.cshtml",
   "PreviewInSolutionExplorer": false
 }

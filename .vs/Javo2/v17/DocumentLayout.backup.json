@@ -3,6 +3,18 @@
   "WorkspaceRootPath": "D:\\github\\Javo2\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\github\\Javo2\\Views\\Ventas\\Index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Views\\Ventas\\Index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\github\\Javo2\\Controllers\\VentasController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Controllers\\VentasController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\github\\Javo2\\Views\\Ventas\\Autorizaciones.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Views\\Ventas\\Autorizaciones.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\github\\Javo2\\ViewModels\\Operaciones\\Ventas\\VentaListViewModel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:ViewModels\\Operaciones\\Ventas\\VentaListViewModel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -11,24 +23,12 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Views\\Ventas\\EntregaProductos.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\github\\Javo2\\Views\\Ventas\\Autorizaciones.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Views\\Ventas\\Autorizaciones.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\github\\Javo2\\Services\\VentasService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\VentasService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\github\\Javo2\\Controllers\\VentasController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Controllers\\VentasController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\github\\Javo2\\IServices\\IVentasService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:IServices\\IVentasService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\github\\Javo2\\Views\\Ventas\\Index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Views\\Ventas\\Index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\github\\Javo2\\Models\\Ventas.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -158,7 +158,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -166,7 +166,70 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "EntregaProductos.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Ventas\\EntregaProductos.cshtml",
+              "RelativeDocumentMoniker": "Views\\Ventas\\EntregaProductos.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Ventas\\EntregaProductos.cshtml",
+              "RelativeToolTip": "Views\\Ventas\\EntregaProductos.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-22T15:21:43.295Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Autorizaciones.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Ventas\\Autorizaciones.cshtml",
+              "RelativeDocumentMoniker": "Views\\Ventas\\Autorizaciones.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Ventas\\Autorizaciones.cshtml",
+              "RelativeToolTip": "Views\\Ventas\\Autorizaciones.cshtml",
+              "ViewState": "AgIAAIQAAAAAAAAAAAAkwKMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-22T15:21:33.186Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "IVentasService.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\IServices\\IVentasService.cs",
+              "RelativeDocumentMoniker": "IServices\\IVentasService.cs",
+              "ToolTip": "D:\\github\\Javo2\\IServices\\IVentasService.cs",
+              "RelativeToolTip": "IServices\\IVentasService.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAAIwCMAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-22T15:21:02.778Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Ventas\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Ventas\\Index.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Ventas\\Index.cshtml",
+              "RelativeToolTip": "Views\\Ventas\\Index.cshtml",
+              "ViewState": "AgIAANQAAAAAAAAAAAAkwPMAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-22T14:41:48.131Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "VentasController.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\VentasController.cs",
+              "RelativeDocumentMoniker": "Controllers\\VentasController.cs",
+              "ToolTip": "D:\\github\\Javo2\\Controllers\\VentasController.cs",
+              "RelativeToolTip": "Controllers\\VentasController.cs",
+              "ViewState": "AgIAAMECAAAAAAAAAAAIwN4CAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-22T14:40:25.715Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "VentaListViewModel.cs",
               "DocumentMoniker": "D:\\github\\Javo2\\ViewModels\\Operaciones\\Ventas\\VentaListViewModel.cs",
               "RelativeDocumentMoniker": "ViewModels\\Operaciones\\Ventas\\VentaListViewModel.cs",
@@ -179,6 +242,18 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "VentasService.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Services\\VentasService.cs",
+              "RelativeDocumentMoniker": "Services\\VentasService.cs",
+              "ToolTip": "D:\\github\\Javo2\\Services\\VentasService.cs",
+              "RelativeToolTip": "Services\\VentasService.cs",
+              "ViewState": "AgIAAHIBAAAAAAAAAAAAAHIBAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-22T14:41:07.391Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 7,
               "Title": "Ventas.cs",
               "DocumentMoniker": "D:\\github\\Javo2\\Models\\Ventas.cs",
@@ -187,86 +262,7 @@
               "RelativeToolTip": "Models\\Ventas.cs",
               "ViewState": "AgIAAFcAAAAAAAAAAAAIwHQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-22T15:28:47.682Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "EntregaProductos.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Ventas\\EntregaProductos.cshtml",
-              "RelativeDocumentMoniker": "Views\\Ventas\\EntregaProductos.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Ventas\\EntregaProductos.cshtml",
-              "RelativeToolTip": "Views\\Ventas\\EntregaProductos.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAvAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-22T15:21:43.295Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Autorizaciones.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Ventas\\Autorizaciones.cshtml",
-              "RelativeDocumentMoniker": "Views\\Ventas\\Autorizaciones.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Ventas\\Autorizaciones.cshtml",
-              "RelativeToolTip": "Views\\Ventas\\Autorizaciones.cshtml",
-              "ViewState": "AgIAABsAAAAAAAAAAAAUwCsAAAAjAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-22T15:21:33.186Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "IVentasService.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\IServices\\IVentasService.cs",
-              "RelativeDocumentMoniker": "IServices\\IVentasService.cs",
-              "ToolTip": "D:\\github\\Javo2\\IServices\\IVentasService.cs",
-              "RelativeToolTip": "IServices\\IVentasService.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAAAIwCMAAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-22T15:21:02.778Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Ventas\\Index.cshtml",
-              "RelativeDocumentMoniker": "Views\\Ventas\\Index.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Ventas\\Index.cshtml",
-              "RelativeToolTip": "Views\\Ventas\\Index.cshtml",
-              "ViewState": "AgIAAOkAAAAAAAAAAAAswAgBAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-22T14:41:48.131Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "VentasService.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Services\\VentasService.cs",
-              "RelativeDocumentMoniker": "Services\\VentasService.cs",
-              "ToolTip": "D:\\github\\Javo2\\Services\\VentasService.cs",
-              "RelativeToolTip": "Services\\VentasService.cs",
-              "ViewState": "AgIAAHIBAAAAAAAAAAAAAHIBAAAGAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-22T14:41:07.391Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "VentasController.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\VentasController.cs",
-              "RelativeDocumentMoniker": "Controllers\\VentasController.cs",
-              "ToolTip": "D:\\github\\Javo2\\Controllers\\VentasController.cs",
-              "RelativeToolTip": "Controllers\\VentasController.cs",
-              "ViewState": "AgIAAAYCAAAAAAAAAAAIwAsCAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-22T14:40:25.715Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-22T15:28:47.682Z"
             },
             {
               "$type": "Document",

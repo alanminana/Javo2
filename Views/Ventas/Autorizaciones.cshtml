@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Javo2.ViewModels.Operaciones.Ventas.VentaListViewModel>
+﻿@* Views/Ventas/Autorizaciones.cshtml *@
+@model IEnumerable<Javo2.ViewModels.Operaciones.Ventas.VentaListViewModel>
 
     @{
     ViewBag.Title = "Ventas Pendientes de Autorización";
@@ -18,6 +19,11 @@
             <p>@Model.Sum(v => v.PrecioTotal).ToString("C")</p>
         </div>
     </div>
+
+    <!-- Formulario oculto para enviar token anti-falsificación -->
+    <form id="antiForgerySendForm">
+        @Html.AntiForgeryToken()
+    </form>
 
     <!-- Tabla de Ventas Pendientes -->
     <div class="card p-3">
@@ -82,6 +88,9 @@
     @section Scripts {
         <script>
         $(document).ready(function() {
+            // Obtener el token anti-falsificación
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
             // Autorizar venta
             $('.autorizar-venta').click(function() {
                 const ventaId = $(this).data('id');
@@ -91,25 +100,26 @@
                     $.ajax({
                         url: '@Url.Action("Autorizar", "Ventas")',
                         type: 'POST',
-                        data: {
-                            id: ventaId,
-                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                        data: { id: ventaId },
+                        headers: {
+                            'RequestVerificationToken': token
                         },
                         success: function(response) {
                             if (response.success) {
                                 $row.fadeOut(400, function() {
                                     $(this).remove();
-                                    if ($('#ventasTable tbody tr').length === 0) {
+                                    if ($('table tbody tr').length === 0) {
                                         location.reload();
                                     }
                                 });
-                                toastr.success(response.message);
+                                alert("Venta autorizada correctamente");
                             } else {
-                                toastr.error(response.message || 'Error al autorizar la venta.');
+                                alert(response.message || 'Error al autorizar la venta.');
                             }
                         },
-                        error: function() {
-                            toastr.error('Error al procesar la solicitud.');
+                        error: function(xhr, status, error) {
+                            console.error("Error:", xhr, status, error);
+                            alert('Error al procesar la solicitud. Consulte la consola para más detalles.');
                         }
                     });
                 }
@@ -124,25 +134,26 @@
                     $.ajax({
                         url: '@Url.Action("Rechazar", "Ventas")',
                         type: 'POST',
-                        data: {
-                            id: ventaId,
-                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                        data: { id: ventaId },
+                        headers: {
+                            'RequestVerificationToken': token
                         },
                         success: function(response) {
                             if (response.success) {
                                 $row.fadeOut(400, function() {
                                     $(this).remove();
-                                    if ($('#ventasTable tbody tr').length === 0) {
+                                    if ($('table tbody tr').length === 0) {
                                         location.reload();
                                     }
                                 });
-                                toastr.success(response.message);
+                                alert("Venta rechazada correctamente");
                             } else {
-                                toastr.error(response.message || 'Error al rechazar la venta.');
+                                alert(response.message || 'Error al rechazar la venta.');
                             }
                         },
-                        error: function() {
-                            toastr.error('Error al procesar la solicitud.');
+                        error: function(xhr, status, error) {
+                            console.error("Error:", xhr, status, error);
+                            alert('Error al procesar la solicitud. Consulte la consola para más detalles.');
                         }
                     });
                 }

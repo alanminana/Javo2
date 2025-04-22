@@ -368,6 +368,166 @@ namespace Javo2.Controllers
             }
         }
 
+        // GET: Ventas/Autorizaciones
+        [HttpGet]
+        public async Task<IActionResult> Autorizaciones()
+        {
+            try
+            {
+                var ventas = await _ventaService.GetVentasByEstadoAsync(EstadoVenta.PendienteDeAutorizacion);
+                var model = _mapper.Map<IEnumerable<VentaListViewModel>>(ventas);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cargar ventas pendientes de autorización");
+                return View("Error");
+            }
+        }
+
+        // POST: Ventas/Autorizar
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Autorizar(int id)
+        {
+            try
+            {
+                _logger.LogInformation("Autorizar POST => VentaID={ID}", id);
+
+                if (id <= 0)
+                {
+                    _logger.LogWarning("ID de venta inválido: {ID}", id);
+                    return Json(new { success = false, message = "ID de venta inválido." });
+                }
+
+                // Verificar que la venta existe y está en estado pendiente
+                var venta = await _ventaService.GetVentaByIDAsync(id);
+                if (venta == null)
+                {
+                    _logger.LogWarning("Venta no encontrada: {ID}", id);
+                    return Json(new { success = false, message = "Venta no encontrada." });
+                }
+
+                if (venta.Estado != EstadoVenta.PendienteDeAutorizacion)
+                {
+                    _logger.LogWarning("La venta {ID} no está pendiente de autorización. Estado actual: {Estado}", id, venta.Estado);
+                    return Json(new { success = false, message = "La venta no está pendiente de autorización." });
+                }
+
+                // Autorizar la venta
+                await _ventaService.AutorizarVentaAsync(id, User.Identity?.Name ?? "Desconocido");
+                _logger.LogInformation("Venta {ID} autorizada exitosamente", id);
+
+                return Json(new { success = true, message = "Venta autorizada correctamente." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al autorizar venta ID: {ID}", id);
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        // POST: Ventas/Rechazar
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Rechazar(int id)
+        {
+            try
+            {
+                _logger.LogInformation("Rechazar POST => VentaID={ID}", id);
+
+                if (id <= 0)
+                {
+                    _logger.LogWarning("ID de venta inválido: {ID}", id);
+                    return Json(new { success = false, message = "ID de venta inválido." });
+                }
+
+                // Verificar que la venta existe y está en estado pendiente
+                var venta = await _ventaService.GetVentaByIDAsync(id);
+                if (venta == null)
+                {
+                    _logger.LogWarning("Venta no encontrada: {ID}", id);
+                    return Json(new { success = false, message = "Venta no encontrada." });
+                }
+
+                if (venta.Estado != EstadoVenta.PendienteDeAutorizacion)
+                {
+                    _logger.LogWarning("La venta {ID} no está pendiente de autorización. Estado actual: {Estado}", id, venta.Estado);
+                    return Json(new { success = false, message = "La venta no está pendiente de autorización." });
+                }
+
+                // Rechazar la venta
+                await _ventaService.RechazarVentaAsync(id, User.Identity?.Name ?? "Desconocido");
+                _logger.LogInformation("Venta {ID} rechazada exitosamente", id);
+
+                return Json(new { success = true, message = "Venta rechazada correctamente." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al rechazar venta ID: {ID}", id);
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        // POST: Ventas/MarcarEntregada
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> MarcarEntregada(int id)
+        {
+            try
+            {
+                _logger.LogInformation("MarcarEntregada POST => VentaID={ID}", id);
+
+                await _ventaService.MarcarVentaComoEntregadaAsync(id, User.Identity?.Name ?? "Desconocido");
+
+                return Json(new { success = true, message = "Venta marcada como entregada correctamente." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al marcar venta como entregada ID: {ID}", id);
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        // GET: Ventas/Reimprimir/5
+        [HttpGet]
+        public async Task<IActionResult> Reimprimir(int id)
+        {
+            try
+            {
+                var venta = await _ventaService.GetVentaByIDAsync(id);
+                if (venta == null)
+                {
+                    return NotFound();
+                }
+
+                // Aquí se implementaría la lógica para generar el PDF o la vista de impresión
+                return View(venta);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al reimprimir venta ID: {ID}", id);
+                return View("Error");
+            }
+        }
+
+        // GET: Ventas/EntregaProductos
+        [HttpGet]
+        public async Task<IActionResult> EntregaProductos()
+        {
+            try
+            {
+                var ventas = await _ventaService.GetVentasPendientesDeEntregaAsync();
+                var model = _mapper.Map<IEnumerable<VentaListViewModel>>(ventas);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cargar ventas pendientes de entrega");
+                return View("Error");
+            }
+        }
+
         #region Métodos AJAX
 
         [HttpPost]
@@ -440,126 +600,6 @@ namespace Javo2.Controllers
             {
                 _logger.LogError(ex, "Error al buscar producto");
                 return Json(new { success = false, message = "Error al buscar el producto." });
-            }
-        }
-
-        #endregion
-
-        #region Flujo de Autorización y Entrega
-
-        // GET: Ventas/Autorizaciones
-        [HttpGet]
-        public async Task<IActionResult> Autorizaciones()
-        {
-            try
-            {
-                var ventas = await _ventaService.GetVentasByEstadoAsync(EstadoVenta.PendienteDeAutorizacion);
-                var model = _mapper.Map<IEnumerable<VentaListViewModel>>(ventas);
-                return View(model);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al cargar ventas pendientes de autorización");
-                return View("Error");
-            }
-        }
-
-        // POST: Ventas/Autorizar
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Autorizar(int id)
-        {
-            try
-            {
-                _logger.LogInformation("Autorizar POST => VentaID={ID}", id);
-
-                await _ventaService.AutorizarVentaAsync(id, User.Identity?.Name ?? "Desconocido");
-
-                return Json(new { success = true, message = "Venta autorizada correctamente." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al autorizar venta ID: {ID}", id);
-                return Json(new { success = false, message = ex.Message });
-            }
-        }
-
-        // POST: Ventas/Rechazar
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Rechazar(int id)
-        {
-            try
-            {
-                _logger.LogInformation("Rechazar POST => VentaID={ID}", id);
-
-                await _ventaService.RechazarVentaAsync(id, User.Identity?.Name ?? "Desconocido");
-
-                return Json(new { success = true, message = "Venta rechazada correctamente." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al rechazar venta ID: {ID}", id);
-                return Json(new { success = false, message = ex.Message });
-            }
-        }
-
-        // GET: Ventas/EntregaProductos
-        [HttpGet]
-        public async Task<IActionResult> EntregaProductos()
-        {
-            try
-            {
-                var ventas = await _ventaService.GetVentasPendientesDeEntregaAsync();
-                var model = _mapper.Map<IEnumerable<VentaListViewModel>>(ventas);
-                return View(model);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al cargar ventas pendientes de entrega");
-                return View("Error");
-            }
-        }
-
-     // POST: Ventas/MarcarEntregada
-[HttpPost]
-[ValidateAntiForgeryToken]
-public async Task<IActionResult> MarcarEntregada(int id)
-{
-    try
-    {
-        _logger.LogInformation("MarcarEntregada POST => VentaID={ID}", id);
-
-        await _ventaService.MarcarVentaComoEntregadaAsync(id, User.Identity?.Name ?? "Desconocido");
-
-        return Json(new { success = true, message = "Venta marcada como entregada correctamente." });
-    }
-    catch (Exception ex)
-    {
-        _logger.LogError(ex, "Error al marcar venta como entregada ID: {ID}", id);
-        return Json(new { success = false, message = ex.Message });
-    }
-}
-
-        // GET: Ventas/Reimprimir/5
-        [HttpGet]
-        public async Task<IActionResult> Reimprimir(int id)
-        {
-            try
-            {
-                var venta = await _ventaService.GetVentaByIDAsync(id);
-                if (venta == null)
-                {
-                    return NotFound();
-                }
-
-                // Aquí se implementaría la lógica para generar el PDF o la vista de impresión
-                return View(venta);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al reimprimir venta ID: {ID}", id);
-                return View("Error");
             }
         }
 
