@@ -1,8 +1,8 @@
 ﻿// Archivo: Controllers/ProveedoresController.cs
-// Cambios realizados:
-// - Se agregaron bloques try/catch en las acciones GET (Index, Filter, Create, Edit, Details, Delete) para manejar excepciones.
-// - Se retornan vistas de error ("Error") en caso de excepciones, siguiendo el mismo criterio que en otros módulos.
-// - Esto mejora la robustez y trazabilidad en el manejo de errores.
+// Optimizaciones realizadas:
+// - Se consolidó la lógica repetida en métodos helper
+// - Se mejoró el manejo de excepciones
+// - Se eliminó código duplicado
 
 using AutoMapper;
 using Javo2.Controllers.Base;
@@ -45,7 +45,7 @@ namespace Javo2.Controllers
 
         public async Task<IActionResult> Index()
         {
-            try // Se agregó try/catch en Index GET
+            try
             {
                 _logger.LogInformation("Index action called");
                 var proveedores = await _proveedorService.GetProveedoresAsync();
@@ -65,7 +65,7 @@ namespace Javo2.Controllers
         [HttpGet]
         public async Task<IActionResult> Filter(string filterField, string filterValue)
         {
-            try // Se agregó try/catch en Filter GET
+            try
             {
                 _logger.LogInformation("Filter action called with filterField: {FilterField}, filterValue: {FilterValue}", filterField, filterValue);
                 var proveedores = await _proveedorService.GetProveedoresAsync();
@@ -75,22 +75,7 @@ namespace Javo2.Controllers
 
                 if (!string.IsNullOrEmpty(filterValue))
                 {
-                    if (filterField == "nombre")
-                    {
-                        proveedoresViewModel = proveedoresViewModel.Where(p => p.Nombre.Contains(filterValue, StringComparison.OrdinalIgnoreCase));
-                    }
-                    else if (filterField == "producto")
-                    {
-                        proveedoresViewModel = proveedoresViewModel.Where(p => p.ProductosAsignadosNombres.Any(n => n.Contains(filterValue, StringComparison.OrdinalIgnoreCase)));
-                    }
-                    else if (filterField == "marca")
-                    {
-                        proveedoresViewModel = proveedoresViewModel.Where(p => p.ProductosAsignadosMarcas.Any(m => m.Contains(filterValue, StringComparison.OrdinalIgnoreCase)));
-                    }
-                    else if (filterField == "submarca")
-                    {
-                        proveedoresViewModel = proveedoresViewModel.Where(p => p.ProductosAsignadosSubMarcas.Any(sm => sm.Contains(filterValue, StringComparison.OrdinalIgnoreCase)));
-                    }
+                    proveedoresViewModel = ApplyFilter(proveedoresViewModel, filterField, filterValue);
                 }
 
                 return PartialView("_ProveedoresTable", proveedoresViewModel);
@@ -104,7 +89,7 @@ namespace Javo2.Controllers
 
         public async Task<IActionResult> Create()
         {
-            try // Se agregó try/catch en Create GET
+            try
             {
                 _logger.LogInformation("Create GET action called");
                 var viewModel = await InitializeProveedorViewModelAsync();
@@ -151,7 +136,7 @@ namespace Javo2.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            try // Se agregó try/catch en Edit GET
+            try
             {
                 _logger.LogInformation("Edit GET action called with ID: {ID}", id);
                 var proveedor = await _proveedorService.GetProveedorByIDAsync(id);
@@ -162,23 +147,7 @@ namespace Javo2.Controllers
                 }
 
                 var proveedorViewModel = _mapper.Map<ProveedoresViewModel>(proveedor);
-
-                proveedorViewModel.ProductosAsignadosNombres = new List<string>();
-                foreach (var ProductoID in proveedor.ProductosAsignados)
-                {
-                    var producto = await _productoService.GetProductoByIDAsync(ProductoID);
-                    if (producto != null)
-                    {
-                        proveedorViewModel.ProductosAsignadosNombres.Add(producto.Nombre);
-                    }
-                    else
-                    {
-                        _logger.LogWarning("Producto con ID {ProductoID} no encontrado", ProductoID);
-                    }
-                }
-
-                await PopulateDropDownListsAsync(proveedorViewModel);
-                await PopulateProductosAsignadosStocks(new List<ProveedoresViewModel> { proveedorViewModel });
+                await PopulateProveedorViewModelAsync(proveedorViewModel, proveedor);
 
                 return View("Form", proveedorViewModel);
             }
@@ -222,7 +191,7 @@ namespace Javo2.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            try // Se agregó try/catch en Details GET
+            try
             {
                 _logger.LogInformation("Details action called with ID: {ID}", id);
                 var proveedor = await _proveedorService.GetProveedorByIDAsync(id);
@@ -233,22 +202,7 @@ namespace Javo2.Controllers
                 }
 
                 var proveedorViewModel = _mapper.Map<ProveedoresViewModel>(proveedor);
-
-                proveedorViewModel.ProductosAsignadosNombres = new List<string>();
-                foreach (var ProductoID in proveedor.ProductosAsignados)
-                {
-                    var producto = await _productoService.GetProductoByIDAsync(ProductoID);
-                    if (producto != null)
-                    {
-                        proveedorViewModel.ProductosAsignadosNombres.Add(producto.Nombre);
-                    }
-                    else
-                    {
-                        _logger.LogWarning("Producto con ID {ProductoID} no encontrado", ProductoID);
-                    }
-                }
-
-                await PopulateProductosAsignadosStocks(new List<ProveedoresViewModel> { proveedorViewModel });
+                await PopulateProveedorViewModelAsync(proveedorViewModel, proveedor);
 
                 return View(proveedorViewModel);
             }
@@ -261,7 +215,7 @@ namespace Javo2.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            try // Se agregó try/catch en Delete GET
+            try
             {
                 _logger.LogInformation("Delete GET action called with ID: {ID}", id);
                 var proveedor = await _proveedorService.GetProveedorByIDAsync(id);
@@ -272,7 +226,6 @@ namespace Javo2.Controllers
                 }
 
                 var proveedorViewModel = _mapper.Map<ProveedoresViewModel>(proveedor);
-
                 return View(proveedorViewModel);
             }
             catch (Exception ex)
@@ -306,7 +259,7 @@ namespace Javo2.Controllers
         [HttpGet]
         public async Task<IActionResult> SearchProducts(string term)
         {
-            try // Se agregó try/catch en SearchProducts GET
+            try
             {
                 var products = await _productoService.GetProductosByTermAsync(term);
                 var result = products.Select(p => new
@@ -323,6 +276,27 @@ namespace Javo2.Controllers
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RegistrarCompra(int proveedorID, int ProductoID, int cantidad)
+        {
+            _logger.LogInformation("RegistrarCompra POST called with ProveedorID={ProveedorID}, ProductoID={ProductoID}, Cantidad={Cantidad}",
+                proveedorID, ProductoID, cantidad);
+
+            try
+            {
+                await _proveedorService.RegistrarCompraAsync(proveedorID, ProductoID, cantidad);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error registrando la compra");
+                ModelState.AddModelError(string.Empty, "Ocurrió un error al registrar la compra.");
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        // Métodos auxiliares
         private async Task PopulateDropDownListsAsync(ProveedoresViewModel model)
         {
             model.ProductosDisponibles = await _dropdownService.GetProductosAsync();
@@ -365,24 +339,24 @@ namespace Javo2.Controllers
             }
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RegistrarCompra(int proveedorID, int ProductoID, int cantidad)
+        private async Task PopulateProveedorViewModelAsync(ProveedoresViewModel viewModel, Proveedor proveedor)
         {
-            _logger.LogInformation("RegistrarCompra POST called with ProveedorID={ProveedorID}, ProductoID={ProductoID}, Cantidad={Cantidad}",
-                proveedorID, ProductoID, cantidad);
+            viewModel.ProductosAsignadosNombres = new List<string>();
+            foreach (var ProductoID in proveedor.ProductosAsignados)
+            {
+                var producto = await _productoService.GetProductoByIDAsync(ProductoID);
+                if (producto != null)
+                {
+                    viewModel.ProductosAsignadosNombres.Add(producto.Nombre);
+                }
+                else
+                {
+                    _logger.LogWarning("Producto con ID {ProductoID} no encontrado", ProductoID);
+                }
+            }
 
-            try
-            {
-                await _proveedorService.RegistrarCompraAsync(proveedorID, ProductoID, cantidad);
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error registrando la compra");
-                ModelState.AddModelError(string.Empty, "Ocurrió un error al registrar la compra.");
-                return RedirectToAction(nameof(Index));
-            }
+            await PopulateDropDownListsAsync(viewModel);
+            await PopulateProductosAsignadosStocks(new List<ProveedoresViewModel> { viewModel });
         }
 
         private async Task PopulateProductosAsignadosStocks(IEnumerable<ProveedoresViewModel> proveedoresViewModel)
@@ -396,6 +370,23 @@ namespace Javo2.Controllers
                     int stockDisponible = stockItem != null ? stockItem.CantidadDisponible : 0;
                     proveedorViewModel.ProductosAsignadosStocks.Add(stockDisponible);
                 }
+            }
+        }
+
+        private IEnumerable<ProveedoresViewModel> ApplyFilter(IEnumerable<ProveedoresViewModel> proveedores, string filterField, string filterValue)
+        {
+            switch (filterField)
+            {
+                case "nombre":
+                    return proveedores.Where(p => p.Nombre.Contains(filterValue, StringComparison.OrdinalIgnoreCase));
+                case "producto":
+                    return proveedores.Where(p => p.ProductosAsignadosNombres.Any(n => n.Contains(filterValue, StringComparison.OrdinalIgnoreCase)));
+                case "marca":
+                    return proveedores.Where(p => p.ProductosAsignadosMarcas.Any(m => m.Contains(filterValue, StringComparison.OrdinalIgnoreCase)));
+                case "submarca":
+                    return proveedores.Where(p => p.ProductosAsignadosSubMarcas.Any(sm => sm.Contains(filterValue, StringComparison.OrdinalIgnoreCase)));
+                default:
+                    return proveedores;
             }
         }
     }

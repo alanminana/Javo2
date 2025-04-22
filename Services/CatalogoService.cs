@@ -8,32 +8,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Javo2.Helpers;  // Para usar JsonFileHelper
+using Javo2.Helpers;
 
 namespace Javo2.Services
 {
     public class CatalogoService : ICatalogoService
     {
-        private List<Rubro> _rubros;
-        private List<Marca> _marcas;
+        private readonly ILogger<CatalogoService> _logger;
+        private readonly string _jsonFilePath = "Data/catalogo.json";
+        private static readonly object _lock = new();
+
+        private List<Rubro> _rubros = new();
+        private List<Marca> _marcas = new();
         private int _nextRubroID;
         private int _nextSubRubroID;
         private int _nextMarcaID;
-        private readonly ILogger<CatalogoService> _logger;
-        private readonly string _jsonFilePath = "Data/catalogo.json";
-        private CatalogoData _catalogoData;
+        private CatalogoData _catalogoData = new();
 
         public CatalogoService(ILogger<CatalogoService> logger)
         {
             _logger = logger;
             LoadCatalogoData();
+
             if (_catalogoData == null || !_catalogoData.Rubros.Any() || !_catalogoData.Marcas.Any())
             {
                 SeedData();
             }
             else
             {
-                // Asignar valores cargados
                 _rubros = _catalogoData.Rubros;
                 _marcas = _catalogoData.Marcas;
                 _nextRubroID = _catalogoData.NextRubroID;
@@ -48,34 +50,36 @@ namespace Javo2.Services
             {
                 _catalogoData = JsonFileHelper.LoadFromJsonFile<CatalogoData>(_jsonFilePath);
                 if (_catalogoData == null)
-                {
                     _catalogoData = new CatalogoData();
-                }
-                _logger.LogInformation("Catalogo data loaded from {File}.", _jsonFilePath);
+
+                _logger.LogInformation("Catalogo data loaded from {File}", _jsonFilePath);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error loading catalogo data from JSON.");
+                _logger.LogError(ex, "Error loading catalogo data");
                 _catalogoData = new CatalogoData();
             }
         }
 
         private void SaveCatalogoData()
         {
-            try
+            lock (_lock)
             {
-                // Actualizar _catalogoData con los valores actuales
-                _catalogoData.Rubros = _rubros;
-                _catalogoData.Marcas = _marcas;
-                _catalogoData.NextRubroID = _nextRubroID;
-                _catalogoData.NextSubRubroID = _nextSubRubroID;
-                _catalogoData.NextMarcaID = _nextMarcaID;
-                JsonFileHelper.SaveToJsonFile(_jsonFilePath, _catalogoData);
-                _logger.LogInformation("Catalogo data saved to {File}.", _jsonFilePath);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error saving catalogo data to JSON.");
+                try
+                {
+                    _catalogoData.Rubros = _rubros;
+                    _catalogoData.Marcas = _marcas;
+                    _catalogoData.NextRubroID = _nextRubroID;
+                    _catalogoData.NextSubRubroID = _nextSubRubroID;
+                    _catalogoData.NextMarcaID = _nextMarcaID;
+
+                    JsonFileHelper.SaveToJsonFile(_jsonFilePath, _catalogoData);
+                    _logger.LogInformation("Catalogo data saved to {File}", _jsonFilePath);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error saving catalogo data");
+                }
             }
         }
 
@@ -93,16 +97,12 @@ namespace Javo2.Services
 
             rubro1.SubRubros.Add(new SubRubro { ID = _nextSubRubroID++, Nombre = "Televisores", RubroID = rubro1.ID });
             rubro1.SubRubros.Add(new SubRubro { ID = _nextSubRubroID++, Nombre = "Computadoras", RubroID = rubro1.ID });
-
             rubro2.SubRubros.Add(new SubRubro { ID = _nextSubRubroID++, Nombre = "Muebles", RubroID = rubro2.ID });
             rubro2.SubRubros.Add(new SubRubro { ID = _nextSubRubroID++, Nombre = "Electrodomésticos", RubroID = rubro2.ID });
 
             _marcas.Add(new Marca { ID = _nextMarcaID++, Nombre = "Marca A" });
             _marcas.Add(new Marca { ID = _nextMarcaID++, Nombre = "Marca B" });
 
-            _logger.LogInformation("SeedData completed in CatalogoService");
-
-            // Inicializar _catalogoData y guardar
             _catalogoData = new CatalogoData
             {
                 Rubros = _rubros,
@@ -111,72 +111,101 @@ namespace Javo2.Services
                 NextSubRubroID = _nextSubRubroID,
                 NextMarcaID = _nextMarcaID
             };
+
             SaveCatalogoData();
+            _logger.LogInformation("Seed data created for Catalogo");
         }
 
-        public Task<IEnumerable<Rubro>> GetRubrosAsync() => Task.FromResult<IEnumerable<Rubro>>(_rubros);
+        // RUBRO
+        public Task<IEnumerable<Rubro>> GetRubrosAsync()
+        {
+            lock (_lock)
+            {
+                return Task.FromResult<IEnumerable<Rubro>>(_rubros.AsEnumerable());
+            }
+        }
 
-        public Task<Rubro?> GetRubroByIDAsync(int id) =>
-            Task.FromResult(_rubros.FirstOrDefault(r => r.ID == id));
+        public Task<Rubro?> GetRubroByIDAsync(int id)
+        {
+            lock (_lock)
+            {
+                return Task.FromResult(_rubros.FirstOrDefault(r => r.ID == id));
+            }
+        }
 
         public Task CreateRubroAsync(Rubro rubro)
         {
             if (string.IsNullOrWhiteSpace(rubro.Nombre))
                 throw new ArgumentException("El nombre del rubro no puede estar vacío.");
 
-            rubro.ID = _nextRubroID++;
-            _rubros.Add(rubro);
-            _logger.LogInformation("Rubro creado: {@Rubro}", rubro);
-            SaveCatalogoData();
+            lock (_lock)
+            {
+                rubro.ID = _nextRubroID++;
+                _rubros.Add(rubro);
+                SaveCatalogoData();
+            }
+
+            _logger.LogInformation("Rubro creado: {Nombre}", rubro.Nombre);
             return Task.CompletedTask;
         }
 
         public Task UpdateRubroAsync(Rubro rubro)
         {
-            var existingRubro = _rubros.FirstOrDefault(r => r.ID == rubro.ID);
-            if (existingRubro != null)
-            {
-                if (string.IsNullOrWhiteSpace(rubro.Nombre))
-                    throw new ArgumentException("El nombre del rubro no puede estar vacío.");
+            if (string.IsNullOrWhiteSpace(rubro.Nombre))
+                throw new ArgumentException("El nombre del rubro no puede estar vacío.");
 
-                existingRubro.Nombre = rubro.Nombre;
-                _logger.LogInformation("Rubro actualizado: {@Rubro}", rubro);
-                SaveCatalogoData();
+            lock (_lock)
+            {
+                var existingRubro = _rubros.FirstOrDefault(r => r.ID == rubro.ID);
+                if (existingRubro != null)
+                {
+                    existingRubro.Nombre = rubro.Nombre;
+                    SaveCatalogoData();
+                    _logger.LogInformation("Rubro actualizado: ID={ID}", rubro.ID);
+                }
             }
+
             return Task.CompletedTask;
         }
 
         public Task DeleteRubroAsync(int id)
         {
-            var rubro = _rubros.FirstOrDefault(r => r.ID == id);
-            if (rubro != null)
+            lock (_lock)
             {
-                _rubros.Remove(rubro);
-                _logger.LogInformation("Rubro eliminado: {@Rubro}", rubro);
-                SaveCatalogoData();
+                var rubro = _rubros.FirstOrDefault(r => r.ID == id);
+                if (rubro != null)
+                {
+                    _rubros.Remove(rubro);
+                    SaveCatalogoData();
+                    _logger.LogInformation("Rubro eliminado: ID={ID}", id);
+                }
             }
+
             return Task.CompletedTask;
         }
 
+        // SUBRUBRO
         public Task<IEnumerable<SubRubro>> GetSubRubrosByRubroIDAsync(int rubroId)
         {
-            _logger.LogInformation("GetSubRubrosByRubroIDAsync called with RubroID: {RubroID}", rubroId);
-            var rubro = _rubros.FirstOrDefault(r => r.ID == rubroId);
-            if (rubro == null)
+            lock (_lock)
             {
-                _logger.LogWarning("Rubro with ID {RubroID} not found", rubroId);
-                return Task.FromResult<IEnumerable<SubRubro>>(new List<SubRubro>());
-            }
+                var rubro = _rubros.FirstOrDefault(r => r.ID == rubroId);
+                if (rubro == null)
+                    return Task.FromResult<IEnumerable<SubRubro>>(new List<SubRubro>());
 
-            var subRubros = rubro.SubRubros;
-            _logger.LogInformation("SubRubros found for RubroID {RubroID}: {Count}", rubroId, subRubros.Count);
-            return Task.FromResult<IEnumerable<SubRubro>>(subRubros);
+                return Task.FromResult<IEnumerable<SubRubro>>(rubro.SubRubros);
+            }
         }
 
         public Task<SubRubro?> GetSubRubroByIDAsync(int id)
         {
-            var subRubro = _rubros.SelectMany(r => r.SubRubros).FirstOrDefault(sr => sr.ID == id);
-            return Task.FromResult(subRubro);
+            lock (_lock)
+            {
+                var subRubro = _rubros
+                    .SelectMany(r => r.SubRubros)
+                    .FirstOrDefault(sr => sr.ID == id);
+                return Task.FromResult(subRubro);
+            }
         }
 
         public Task CreateSubRubroAsync(SubRubro subRubro)
@@ -184,14 +213,18 @@ namespace Javo2.Services
             if (string.IsNullOrWhiteSpace(subRubro.Nombre))
                 throw new ArgumentException("El nombre del subrubro no puede estar vacío.");
 
-            subRubro.ID = _nextSubRubroID++;
-            var rubro = _rubros.FirstOrDefault(r => r.ID == subRubro.RubroID);
-            if (rubro != null)
+            lock (_lock)
             {
-                rubro.SubRubros.Add(subRubro);
-                _logger.LogInformation("SubRubro creado: {@SubRubro}", subRubro);
-                SaveCatalogoData();
+                subRubro.ID = _nextSubRubroID++;
+                var rubro = _rubros.FirstOrDefault(r => r.ID == subRubro.RubroID);
+                if (rubro != null)
+                {
+                    rubro.SubRubros.Add(subRubro);
+                    SaveCatalogoData();
+                    _logger.LogInformation("SubRubro creado: {Nombre}", subRubro.Nombre);
+                }
             }
+
             return Task.CompletedTask;
         }
 
@@ -200,87 +233,104 @@ namespace Javo2.Services
             if (string.IsNullOrWhiteSpace(subRubro.Nombre))
                 throw new ArgumentException("El nombre del subrubro no puede estar vacío.");
 
-            var rubro = _rubros.FirstOrDefault(r => r.ID == subRubro.RubroID);
-            if (rubro != null)
+            lock (_lock)
             {
-                var existingSubRubro = rubro.SubRubros.FirstOrDefault(sr => sr.ID == subRubro.ID);
-                if (existingSubRubro != null)
+                var rubro = _rubros.FirstOrDefault(r => r.ID == subRubro.RubroID);
+                if (rubro != null)
                 {
-                    existingSubRubro.Nombre = subRubro.Nombre;
-                    _logger.LogInformation("SubRubro actualizado: {@SubRubro}", subRubro);
-                    SaveCatalogoData();
+                    var existingSubRubro = rubro.SubRubros.FirstOrDefault(sr => sr.ID == subRubro.ID);
+                    if (existingSubRubro != null)
+                    {
+                        existingSubRubro.Nombre = subRubro.Nombre;
+                        SaveCatalogoData();
+                        _logger.LogInformation("SubRubro actualizado: ID={ID}", subRubro.ID);
+                    }
                 }
             }
+
             return Task.CompletedTask;
         }
 
         public Task DeleteSubRubroAsync(int id)
         {
-            foreach (var rubro in _rubros)
+            lock (_lock)
             {
-                var subRubro = rubro.SubRubros.FirstOrDefault(sr => sr.ID == id);
-                if (subRubro != null)
+                foreach (var rubro in _rubros)
                 {
-                    rubro.SubRubros.Remove(subRubro);
-                    _logger.LogInformation("SubRubro eliminado: {@SubRubro}", subRubro);
-                    SaveCatalogoData();
-                    break;
+                    var subRubro = rubro.SubRubros.FirstOrDefault(sr => sr.ID == id);
+                    if (subRubro != null)
+                    {
+                        rubro.SubRubros.Remove(subRubro);
+                        SaveCatalogoData();
+                        _logger.LogInformation("SubRubro eliminado: ID={ID}", id);
+                        break;
+                    }
                 }
             }
+
             return Task.CompletedTask;
         }
 
         public Task UpdateSubRubrosAsync(EditSubRubrosViewModel model)
         {
-            var rubro = _rubros.FirstOrDefault(r => r.ID == model.RubroID);
-            if (rubro != null)
+            lock (_lock)
             {
-                foreach (var subRubroEdit in model.SubRubros)
+                var rubro = _rubros.FirstOrDefault(r => r.ID == model.RubroID);
+                if (rubro != null)
                 {
-                    if (string.IsNullOrWhiteSpace(subRubroEdit.Nombre) && !subRubroEdit.IsDeleted)
-                        throw new ArgumentException("El nombre del subrubro no puede estar vacío.");
+                    foreach (var subRubroEdit in model.SubRubros)
+                    {
+                        if (string.IsNullOrWhiteSpace(subRubroEdit.Nombre) && !subRubroEdit.IsDeleted)
+                            throw new ArgumentException("El nombre del subrubro no puede estar vacío.");
 
-                    var subRubro = rubro.SubRubros.FirstOrDefault(sr => sr.ID == subRubroEdit.ID);
-                    if (subRubro != null)
-                    {
-                        if (subRubroEdit.IsDeleted)
+                        var subRubro = rubro.SubRubros.FirstOrDefault(sr => sr.ID == subRubroEdit.ID);
+                        if (subRubro != null)
                         {
-                            rubro.SubRubros.Remove(subRubro);
-                            _logger.LogInformation("SubRubro eliminado: {@SubRubro}", subRubro);
+                            if (subRubroEdit.IsDeleted)
+                            {
+                                rubro.SubRubros.Remove(subRubro);
+                                _logger.LogInformation("SubRubro eliminado: ID={ID}", subRubro.ID);
+                            }
+                            else
+                            {
+                                subRubro.Nombre = subRubroEdit.Nombre;
+                                _logger.LogInformation("SubRubro actualizado: ID={ID}", subRubro.ID);
+                            }
                         }
-                        else
+                        else if (!subRubroEdit.IsDeleted)
                         {
-                            subRubro.Nombre = subRubroEdit.Nombre;
-                            _logger.LogInformation("SubRubro actualizado: {@SubRubro}", subRubro);
+                            var newSubRubro = new SubRubro
+                            {
+                                ID = _nextSubRubroID++,
+                                Nombre = subRubroEdit.Nombre,
+                                RubroID = model.RubroID
+                            };
+                            rubro.SubRubros.Add(newSubRubro);
+                            _logger.LogInformation("SubRubro creado: {Nombre}", newSubRubro.Nombre);
                         }
                     }
-                    else if (!subRubroEdit.IsDeleted)
-                    {
-                        var newSubRubro = new SubRubro
-                        {
-                            ID = _nextSubRubroID++,
-                            Nombre = subRubroEdit.Nombre,
-                            RubroID = model.RubroID
-                        };
-                        rubro.SubRubros.Add(newSubRubro);
-                        _logger.LogInformation("SubRubro creado: {@SubRubro}", newSubRubro);
-                    }
+                    SaveCatalogoData();
                 }
-                SaveCatalogoData();
             }
 
             return Task.CompletedTask;
         }
 
+        // MARCA
         public Task<IEnumerable<Marca>> GetMarcasAsync()
         {
-            return Task.FromResult<IEnumerable<Marca>>(_marcas);
+            lock (_lock)
+            {
+                return Task.FromResult<IEnumerable<Marca>>(_marcas.AsEnumerable());
+            }
         }
 
         public Task<Marca?> GetMarcaByIDAsync(int id)
         {
-            var marca = _marcas.FirstOrDefault(m => m.ID == id);
-            return Task.FromResult(marca);
+            lock (_lock)
+            {
+                return Task.FromResult(_marcas.FirstOrDefault(m => m.ID == id));
+            }
         }
 
         public Task CreateMarcaAsync(Marca marca)
@@ -288,60 +338,77 @@ namespace Javo2.Services
             if (string.IsNullOrWhiteSpace(marca.Nombre))
                 throw new ArgumentException("El nombre de la marca no puede estar vacío.");
 
-            marca.ID = _nextMarcaID++;
-            _marcas.Add(marca);
-            _logger.LogInformation("Marca creada: {@Marca}", marca);
-            SaveCatalogoData();
+            lock (_lock)
+            {
+                marca.ID = _nextMarcaID++;
+                _marcas.Add(marca);
+                SaveCatalogoData();
+            }
+
+            _logger.LogInformation("Marca creada: {Nombre}", marca.Nombre);
             return Task.CompletedTask;
         }
 
         public Task UpdateMarcaAsync(Marca marca)
         {
-            var existingMarca = _marcas.FirstOrDefault(m => m.ID == marca.ID);
-            if (existingMarca != null)
-            {
-                if (string.IsNullOrWhiteSpace(marca.Nombre))
-                    throw new ArgumentException("El nombre de la marca no puede estar vacío.");
+            if (string.IsNullOrWhiteSpace(marca.Nombre))
+                throw new ArgumentException("El nombre de la marca no puede estar vacío.");
 
-                existingMarca.Nombre = marca.Nombre;
-                _logger.LogInformation("Marca actualizada: {@Marca}", marca);
-                SaveCatalogoData();
+            lock (_lock)
+            {
+                var existingMarca = _marcas.FirstOrDefault(m => m.ID == marca.ID);
+                if (existingMarca != null)
+                {
+                    existingMarca.Nombre = marca.Nombre;
+                    SaveCatalogoData();
+                    _logger.LogInformation("Marca actualizada: ID={ID}", marca.ID);
+                }
             }
+
             return Task.CompletedTask;
         }
 
         public Task DeleteMarcaAsync(int id)
         {
-            var marca = _marcas.FirstOrDefault(m => m.ID == id);
-            if (marca != null)
+            lock (_lock)
             {
-                _marcas.Remove(marca);
-                _logger.LogInformation("Marca eliminada: {@Marca}", marca);
-                SaveCatalogoData();
+                var marca = _marcas.FirstOrDefault(m => m.ID == id);
+                if (marca != null)
+                {
+                    _marcas.Remove(marca);
+                    SaveCatalogoData();
+                    _logger.LogInformation("Marca eliminada: ID={ID}", id);
+                }
             }
+
             return Task.CompletedTask;
         }
 
+        // FILTROS
         public Task<IEnumerable<Rubro>> FilterRubrosAsync(CatalogoFilterDto filters)
         {
-            _logger.LogInformation("FilterRubrosAsync called with filters: {@Filters}", filters);
-            var query = _rubros.AsQueryable();
-            if (!string.IsNullOrEmpty(filters.Nombre))
+            lock (_lock)
             {
-                query = query.Where(r => r.Nombre.Contains(filters.Nombre, StringComparison.OrdinalIgnoreCase));
+                var query = _rubros.AsQueryable();
+
+                if (!string.IsNullOrEmpty(filters.Nombre))
+                    query = query.Where(r => r.Nombre.Contains(filters.Nombre, StringComparison.OrdinalIgnoreCase));
+
+                return Task.FromResult<IEnumerable<Rubro>>(query.ToList());
             }
-            return Task.FromResult<IEnumerable<Rubro>>(query.ToList());
         }
 
         public Task<IEnumerable<Marca>> FilterMarcasAsync(CatalogoFilterDto filters)
         {
-            _logger.LogInformation("FilterMarcasAsync called with filters: {@Filters}", filters);
-            var query = _marcas.AsQueryable();
-            if (!string.IsNullOrEmpty(filters.Nombre))
+            lock (_lock)
             {
-                query = query.Where(m => m.Nombre.Contains(filters.Nombre, StringComparison.OrdinalIgnoreCase));
+                var query = _marcas.AsQueryable();
+
+                if (!string.IsNullOrEmpty(filters.Nombre))
+                    query = query.Where(m => m.Nombre.Contains(filters.Nombre, StringComparison.OrdinalIgnoreCase));
+
+                return Task.FromResult<IEnumerable<Marca>>(query.ToList());
             }
-            return Task.FromResult<IEnumerable<Marca>>(query.ToList());
         }
     }
 }

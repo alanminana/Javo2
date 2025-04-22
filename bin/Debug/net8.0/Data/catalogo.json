@@ -1,0 +1,89 @@
+{
+  "Rubros": [
+    {
+      "ID": 1,
+      "Nombre": "Electr\u00F3nica",
+      "SubRubros": [
+        {
+          "ID": 1,
+          "Nombre": "Televisores",
+          "RubroID": 1,
+          "Rubro": {
+            "ID": 0,
+            "Nombre": "",
+            "SubRubros": []
+          }
+        },
+        {
+          "ID": 2,
+          "Nombre": "Computadoras",
+          "RubroID": 1,
+          "Rubro": {
+            "ID": 0,
+            "Nombre": "",
+            "SubRubros": []
+          }
+        }
+      ]
+    },
+    {
+      "ID": 2,
+      "Nombre": "Hogar",
+      "SubRubros": [
+        {
+          "ID": 3,
+          "Nombre": "Muebles",
+          "RubroID": 2,
+          "Rubro": {
+            "ID": 0,
+            "Nombre": "",
+            "SubRubros": []
+          }
+        },
+        {
+          "ID": 4,
+          "Nombre": "Electrodom\u00E9sticos",
+          "RubroID": 2,
+          "Rubro": {
+            "ID": 0,
+            "Nombre": "",
+            "SubRubros": []
+          }
+        }
+      ]
+    },
+    {
+      "ID": 3,
+      "Nombre": "rubro1",
+      "SubRubros": [
+        {
+          "ID": 5,
+          "Nombre": "test",
+          "RubroID": 3,
+          "Rubro": {
+            "ID": 0,
+            "Nombre": "",
+            "SubRubros": []
+          }
+        }
+      ]
+    }
+  ],
+  "Marcas": [
+    {
+      "ID": 1,
+      "Nombre": "Marca A"
+    },
+    {
+      "ID": 2,
+      "Nombre": "Marca B"
+    },
+    {
+      "ID": 3,
+      "Nombre": "marca1"
+    }
+  ],
+  "NextRubroID": 4,
+  "NextSubRubroID": 6,
+  "NextMarcaID": 4
+}

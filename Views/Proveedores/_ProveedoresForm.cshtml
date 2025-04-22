@@ -1,4 +1,5 @@
-﻿@model Javo2.ViewModels.Operaciones.Proveedores.ProveedoresViewModel
+﻿// Archivo: Views/Proveedores/_ProveedoresForm.cshtml
+@model Javo2.ViewModels.Operaciones.Proveedores.ProveedoresViewModel
 
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -40,13 +41,12 @@
                     var productID = Model.ProductosAsignados[i];
                     var productName = Model.ProductosAsignadosNombres.Count > i ? Model.ProductosAsignadosNombres[i] : "Nombre no disponible";
 
-                    <li class="list-group-item d-flex justify-content-between align-items-center" data-id="@productID">
-                        @productName
-                        <button type="button" class="btn btn-link btn-sm remove-product">Eliminar</button>
-                        <input type="hidden" name="ProductosAsignados" value="@productID" />
-                    </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center" data-id="@productID">
+                    @productName
+                    <button type="button" class="btn btn-link btn-sm remove-product">Eliminar</button>
+                    <input type="hidden" name="ProductosAsignados" value="@productID" />
+                </li>
                 }
-
             </ul>
         </div>
     </div>

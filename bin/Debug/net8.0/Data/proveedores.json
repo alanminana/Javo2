@@ -1,0 +1,38 @@
+{
+  "Proveedores": [
+    {
+      "ProveedorID": 1,
+      "Nombre": "Proveedor Ejemplo 1",
+      "Direccion": "Calle Falsa 123",
+      "Telefono": "123456789",
+      "Email": "proveedor1@example.com",
+      "CondicionesPago": "30 d\u00EDas",
+      "ProductosAsignados": [
+        1,
+        2
+      ]
+    },
+    {
+      "ProveedorID": 2,
+      "Nombre": "Proveedor Ejemplo 2",
+      "Direccion": "Avenida Siempre Viva 742",
+      "Telefono": "987654321",
+      "Email": "proveedor2@example.com",
+      "CondicionesPago": "15 d\u00EDas",
+      "ProductosAsignados": [
+        3
+      ]
+    },
+    {
+      "ProveedorID": 3,
+      "Nombre": "test",
+      "Direccion": "123",
+      "Telefono": "1234",
+      "Email": "123@sd.com",
+      "CondicionesPago": "sdas",
+      "ProductosAsignados": [
+        1
+      ]
+    }
+  ]
+}

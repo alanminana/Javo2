@@ -23,20 +23,17 @@
 </div>
 
 <!-- Formulario de Filtrado -->
-@* Podríamos hacerlo Partial, pero lo dejamos inline. *@
 <div class="card mb-4 p-4">
     <form id="filterForm" class="row g-3">
         <div class="col-md-3">
             <label for="filterField" class="form-label">Campo de Filtro</label>
-            <select class="form-select" id="filterField" name="filterField">
-                <option value="rubro">Rubro</option>
-                <option value="subrubro">SubRubro</option>
-                <option value="marca">Marca</option>
+            <select class="form-select" id="filterField">
+                <option value="nombre">Nombre</option>
             </select>
         </div>
         <div class="col-md-3">
-            <label for="filterValue" class="form-label">Valor del Filtro</label>
-            <input type="text" class="form-control" id="filterValue" name="filterValue" placeholder="Ingrese valor del filtro" autocomplete="off">
+            <label for="filterValue" class="form-label">Valor</label>
+            <input type="text" class="form-control" id="filterValue" placeholder="Ingrese valor del filtro" />
         </div>
         <div class="col-md-6 align-self-end">
             <button type="button" class="btn btn-primary me-2" id="applyFilter">
@@ -58,6 +55,7 @@
                 <tr>
                     <th>Rubro</th>
                     <th>SubRubros</th>
+                    <th>Total Stock</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -67,14 +65,15 @@
         </table>
     </div>
 
-    <hr />
+    <hr class="my-4" />
 
-    <h3 class="card-title mt-3 mb-3">Marcas</h3>
+    <h3 class="card-title mb-3">Marcas</h3>
     <div class="table-responsive">
         <table class="table table-dark table-striped">
             <thead>
                 <tr>
                     <th>Marca</th>
+                    <th>Total Stock</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -85,20 +84,24 @@
     </div>
 </div>
 
-<!-- Botones para Agregar Rubro y Marca -->
-<a asp-action="CreateRubro" class="btn btn-success mt-3 me-2">
-    <i class="bi bi-plus-circle me-2"></i> Agregar Rubro
-</a>
-<a asp-action="CreateMarca" class="btn btn-success mt-3">
-    <i class="bi bi-plus-circle me-2"></i> Agregar Marca
-</a>
+<!-- Botones para Agregar -->
+<div class="mt-3">
+    <a asp-action="CreateRubro" class="btn btn-success me-2">
+        <i class="bi bi-plus-circle me-2"></i> Agregar Rubro
+    </a>
+    <a asp-action="CreateMarca" class="btn btn-success">
+        <i class="bi bi-plus-circle me-2"></i> Agregar Marca
+    </a>
+</div>
 
 @section Scripts {
     <script>
         $(document).ready(function () {
-            var filters = {};
+            $('#applyFilter').click(function () {
+                var field = $('#filterField').val();
+                var value = $('#filterValue').val();
+                var filters = { Nombre: value };
 
-            function applyFilters() {
                 $.ajax({
                     url: '@Url.Action("FilterAsync", "Catalogo")',
                     type: 'GET',
@@ -108,25 +111,14 @@
                         $('#marcasTableBody').html(data.marcasPartial);
                     },
                     error: function () {
-                        alert("Ocurrió un error al aplicar los filtros.");
+                        alert("Error al aplicar los filtros.");
                     }
                 });
-            }
-
-            $('#applyFilter').click(function () {
-                var field = $('#filterField').val();
-                var value = $('#filterValue').val().trim();
-
-                filters = {};
-                if (value) filters.Nombre = value; // Como tu lógica anterior
-                applyFilters();
             });
 
             $('#clearFilter').click(function () {
-                $('#filterField').val('rubro');
                 $('#filterValue').val('');
-                filters = {};
-                applyFilters();
+                $('#applyFilter').click();
             });
         });
     </script>

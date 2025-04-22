@@ -1,111 +1,89 @@
-﻿// File: Controllers/CotizacionesController.cs
-using AutoMapper;
+﻿using Javo2.Helpers;
 using Javo2.IServices;
 using Javo2.Models;
-using Javo2.ViewModels.Operaciones.Ventas;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Javo2.Controllers
+namespace Javo2.Services
 {
-    public class CotizacionesController : Controller
+    public class ClientesService : IClienteService
     {
-        private readonly ICotizacionService _cotizacionService;
-        private readonly IMapper _mapper;
-        private readonly ILogger<CotizacionesController> _logger;
+        private readonly string _jsonFilePath = Path.Combine("Data", "clientes.json");
+        private readonly IJsonFileHelper _fileHelper;
+        private readonly object _lock = new object();
 
-        public CotizacionesController(ICotizacionService cotizacionService, IMapper mapper, ILogger<CotizacionesController> logger)
+        public ClientesService(IJsonFileHelper fileHelper)
         {
-            _cotizacionService = cotizacionService;
-            _mapper = mapper;
-            _logger = logger;
+            _fileHelper = fileHelper;
         }
 
-        // GET: Cotizaciones/Index
-        [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IEnumerable<Cliente>> GetAllClientesAsync()
         {
-            var cotizaciones = await _cotizacionService.GetAllCotizacionesAsync();
-            var model = cotizaciones.Select(c => _mapper.Map<VentaListViewModel>(c));
-            return View(model);
+            var json = await _fileHelper.ReadAsync(_jsonFilePath);
+            return JsonSerializer.Deserialize<List<Cliente>>(json) ?? new List<Cliente>();
         }
 
-        // GET: Cotizaciones/Create
-        [HttpGet]
-        public async Task<IActionResult> Create()
+        public async Task<Cliente?> GetClienteByIDAsync(int id)
         {
-            var viewModel = new VentaFormViewModel
+            return (await GetAllClientesAsync()).FirstOrDefault(c => c.ClienteID == id);
+        }
+
+        public async Task CreateClienteAsync(Cliente cliente)
+        {
+            var lista = (await GetAllClientesAsync()).ToList();
+            cliente.ClienteID = lista.Any() ? lista.Max(c => c.ClienteID) + 1 : 1;
+            lista.Add(cliente);
+            var json = JsonSerializer.Serialize(lista);
+            await _fileHelper.WriteAsync(_jsonFilePath, json);
+        }
+
+        public async Task UpdateClienteAsync(Cliente cliente)
+        {
+            var lista = (await GetAllClientesAsync()).ToList();
+            var index = lista.FindIndex(c => c.ClienteID == cliente.ClienteID);
+            if (index >= 0)
             {
-                FechaVenta = System.DateTime.Now,
-                NumeroFactura = await _cotizacionService.GenerarNumeroCotizacionAsync(),
-                Usuario = User.Identity?.Name ?? "Desconocido",
-                Vendedor = User.Identity?.Name ?? "Desconocido"
-                // Se pueden cargar otros combos si se requieren
-            };
-            return View("Form", viewModel);
-        }
-
-        // POST: Cotizaciones/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(VentaFormViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View("Form", model);
+                lista[index] = cliente;
+                var json = JsonSerializer.Serialize(lista);
+                await _fileHelper.WriteAsync(_jsonFilePath, json);
             }
-            var cotizacion = _mapper.Map<Venta>(model);
-            cotizacion.Estado = EstadoVenta.Borrador;
-            await _cotizacionService.CreateCotizacionAsync(cotizacion);
-            return RedirectToAction(nameof(Index));
         }
 
-        // GET: Cotizaciones/Edit/5
-        [HttpGet]
-        public async Task<IActionResult> Edit(int id)
+        public async Task DeleteClienteAsync(int id)
         {
-            var cotizacion = await _cotizacionService.GetCotizacionByIDAsync(id);
-            if (cotizacion == null)
-                return NotFound();
-
-            var viewModel = _mapper.Map<VentaFormViewModel>(cotizacion);
-            return View("Form", viewModel);
+            var lista = (await GetAllClientesAsync()).ToList();
+            lista.RemoveAll(c => c.ClienteID == id);
+            var json = JsonSerializer.Serialize(lista);
+            await _fileHelper.WriteAsync(_jsonFilePath, json);
         }
 
-        // POST: Cotizaciones/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(VentaFormViewModel model)
+        public async Task<IEnumerable<Provincia>> GetProvinciasAsync()
         {
-            if (!ModelState.IsValid)
+            var json = await _fileHelper.ReadAsync(Path.Combine("Data", "provincias.json"));
+            return JsonSerializer.Deserialize<List<Provincia>>(json) ?? new List<Provincia>();
+        }
+
+        public async Task<IEnumerable<Ciudad>> GetCiudadesByProvinciaAsync(int provinciaID)
+        {
+            var json = await _fileHelper.ReadAsync(Path.Combine("Data", "ciudades.json"));
+            var ciudades = JsonSerializer.Deserialize<List<Ciudad>>(json) ?? new List<Ciudad>();
+            return ciudades.Where(c => c.ProvinciaID == provinciaID);
+        }
+
+        public async Task<Cliente?> GetClienteByDNIAsync(int dni) =>
+            (await GetAllClientesAsync()).FirstOrDefault(c => c.DNI == dni);
+
+        public async Task AgregarCompraAsync(int clienteID, Compra compra)
+        {
+            var cliente = await GetClienteByIDAsync(clienteID);
+            if (cliente != null)
             {
-                return View("Form", model);
+                cliente.Compras ??= new List<Compra>();
+                cliente.Compras.Add(compra);
+                await UpdateClienteAsync(cliente);
             }
-            var cotizacion = _mapper.Map<Venta>(model);
-            await _cotizacionService.UpdateCotizacionAsync(cotizacion);
-            return RedirectToAction(nameof(Index));
-        }
-
-        // GET: Cotizaciones/Delete/5
-        [HttpGet]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var cotizacion = await _cotizacionService.GetCotizacionByIDAsync(id);
-            if (cotizacion == null)
-                return NotFound();
-            var viewModel = _mapper.Map<VentaListViewModel>(cotizacion);
-            return View(viewModel);
-        }
-
-        // POST: Cotizaciones/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            await _cotizacionService.DeleteCotizacionAsync(id);
-            return RedirectToAction(nameof(Index));
         }
     }
 }

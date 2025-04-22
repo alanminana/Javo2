@@ -11,6 +11,12 @@ namespace Javo2.ViewModels.Operaciones.Ventas
         public string NombreCliente { get; set; }
         public decimal PrecioTotal { get; set; }
         public string Estado { get; set; }
+        public decimal TotalProductos { get; set; }
         public string EstadoEntrega { get; set; }
+        public string Usuario { get; set; }
+        public string DomicilioCliente { get; set; }
+
+
+
     }
 }

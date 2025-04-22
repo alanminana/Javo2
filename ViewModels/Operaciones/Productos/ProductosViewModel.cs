@@ -13,6 +13,7 @@ namespace Javo2.ViewModels.Operaciones.Productos
             Rubros = new List<SelectListItem>();
             SubRubros = new List<SelectListItem>();
             Marcas = new List<SelectListItem>();
+            ModificadoPor = string.Empty;
         }
 
         public int ProductoID { get; set; }
@@ -54,21 +55,8 @@ namespace Javo2.ViewModels.Operaciones.Productos
         [Display(Name = "Fecha de Modificación de Precio")]
         public DateTime FechaModPrecio { get; set; } = DateTime.Now;
 
-        [Display(Name = "Entregable")]
-        public bool Entregable { get; set; }
-
-        [Range(0, int.MaxValue, ErrorMessage = "La cantidad en stock debe ser mayor o igual a cero.")]
-        [Display(Name = "Cantidad en Stock")]
-        public int CantidadStock { get; set; }
-
-        [Display(Name = "No Listar")]
-        public bool NoListar { get; set; }
-
-        [Display(Name = "Fecha de Stock")]
-        public DateTime FechaStock { get; set; } = DateTime.Now;
-
         [Display(Name = "Modificado Por")]
-        public string ModificadoPor { get; set; }
+        public string ModificadoPor { get; set; } = string.Empty;
 
         // Rubros
         [Required(ErrorMessage = "El rubro es obligatorio.")]

@@ -1,189 +1,109 @@
-﻿@model Javo2.ViewModels.Operaciones.Clientes.ClientesViewModel
+﻿<!-- Views/Clientes/_ClientesForm.cshtml -->
+@model Javo2.ViewModels.Operaciones.Clientes.ClientesViewModel
 
-@{
-    ViewData["Title"] = Model.ClienteID == 0 ? "Crear Cliente" : "Editar Cliente";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-<h2>@ViewData["Title"]</h2>
-
-<div class="card p-4">
-    <form asp-action="@(Model.ClienteID == 0 ? "Create" : "Edit")" method="post" id="clienteForm">
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(m => m.ClienteID)
-
-        <!-- Datos Personales -->
-        <fieldset class="mb-4">
-            <legend>Datos Personales</legend>
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <label asp-for="Nombre" class="form-label">Nombre</label>
-                    <input asp-for="Nombre" class="form-control" />
-                    <span asp-validation-for="Nombre" class="text-danger"></span>
-                </div>
-                <div class="col-md-6">
-                    <label asp-for="Apellido" class="form-label">Apellido</label>
-                    <input asp-for="Apellido" class="form-control" />
-                    <span asp-validation-for="Apellido" class="text-danger"></span>
-                </div>
+<div>
+    <!-- Datos Personales -->
+    <fieldset class="mb-4">
+        <legend>Datos Personales</legend>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="Nombre" class="form-label">Nombre</label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
-            <div class="row g-3">
-                <div class="col-md-4">
-                    <label asp-for="DNI" class="form-label">DNI</label>
-                    <input asp-for="DNI" class="form-control" />
-                    <span asp-validation-for="DNI" class="text-danger"></span>
-                </div>
-                <div class="col-md-4">
-                    <label asp-for="Email" class="form-label">Email</label>
-                    <input asp-for="Email" class="form-control" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
-                <div class="col-md-4">
-                    <label asp-for="Telefono" class="form-label">Teléfono</label>
-                    <input asp-for="Telefono" class="form-control" />
-                    <span asp-validation-for="Telefono" class="text-danger"></span>
-                </div>
+            <div class="col-md-6">
+                <label asp-for="Apellido" class="form-label">Apellido</label>
+                <input asp-for="Apellido" class="form-control" />
+                <span asp-validation-for="Apellido" class="text-danger"></span>
             </div>
-            <div class="row g-3">
-                <div class="col-md-4">
-                    <label asp-for="Celular" class="form-label">Celular</label>
-                    <input asp-for="Celular" class="form-control" />
-                    <span asp-validation-for="Celular" class="text-danger"></span>
-                </div>
-                <div class="col-md-4">
-                    <label asp-for="TelefonoTrabajo" class="form-label">Teléfono de Trabajo</label>
-                    <input asp-for="TelefonoTrabajo" class="form-control" />
-                    <span asp-validation-for="TelefonoTrabajo" class="text-danger"></span>
-                </div>
-                <div class="col-md-4">
-                    <label asp-for="Verificar" class="form-label">Verificar</label>
+        </div>
+        <div class="row g-3 mt-2">
+            <div class="col-md-4">
+                <label asp-for="DNI" class="form-label">DNI</label>
+                <input asp-for="DNI" class="form-control" />
+                <span asp-validation-for="DNI" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Email" class="form-label">Email</label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Telefono" class="form-label">Teléfono</label>
+                <input asp-for="Telefono" class="form-control" />
+                <span asp-validation-for="Telefono" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row g-3 mt-2">
+            <div class="col-md-4">
+                <label asp-for="Celular" class="form-label">Celular</label>
+                <input asp-for="Celular" class="form-control" />
+                <span asp-validation-for="Celular" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="TelefonoTrabajo" class="form-label">Teléfono de Trabajo</label>
+                <input asp-for="TelefonoTrabajo" class="form-control" />
+                <span asp-validation-for="TelefonoTrabajo" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Verificar" class="form-label">Verificar</label>
+                <div class="form-check" style="margin-top: 8px">
                     <input asp-for="Verificar" type="checkbox" class="form-check-input" />
                     <span asp-validation-for="Verificar" class="text-danger"></span>
                 </div>
             </div>
-        </fieldset>
-
-        <!-- Datos Domiciliarios -->
-        <fieldset class="mb-4">
-            <legend>Datos Domiciliarios</legend>
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <label asp-for="Calle" class="form-label">Calle</label>
-                    <input asp-for="Calle" class="form-control" />
-                    <span asp-validation-for="Calle" class="text-danger"></span>
-                </div>
-                <div class="col-md-6">
-                    <label asp-for="NumeroCalle" class="form-label">Número de Calle</label>
-                    <input asp-for="NumeroCalle" class="form-control" />
-                    <span asp-validation-for="NumeroCalle" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="row g-3">
-                <div class="col-md-4">
-                    <label asp-for="ProvinciaID" class="form-label">Provincia</label>
-                    <select asp-for="ProvinciaID" asp-items="Model.Provincias" class="form-select" id="ProvinciaID">
-                        <option value="">-- Seleccione una provincia --</option>
-                    </select>
-                    <span asp-validation-for="ProvinciaID" class="text-danger"></span>
-                </div>
-                <div class="col-md-4">
-                    <label asp-for="CiudadID" class="form-label">Ciudad</label>
-                    <select asp-for="CiudadID" asp-items="Model.Ciudades" class="form-select" id="CiudadID">
-                        <option value="">-- Seleccione una ciudad --</option>
-                    </select>
-
-                    <span asp-validation-for="CiudadID" class="text-danger"></span>
-                </div>
-                <div class="col-md-4">
-                    <label asp-for="EstadoComentario" class="form-label">Estado Comentario</label>
-                    <input asp-for="EstadoComentario" class="form-control" />
-                    <span asp-validation-for="EstadoComentario" class="text-danger"></span>
-                </div>
-            </div>
-
-            <label asp-for="Localidad" class="form-label">Localidad</label>
-            <input asp-for="Localidad" class="form-control" />
-
-            <label asp-for="CodigoPostal" class="form-label">Código Postal</label>
-            <input asp-for="CodigoPostal" class="form-control" />
-
-            <label asp-for="DescripcionDomicilio" class="form-label">Descripción Domicilio</label>
-            <input asp-for="DescripcionDomicilio" class="form-control" />
-        </fieldset>
-
-
-        <div class="card p-4">
-            <form asp-action="CreatePromocionCliente" method="post" id="clientePromocionForm">
-                @Html.AntiForgeryToken()
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                @Html.HiddenFor(m => m.ClienteID)
-
-                <!-- Datos Personales y Domiciliarios como en ClientesForm.cshtml -->
-                <!-- Añadir campos específicos para Promociones si es necesario -->
-                <!-- Botones de Acción dentro del Formulario -->
-                <div class="mb-4 text-end">
-                    <button type="submit" class="btn btn-success">
-                        <i class="bi bi-save me-1"></i> Guardar
-                    </button>
-                    <a asp-action="Index" class="btn btn-secondary">
-                        <i class="bi bi-arrow-left me-1"></i> Cancelar
-                    </a>
-                </div>
-            </form>
         </div>
-        <!-- Botones de Acción dentro del Formulario -->
-        <div class="mb-4 text-end">
-            <button type="submit" class="btn btn-success">
-                <i class="bi bi-save me-1"></i> Guardar
-            </button>
-            <a asp-action="Index" class="btn btn-secondary">
-                <i class="bi bi-arrow-left me-1"></i> Cancelar
-            </a>
+    </fieldset>
+
+    <!-- Datos Domiciliarios -->
+    <fieldset class="mb-4">
+        <legend>Datos Domiciliarios</legend>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="Calle" class="form-label">Calle</label>
+                <input asp-for="Calle" class="form-control" />
+                <span asp-validation-for="Calle" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="NumeroCalle" class="form-label">Número de Calle</label>
+                <input asp-for="NumeroCalle" class="form-control" />
+                <span asp-validation-for="NumeroCalle" class="text-danger"></span>
+            </div>
         </div>
-    </form>
+        <div class="row g-3 mt-2">
+            <div class="col-md-4">
+                <label asp-for="ProvinciaID" class="form-label">Provincia</label>
+                <select asp-for="ProvinciaID" asp-items="Model.Provincias" class="form-select" id="ProvinciaID">
+                    <option value="">-- Seleccione una provincia --</option>
+                </select>
+                <span asp-validation-for="ProvinciaID" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="CiudadID" class="form-label">Ciudad</label>
+                <select asp-for="CiudadID" asp-items="Model.Ciudades" class="form-select" id="CiudadID">
+                    <option value="">-- Seleccione una ciudad --</option>
+                </select>
+                <span asp-validation-for="CiudadID" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="EstadoComentario" class="form-label">Estado Comentario</label>
+                <input asp-for="EstadoComentario" class="form-control" />
+                <span asp-validation-for="EstadoComentario" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row g-3 mt-2">
+            <div class="col-md-4">
+                <label asp-for="Localidad" class="form-label">Localidad</label>
+                <input asp-for="Localidad" class="form-control" />
+            </div>
+            <div class="col-md-4">
+                <label asp-for="CodigoPostal" class="form-label">Código Postal</label>
+                <input asp-for="CodigoPostal" class="form-control" />
+            </div>
+            <div class="col-md-4">
+                <label asp-for="DescripcionDomicilio" class="form-label">Descripción Domicilio</label>
+                <input asp-for="DescripcionDomicilio" class="form-control" />
+            </div>
+        </div>
+    </fieldset>
 </div>
-
-
-@section Scripts {
-    @await Html.PartialAsync("_ValidationScriptsPartial")
-
-    <script>
-        $(document).ready(function () {
-            console.log("Script cargado y listo");
-
-            $('#ProvinciaID').change(function () {
-                var provinciaID = $(this).val();
-                if (provinciaID) {
-                    $.ajax({
-                        url: '@Url.Action("GetCiudades", "Clientes")',
-                        type: 'GET',
-                        data: { provinciaID: provinciaID },
-                        success: function (data) {
-                            var ciudadDropdown = $('#CiudadID');
-                            ciudadDropdown.empty();
-                            ciudadDropdown.append('<option value="">Seleccione una ciudad</option>');
-
-                            $.each(data, function (index, ciudad) {
-                                ciudadDropdown.append('<option value="' + ciudad.value + '">' + ciudad.text + '</option>');
-                            });
-                        },
-                        error: function () {
-                            alert("Ocurrió un error al obtener las ciudades.");
-                        }
-                    });
-                } else {
-                    var ciudadDropdown = $('#CiudadID');
-                    ciudadDropdown.empty();
-                    ciudadDropdown.append('<option value="">Seleccione una ciudad</option>');
-                }
-            });
-
-            // Si ProvinciaID ya está seleccionada (modo Edición), desencadenar el cambio
-            var initialProvinciaID = $('#ProvinciaID').val();
-            if (initialProvinciaID) {
-                $('#ProvinciaID').trigger('change');
-            }
-        });
-    </script>
-}

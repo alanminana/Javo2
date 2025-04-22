@@ -10,7 +10,76 @@
 
 <div class="card p-4">
     <form asp-action="@(isEdit ? "Edit" : "Create")" method="post">
-        @await Html.PartialAsync("_ProductosForm", Model)
+        @Html.HiddenFor(m => m.ProductoID)
+        @Html.HiddenFor(m => m.ModificadoPor)
+
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Datos básicos -->
+                <div class="mb-3">
+                    <label asp-for="Nombre" class="form-label"></label>
+                    <input asp-for="Nombre" class="form-control" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Descripcion" class="form-label"></label>
+                    <textarea asp-for="Descripcion" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Descripcion" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="PCosto" class="form-label"></label>
+                        <input asp-for="PCosto" class="form-control" type="number" step="0.01" />
+                        <span asp-validation-for="PCosto" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="PContado" class="form-label"></label>
+                        <input asp-for="PContado" class="form-control" type="number" step="0.01" />
+                        <span asp-validation-for="PContado" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="PLista" class="form-label"></label>
+                        <input asp-for="PLista" class="form-control" type="number" step="0.01" />
+                        <span asp-validation-for="PLista" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="PorcentajeIva" class="form-label"></label>
+                    <input asp-for="PorcentajeIva" class="form-control" type="number" step="0.01" />
+                    <span asp-validation-for="PorcentajeIva" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <!-- Clasificación -->
+                <div class="mb-3">
+                    <label asp-for="SelectedRubroID" class="form-label">Rubro</label>
+                    <select asp-for="SelectedRubroID" class="form-select" asp-items="Model.Rubros" id="rubroSelect">
+                        <option value="">Seleccione un Rubro</option>
+                    </select>
+                    <span asp-validation-for="SelectedRubroID" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="SelectedSubRubroID" class="form-label">SubRubro</label>
+                    <select asp-for="SelectedSubRubroID" class="form-select" asp-items="Model.SubRubros" id="subRubroSelect">
+                        <option value="">Seleccione un SubRubro</option>
+                    </select>
+                    <span asp-validation-for="SelectedSubRubroID" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="SelectedMarcaID" class="form-label">Marca</label>
+                    <select asp-for="SelectedMarcaID" class="form-select" asp-items="Model.Marcas">
+                        <option value="">Seleccione una Marca</option>
+                    </select>
+                    <span asp-validation-for="SelectedMarcaID" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
 
         <div class="mt-3">
             <button type="submit" class="btn btn-primary me-2">
@@ -28,12 +97,10 @@
 
     <script>
         $(document).ready(function () {
-            console.log("Script cargado y listo para Productos");
-
-            // Manejar el cambio en el dropdown de Rubro
+            // Manejar cambio de Rubro
             $('#rubroSelect').change(function () {
                 var rubroId = $(this).val();
-                console.log("Rubro seleccionado: " + rubroId);
+                console.log("Rubro seleccionado:", rubroId);
 
                 if (rubroId) {
                     $.ajax({
@@ -47,30 +114,32 @@
                             subRubroDropdown.empty();
                             subRubroDropdown.append('<option value="">Seleccione un SubRubro</option>');
 
-                            $.each(data, function (index, subRubro) {
-                                console.log("Procesando subRubro:", subRubro);
-                                subRubroDropdown.append('<option value="' + subRubro.value + '">' + subRubro.text + '</option>');
+                            $.each(data, function (index, item) {
+                                subRubroDropdown.append(
+                                    $('<option></option>').val(item.value).text(item.text)
+                                );
                             });
-
-                            console.log("Dropdown de subRubros actualizado");
                         },
                         error: function (xhr, status, error) {
                             console.error("Error al obtener subRubros:", status, error);
-                            alert("Ocurrió un error al obtener los subRubros.");
+                            alert("Error al cargar los subRubros.");
                         }
                     });
                 } else {
-                    var subRubroDropdown = $('#subRubroSelect');
-                    subRubroDropdown.empty();
-                    subRubroDropdown.append('<option value="">Seleccione un SubRubro</option>');
+                    $('#subRubroSelect').empty();
+                    $('#subRubroSelect').append('<option value="">Seleccione un SubRubro</option>');
                 }
             });
 
-            // Si RubroID ya está seleccionado (modo Edición), desencadenar el cambio para cargar los subRubros
-            var initialRubroID = $('#rubroSelect').val();
-            console.log("Valor inicial de RubroID:", initialRubroID);
-            if (initialRubroID) {
-                $('#rubroSelect').trigger('change');
+            // Si estamos editando, cargar los subRubros
+            @if (isEdit)
+            {
+                <text>
+                    var initialRubroID = $('#rubroSelect').val();
+                    if (initialRubroID) {
+                        $('#rubroSelect').trigger('change');
+                    }
+                </text>
             }
         });
     </script>

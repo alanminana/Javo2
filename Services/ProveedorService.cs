@@ -1,8 +1,12 @@
-﻿// File: Services/ProveedorService.cs
+﻿// Archivo: Services/ProveedorService.cs
+// Optimizaciones realizadas:
+// - Se mejoró el manejo de persistencia con mejor manejo de errores
+// - Se consolidó la lógica de carga y guardado
+
 using Javo2.IServices;
 using Javo2.Models;
 using Microsoft.Extensions.Logging;
-using Javo2.Helpers; // Para utilizar JsonFileHelper
+using Javo2.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,136 +17,130 @@ namespace Javo2.Services
     public class ProveedorService : IProveedorService
     {
         private readonly ILogger<ProveedorService> _logger;
-        private List<Proveedor> _proveedores;
         private readonly IStockService _stockService;
         private readonly IProductoService _productoService;
-        private static readonly object _lock = new();
         private readonly string _jsonFilePath = "Data/proveedores.json";
-        private ProveedorData _proveedorData;
 
-        public ProveedorService(ILogger<ProveedorService> logger, IStockService stockService, IProductoService productoService)
+        private List<Proveedor> _proveedores;
+        private ProveedorData _proveedorData;
+        private static readonly object _lock = new();
+
+        public ProveedorService(
+            ILogger<ProveedorService> logger,
+            IStockService stockService,
+            IProductoService productoService)
         {
             _logger = logger;
             _stockService = stockService;
             _productoService = productoService;
-            LoadData();
-            if (_proveedorData == null || !_proveedorData.Proveedores.Any())
+
+            InitializeData();
+        }
+
+        private void InitializeData()
+        {
+            try
             {
-                SeedData();
-            }
-            else
-            {
+                _proveedorData = JsonFileHelper.LoadFromJsonFile<ProveedorData>(_jsonFilePath) ?? new ProveedorData();
                 _proveedores = _proveedorData.Proveedores;
-            }
-        }
 
-        private void LoadData()
-        {
-            lock (_lock)
-            {
-                _proveedorData = JsonFileHelper.LoadFromJsonFile<ProveedorData>(_jsonFilePath);
-                if (_proveedorData == null)
+                if (!_proveedores.Any())
                 {
-                    _proveedorData = new ProveedorData();
+                    SeedData();
                 }
-                _logger.LogInformation("Proveedor data loaded from {File}.", _jsonFilePath);
-            }
-        }
 
-        private void SaveData()
-        {
-            lock (_lock)
+                _logger.LogInformation("Proveedor data initialized with {Count} providers", _proveedores.Count);
+            }
+            catch (Exception ex)
             {
-                _proveedorData.Proveedores = _proveedores;
-                JsonFileHelper.SaveToJsonFile(_jsonFilePath, _proveedorData);
-                _logger.LogInformation("Proveedor data saved to {File}.", _jsonFilePath);
+                _logger.LogError(ex, "Error initializing provider data");
+                _proveedorData = new ProveedorData();
+                _proveedores = new List<Proveedor>();
+                SeedData();
             }
         }
 
         private void SeedData()
         {
-            lock (_lock)
+            _proveedores = new List<Proveedor>
             {
-                _proveedores = new List<Proveedor>
+                new Proveedor
                 {
-                    new Proveedor
-                    {
-                        ProveedorID = 1,
-                        Nombre = "Proveedor Ejemplo 1",
-                        Direccion = "Calle Falsa 123",
-                        Telefono = "123456789",
-                        Email = "proveedor1@example.com",
-                        CondicionesPago = "30 días",
-                        ProductosAsignados = new List<int> { 1, 2 }
-                    },
-                    new Proveedor
-                    {
-                        ProveedorID = 2,
-                        Nombre = "Proveedor Ejemplo 2",
-                        Direccion = "Avenida Siempre Viva 742",
-                        Telefono = "987654321",
-                        Email = "proveedor2@example.com",
-                        CondicionesPago = "15 días",
-                        ProductosAsignados = new List<int> { 3 }
-                    }
-                };
-                _logger.LogInformation("Seed data added for Proveedores");
-                _proveedorData = new ProveedorData { Proveedores = _proveedores };
-                SaveData();
+                    ProveedorID = 1,
+                    Nombre = "Proveedor Ejemplo 1",
+                    Direccion = "Calle Falsa 123",
+                    Telefono = "123456789",
+                    Email = "proveedor1@example.com",
+                    CondicionesPago = "30 días",
+                    ProductosAsignados = new List<int> { 1, 2 }
+                },
+                new Proveedor
+                {
+                    ProveedorID = 2,
+                    Nombre = "Proveedor Ejemplo 2",
+                    Direccion = "Avenida Siempre Viva 742",
+                    Telefono = "987654321",
+                    Email = "proveedor2@example.com",
+                    CondicionesPago = "15 días",
+                    ProductosAsignados = new List<int> { 3 }
+                }
+            };
+
+            _proveedorData.Proveedores = _proveedores;
+            SaveData();
+            _logger.LogInformation("Seed data created for Proveedores");
+        }
+
+        private void SaveData()
+        {
+            try
+            {
+                JsonFileHelper.SaveToJsonFile(_jsonFilePath, _proveedorData);
+                _logger.LogInformation("Proveedor data saved to {File}", _jsonFilePath);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving provider data");
+                throw;
             }
         }
 
         public async Task<IEnumerable<Proveedor>> GetProveedoresAsync()
         {
             _logger.LogInformation("GetProveedoresAsync called");
-            List<Proveedor> proveedoresCopy;
-            lock (_lock)
-            {
-                proveedoresCopy = _proveedores.ToList();
-            }
-            return await Task.FromResult(proveedoresCopy);
+            return await Task.FromResult(_proveedores.ToList());
         }
 
         public async Task<Proveedor?> GetProveedorByIDAsync(int id)
         {
             _logger.LogInformation("GetProveedorByIDAsync called with ID: {ID}", id);
-            Proveedor? proveedor;
-            lock (_lock)
-            {
-                proveedor = _proveedores.FirstOrDefault(p => p.ProveedorID == id);
-            }
-            if (proveedor == null)
-            {
-                _logger.LogWarning("Proveedor with ID {ID} not found", id);
-            }
-            return await Task.FromResult(proveedor);
+            return await Task.FromResult(_proveedores.FirstOrDefault(p => p.ProveedorID == id));
         }
 
         public async Task CreateProveedorAsync(Proveedor proveedor)
         {
             ValidateProveedor(proveedor);
-            _logger.LogInformation("CreateProveedorAsync called with Proveedor: {Proveedor}", proveedor.Nombre);
+
             lock (_lock)
             {
                 proveedor.ProveedorID = _proveedores.Any() ? _proveedores.Max(p => p.ProveedorID) + 1 : 1;
-                _logger.LogInformation("Assigned ProveedorID: {ProveedorID}", proveedor.ProveedorID);
                 _proveedores.Add(proveedor);
-                _logger.LogInformation("Proveedor created with ID: {ID}", proveedor.ProveedorID);
                 SaveData();
             }
+
+            _logger.LogInformation("Proveedor created with ID: {ID}", proveedor.ProveedorID);
             await Task.CompletedTask;
         }
 
         public async Task UpdateProveedorAsync(Proveedor proveedor)
         {
             ValidateProveedor(proveedor);
-            _logger.LogInformation("UpdateProveedorAsync called with ProveedorID: {ProveedorID}", proveedor.ProveedorID);
+
             lock (_lock)
             {
                 var existingProveedor = _proveedores.FirstOrDefault(p => p.ProveedorID == proveedor.ProveedorID);
                 if (existingProveedor == null)
                 {
-                    _logger.LogWarning("Proveedor with ID {ID} not found", proveedor.ProveedorID);
                     throw new KeyNotFoundException($"Proveedor con ID {proveedor.ProveedorID} no encontrado.");
                 }
 
@@ -152,28 +150,29 @@ namespace Javo2.Services
                 existingProveedor.Email = proveedor.Email;
                 existingProveedor.CondicionesPago = proveedor.CondicionesPago;
                 existingProveedor.ProductosAsignados = proveedor.ProductosAsignados;
-                _logger.LogInformation("Proveedor updated with ID: {ID}", proveedor.ProveedorID);
+
                 SaveData();
             }
+
+            _logger.LogInformation("Proveedor updated with ID: {ID}", proveedor.ProveedorID);
             await Task.CompletedTask;
         }
 
         public async Task DeleteProveedorAsync(int id)
         {
-            _logger.LogInformation("DeleteProveedorAsync called with ID: {ID}", id);
             lock (_lock)
             {
                 var proveedor = _proveedores.FirstOrDefault(p => p.ProveedorID == id);
                 if (proveedor == null)
                 {
-                    _logger.LogWarning("Proveedor with ID {ID} not found", id);
                     throw new KeyNotFoundException($"Proveedor con ID {id} no encontrado.");
                 }
 
                 _proveedores.Remove(proveedor);
-                _logger.LogInformation("Proveedor deleted with ID: {ID}", id);
                 SaveData();
             }
+
+            _logger.LogInformation("Proveedor deleted with ID: {ID}", id);
             await Task.CompletedTask;
         }
 

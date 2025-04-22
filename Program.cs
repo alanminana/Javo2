@@ -35,9 +35,10 @@ builder.Services.AddSingleton<IVentaService, VentaService>();
 builder.Services.AddSingleton<IProductoService, ProductoService>();
 builder.Services.AddSingleton<ICotizacionService, CotizacionService>();
 builder.Services.AddSingleton<IStockService, StockService>();
-builder.Services.AddSingleton<IPromocionService, PromocionService>();
-builder.Services.AddSingleton<IUserService, UserService>();
-builder.Services.AddSingleton<IReporteService, ReporteService>();
+
+builder.Services.AddSingleton<IClienteSearchService>(sp => 
+    sp.GetRequiredService<IClienteService>() as IClienteSearchService ?? 
+    throw new InvalidOperationException("ClienteService must implement IClienteSearchService"));
 // Servicios con ciclo de vida Scoped
 builder.Services.AddScoped<IVentaService, VentaService>();
 builder.Services.AddScoped<IDropdownService, DropdownService>();

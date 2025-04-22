@@ -1,4 +1,6 @@
 ﻿// Archivo: IServices/IProveedorService.cs
+// Se mantiene igual ya que la interfaz está bien definida
+
 using Javo2.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -35,7 +37,9 @@ namespace Javo2.IServices
         /// </summary>
         Task DeleteProveedorAsync(int id);
 
+        /// <summary>
+        /// Registra una compra de un producto a un proveedor.
+        /// </summary>
         Task RegistrarCompraAsync(int proveedorID, int ProductoID, int cantidad);
-
     }
 }

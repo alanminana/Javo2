@@ -5,23 +5,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
-using Javo2.Helpers; // Para utilizar el JsonFileHelper modificado
+using Javo2.Helpers;
 using System.IO;
+using System.Threading;
 
 namespace Javo2.Services
 {
-    public class ClienteService : IClienteService
+    public class ClienteService : IClienteService, IClienteSearchService
     {
         private readonly ILogger<ClienteService> _logger;
-        private readonly IAuditoriaService? _auditoriaService; // Opcional, para registrar auditoría
-
+        private readonly IAuditoriaService? _auditoriaService;
         private static List<Cliente> _clientes = new();
-        private static readonly object _lock = new();
+        private static ReaderWriterLockSlim _lock = new();
         private static int _nextID = 1;
-
         private readonly string _jsonFilePath = "Data/clientes.json";
+        private readonly string _backupDirectory = "Data/Backups";
 
-        // Provincias y Ciudades "mock" (para este prototipo)
         private static readonly List<Provincia> _provincias = new()
         {
             new Provincia { ProvinciaID = 1, Nombre = "Buenos Aires" },
@@ -31,222 +30,285 @@ namespace Javo2.Services
 
         private static readonly List<Ciudad> _ciudades = new()
         {
-            new Ciudad { CiudadID = 1, Nombre = "La Plata",       ProvinciaID = 1 },
-            new Ciudad { CiudadID = 2, Nombre = "Mar del Plata",  ProvinciaID = 1 },
-            new Ciudad { CiudadID = 3, Nombre = "Córdoba Capital",ProvinciaID = 2 },
-            new Ciudad { CiudadID = 4, Nombre = "Rosario",        ProvinciaID = 3 }
+            new Ciudad { CiudadID = 1, Nombre = "La Plata", ProvinciaID = 1 },
+            new Ciudad { CiudadID = 2, Nombre = "Mar del Plata", ProvinciaID = 1 },
+            new Ciudad { CiudadID = 3, Nombre = "Córdoba Capital", ProvinciaID = 2 },
+            new Ciudad { CiudadID = 4, Nombre = "Rosario", ProvinciaID = 3 }
         };
 
         public ClienteService(ILogger<ClienteService> logger, IAuditoriaService? auditoriaService = null)
         {
             _logger = logger;
             _auditoriaService = auditoriaService;
-            // Se utiliza el método asíncrono de carga en forma síncrona en el constructor
-            CargarDesdeJsonAsync().GetAwaiter().GetResult();
+            InitializeAsync().GetAwaiter().GetResult();
         }
 
-        // ========================================
-        // Métodos CRUD
-        // ========================================
+        private async Task InitializeAsync()
+        {
+            Directory.CreateDirectory(_backupDirectory);
+            await CargarDesdeJsonAsync();
+        }
 
         public Task<IEnumerable<Cliente>> GetAllClientesAsync()
         {
-            lock (_lock)
+            _lock.EnterReadLock();
+            try
             {
-                _logger.LogInformation("GetAllClientesAsync: {Count} clientes en memoria", _clientes.Count);
                 return Task.FromResult(_clientes.AsEnumerable());
+            }
+            finally
+            {
+                _lock.ExitReadLock();
             }
         }
 
         public Task<Cliente?> GetClienteByIDAsync(int id)
         {
-            lock (_lock)
+            _lock.EnterReadLock();
+            try
             {
-                var cliente = _clientes.FirstOrDefault(c => c.ClienteID == id);
-                return Task.FromResult(cliente);
+                return Task.FromResult(_clientes.FirstOrDefault(c => c.ClienteID == id));
+            }
+            finally
+            {
+                _lock.ExitReadLock();
             }
         }
 
         public async Task CreateClienteAsync(Cliente cliente)
         {
-            lock (_lock)
+            _lock.EnterWriteLock();
+            try
             {
                 cliente.ClienteID = _nextID++;
+                cliente.FechaCreacion = DateTime.UtcNow;
                 _clientes.Add(cliente);
             }
-            await GuardarEnJsonAsync();
-            _logger.LogInformation("CreateClienteAsync: nuevo cliente ID={ID}, Nombre={Nombre}", cliente.ClienteID, cliente.Nombre);
-
-            // Registrar auditoría de forma opcional (sin await para no bloquear el flujo)
-            _ = _auditoriaService?.RegistrarCambioAsync(new AuditoriaRegistro
+            finally
             {
-                FechaHora = DateTime.Now,
-                Usuario = "Sistema",
-                Entidad = "Cliente",
-                Accion = "Create",
-                LlavePrimaria = cliente.ClienteID.ToString(),
-                Detalle = $"Nombre={cliente.Nombre}, Apellido={cliente.Apellido}"
-            });
+                _lock.ExitWriteLock();
+            }
+            
+            await GuardarEnJsonAsync();
+            _logger.LogInformation("Cliente creado: ID={ID}, Nombre={Nombre}", cliente.ClienteID, cliente.Nombre);
         }
 
         public async Task UpdateClienteAsync(Cliente cliente)
         {
-            lock (_lock)
+            _lock.EnterWriteLock();
+            try
             {
                 var existing = _clientes.FirstOrDefault(c => c.ClienteID == cliente.ClienteID);
                 if (existing != null)
                 {
                     var index = _clientes.IndexOf(existing);
+                    cliente.FechaModificacion = DateTime.UtcNow;
                     _clientes[index] = cliente;
                 }
-                else
-                {
-                    _logger.LogWarning("UpdateClienteAsync: no se encontró cliente ID={ID} para actualizar", cliente.ClienteID);
-                }
             }
-            await GuardarEnJsonAsync();
-            _logger.LogInformation("UpdateClienteAsync: cliente ID={ID} actualizado", cliente.ClienteID);
-
-            _ = _auditoriaService?.RegistrarCambioAsync(new AuditoriaRegistro
+            finally
             {
-                FechaHora = DateTime.Now,
-                Usuario = "Sistema",
-                Entidad = "Cliente",
-                Accion = "Edit",
-                LlavePrimaria = cliente.ClienteID.ToString(),
-                Detalle = $"Nombre={cliente.Nombre}, Apellido={cliente.Apellido}"
-            });
+                _lock.ExitWriteLock();
+            }
+            
+            await GuardarEnJsonAsync();
+            _logger.LogInformation("Cliente actualizado: ID={ID}", cliente.ClienteID);
         }
 
         public async Task DeleteClienteAsync(int id)
         {
-            lock (_lock)
+            _lock.EnterWriteLock();
+            try
             {
                 var existing = _clientes.FirstOrDefault(c => c.ClienteID == id);
                 if (existing != null)
                 {
                     _clientes.Remove(existing);
                 }
-                else
-                {
-                    _logger.LogWarning("DeleteClienteAsync: cliente ID={ID} no encontrado", id);
-                }
             }
+            finally
+            {
+                _lock.ExitWriteLock();
+            }
+            
             await GuardarEnJsonAsync();
-            _logger.LogInformation("DeleteClienteAsync: cliente ID={ID} eliminado", id);
-
-            _ = _auditoriaService?.RegistrarCambioAsync(new AuditoriaRegistro
-            {
-                FechaHora = DateTime.Now,
-                Usuario = "Sistema",
-                Entidad = "Cliente",
-                Accion = "Delete",
-                LlavePrimaria = id.ToString(),
-                Detalle = $"Eliminado cliente"
-            });
+            _logger.LogInformation("Cliente eliminado: ID={ID}", id);
         }
 
-        // ========================================
-        // Métodos de Provincias / Ciudades (Mock)
-        // ========================================
-        public Task<IEnumerable<Provincia>> GetProvinciasAsync()
+        public async Task<(IEnumerable<Cliente> Clientes, int TotalCount)> SearchClientesAsync(
+            string? searchTerm = null,
+            int? page = null,
+            int? pageSize = null,
+            string? orderBy = null,
+            bool? ascending = true)
         {
-            lock (_lock)
+            _lock.EnterReadLock();
+            try
             {
-                return Task.FromResult(_provincias.AsEnumerable());
+                var query = _clientes.AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(searchTerm))
+                {
+                    searchTerm = searchTerm.ToLower();
+                    query = query.Where(c => 
+                        c.Nombre.ToLower().Contains(searchTerm) ||
+                        c.Apellido.ToLower().Contains(searchTerm) ||
+                        c.DNI.ToString().Contains(searchTerm) ||
+                        c.Email.ToLower().Contains(searchTerm) ||
+                        c.Telefono.Contains(searchTerm) ||
+                        c.Celular.Contains(searchTerm));
+                }
+
+                var totalCount = query.Count();
+
+                switch (orderBy?.ToLower())
+                {
+                    case "nombre":
+                        query = ascending.GetValueOrDefault() ? 
+                            query.OrderBy(c => c.Nombre) : 
+                            query.OrderByDescending(c => c.Nombre);
+                        break;
+                    case "apellido":
+                        query = ascending.GetValueOrDefault() ? 
+                            query.OrderBy(c => c.Apellido) : 
+                            query.OrderByDescending(c => c.Apellido);
+                        break;
+                    case "dni":
+                        query = ascending.GetValueOrDefault() ? 
+                            query.OrderBy(c => c.DNI) : 
+                            query.OrderByDescending(c => c.DNI);
+                        break;
+                    default:
+                        query = query.OrderByDescending(c => c.FechaCreacion);
+                        break;
+                }
+
+                if (page.HasValue && pageSize.HasValue)
+                {
+                    query = query.Skip((page.Value - 1) * pageSize.Value).Take(pageSize.Value);
+                }
+
+                return (query.ToList(), totalCount);
+            }
+            finally
+            {
+                _lock.ExitReadLock();
             }
         }
+
+        public Task<IEnumerable<Provincia>> GetProvinciasAsync() => Task.FromResult(_provincias.AsEnumerable());
 
         public Task<IEnumerable<Ciudad>> GetCiudadesByProvinciaAsync(int provinciaID)
         {
-            lock (_lock)
-            {
-                var lista = _ciudades.Where(c => c.ProvinciaID == provinciaID).ToList();
-                return Task.FromResult(lista.AsEnumerable());
-            }
+            return Task.FromResult(_ciudades.Where(c => c.ProvinciaID == provinciaID).AsEnumerable());
         }
 
         public Task<Cliente?> GetClienteByDNIAsync(int dni)
         {
-            lock (_lock)
+            _lock.EnterReadLock();
+            try
             {
-                var cliente = _clientes.FirstOrDefault(c => c.DNI == dni && c.Activo);
-                return Task.FromResult(cliente);
+                return Task.FromResult(_clientes.FirstOrDefault(c => c.DNI == dni && c.Activo));
+            }
+            finally
+            {
+                _lock.ExitReadLock();
             }
         }
 
-        public Task AgregarCompraAsync(int clienteID, Compra compra)
+        public async Task AgregarCompraAsync(int clienteID, Compra compra)
         {
-            lock (_lock)
+            _lock.EnterWriteLock();
+            try
             {
                 var cliente = _clientes.FirstOrDefault(c => c.ClienteID == clienteID);
-                if (cliente == null)
+                if (cliente != null)
                 {
-                    _logger.LogWarning("AgregarCompraAsync: no se encontró cliente ID={ID}", clienteID);
-                }
-                else
-                {
-                    if (cliente.Compras == null)
-                        cliente.Compras = new List<Compra>();
-
+                    cliente.Compras ??= new List<Compra>();
                     cliente.Compras.Add(compra);
                 }
             }
-            return GuardarEnJsonAsync();
+            finally
+            {
+                _lock.ExitWriteLock();
+            }
+            
+            await GuardarEnJsonAsync();
         }
 
-        // ========================================
-        // Persistencia en JSON (asíncrona)
-        // ========================================
         private async Task CargarDesdeJsonAsync()
         {
             try
             {
                 if (!File.Exists(_jsonFilePath))
                 {
-                    lock (_lock)
-                    {
-                        _clientes = new List<Cliente>();
-                    }
+                    _clientes = new List<Cliente>();
                     return;
                 }
+
                 var data = await JsonFileHelper.LoadFromJsonFileAsync<List<Cliente>>(_jsonFilePath);
-                lock (_lock)
+                _lock.EnterWriteLock();
+                try
                 {
                     _clientes = data ?? new List<Cliente>();
                     if (_clientes.Any())
                     {
                         _nextID = _clientes.Max(c => c.ClienteID) + 1;
                     }
-                    _logger.LogInformation("ClienteService: {Count} clientes cargados desde {File}", _clientes.Count, _jsonFilePath);
+                }
+                finally
+                {
+                    _lock.ExitWriteLock();
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al cargar clientes desde JSON");
-                lock (_lock)
-                {
-                    _clientes = new List<Cliente>();
-                    _nextID = 1;
-                }
+                _clientes = new List<Cliente>();
+                _nextID = 1;
             }
         }
 
         private async Task GuardarEnJsonAsync()
         {
             List<Cliente> snapshot;
-            lock (_lock)
+            _lock.EnterReadLock();
+            try
             {
                 snapshot = _clientes.ToList();
             }
+            finally
+            {
+                _lock.ExitReadLock();
+            }
+
             try
             {
+                // Backup automático
+                if (File.Exists(_jsonFilePath))
+                {
+                    var backupPath = Path.Combine(_backupDirectory, 
+                        $"clientes_backup_{DateTime.Now:yyyyMMddHHmmss}.json");
+                    File.Copy(_jsonFilePath, backupPath, true);
+
+                    // Mantener solo los últimos 10 backups
+                    var backupFiles = Directory.GetFiles(_backupDirectory, "clientes_backup_*.json")
+                        .OrderByDescending(f => File.GetCreationTime(f))
+                        .Skip(10);
+                    
+                    foreach (var file in backupFiles)
+                    {
+                        try { File.Delete(file); } catch { }
+                    }
+                }
+
                 await JsonFileHelper.SaveToJsonFileAsync(_jsonFilePath, snapshot);
-                _logger.LogInformation("ClienteService: guardados {Count} clientes en {File}", snapshot.Count, _jsonFilePath);
+                _logger.LogInformation("Clientes guardados: {Count}", snapshot.Count);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al guardar clientes en JSON");
+                throw;
             }
         }
     }

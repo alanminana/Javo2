@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Javo2.Controllers.Base;
 using Javo2.IServices;
 using Javo2.Models;
 using Javo2.ViewModels.Operaciones.Ventas;
@@ -12,15 +13,12 @@ using System.Threading.Tasks;
 
 namespace Javo2.Controllers
 {
-    public class VentasController : Controller
+    public class VentasController : BaseController
     {
         private readonly IVentaService _ventaService;
         private readonly IMapper _mapper;
-        private readonly ILogger<VentasController> _logger;
         private readonly IClienteService _clienteService;
         private readonly IProductoService _productoService;
-
-        // NUEVO: Para registrar auditoría de ventas
         private readonly IAuditoriaService _auditoriaService;
 
         public VentasController(
@@ -29,53 +27,62 @@ namespace Javo2.Controllers
             ILogger<VentasController> logger,
             IClienteService clienteService,
             IProductoService productoService,
-            IAuditoriaService auditoriaService    // <-- se inyecta la auditoría
-        )
+            IAuditoriaService auditoriaService
+        ) : base(logger)
         {
             _ventaService = ventaService;
             _mapper = mapper;
-            _logger = logger;
             _clienteService = clienteService;
             _productoService = productoService;
-            _auditoriaService = auditoriaService; // <-- asignación
+            _auditoriaService = auditoriaService;
         }
 
         // GET: Ventas/Index
         [HttpGet]
         public async Task<IActionResult> Index(VentaFilterDto filter)
         {
-            _logger.LogInformation("Entrando a Ventas/Index con filtro: {@Filter}", filter);
+            try
+            {
+                _logger.LogInformation("Index GET => Filtro: {@Filter}", filter);
 
-            var ventas = await _ventaService.GetVentasAsync(filter);
-            var model = _mapper.Map<IEnumerable<VentaListViewModel>>(ventas);
+                var ventas = await _ventaService.GetVentasAsync(filter);
+                var model = _mapper.Map<IEnumerable<VentaListViewModel>>(ventas);
 
-            _logger.LogInformation("Se mapearon {Count} ventas al ViewModel", model.Count());
-            return View(model);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener la lista de ventas");
+                return View("Error");
+            }
         }
 
         // GET: Ventas/Create
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            _logger.LogInformation("Entrando a Ventas/Create (GET)");
-
-            var viewModel = new VentaFormViewModel
+            try
             {
-                FechaVenta = DateTime.Now,
-                NumeroFactura = await _ventaService.GenerarNumeroFacturaAsync(),
-                Usuario = User.Identity?.Name ?? "Desconocido",
-                Vendedor = User.Identity?.Name ?? "Desconocido",
+                _logger.LogInformation("Create GET => Inicializando formulario de venta");
 
-                FormasPago = await ObtenerFormasPago(),
-                Bancos = await ObtenerBancos(),
-                TipoTarjetaOptions = await ObtenerTipoTarjetaOptions(),
-                CuotasOptions = await ObtenerCuotasOptions(),
-                EntidadesElectronicas = await ObtenerEntidadesElectronicas(),
-                PlanesFinanciamiento = await ObtenerPlanesFinanciamiento()
-            };
+                var viewModel = new VentaFormViewModel
+                {
+                    FechaVenta = DateTime.Today,
+                    NumeroFactura = await _ventaService.GenerarNumeroFacturaAsync(),
+                    Usuario = User.Identity?.Name ?? "Desconocido",
+                    Vendedor = User.Identity?.Name ?? "Desconocido",
+                    ProductosPresupuesto = new List<DetalleVentaViewModel>(),
+                    Estado = EstadoVenta.Borrador.ToString()
+                };
 
-            _logger.LogInformation("VentaFormViewModel inicializado: {@ViewModel}", viewModel);
-            return View("Form", viewModel);
+                await CargarCombosAsync(viewModel);
+                return View("Form", viewModel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al inicializar el formulario de venta");
+                return View("Error");
+            }
         }
 
         // POST: Ventas/Create
@@ -83,93 +90,71 @@ namespace Javo2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(VentaFormViewModel model, string Finalizar)
         {
-            _logger.LogInformation("[VentasController] Create POST => Finalizar={Finalizar}, Model={@Model}", Finalizar, model);
-
-            // Validación condicional
-            if (model.FormaPagoID == 2 && string.IsNullOrEmpty(model.TipoTarjeta))
-            {
-                ModelState.AddModelError(nameof(model.TipoTarjeta), "El campo 'TipoTarjeta' es requerido para Tarjeta de Crédito.");
-            }
-            if (model.FormaPagoID == 5 && string.IsNullOrEmpty(model.EntidadElectronica))
-            {
-                ModelState.AddModelError(nameof(model.EntidadElectronica), "El campo 'EntidadElectronica' es requerido para Pago Virtual.");
-            }
-            if (model.FormaPagoID == 6 && string.IsNullOrEmpty(model.PlanFinanciamiento))
-            {
-                ModelState.AddModelError(nameof(model.PlanFinanciamiento), "El campo 'PlanFinanciamiento' es requerido para Crédito Personal.");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                // Recargar combos si falla la validación
-                model.FormasPago = await ObtenerFormasPago();
-                model.Bancos = await ObtenerBancos();
-                model.TipoTarjetaOptions = await ObtenerTipoTarjetaOptions();
-                model.CuotasOptions = await ObtenerCuotasOptions();
-                model.EntidadesElectronicas = await ObtenerEntidadesElectronicas();
-                model.PlanesFinanciamiento = await ObtenerPlanesFinanciamiento();
-
-                // Log de cada error
-                foreach (var state in ModelState)
-                {
-                    foreach (var error in state.Value.Errors)
-                    {
-                        _logger.LogWarning("Error en el campo {Field}: {Message}", state.Key, error.ErrorMessage);
-                    }
-                }
-
-                return View("Form", model);
-            }
-
-            var venta = _mapper.Map<Venta>(model);
-            venta.Usuario = User.Identity?.Name ?? "Desconocido";
-            venta.Vendedor = User.Identity?.Name ?? "Desconocido";
-
-            // Calcular total
-            venta.PrecioTotal = venta.ProductosPresupuesto.Sum(p => p.PrecioTotal);
-            _logger.LogInformation("[VentasController] PrecioTotal calculado: {Total}", venta.PrecioTotal);
-
-            // Estado de la venta según si se finaliza
-            if (!string.IsNullOrEmpty(Finalizar) && Finalizar.Equals("true", StringComparison.OrdinalIgnoreCase))
-            {
-                venta.Estado = EstadoVenta.PendienteDeAutorizacion;
-                _logger.LogInformation("[VentasController] Venta finalizada => PendienteDeAutorizacion");
-            }
-            else
-            {
-                venta.Estado = EstadoVenta.Borrador;
-                _logger.LogInformation("[VentasController] Venta en estado Borrador");
-            }
-
-            // Crear en servicio
-            await _ventaService.CreateVentaAsync(venta);
-            _logger.LogInformation("[VentasController] Venta creada con ID={ID}", venta.VentaID);
-
-            // -----------------------------------
-            // Registrar auditoría de la creación
-            // -----------------------------------
-            await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
-            {
-                FechaHora = DateTime.Now,
-                Usuario = User.Identity?.Name ?? "Desconocido",
-                Entidad = "Venta",
-                Accion = "Create",
-                LlavePrimaria = venta.VentaID.ToString(),
-                Detalle = $"Cliente={venta.NombreCliente}, Total={venta.PrecioTotal}, Estado={venta.Estado}"
-            });
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        // Nuevo ejemplo: Acción para “procesar” la venta (descontar stock, cambiar estado, etc.)
-        [HttpPost]
-        public async Task<IActionResult> Process(int id)
-        {
-            _logger.LogInformation("[VentasController] Process => ID={ID}", id);
             try
             {
-                await _ventaService.ProcessVentaAsync(id);
-                _logger.LogInformation("[VentasController] Venta ID={ID} procesada (stock descontado, etc.)", id);
+                _logger.LogInformation("Create POST => Finalizar={Finalizar}, Model={@Model}", Finalizar, model);
+
+                // Limpiar errores de ModelState para campos que no aplican según la forma de pago
+                if (model.FormaPagoID != 2) // Si no es tarjeta de crédito
+                {
+                    ModelState.Remove(nameof(model.TipoTarjeta));
+                    ModelState.Remove(nameof(model.Cuotas));
+                }
+                if (model.FormaPagoID != 5) // Si no es pago virtual
+                {
+                    ModelState.Remove(nameof(model.EntidadElectronica));
+                }
+                if (model.FormaPagoID != 6) // Si no es crédito personal
+                {
+                    ModelState.Remove(nameof(model.PlanFinanciamiento));
+                }
+
+                // Limpiar errores de campos opcionales en productos
+                for (int i = 0; i < model.ProductosPresupuesto.Count; i++)
+                {
+                    ModelState.Remove($"ProductosPresupuesto[{i}].Marca");
+                    ModelState.Remove($"ProductosPresupuesto[{i}].CodigoAlfa");
+                    ModelState.Remove($"ProductosPresupuesto[{i}].CodigoBarra");
+                }
+
+                // Validación personalizada para campos condicionales
+                if (!ValidarFormaPago(model))
+                {
+                    await CargarCombosAsync(model);
+                    return View("Form", model);
+                }
+
+                // Asegurarse de que hay al menos un producto
+                if (model.ProductosPresupuesto == null || !model.ProductosPresupuesto.Any())
+                {
+                    ModelState.AddModelError(string.Empty, "Debe agregar al menos un producto.");
+                    await CargarCombosAsync(model);
+                    return View("Form", model);
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    LogModelStateErrors();
+                    await CargarCombosAsync(model);
+                    return View("Form", model);
+                }
+
+                // Mapear y configurar la venta
+                var venta = _mapper.Map<Venta>(model);
+                venta.Usuario = User.Identity?.Name ?? "Desconocido";
+                venta.Vendedor = User.Identity?.Name ?? "Desconocido";
+                venta.FechaVenta = DateTime.Today;
+
+                // Calcular totales
+                venta.TotalProductos = venta.ProductosPresupuesto.Sum(p => p.Cantidad);
+                venta.PrecioTotal = venta.ProductosPresupuesto.Sum(p => p.PrecioTotal);
+
+                // Determinar estado basado en el botón presionado
+                venta.Estado = !string.IsNullOrEmpty(Finalizar) && Finalizar.Equals("true", StringComparison.OrdinalIgnoreCase)
+                    ? EstadoVenta.PendienteDeAutorizacion
+                    : EstadoVenta.Borrador;
+
+                await _ventaService.CreateVentaAsync(venta);
 
                 // Registrar auditoría
                 await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
@@ -177,138 +162,465 @@ namespace Javo2.Controllers
                     FechaHora = DateTime.Now,
                     Usuario = User.Identity?.Name ?? "Desconocido",
                     Entidad = "Venta",
-                    Accion = "Process",
-                    LlavePrimaria = id.ToString(),
-                    Detalle = "Venta completada y stock descontado"
+                    Accion = "Create",
+                    LlavePrimaria = venta.VentaID.ToString(),
+                    Detalle = $"Cliente={venta.NombreCliente}, Total={venta.PrecioTotal}, Estado={venta.Estado}"
                 });
 
-                TempData["Success"] = $"La venta {id} fue procesada correctamente.";
+                TempData["Success"] = "Venta creada exitosamente.";
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "[VentasController] Error al procesar la venta ID={ID}", id);
-                TempData["Error"] = "No se pudo procesar la venta.";
+                _logger.LogError(ex, "Error al crear la venta");
+                ModelState.AddModelError(string.Empty, "Ocurrió un error al crear la venta.");
+                await CargarCombosAsync(model);
+                return View("Form", model);
             }
-
-            return RedirectToAction(nameof(Index));
         }
 
-        // ============== Acciones AJAX para buscar clientes/productos ==============
+        // GET: Ventas/Edit/5
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            try
+            {
+                _logger.LogInformation("Edit GET => VentaID={ID}", id);
+
+                var venta = await _ventaService.GetVentaByIDAsync(id);
+                if (venta == null)
+                {
+                    return NotFound();
+                }
+
+                var model = _mapper.Map<VentaFormViewModel>(venta);
+                await CargarCombosAsync(model);
+
+                return View("Form", model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cargar la venta para edición");
+                return View("Error");
+            }
+        }
+
+        // POST: Ventas/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(VentaFormViewModel model)
+        {
+            try
+            {
+                _logger.LogInformation("Edit POST => VentaID={ID}", model.VentaID);
+
+                // Limpiar errores de ModelState para campos que no aplican según la forma de pago
+                if (model.FormaPagoID != 2) // Si no es tarjeta de crédito
+                {
+                    ModelState.Remove(nameof(model.TipoTarjeta));
+                    ModelState.Remove(nameof(model.Cuotas));
+                }
+                if (model.FormaPagoID != 5) // Si no es pago virtual
+                {
+                    ModelState.Remove(nameof(model.EntidadElectronica));
+                }
+                if (model.FormaPagoID != 6) // Si no es crédito personal
+                {
+                    ModelState.Remove(nameof(model.PlanFinanciamiento));
+                }
+
+                // Limpiar errores de campos opcionales en productos
+                for (int i = 0; i < model.ProductosPresupuesto.Count; i++)
+                {
+                    ModelState.Remove($"ProductosPresupuesto[{i}].Marca");
+                    ModelState.Remove($"ProductosPresupuesto[{i}].CodigoAlfa");
+                    ModelState.Remove($"ProductosPresupuesto[{i}].CodigoBarra");
+                }
+
+                if (!ValidarFormaPago(model))
+                {
+                    await CargarCombosAsync(model);
+                    return View("Form", model);
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    LogModelStateErrors();
+                    await CargarCombosAsync(model);
+                    return View("Form", model);
+                }
+
+                var venta = _mapper.Map<Venta>(model);
+
+                // Recalcular totales
+                venta.TotalProductos = venta.ProductosPresupuesto.Sum(p => p.Cantidad);
+                venta.PrecioTotal = venta.ProductosPresupuesto.Sum(p => p.PrecioTotal);
+
+                await _ventaService.UpdateVentaAsync(venta);
+
+                // Registrar auditoría
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = User.Identity?.Name ?? "Desconocido",
+                    Entidad = "Venta",
+                    Accion = "Update",
+                    LlavePrimaria = venta.VentaID.ToString(),
+                    Detalle = $"Cliente={venta.NombreCliente}, Total={venta.PrecioTotal}, Estado={venta.Estado}"
+                });
+
+                TempData["Success"] = "Venta actualizada exitosamente.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al actualizar la venta");
+                ModelState.AddModelError(string.Empty, "Ocurrió un error al actualizar la venta.");
+                await CargarCombosAsync(model);
+                return View("Form", model);
+            }
+        }
+
+        // GET: Ventas/Details/5
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            try
+            {
+                _logger.LogInformation("Details GET => VentaID={ID}", id);
+
+                var venta = await _ventaService.GetVentaByIDAsync(id);
+                if (venta == null)
+                {
+                    return NotFound();
+                }
+
+                var model = _mapper.Map<VentaListViewModel>(venta);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener los detalles de la venta");
+                return View("Error");
+            }
+        }
+
+        // GET: Ventas/Delete/5
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                _logger.LogInformation("Delete GET => VentaID={ID}", id);
+
+                var venta = await _ventaService.GetVentaByIDAsync(id);
+                if (venta == null)
+                {
+                    return NotFound();
+                }
+
+                var model = _mapper.Map<VentaListViewModel>(venta);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cargar la venta para eliminación");
+                return View("Error");
+            }
+        }
+
+        // POST: Ventas/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            try
+            {
+                _logger.LogInformation("DeleteConfirmed POST => VentaID={ID}", id);
+
+                var venta = await _ventaService.GetVentaByIDAsync(id);
+                if (venta == null)
+                {
+                    return NotFound();
+                }
+
+                await _ventaService.DeleteVentaAsync(id);
+
+                // Registrar auditoría
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = User.Identity?.Name ?? "Desconocido",
+                    Entidad = "Venta",
+                    Accion = "Delete",
+                    LlavePrimaria = id.ToString(),
+                    Detalle = $"Eliminada venta: Cliente={venta.NombreCliente}, Total={venta.PrecioTotal}"
+                });
+
+                TempData["Success"] = "Venta eliminada exitosamente.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar la venta");
+                TempData["Error"] = "Ocurrió un error al eliminar la venta.";
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        #region Métodos AJAX
+
         [HttpPost]
         public async Task<IActionResult> BuscarClientePorDNI(int dni)
         {
-            _logger.LogInformation("[VentasController] BuscarClientePorDNI => DNI={Dni}", dni);
-
-            var cliente = await _clienteService.GetClienteByDNIAsync(dni);
-            if (cliente == null)
+            try
             {
-                return Json(new { success = false, message = "Cliente no encontrado con ese DNI." });
-            }
+                _logger.LogInformation("BuscarClientePorDNI => DNI={Dni}", dni);
 
-            return Json(new
-            {
-                success = true,
-                data = new
+                var cliente = await _clienteService.GetClienteByDNIAsync(dni);
+                if (cliente == null)
                 {
-                    nombre = $"{cliente.Nombre} {cliente.Apellido}",
-                    telefono = cliente.Telefono,
-                    calle = cliente.Calle,
-                    localidad = cliente.Localidad,
-                    celular = cliente.Celular,
-                    limiteCredito = cliente.LimiteCreditoInicial,
-                    saldo = cliente.Saldo,
-                    saldoDisponible = cliente.SaldoDisponible
+                    return Json(new { success = false, message = "Cliente no encontrado con ese DNI." });
                 }
-            });
+
+                return Json(new
+                {
+                    success = true,
+                    data = new
+                    {
+                        nombre = $"{cliente.Nombre} {cliente.Apellido}",
+                        telefono = cliente.Telefono,
+                        domicilio = $"{cliente.Calle} {cliente.NumeroCalle}",
+                        localidad = cliente.Localidad,
+                        celular = cliente.Celular,
+                        limiteCredito = cliente.LimiteCreditoInicial,
+                        saldo = cliente.Saldo,
+                        saldoDisponible = cliente.SaldoDisponible
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al buscar cliente por DNI");
+                return Json(new { success = false, message = "Error al buscar el cliente." });
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> BuscarProducto(string codigoProducto)
         {
-            _logger.LogInformation("[VentasController] BuscarProducto => codigoProducto={Codigo}", codigoProducto);
-
-            var producto = await _productoService.GetProductoByCodigoAsync(codigoProducto);
-            if (producto == null)
+            try
             {
-                return Json(new { success = false, message = "Producto no encontrado." });
-            }
+                _logger.LogInformation("BuscarProducto => Código={Codigo}", codigoProducto);
 
-            return Json(new
-            {
-                success = true,
-                data = new
+                var producto = await _productoService.GetProductoByCodigoAsync(codigoProducto);
+                if (producto == null)
                 {
-                    productoID = producto.ProductoID,
-                    codigoBarra = producto.CodigoBarra,
-                    codigoAlfa = producto.CodigoAlfa,
-                    nombreProducto = producto.Nombre,
-                    marca = producto.Marca?.Nombre ?? "",
-                    cantidad = 1,
-                    precioUnitario = producto.PContado,
-                    precioLista = producto.PLista,
-                    precioTotal = producto.PContado
+                    return Json(new { success = false, message = "Producto no encontrado." });
                 }
-            });
-        }
 
-        [HttpPost]
-        public async Task<IActionResult> BuscarProductoPorNombre(string nombreProducto)
-        {
-            _logger.LogInformation("[VentasController] BuscarProductoPorNombre => nombreProducto={Nombre}", nombreProducto);
-
-            var prod = await _productoService.GetProductoByNombreAsync(nombreProducto);
-            if (prod == null)
-            {
-                return Json(new { success = false, message = "No se encontró producto con ese nombre." });
-            }
-
-            return Json(new
-            {
-                success = true,
-                data = new[] {
-                    new {
-                        productoID = prod.ProductoID,
-                        codigoBarra = prod.CodigoBarra,
-                        codigoAlfa = prod.CodigoAlfa,
-                        nombreProducto = prod.Nombre,
-                        marca = prod.Marca?.Nombre ?? "",
+                return Json(new
+                {
+                    success = true,
+                    data = new
+                    {
+                        productoID = producto.ProductoID,
+                        codigoBarra = producto.CodigoBarra,
+                        codigoAlfa = producto.CodigoAlfa,
+                        nombreProducto = producto.Nombre,
+                        marca = producto.Marca?.Nombre ?? "",
                         cantidad = 1,
-                        precioUnitario = prod.PContado,
-                        precioLista = prod.PLista,
-                        precioTotal = prod.PContado
+                        precioUnitario = producto.PContado,
+                        precioLista = producto.PLista,
+                        precioTotal = producto.PContado
                     }
-                }
-            });
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al buscar producto");
+                return Json(new { success = false, message = "Error al buscar el producto." });
+            }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> BuscarProductosPorRubro(string rubroProducto)
-        {
-            _logger.LogInformation("[VentasController] BuscarProductosPorRubro => rubro={Rubro}", rubroProducto);
+        #endregion
 
-            var productos = await _productoService.GetProductosByRubroAsync(rubroProducto);
-            if (!productos.Any())
+        #region Flujo de Autorización y Entrega
+
+        // GET: Ventas/Autorizaciones
+        [HttpGet]
+        public async Task<IActionResult> Autorizaciones()
+        {
+            try
             {
-                return Json(new { success = false, message = "No se encontraron productos para ese rubro." });
+                var ventas = await _ventaService.GetVentasByEstadoAsync(EstadoVenta.PendienteDeAutorizacion);
+                var model = _mapper.Map<IEnumerable<VentaListViewModel>>(ventas);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cargar ventas pendientes de autorización");
+                return View("Error");
+            }
+        }
+
+        // POST: Ventas/Autorizar
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Autorizar(int id)
+        {
+            try
+            {
+                _logger.LogInformation("Autorizar POST => VentaID={ID}", id);
+
+                await _ventaService.AutorizarVentaAsync(id, User.Identity?.Name ?? "Desconocido");
+
+                return Json(new { success = true, message = "Venta autorizada correctamente." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al autorizar venta ID: {ID}", id);
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        // POST: Ventas/Rechazar
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Rechazar(int id)
+        {
+            try
+            {
+                _logger.LogInformation("Rechazar POST => VentaID={ID}", id);
+
+                await _ventaService.RechazarVentaAsync(id, User.Identity?.Name ?? "Desconocido");
+
+                return Json(new { success = true, message = "Venta rechazada correctamente." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al rechazar venta ID: {ID}", id);
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        // GET: Ventas/EntregaProductos
+        [HttpGet]
+        public async Task<IActionResult> EntregaProductos()
+        {
+            try
+            {
+                var ventas = await _ventaService.GetVentasPendientesDeEntregaAsync();
+                var model = _mapper.Map<IEnumerable<VentaListViewModel>>(ventas);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cargar ventas pendientes de entrega");
+                return View("Error");
+            }
+        }
+
+     // POST: Ventas/MarcarEntregada
+[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> MarcarEntregada(int id)
+{
+    try
+    {
+        _logger.LogInformation("MarcarEntregada POST => VentaID={ID}", id);
+
+        await _ventaService.MarcarVentaComoEntregadaAsync(id, User.Identity?.Name ?? "Desconocido");
+
+        return Json(new { success = true, message = "Venta marcada como entregada correctamente." });
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "Error al marcar venta como entregada ID: {ID}", id);
+        return Json(new { success = false, message = ex.Message });
+    }
+}
+
+        // GET: Ventas/Reimprimir/5
+        [HttpGet]
+        public async Task<IActionResult> Reimprimir(int id)
+        {
+            try
+            {
+                var venta = await _ventaService.GetVentaByIDAsync(id);
+                if (venta == null)
+                {
+                    return NotFound();
+                }
+
+                // Aquí se implementaría la lógica para generar el PDF o la vista de impresión
+                return View(venta);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al reimprimir venta ID: {ID}", id);
+                return View("Error");
+            }
+        }
+
+        #endregion
+
+        #region Métodos Privados
+
+        private async Task CargarCombosAsync(VentaFormViewModel model)
+        {
+            model.FormasPago = await ObtenerFormasPago();
+            model.Bancos = await ObtenerBancos();
+            model.TipoTarjetaOptions = await ObtenerTipoTarjetaOptions();
+            model.CuotasOptions = await ObtenerCuotasOptions();
+            model.EntidadesElectronicas = await ObtenerEntidadesElectronicas();
+            model.PlanesFinanciamiento = await ObtenerPlanesFinanciamiento();
+        }
+
+        private bool ValidarFormaPago(VentaFormViewModel model)
+        {
+            bool isValid = true;
+
+            // Solo validar campos específicos según la forma de pago seleccionada
+            switch (model.FormaPagoID)
+            {
+                case 2: // Tarjeta de Crédito
+                    if (string.IsNullOrEmpty(model.TipoTarjeta))
+                    {
+                        ModelState.AddModelError(nameof(model.TipoTarjeta),
+                            "Debe seleccionar un tipo de tarjeta para pagos con tarjeta de crédito.");
+                        isValid = false;
+                    }
+                    if (!model.Cuotas.HasValue || model.Cuotas.Value <= 0)
+                    {
+                        ModelState.AddModelError(nameof(model.Cuotas),
+                            "Debe especificar el número de cuotas.");
+                        isValid = false;
+                    }
+                    break;
+
+                case 5: // Pago Virtual
+                    if (string.IsNullOrEmpty(model.EntidadElectronica))
+                    {
+                        ModelState.AddModelError(nameof(model.EntidadElectronica),
+                            "Debe seleccionar una entidad electrónica para pagos virtuales.");
+                        isValid = false;
+                    }
+                    break;
+
+                case 6: // Crédito Personal
+                    if (string.IsNullOrEmpty(model.PlanFinanciamiento))
+                    {
+                        ModelState.AddModelError(nameof(model.PlanFinanciamiento),
+                            "Debe seleccionar un plan de financiamiento para crédito personal.");
+                        isValid = false;
+                    }
+                    break;
             }
 
-            var dataList = productos.Select(p => new
-            {
-                productoID = p.ProductoID,
-                codigoBarra = p.CodigoBarra,
-                codigoAlfa = p.CodigoAlfa,
-                nombreProducto = p.Nombre,
-                marca = p.Marca?.Nombre ?? "",
-                cantidad = 1,
-                precioUnitario = p.PContado,
-                precioLista = p.PLista,
-                precioTotal = p.PContado
-            }).ToList();
-
-            return Json(new { success = true, data = dataList });
+            return isValid;
         }
 
-        // Otras funciones auxiliares para combos
         private async Task<IEnumerable<SelectListItem>> ObtenerFormasPago()
         {
             var formasPago = await _ventaService.GetFormasPagoAsync();
@@ -329,59 +641,55 @@ namespace Javo2.Controllers
             });
         }
 
-        private async Task<IEnumerable<SelectListItem>> ObtenerTipoTarjetaOptions()
+        private Task<IEnumerable<SelectListItem>> ObtenerTipoTarjetaOptions()
         {
             var tipos = new List<SelectListItem>
             {
                 new SelectListItem { Value = "Visa", Text = "Visa" },
                 new SelectListItem { Value = "MasterCard", Text = "MasterCard" },
                 new SelectListItem { Value = "Amex", Text = "Amex" },
+                new SelectListItem { Value = "Naranja", Text = "Naranja" },
+                new SelectListItem { Value = "Cabal", Text = "Cabal" }
             };
-            return await Task.FromResult(tipos);
+            return Task.FromResult<IEnumerable<SelectListItem>>(tipos);
         }
 
-        private async Task<IEnumerable<SelectListItem>> ObtenerCuotasOptions()
+        private Task<IEnumerable<SelectListItem>> ObtenerCuotasOptions()
         {
-            var list = new List<SelectListItem>();
-            for (int i = 1; i <= 12; i++)
+            var cuotas = new List<SelectListItem>();
+            for (int i = 1; i <= 24; i++)
             {
-                list.Add(new SelectListItem { Value = i.ToString(), Text = $"{i} Cuotas" });
+                cuotas.Add(new SelectListItem { Value = i.ToString(), Text = $"{i} Cuota{(i > 1 ? "s" : "")}" });
             }
-            return await Task.FromResult(list);
+            return Task.FromResult<IEnumerable<SelectListItem>>(cuotas);
         }
 
-        private async Task<IEnumerable<SelectListItem>> ObtenerEntidadesElectronicas()
+        private Task<IEnumerable<SelectListItem>> ObtenerEntidadesElectronicas()
         {
             var entidades = new List<SelectListItem>
             {
-                new SelectListItem { Value = "PayPal", Text = "PayPal" },
                 new SelectListItem { Value = "MercadoPago", Text = "MercadoPago" },
-                new SelectListItem { Value = "Stripe", Text = "Stripe" },
+                new SelectListItem { Value = "Modo", Text = "Modo" },
+                new SelectListItem { Value = "BIMO", Text = "BIMO" },
+                new SelectListItem { Value = "Cuenta DNI", Text = "Cuenta DNI" },
+                new SelectListItem { Value = "QR", Text = "QR" }
             };
-            return await Task.FromResult(entidades);
+            return Task.FromResult<IEnumerable<SelectListItem>>(entidades);
         }
 
-        private async Task<IEnumerable<SelectListItem>> ObtenerPlanesFinanciamiento()
+        private Task<IEnumerable<SelectListItem>> ObtenerPlanesFinanciamiento()
         {
             var planes = new List<SelectListItem>
             {
-                new SelectListItem { Value = "Plan A", Text = "Plan A" },
-                new SelectListItem { Value = "Plan B", Text = "Plan B" },
-                new SelectListItem { Value = "Plan C", Text = "Plan C" },
+                new SelectListItem { Value = "Plan 6 cuotas", Text = "Plan 6 cuotas" },
+                new SelectListItem { Value = "Plan 12 cuotas", Text = "Plan 12 cuotas" },
+                new SelectListItem { Value = "Plan 18 cuotas", Text = "Plan 18 cuotas" },
+                new SelectListItem { Value = "Plan 24 cuotas", Text = "Plan 24 cuotas" },
+                new SelectListItem { Value = "Plan 36 cuotas", Text = "Plan 36 cuotas" }
             };
-            return await Task.FromResult(planes);
+            return Task.FromResult<IEnumerable<SelectListItem>>(planes);
         }
 
-        // GET: Ventas/Reimprimir
-        [HttpGet]
-        public async Task<IActionResult> Reimprimir(int id)
-        {
-            var venta = await _ventaService.GetVentaByIDAsync(id);
-            if (venta == null)
-                return NotFound();
-
-            // Lógica para reimprimir
-            return View("Reimprimir", venta);
-        }
+        #endregion
     }
 }

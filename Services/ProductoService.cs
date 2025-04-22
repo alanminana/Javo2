@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Javo2.Helpers;
 
 namespace Javo2.Services
 {
@@ -16,9 +17,11 @@ namespace Javo2.Services
         private readonly ICatalogoService _catalogoService;
         private readonly IStockService _stockService;
         private readonly IPromocionesService _promocionesService;
+        private readonly string _jsonFilePath = "Data/productos.json";
 
-        private static readonly List<Producto> _productos = new();
-        private int _nextProductoID = 1;
+        private static List<Producto> _productos = new();
+        private static int _nextProductoID = 1;
+        private static readonly object _lock = new();
 
         public ProductoService(
             ILogger<ProductoService> logger,
@@ -32,21 +35,70 @@ namespace Javo2.Services
             _stockService = stockService;
             _promocionesService = promocionesService;
 
-            _logger.LogInformation("ProductoService constructor: inicializando datos de prueba...");
-            SeedDataAsync().GetAwaiter().GetResult();
+            _logger.LogInformation("ProductoService: Inicializando servicio");
+            CargarDesdeJsonAsync().GetAwaiter().GetResult();
+
+            if (!_productos.Any())
+            {
+                SeedDataAsync().GetAwaiter().GetResult();
+            }
+        }
+
+        private async Task CargarDesdeJsonAsync()
+        {
+            try
+            {
+                var data = await JsonFileHelper.LoadFromJsonFileAsync<List<Producto>>(_jsonFilePath);
+                lock (_lock)
+                {
+                    _productos = data ?? new List<Producto>();
+                    if (_productos.Any())
+                    {
+                        _nextProductoID = _productos.Max(p => p.ProductoID) + 1;
+                    }
+                    _logger.LogInformation("ProductoService: {Count} productos cargados desde {File}", _productos.Count, _jsonFilePath);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cargar productos desde JSON");
+                lock (_lock)
+                {
+                    _productos = new List<Producto>();
+                    _nextProductoID = 1;
+                }
+            }
+        }
+
+        private async Task GuardarEnJsonAsync()
+        {
+            List<Producto> snapshot;
+            lock (_lock)
+            {
+                snapshot = _productos.ToList();
+            }
+            try
+            {
+                await JsonFileHelper.SaveToJsonFileAsync(_jsonFilePath, snapshot);
+                _logger.LogInformation("ProductoService: guardados {Count} productos en {File}", snapshot.Count, _jsonFilePath);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al guardar productos en JSON");
+            }
         }
 
         private async Task SeedDataAsync()
         {
             try
             {
-                _logger.LogInformation("SeedDataAsync: Cargando rubros y marcas...");
+                _logger.LogInformation("SeedDataAsync: Iniciando carga de datos");
                 var marcas = (await _catalogoService.GetMarcasAsync()).ToList();
                 var rubros = (await _catalogoService.GetRubrosAsync()).ToList();
 
                 if (!marcas.Any() || !rubros.Any())
                 {
-                    _logger.LogWarning("No se encontraron marcas o rubros. No se inicializarán productos en SeedData.");
+                    _logger.LogWarning("No se encontraron marcas o rubros");
                     return;
                 }
 
@@ -54,9 +106,10 @@ namespace Javo2.Services
                 var rubro = rubros.First();
                 var subRubros = await _catalogoService.GetSubRubrosByRubroIDAsync(rubro.ID);
                 var subRubro = subRubros.FirstOrDefault();
+
                 if (subRubro == null)
                 {
-                    _logger.LogWarning("El rubro no tiene subRubros. No se inicializan productos en SeedData.");
+                    _logger.LogWarning("No hay subRubros para el rubro {RubroID}", rubro.ID);
                     return;
                 }
 
@@ -74,28 +127,24 @@ namespace Javo2.Services
                     RubroID = rubro.ID,
                     SubRubroID = subRubro.ID,
                     MarcaID = marca.ID,
-                    Rubro = rubro,
-                    SubRubro = subRubro,
-                    Marca = marca,
                     FechaMod = DateTime.Now,
                     FechaModPrecio = DateTime.Now,
-                    Usuario = "TestUser",
-                    ModificadoPor = "TestUser",
-                    EstadoComentario = "Activo",
-                    DeudaTotal = 0
+                    ModificadoPor = "Sistema",
+                    Estado = Producto.EstadoProducto.Activo
                 };
 
                 _productos.Add(producto);
-                _logger.LogInformation("SeedDataAsync: Agregado producto inicial: {Nombre}", producto.Nombre);
+                await GuardarEnJsonAsync();
+                _logger.LogInformation("Producto inicial creado: {Nombre}", producto.Nombre);
 
+                // Crear stock inicial
                 var stockItem = new StockItem
                 {
                     ProductoID = producto.ProductoID,
-                    CantidadDisponible = 10,
-                    Producto = producto
+                    CantidadDisponible = 10
                 };
                 await _stockService.CreateStockItemAsync(stockItem);
-                _logger.LogInformation("SeedDataAsync: Stock inicial creado para producto ID={ID}", producto.ProductoID);
+                _logger.LogInformation("Stock inicial creado para producto ID={ID}", producto.ProductoID);
             }
             catch (Exception ex)
             {
@@ -103,100 +152,88 @@ namespace Javo2.Services
             }
         }
 
-        public async Task<IEnumerable<Producto>> GetProductosByTermAsync(string term)
-        {
-            var result = _productos
-                .Where(p => p.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase)
-                         || (p.Marca != null && p.Marca.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase)));
-            return await Task.FromResult(result);
-        }
-
-        // Ajuste de precios
-        public async Task AdjustPricesAsync(IEnumerable<int> ProductoIDs, decimal porcentaje, bool isAumento)
-        {
-            _logger.LogInformation("AdjustPricesAsync llamado. ProductoIDs={@IDs}, porcentaje={Porcentaje}, isAumento={IsAumento}",
-                ProductoIDs, porcentaje, isAumento);
-
-            foreach (var id in ProductoIDs)
-            {
-                var producto = _productos.FirstOrDefault(p => p.ProductoID == id);
-                if (producto != null)
-                {
-                    decimal factor = isAumento ? (1 + porcentaje / 100m)
-                                               : (1 - porcentaje / 100m);
-
-                    _logger.LogInformation("Ajustando precios de producto ID={ID}, factor={Factor}", id, factor);
-
-                    producto.PCosto *= factor;
-                    producto.PContado *= factor;
-                    producto.PLista *= factor;
-                    producto.FechaModPrecio = DateTime.Now;
-                }
-                else
-                {
-                    _logger.LogWarning("AdjustPricesAsync: Producto ID={ID} no encontrado para ajuste", id);
-                }
-            }
-            _logger.LogInformation("Ajuste masivo de precios completado. CantProductos: {Count}", ProductoIDs.Count());
-            await Task.CompletedTask;
-        }
-
         public async Task<IEnumerable<Producto>> GetAllProductosAsync()
         {
-            _logger.LogInformation("GetAllProductosAsync: retornando {_Count} productos", _productos.Count);
+            lock (_lock)
+            {
+                _logger.LogInformation("GetAllProductosAsync: Retornando {Count} productos", _productos.Count);
+            }
 
+            // Cargar stock y relaciones
             foreach (var producto in _productos)
             {
-                // Asignar stock item
                 producto.StockItem = await _stockService.GetStockItemByProductoIDAsync(producto.ProductoID);
+                producto.Rubro = await _catalogoService.GetRubroByIDAsync(producto.RubroID);
+                producto.SubRubro = await _catalogoService.GetSubRubroByIDAsync(producto.SubRubroID);
+                producto.Marca = await _catalogoService.GetMarcaByIDAsync(producto.MarcaID);
 
-                // Aplicar promociones si las hay
                 var promos = await _promocionesService.GetPromocionesAplicablesAsync(producto);
-                decimal pListaOriginal = producto.PLista;
-                foreach (var promo in promos)
+                if (promos.Any())
                 {
-                    if (promo.EsAumento)
-                        pListaOriginal += pListaOriginal * (promo.Porcentaje / 100m);
-                    else
-                        pListaOriginal -= pListaOriginal * (promo.Porcentaje / 100m);
+                    decimal precioOriginal = producto.PLista;
+                    foreach (var promo in promos)
+                    {
+                        if (promo.EsAumento)
+                            precioOriginal += precioOriginal * (promo.Porcentaje / 100m);
+                        else
+                            precioOriginal -= precioOriginal * (promo.Porcentaje / 100m);
+                    }
+                    producto.PLista = precioOriginal;
                 }
-                producto.PLista = pListaOriginal;
             }
-            return _productos.AsEnumerable();
+
+            lock (_lock)
+            {
+                return _productos.AsEnumerable();
+            }
         }
 
         public async Task<Producto?> GetProductoByIDAsync(int id)
         {
-            _logger.LogInformation("GetProductoByIDAsync llamado con ID={ID}", id);
-            var producto = _productos.FirstOrDefault(p => p.ProductoID == id);
+            _logger.LogInformation("GetProductoByIDAsync: ID={ID}", id);
+            Producto? producto;
+
+            lock (_lock)
+            {
+                producto = _productos.FirstOrDefault(p => p.ProductoID == id);
+            }
+
             if (producto != null)
             {
                 producto.StockItem = await _stockService.GetStockItemByProductoIDAsync(producto.ProductoID);
+                producto.Rubro = await _catalogoService.GetRubroByIDAsync(producto.RubroID);
+                producto.SubRubro = await _catalogoService.GetSubRubroByIDAsync(producto.SubRubroID);
+                producto.Marca = await _catalogoService.GetMarcaByIDAsync(producto.MarcaID);
             }
             else
             {
-                _logger.LogWarning("GetProductoByIDAsync: Producto ID={ID} no encontrado", id);
+                _logger.LogWarning("Producto ID={ID} no encontrado", id);
             }
+
             return producto;
         }
 
         public async Task CreateProductoAsync(Producto producto)
         {
-            _logger.LogInformation("CreateProductoAsync llamado para {Nombre}", producto.Nombre);
+            _logger.LogInformation("CreateProductoAsync: {Nombre}", producto.Nombre);
             ValidateProducto(producto);
 
-            producto.ProductoID = _nextProductoID++;
-            producto.FechaMod = DateTime.Now;
-            producto.FechaModPrecio = DateTime.Now;
+            lock (_lock)
+            {
+                producto.ProductoID = _nextProductoID++;
+                producto.FechaMod = DateTime.Now;
+                producto.FechaModPrecio = DateTime.Now;
+                _productos.Add(producto);
+            }
 
-            _productos.Add(producto);
-            _logger.LogInformation("Producto creado con ID={ID}, Nombre={Nombre}", producto.ProductoID, producto.Nombre);
+            await GuardarEnJsonAsync();
+            _logger.LogInformation("Producto creado con ID={ID}", producto.ProductoID);
 
+            // Crear stock inicial
             var stockItem = new StockItem
             {
                 ProductoID = producto.ProductoID,
-                CantidadDisponible = 0,
-                Producto = producto
+                CantidadDisponible = 0
             };
             await _stockService.CreateStockItemAsync(stockItem);
             _logger.LogInformation("StockItem creado para producto ID={ID}", producto.ProductoID);
@@ -204,61 +241,73 @@ namespace Javo2.Services
 
         public async Task UpdateProductoAsync(Producto producto)
         {
-            _logger.LogInformation("UpdateProductoAsync llamado para producto ID={ID}, Nombre={Nombre}",
-                producto.ProductoID, producto.Nombre);
+            _logger.LogInformation("UpdateProductoAsync: ID={ID}", producto.ProductoID);
             ValidateProducto(producto);
 
-            var existingProducto = _productos.FirstOrDefault(p => p.ProductoID == producto.ProductoID);
-            if (existingProducto == null)
+            lock (_lock)
             {
-                _logger.LogWarning("UpdateProductoAsync: Producto ID={ID} no encontrado", producto.ProductoID);
-                throw new KeyNotFoundException($"Producto con ID {producto.ProductoID} no encontrado.");
+                var existingProducto = _productos.FirstOrDefault(p => p.ProductoID == producto.ProductoID);
+                if (existingProducto == null)
+                {
+                    _logger.LogWarning("Producto ID={ID} no encontrado para actualizar", producto.ProductoID);
+                    throw new KeyNotFoundException($"Producto con ID {producto.ProductoID} no encontrado.");
+                }
+
+                existingProducto.Nombre = producto.Nombre;
+                existingProducto.Descripcion = producto.Descripcion;
+                existingProducto.PCosto = producto.PCosto;
+                existingProducto.PContado = producto.PContado;
+                existingProducto.PLista = producto.PLista;
+                existingProducto.PorcentajeIva = producto.PorcentajeIva;
+                existingProducto.RubroID = producto.RubroID;
+                existingProducto.SubRubroID = producto.SubRubroID;
+                existingProducto.MarcaID = producto.MarcaID;
+                existingProducto.FechaMod = DateTime.Now;
+                existingProducto.ModificadoPor = producto.ModificadoPor;
             }
 
-            existingProducto.Nombre = producto.Nombre;
-            existingProducto.Descripcion = producto.Descripcion;
-            existingProducto.PCosto = producto.PCosto;
-            existingProducto.PContado = producto.PContado;
-            existingProducto.PLista = producto.PLista;
-            existingProducto.PorcentajeIva = producto.PorcentajeIva;
-            existingProducto.RubroID = producto.RubroID;
-            existingProducto.SubRubroID = producto.SubRubroID;
-            existingProducto.MarcaID = producto.MarcaID;
-            existingProducto.FechaMod = DateTime.Now;
-            existingProducto.ModificadoPor = producto.ModificadoPor;
-            existingProducto.EstadoComentario = producto.EstadoComentario;
-
-            // Actualizar StockItem
-            existingProducto.StockItem = await _stockService.GetStockItemByProductoIDAsync(existingProducto.ProductoID);
-
-            _logger.LogInformation("Producto ID={ID} actualizado correctamente", producto.ProductoID);
+            await GuardarEnJsonAsync();
+            _logger.LogInformation("Producto ID={ID} actualizado", producto.ProductoID);
         }
 
         public async Task DeleteProductoAsync(int id)
         {
-            _logger.LogInformation("DeleteProductoAsync llamado con ID={ID}", id);
-            var producto = _productos.FirstOrDefault(p => p.ProductoID == id);
-            if (producto == null)
+            _logger.LogInformation("DeleteProductoAsync: ID={ID}", id);
+
+            lock (_lock)
             {
-                _logger.LogWarning("DeleteProductoAsync: Producto ID={ID} no encontrado", id);
-                throw new KeyNotFoundException($"Producto con ID {id} no encontrado.");
+                var producto = _productos.FirstOrDefault(p => p.ProductoID == id);
+                if (producto == null)
+                {
+                    _logger.LogWarning("Producto ID={ID} no encontrado para eliminar", id);
+                    throw new KeyNotFoundException($"Producto con ID {id} no encontrado.");
+                }
+
+                _productos.Remove(producto);
             }
 
-            _productos.Remove(producto);
-            _logger.LogInformation("Producto ID={ID} eliminado.", id);
+            await GuardarEnJsonAsync();
 
+            // Eliminar stock asociado
             var stockItem = await _stockService.GetStockItemByProductoIDAsync(id);
             if (stockItem != null)
             {
                 await _stockService.DeleteStockItemAsync(stockItem.StockItemID);
-                _logger.LogInformation("StockItem para producto ID={ID} también fue eliminado.", id);
+                _logger.LogInformation("StockItem eliminado para producto ID={ID}", id);
             }
+
+            _logger.LogInformation("Producto ID={ID} eliminado", id);
         }
 
         public async Task<IEnumerable<Producto>> FilterProductosAsync(ProductoFilterDto filters)
         {
-            _logger.LogInformation("FilterProductosAsync llamado con filtros: {@Filters}", filters);
-            var query = _productos.AsQueryable();
+            _logger.LogInformation("FilterProductosAsync: {@Filters}", filters);
+            IQueryable<Producto> query;
+
+            lock (_lock)
+            {
+                query = _productos.AsQueryable();
+            }
 
             if (!string.IsNullOrEmpty(filters.Nombre))
                 query = query.Where(p => p.Nombre.Contains(filters.Nombre, StringComparison.OrdinalIgnoreCase));
@@ -268,90 +317,166 @@ namespace Javo2.Services
                                       || (p.CodigoAlfa != null && p.CodigoAlfa.Contains(filters.Codigo, StringComparison.OrdinalIgnoreCase)));
 
             if (!string.IsNullOrEmpty(filters.Marca))
-                query = query.Where(p => p.Marca != null
-                                      && p.Marca.Nombre.Contains(filters.Marca, StringComparison.OrdinalIgnoreCase));
+                query = query.Where(p => p.Marca != null && p.Marca.Nombre.Contains(filters.Marca, StringComparison.OrdinalIgnoreCase));
 
             if (!string.IsNullOrEmpty(filters.Rubro))
-                query = query.Where(p => p.Rubro != null
-                                      && p.Rubro.Nombre.Contains(filters.Rubro, StringComparison.OrdinalIgnoreCase));
+                query = query.Where(p => p.Rubro != null && p.Rubro.Nombre.Contains(filters.Rubro, StringComparison.OrdinalIgnoreCase));
 
             if (!string.IsNullOrEmpty(filters.SubRubro))
-                query = query.Where(p => p.SubRubro != null
-                                      && p.SubRubro.Nombre.Contains(filters.SubRubro, StringComparison.OrdinalIgnoreCase));
+                query = query.Where(p => p.SubRubro != null && p.SubRubro.Nombre.Contains(filters.SubRubro, StringComparison.OrdinalIgnoreCase));
+
+            if (filters.PrecioMinimo.HasValue)
+                query = query.Where(p => p.PLista >= filters.PrecioMinimo.Value);
+
+            if (filters.PrecioMaximo.HasValue)
+                query = query.Where(p => p.PLista <= filters.PrecioMaximo.Value);
 
             return await Task.FromResult(query.AsEnumerable());
         }
 
+        public async Task AdjustPricesAsync(IEnumerable<int> productIDs, decimal porcentaje, bool isAumento)
+        {
+            _logger.LogInformation("AdjustPricesAsync: {Count} productos, {Porcentaje}% {Tipo}",
+                productIDs.Count(), porcentaje, isAumento ? "Aumento" : "Descuento");
+
+            decimal factor = isAumento ? (1 + porcentaje / 100m) : (1 - porcentaje / 100m);
+
+            lock (_lock)
+            {
+                foreach (var id in productIDs)
+                {
+                    var producto = _productos.FirstOrDefault(p => p.ProductoID == id);
+                    if (producto != null)
+                    {
+                        producto.PCosto *= factor;
+                        producto.PContado *= factor;
+                        producto.PLista *= factor;
+                        producto.FechaModPrecio = DateTime.Now;
+
+                        _logger.LogInformation("Precio ajustado para producto ID={ID}", id);
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Producto ID={ID} no encontrado para ajuste", id);
+                    }
+                }
+            }
+
+            await GuardarEnJsonAsync();
+        }
+
         public Task<Producto?> GetProductoByCodigoAsync(string codigo)
         {
-            _logger.LogInformation("GetProductoByCodigoAsync llamado con Codigo={Codigo}", codigo);
-            var producto = _productos.FirstOrDefault(p => (p.CodigoBarra != null && p.CodigoBarra.Contains(codigo))
-                                                       || (p.CodigoAlfa != null && p.CodigoAlfa.Contains(codigo)));
-            return Task.FromResult(producto);
+            _logger.LogInformation("GetProductoByCodigoAsync: {Codigo}", codigo);
+            lock (_lock)
+            {
+                var producto = _productos.FirstOrDefault(p =>
+                    (p.CodigoBarra != null && p.CodigoBarra == codigo) ||
+                    (p.CodigoAlfa != null && p.CodigoAlfa == codigo));
+                return Task.FromResult(producto);
+            }
         }
 
         public Task<Producto?> GetProductoByNombreAsync(string nombre)
         {
-            _logger.LogInformation("GetProductoByNombreAsync llamado con Nombre={Nombre}", nombre);
-            var producto = _productos.FirstOrDefault(p => p.Nombre.Contains(nombre, StringComparison.OrdinalIgnoreCase));
-            return Task.FromResult(producto);
+            _logger.LogInformation("GetProductoByNombreAsync: {Nombre}", nombre);
+            lock (_lock)
+            {
+                var producto = _productos.FirstOrDefault(p =>
+                    p.Nombre.Equals(nombre, StringComparison.OrdinalIgnoreCase));
+                return Task.FromResult(producto);
+            }
         }
 
         public Task<IEnumerable<Producto>> GetProductosByRubroAsync(string rubro)
         {
-            _logger.LogInformation("GetProductosByRubroAsync llamado con Rubro={Rubro}", rubro);
-            var productos = _productos.Where(p => p.Rubro != null
-                                               && p.Rubro.Nombre.Equals(rubro, StringComparison.OrdinalIgnoreCase));
-            return Task.FromResult(productos.AsEnumerable());
+            _logger.LogInformation("GetProductosByRubroAsync: {Rubro}", rubro);
+            lock (_lock)
+            {
+                var productos = _productos
+                    .Where(p => p.Rubro != null && p.Rubro.Nombre.Equals(rubro, StringComparison.OrdinalIgnoreCase))
+                    .AsEnumerable();
+                return Task.FromResult(productos);
+            }
+        }
+
+        public Task<IEnumerable<Producto>> GetProductosByTermAsync(string term)
+        {
+            lock (_lock)
+            {
+                var productos = _productos
+                    .Where(p => p.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                               (p.Marca != null && p.Marca.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase)) ||
+                               (p.Rubro != null && p.Rubro.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase)))
+                    .AsEnumerable();
+                return Task.FromResult(productos);
+            }
         }
 
         public string GenerarProductoIDAlfa()
         {
-            _logger.LogInformation("GenerarProductoIDAlfa llamado.");
-            var maxID = _productos.Any() ? _productos.Max(p => p.ProductoID) : 0;
-            return $"P{maxID + 1:D3}";
+            _logger.LogInformation("GenerarProductoIDAlfa");
+            lock (_lock)
+            {
+                var maxID = _productos.Any() ? _productos.Max(p => p.ProductoID) : 0;
+                return $"P{maxID + 1:D3}";
+            }
         }
 
         public string GenerarCodBarraProducto()
         {
-            _logger.LogInformation("GenerarCodBarraProducto llamado.");
+            _logger.LogInformation("GenerarCodBarraProducto");
             var random = new Random();
             return random.Next(100000000, 999999999).ToString();
         }
 
-        public async Task<IEnumerable<string>> GetRubrosAutocompleteAsync(string term)
+        public Task<IEnumerable<string>> GetRubrosAutocompleteAsync(string term)
         {
-            _logger.LogInformation("GetRubrosAutocompleteAsync llamado con Term={Term}", term);
-            var rubros = _productos
-                .Select(p => p.Rubro?.Nombre ?? "")
-                .Distinct()
-                .Where(r => r != null && r.Contains(term, StringComparison.OrdinalIgnoreCase));
-            return await Task.FromResult(rubros);
+            _logger.LogInformation("GetRubrosAutocompleteAsync: {Term}", term);
+            lock (_lock)
+            {
+                var rubros = _productos
+                    .Where(p => p.Rubro != null)
+                    .Select(p => p.Rubro.Nombre)
+                    .Distinct()
+                    .Where(r => r.Contains(term, StringComparison.OrdinalIgnoreCase))
+                    .AsEnumerable();
+                return Task.FromResult(rubros);
+            }
         }
 
-        public async Task<IEnumerable<string>> GetMarcasAutocompleteAsync(string term)
+        public Task<IEnumerable<string>> GetMarcasAutocompleteAsync(string term)
         {
-            _logger.LogInformation("GetMarcasAutocompleteAsync llamado con Term={Term}", term);
-            var marcas = _productos
-                .Select(p => p.Marca?.Nombre ?? "")
-                .Distinct()
-                .Where(m => m != null && m.Contains(term, StringComparison.OrdinalIgnoreCase));
-            return await Task.FromResult(marcas);
+            _logger.LogInformation("GetMarcasAutocompleteAsync: {Term}", term);
+            lock (_lock)
+            {
+                var marcas = _productos
+                    .Where(p => p.Marca != null)
+                    .Select(p => p.Marca.Nombre)
+                    .Distinct()
+                    .Where(m => m.Contains(term, StringComparison.OrdinalIgnoreCase))
+                    .AsEnumerable();
+                return Task.FromResult(marcas);
+            }
         }
 
-        public async Task<IEnumerable<string>> GetProductosAutocompleteAsync(string term)
+        public Task<IEnumerable<string>> GetProductosAutocompleteAsync(string term)
         {
-            _logger.LogInformation("GetProductosAutocompleteAsync llamado con Term={Term}", term);
-            var productos = _productos
-                .Where(p => p.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase))
-                .Select(p => p.Nombre)
-                .Distinct();
-            return await Task.FromResult(productos);
+            _logger.LogInformation("GetProductosAutocompleteAsync: {Term}", term);
+            lock (_lock)
+            {
+                var productos = _productos
+                    .Where(p => p.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase))
+                    .Select(p => p.Nombre)
+                    .Distinct()
+                    .AsEnumerable();
+                return Task.FromResult(productos);
+            }
         }
 
         public async Task<(Dictionary<int, int> rubrosStock, Dictionary<int, int> marcasStock)> GetRubrosMarcasStockAsync()
         {
-            _logger.LogInformation("GetRubrosMarcasStockAsync llamado.");
+            _logger.LogInformation("GetRubrosMarcasStockAsync");
             var productos = await GetAllProductosAsync();
 
             var rubroStocks = productos
@@ -369,8 +494,7 @@ namespace Javo2.Services
 
         private void ValidateProducto(Producto producto)
         {
-            _logger.LogInformation("ValidateProducto llamado para Nombre={Nombre}, PCosto={PCosto}, PContado={PContado}, PLista={PLista}",
-                producto.Nombre, producto.PCosto, producto.PContado, producto.PLista);
+            _logger.LogInformation("ValidateProducto: {Nombre}", producto.Nombre);
 
             if (string.IsNullOrWhiteSpace(producto.Nombre))
             {
@@ -378,6 +502,7 @@ namespace Javo2.Services
                 _logger.LogError(msg);
                 throw new ArgumentException(msg);
             }
+
             if (producto.PCosto < 0 || producto.PContado < 0 || producto.PLista < 0)
             {
                 var msg = "Los precios no pueden ser negativos.";

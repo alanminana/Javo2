@@ -1,4 +1,5 @@
-﻿@model Javo2.ViewModels.Operaciones.Proveedores.ProveedoresViewModel
+﻿// Archivo: Views/Proveedores/Details.cshtml
+@model Javo2.ViewModels.Operaciones.Proveedores.ProveedoresViewModel
 
 @{
     ViewBag.Title = "Detalles del Proveedor";
@@ -28,16 +29,18 @@
         <dd class="col-sm-9">
             @if (Model.ProductosAsignadosNombres != null && Model.ProductosAsignadosNombres.Any())
             {
-                <ul>
-                    @foreach (var productName in Model.ProductosAsignadosNombres)
+            <ul>
+                @for (int i = 0; i < Model.ProductosAsignadosNombres.Count; i++)
                     {
-                        <li>@productName</li>
+                        var productName = Model.ProductosAsignadosNombres[i];
+                        var stock = Model.ProductosAsignadosStocks.Count > i ? Model.ProductosAsignadosStocks[i] : 0;
+                <li>@productName (Stock: @stock)</li>
                     }
-                </ul>
+            </ul>
             }
             else
             {
-                <span>No hay productos asignados</span>
+            <span>No hay productos asignados</span>
             }
         </dd>
     </dl>

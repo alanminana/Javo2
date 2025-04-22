@@ -1,4 +1,6 @@
-﻿// File: Models/Proveedor.cs
+﻿// Archivo: Models/Proveedor.cs
+// Se mantiene igual ya que el modelo está correctamente estructurado
+
 namespace Javo2.Models
 {
     public class Proveedor

@@ -1,0 +1,947 @@
+[
+  {
+    "StockItemID": 1,
+    "ProductoID": 1,
+    "CantidadDisponible": 10,
+    "Producto": {
+      "ProductoID": 1,
+      "CodigoAlfa": "P001",
+      "CodigoBarra": "316175785",
+      "Nombre": "Producto Inicial",
+      "Descripcion": "Descripci\u00F3n del producto inicial",
+      "PCosto": 100,
+      "PContado": 150,
+      "PLista": 200,
+      "RubroID": 1,
+      "Rubro": {
+        "ID": 1,
+        "Nombre": "Electr\u00F3nica",
+        "SubRubros": [
+          {
+            "ID": 1,
+            "Nombre": "Televisores",
+            "RubroID": 1,
+            "Rubro": {
+              "ID": 0,
+              "Nombre": "",
+              "SubRubros": []
+            }
+          },
+          {
+            "ID": 2,
+            "Nombre": "Computadoras",
+            "RubroID": 1,
+            "Rubro": {
+              "ID": 0,
+              "Nombre": "",
+              "SubRubros": []
+            }
+          }
+        ]
+      },
+      "SubRubroID": 1,
+      "SubRubro": {
+        "ID": 1,
+        "Nombre": "Televisores",
+        "RubroID": 1,
+        "Rubro": {
+          "ID": 0,
+          "Nombre": "",
+          "SubRubros": []
+        }
+      },
+      "MarcaID": 1,
+      "Marca": {
+        "ID": 1,
+        "Nombre": "Marca A"
+      },
+      "PorcentajeIva": 21,
+      "FechaMod": "2025-04-21T23:38:16.5841977-03:00",
+      "FechaModPrecio": "2025-04-21T23:38:16.5843473-03:00",
+      "Entregable": false,
+      "NoListar": false,
+      "Proveedor": {
+        "ProveedorID": 0,
+        "Nombre": "",
+        "Direccion": "",
+        "Telefono": "",
+        "Email": "",
+        "CondicionesPago": "",
+        "ProductosAsignados": []
+      },
+      "Usuario": "",
+      "ModificadoPor": "Sistema",
+      "EstadoComentario": "",
+      "DeudaTotal": 0,
+      "Estado": 0,
+      "StockItem": null
+    }
+  },
+  {
+    "StockItemID": 2,
+    "ProductoID": 1,
+    "CantidadDisponible": 10,
+    "Producto": {
+      "ProductoID": 1,
+      "CodigoAlfa": "P001",
+      "CodigoBarra": "650082181",
+      "Nombre": "Producto Inicial",
+      "Descripcion": "Descripci\u00F3n del producto inicial",
+      "PCosto": 100,
+      "PContado": 150,
+      "PLista": 200,
+      "RubroID": 1,
+      "Rubro": {
+        "ID": 1,
+        "Nombre": "Electr\u00F3nica",
+        "SubRubros": [
+          {
+            "ID": 1,
+            "Nombre": "Televisores",
+            "RubroID": 1,
+            "Rubro": {
+              "ID": 0,
+              "Nombre": "",
+              "SubRubros": []
+            }
+          },
+          {
+            "ID": 2,
+            "Nombre": "Computadoras",
+            "RubroID": 1,
+            "Rubro": {
+              "ID": 0,
+              "Nombre": "",
+              "SubRubros": []
+            }
+          }
+        ]
+      },
+      "SubRubroID": 1,
+      "SubRubro": {
+        "ID": 1,
+        "Nombre": "Televisores",
+        "RubroID": 1,
+        "Rubro": {
+          "ID": 0,
+          "Nombre": "",
+          "SubRubros": []
+        }
+      },
+      "MarcaID": 1,
+      "Marca": {
+        "ID": 1,
+        "Nombre": "Marca A"
+      },
+      "PorcentajeIva": 21,
+      "FechaMod": "2025-04-21T23:39:38.6977281-03:00",
+      "FechaModPrecio": "2025-04-21T23:39:38.6979051-03:00",
+      "Entregable": false,
+      "NoListar": false,
+      "Proveedor": {
+        "ProveedorID": 0,
+        "Nombre": "",
+        "Direccion": "",
+        "Telefono": "",
+        "Email": "",
+        "CondicionesPago": "",
+        "ProductosAsignados": []
+      },
+      "Usuario": "",
+      "ModificadoPor": "Sistema",
+      "EstadoComentario": "",
+      "DeudaTotal": 0,
+      "Estado": 0,
+      "StockItem": null
+    }
+  },
+  {
+    "StockItemID": 3,
+    "ProductoID": 1,
+    "CantidadDisponible": 10,
+    "Producto": {
+      "ProductoID": 1,
+      "CodigoAlfa": "P001",
+      "CodigoBarra": "180997305",
+      "Nombre": "Producto Inicial",
+      "Descripcion": "Descripci\u00F3n del producto inicial",
+      "PCosto": 100,
+      "PContado": 150,
+      "PLista": 200,
+      "RubroID": 1,
+      "Rubro": {
+        "ID": 1,
+        "Nombre": "Electr\u00F3nica",
+        "SubRubros": [
+          {
+            "ID": 1,
+            "Nombre": "Televisores",
+            "RubroID": 1,
+            "Rubro": {
+              "ID": 0,
+              "Nombre": "",
+              "SubRubros": []
+            }
+          },
+          {
+            "ID": 2,
+            "Nombre": "Computadoras",
+            "RubroID": 1,
+            "Rubro": {
+              "ID": 0,
+              "Nombre": "",
+              "SubRubros": []
+            }
+          }
+        ]
+      },
+      "SubRubroID": 1,
+      "SubRubro": {
+        "ID": 1,
+        "Nombre": "Televisores",
+        "RubroID": 1,
+        "Rubro": {
+          "ID": 0,
+          "Nombre": "",
+          "SubRubros": []
+        }
+      },
+      "MarcaID": 1,
+      "Marca": {
+        "ID": 1,
+        "Nombre": "Marca A"
+      },
+      "PorcentajeIva": 21,
+      "FechaMod": "2025-04-21T23:40:23.2808801-03:00",
+      "FechaModPrecio": "2025-04-21T23:40:23.2808878-03:00",
+      "Entregable": false,
+      "NoListar": false,
+      "Proveedor": {
+        "ProveedorID": 0,
+        "Nombre": "",
+        "Direccion": "",
+        "Telefono": "",
+        "Email": "",
+        "CondicionesPago": "",
+        "ProductosAsignados": []
+      },
+      "Usuario": "",
+      "ModificadoPor": "Sistema",
+      "EstadoComentario": "",
+      "DeudaTotal": 0,
+      "Estado": 0,
+      "StockItem": null
+    }
+  },
+  {
+    "StockItemID": 4,
+    "ProductoID": 1,
+    "CantidadDisponible": 10,
+    "Producto": {
+      "ProductoID": 1,
+      "CodigoAlfa": "P001",
+      "CodigoBarra": "837889363",
+      "Nombre": "Producto Inicial",
+      "Descripcion": "Descripci\u00F3n del producto inicial",
+      "PCosto": 100,
+      "PContado": 150,
+      "PLista": 200,
+      "RubroID": 1,
+      "Rubro": {
+        "ID": 1,
+        "Nombre": "Electr\u00F3nica",
+        "SubRubros": [
+          {
+            "ID": 1,
+            "Nombre": "Televisores",
+            "RubroID": 1,
+            "Rubro": {
+              "ID": 0,
+              "Nombre": "",
+              "SubRubros": []
+            }
+          },
+          {
+            "ID": 2,
+            "Nombre": "Computadoras",
+            "RubroID": 1,
+            "Rubro": {
+              "ID": 0,
+              "Nombre": "",
+              "SubRubros": []
+            }
+          }
+        ]
+      },
+      "SubRubroID": 1,
+      "SubRubro": {
+        "ID": 1,
+        "Nombre": "Televisores",
+        "RubroID": 1,
+        "Rubro": {
+          "ID": 0,
+          "Nombre": "",
+          "SubRubros": []
+        }
+      },
+      "MarcaID": 1,
+      "Marca": {
+        "ID": 1,
+        "Nombre": "Marca A"
+      },
+      "PorcentajeIva": 21,
+      "FechaMod": "2025-04-21T23:49:51.0123119-03:00",
+      "FechaModPrecio": "2025-04-21T23:49:51.0125722-03:00",
+      "Entregable": false,
+      "NoListar": false,
+      "Proveedor": {
+        "ProveedorID": 0,
+        "Nombre": "",
+        "Direccion": "",
+        "Telefono": "",
+        "Email": "",
+        "CondicionesPago": "",
+        "ProductosAsignados": []
+      },
+      "Usuario": "",
+      "ModificadoPor": "Sistema",
+      "EstadoComentario": "",
+      "DeudaTotal": 0,
+      "Estado": 0,
+      "StockItem": null
+    }
+  },
+  {
+    "StockItemID": 5,
+    "ProductoID": 2,
+    "CantidadDisponible": 0,
+    "Producto": {
+      "ProductoID": 2,
+      "CodigoAlfa": "P002",
+      "CodigoBarra": "873211311",
+      "Nombre": "test1234",
+      "Descripcion": "tds",
+      "PCosto": 12,
+      "PContado": 12,
+      "PLista": 12,
+      "RubroID": 3,
+      "Rubro": {
+        "ID": 0,
+        "Nombre": "",
+        "SubRubros": []
+      },
+      "SubRubroID": 5,
+      "SubRubro": {
+        "ID": 0,
+        "Nombre": "",
+        "RubroID": 0,
+        "Rubro": {
+          "ID": 0,
+          "Nombre": "",
+          "SubRubros": []
+        }
+      },
+      "MarcaID": 3,
+      "Marca": null,
+      "PorcentajeIva": 21,
+      "FechaMod": "2025-04-21T23:49:51.4150189-03:00",
+      "FechaModPrecio": "2025-04-21T23:49:51.4150289-03:00",
+      "Entregable": false,
+      "NoListar": false,
+      "Proveedor": {
+        "ProveedorID": 0,
+        "Nombre": "",
+        "Direccion": "",
+        "Telefono": "",
+        "Email": "",
+        "CondicionesPago": "",
+        "ProductosAsignados": []
+      },
+      "Usuario": "",
+      "ModificadoPor": "Sistema",
+      "EstadoComentario": "",
+      "DeudaTotal": 0,
+      "Estado": 0,
+      "StockItem": null
+    }
+  },
+  {
+    "StockItemID": 6,
+    "ProductoID": 1,
+    "CantidadDisponible": 10,
+    "Producto": {
+      "ProductoID": 1,
+      "CodigoAlfa": "P001",
+      "CodigoBarra": "773153563",
+      "Nombre": "Producto Inicial",
+      "Descripcion": "Descripci\u00F3n del producto inicial",
+      "PCosto": 100,
+      "PContado": 150,
+      "PLista": 180.0,
+      "RubroID": 1,
+      "Rubro": {
+        "ID": 1,
+        "Nombre": "Electr\u00F3nica",
+        "SubRubros": [
+          {
+            "ID": 1,
+            "Nombre": "Televisores",
+            "RubroID": 1,
+            "Rubro": {
+              "ID": 0,
+              "Nombre": "",
+              "SubRubros": []
+            }
+          },
+          {
+            "ID": 2,
+            "Nombre": "Computadoras",
+            "RubroID": 1,
+            "Rubro": {
+              "ID": 0,
+              "Nombre": "",
+              "SubRubros": []
+            }
+          }
+        ]
+      },
+      "SubRubroID": 1,
+      "SubRubro": {
+        "ID": 1,
+        "Nombre": "Televisores",
+        "RubroID": 1,
+        "Rubro": {
+          "ID": 0,
+          "Nombre": "",
+          "SubRubros": []
+        }
+      },
+      "MarcaID": 1,
+      "Marca": {
+        "ID": 1,
+        "Nombre": "Marca A"
+      },
+      "PorcentajeIva": 21,
+      "FechaMod": "2025-04-21T23:56:04.6364359-03:00",
+      "FechaModPrecio": "2025-04-21T23:56:04.6367539-03:00",
+      "Entregable": false,
+      "NoListar": false,
+      "Proveedor": {
+        "ProveedorID": 0,
+        "Nombre": "",
+        "Direccion": "",
+        "Telefono": "",
+        "Email": "",
+        "CondicionesPago": "",
+        "ProductosAsignados": []
+      },
+      "Usuario": "",
+      "ModificadoPor": "Sistema",
+      "EstadoComentario": "",
+      "DeudaTotal": 0,
+      "Estado": 0,
+      "StockItem": {
+        "StockItemID": 1,
+        "ProductoID": 1,
+        "CantidadDisponible": 10,
+        "Producto": {
+          "ProductoID": 1,
+          "CodigoAlfa": "P001",
+          "CodigoBarra": "316175785",
+          "Nombre": "Producto Inicial",
+          "Descripcion": "Descripci\u00F3n del producto inicial",
+          "PCosto": 100,
+          "PContado": 150,
+          "PLista": 200,
+          "RubroID": 1,
+          "Rubro": {
+            "ID": 1,
+            "Nombre": "Electr\u00F3nica",
+            "SubRubros": [
+              {
+                "ID": 1,
+                "Nombre": "Televisores",
+                "RubroID": 1,
+                "Rubro": {
+                  "ID": 0,
+                  "Nombre": "",
+                  "SubRubros": []
+                }
+              },
+              {
+                "ID": 2,
+                "Nombre": "Computadoras",
+                "RubroID": 1,
+                "Rubro": {
+                  "ID": 0,
+                  "Nombre": "",
+                  "SubRubros": []
+                }
+              }
+            ]
+          },
+          "SubRubroID": 1,
+          "SubRubro": {
+            "ID": 1,
+            "Nombre": "Televisores",
+            "RubroID": 1,
+            "Rubro": {
+              "ID": 0,
+              "Nombre": "",
+              "SubRubros": []
+            }
+          },
+          "MarcaID": 1,
+          "Marca": {
+            "ID": 1,
+            "Nombre": "Marca A"
+          },
+          "PorcentajeIva": 21,
+          "FechaMod": "2025-04-21T23:38:16.5841977-03:00",
+          "FechaModPrecio": "2025-04-21T23:38:16.5843473-03:00",
+          "Entregable": false,
+          "NoListar": false,
+          "Proveedor": {
+            "ProveedorID": 0,
+            "Nombre": "",
+            "Direccion": "",
+            "Telefono": "",
+            "Email": "",
+            "CondicionesPago": "",
+            "ProductosAsignados": []
+          },
+          "Usuario": "",
+          "ModificadoPor": "Sistema",
+          "EstadoComentario": "",
+          "DeudaTotal": 0,
+          "Estado": 0,
+          "StockItem": null
+        }
+      }
+    }
+  },
+  {
+    "StockItemID": 7,
+    "ProductoID": 2,
+    "CantidadDisponible": 0,
+    "Producto": {
+      "ProductoID": 2,
+      "CodigoAlfa": "P002",
+      "CodigoBarra": "982374886",
+      "Nombre": "sadda",
+      "Descripcion": "dasd",
+      "PCosto": 12,
+      "PContado": 12,
+      "PLista": 10.8,
+      "RubroID": 1,
+      "Rubro": {
+        "ID": 0,
+        "Nombre": "",
+        "SubRubros": []
+      },
+      "SubRubroID": 1,
+      "SubRubro": {
+        "ID": 0,
+        "Nombre": "",
+        "RubroID": 0,
+        "Rubro": {
+          "ID": 0,
+          "Nombre": "",
+          "SubRubros": []
+        }
+      },
+      "MarcaID": 1,
+      "Marca": null,
+      "PorcentajeIva": 21,
+      "FechaMod": "2025-04-21T23:56:04.9369865-03:00",
+      "FechaModPrecio": "2025-04-21T23:56:04.937001-03:00",
+      "Entregable": false,
+      "NoListar": false,
+      "Proveedor": {
+        "ProveedorID": 0,
+        "Nombre": "",
+        "Direccion": "",
+        "Telefono": "",
+        "Email": "",
+        "CondicionesPago": "",
+        "ProductosAsignados": []
+      },
+      "Usuario": "",
+      "ModificadoPor": "Sistema",
+      "EstadoComentario": "",
+      "DeudaTotal": 0,
+      "Estado": 0,
+      "StockItem": {
+        "StockItemID": 5,
+        "ProductoID": 2,
+        "CantidadDisponible": 0,
+        "Producto": {
+          "ProductoID": 2,
+          "CodigoAlfa": "P002",
+          "CodigoBarra": "873211311",
+          "Nombre": "test1234",
+          "Descripcion": "tds",
+          "PCosto": 12,
+          "PContado": 12,
+          "PLista": 12,
+          "RubroID": 3,
+          "Rubro": {
+            "ID": 0,
+            "Nombre": "",
+            "SubRubros": []
+          },
+          "SubRubroID": 5,
+          "SubRubro": {
+            "ID": 0,
+            "Nombre": "",
+            "RubroID": 0,
+            "Rubro": {
+              "ID": 0,
+              "Nombre": "",
+              "SubRubros": []
+            }
+          },
+          "MarcaID": 3,
+          "Marca": null,
+          "PorcentajeIva": 21,
+          "FechaMod": "2025-04-21T23:49:51.4150189-03:00",
+          "FechaModPrecio": "2025-04-21T23:49:51.4150289-03:00",
+          "Entregable": false,
+          "NoListar": false,
+          "Proveedor": {
+            "ProveedorID": 0,
+            "Nombre": "",
+            "Direccion": "",
+            "Telefono": "",
+            "Email": "",
+            "CondicionesPago": "",
+            "ProductosAsignados": []
+          },
+          "Usuario": "",
+          "ModificadoPor": "Sistema",
+          "EstadoComentario": "",
+          "DeudaTotal": 0,
+          "Estado": 0,
+          "StockItem": null
+        }
+      }
+    }
+  },
+  {
+    "StockItemID": 8,
+    "ProductoID": 3,
+    "CantidadDisponible": 0,
+    "Producto": {
+      "ProductoID": 3,
+      "CodigoAlfa": "P003",
+      "CodigoBarra": "624022894",
+      "Nombre": "sdda",
+      "Descripcion": "dssad",
+      "PCosto": 22,
+      "PContado": 22,
+      "PLista": 22,
+      "RubroID": 2,
+      "Rubro": {
+        "ID": 0,
+        "Nombre": "",
+        "SubRubros": []
+      },
+      "SubRubroID": 3,
+      "SubRubro": {
+        "ID": 0,
+        "Nombre": "",
+        "RubroID": 0,
+        "Rubro": {
+          "ID": 0,
+          "Nombre": "",
+          "SubRubros": []
+        }
+      },
+      "MarcaID": 1,
+      "Marca": null,
+      "PorcentajeIva": 21,
+      "FechaMod": "2025-04-21T23:56:25.1732317-03:00",
+      "FechaModPrecio": "2025-04-21T23:56:25.1732357-03:00",
+      "Entregable": false,
+      "NoListar": false,
+      "Proveedor": {
+        "ProveedorID": 0,
+        "Nombre": "",
+        "Direccion": "",
+        "Telefono": "",
+        "Email": "",
+        "CondicionesPago": "",
+        "ProductosAsignados": []
+      },
+      "Usuario": "",
+      "ModificadoPor": "Sistema",
+      "EstadoComentario": "",
+      "DeudaTotal": 0,
+      "Estado": 0,
+      "StockItem": null
+    }
+  },
+  {
+    "StockItemID": 9,
+    "ProductoID": 1,
+    "CantidadDisponible": 10,
+    "Producto": {
+      "ProductoID": 1,
+      "CodigoAlfa": "P001",
+      "CodigoBarra": "889393175",
+      "Nombre": "Producto Inicial",
+      "Descripcion": "Descripci\u00F3n del producto inicial",
+      "PCosto": 100,
+      "PContado": 150,
+      "PLista": 95.6593800,
+      "RubroID": 1,
+      "Rubro": {
+        "ID": 1,
+        "Nombre": "Electr\u00F3nica",
+        "SubRubros": [
+          {
+            "ID": 1,
+            "Nombre": "Televisores",
+            "RubroID": 1,
+            "Rubro": {
+              "ID": 0,
+              "Nombre": "",
+              "SubRubros": []
+            }
+          },
+          {
+            "ID": 2,
+            "Nombre": "Computadoras",
+            "RubroID": 1,
+            "Rubro": {
+              "ID": 0,
+              "Nombre": "",
+              "SubRubros": []
+            }
+          }
+        ]
+      },
+      "SubRubroID": 1,
+      "SubRubro": {
+        "ID": 1,
+        "Nombre": "Televisores",
+        "RubroID": 1,
+        "Rubro": {
+          "ID": 0,
+          "Nombre": "",
+          "SubRubros": []
+        }
+      },
+      "MarcaID": 1,
+      "Marca": {
+        "ID": 1,
+        "Nombre": "Marca A"
+      },
+      "PorcentajeIva": 21,
+      "FechaMod": "2025-04-21T23:56:56.8188546-03:00",
+      "FechaModPrecio": "2025-04-21T23:56:56.8190467-03:00",
+      "Entregable": false,
+      "NoListar": false,
+      "Proveedor": {
+        "ProveedorID": 0,
+        "Nombre": "",
+        "Direccion": "",
+        "Telefono": "",
+        "Email": "",
+        "CondicionesPago": "",
+        "ProductosAsignados": []
+      },
+      "Usuario": "",
+      "ModificadoPor": "Sistema",
+      "EstadoComentario": "",
+      "DeudaTotal": 0,
+      "Estado": 0,
+      "StockItem": {
+        "StockItemID": 1,
+        "ProductoID": 1,
+        "CantidadDisponible": 10,
+        "Producto": {
+          "ProductoID": 1,
+          "CodigoAlfa": "P001",
+          "CodigoBarra": "316175785",
+          "Nombre": "Producto Inicial",
+          "Descripcion": "Descripci\u00F3n del producto inicial",
+          "PCosto": 100,
+          "PContado": 150,
+          "PLista": 200,
+          "RubroID": 1,
+          "Rubro": {
+            "ID": 1,
+            "Nombre": "Electr\u00F3nica",
+            "SubRubros": [
+              {
+                "ID": 1,
+                "Nombre": "Televisores",
+                "RubroID": 1,
+                "Rubro": {
+                  "ID": 0,
+                  "Nombre": "",
+                  "SubRubros": []
+                }
+              },
+              {
+                "ID": 2,
+                "Nombre": "Computadoras",
+                "RubroID": 1,
+                "Rubro": {
+                  "ID": 0,
+                  "Nombre": "",
+                  "SubRubros": []
+                }
+              }
+            ]
+          },
+          "SubRubroID": 1,
+          "SubRubro": {
+            "ID": 1,
+            "Nombre": "Televisores",
+            "RubroID": 1,
+            "Rubro": {
+              "ID": 0,
+              "Nombre": "",
+              "SubRubros": []
+            }
+          },
+          "MarcaID": 1,
+          "Marca": {
+            "ID": 1,
+            "Nombre": "Marca A"
+          },
+          "PorcentajeIva": 21,
+          "FechaMod": "2025-04-21T23:38:16.5841977-03:00",
+          "FechaModPrecio": "2025-04-21T23:38:16.5843473-03:00",
+          "Entregable": false,
+          "NoListar": false,
+          "Proveedor": {
+            "ProveedorID": 0,
+            "Nombre": "",
+            "Direccion": "",
+            "Telefono": "",
+            "Email": "",
+            "CondicionesPago": "",
+            "ProductosAsignados": []
+          },
+          "Usuario": "",
+          "ModificadoPor": "Sistema",
+          "EstadoComentario": "",
+          "DeudaTotal": 0,
+          "Estado": 0,
+          "StockItem": null
+        }
+      }
+    }
+  },
+  {
+    "StockItemID": 10,
+    "ProductoID": 2,
+    "CantidadDisponible": 0,
+    "Producto": {
+      "ProductoID": 2,
+      "CodigoAlfa": "P002",
+      "CodigoBarra": "462352008",
+      "Nombre": "dad",
+      "Descripcion": "ddd",
+      "PCosto": 11,
+      "PContado": 11,
+      "PLista": 11,
+      "RubroID": 1,
+      "Rubro": {
+        "ID": 0,
+        "Nombre": "",
+        "SubRubros": []
+      },
+      "SubRubroID": 1,
+      "SubRubro": {
+        "ID": 0,
+        "Nombre": "",
+        "RubroID": 0,
+        "Rubro": {
+          "ID": 0,
+          "Nombre": "",
+          "SubRubros": []
+        }
+      },
+      "MarcaID": 1,
+      "Marca": null,
+      "PorcentajeIva": 21,
+      "FechaMod": "2025-04-22T00:32:52.5967368-03:00",
+      "FechaModPrecio": "2025-04-22T00:32:52.5967469-03:00",
+      "Entregable": false,
+      "NoListar": false,
+      "Proveedor": {
+        "ProveedorID": 0,
+        "Nombre": "",
+        "Direccion": "",
+        "Telefono": "",
+        "Email": "",
+        "CondicionesPago": "",
+        "ProductosAsignados": []
+      },
+      "Usuario": "",
+      "ModificadoPor": "Sistema",
+      "EstadoComentario": "",
+      "DeudaTotal": 0,
+      "Estado": 0,
+      "StockItem": null
+    }
+  },
+  {
+    "StockItemID": 11,
+    "ProductoID": 1,
+    "CantidadDisponible": 10,
+    "Producto": {
+      "ProductoID": 0,
+      "CodigoAlfa": "",
+      "CodigoBarra": "",
+      "Nombre": "",
+      "Descripcion": "",
+      "PCosto": 0,
+      "PContado": 0,
+      "PLista": 0,
+      "RubroID": 0,
+      "Rubro": {
+        "ID": 0,
+        "Nombre": "",
+        "SubRubros": []
+      },
+      "SubRubroID": 0,
+      "SubRubro": {
+        "ID": 0,
+        "Nombre": "",
+        "RubroID": 0,
+        "Rubro": {
+          "ID": 0,
+          "Nombre": "",
+          "SubRubros": []
+        }
+      },
+      "MarcaID": 0,
+      "Marca": null,
+      "PorcentajeIva": 21,
+      "FechaMod": "2025-04-22T14:48:09.8480417Z",
+      "FechaModPrecio": "2025-04-22T14:48:09.8480426Z",
+      "Entregable": false,
+      "NoListar": false,
+      "Proveedor": {
+        "ProveedorID": 0,
+        "Nombre": "",
+        "Direccion": "",
+        "Telefono": "",
+        "Email": "",
+        "CondicionesPago": "",
+        "ProductosAsignados": []
+      },
+      "Usuario": "",
+      "ModificadoPor": "",
+      "EstadoComentario": "",
+      "DeudaTotal": 0,
+      "Estado": 0,
+      "StockItem": null
+    }
+  }
+]

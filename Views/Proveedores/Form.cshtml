@@ -1,4 +1,7 @@
-﻿@model Javo2.ViewModels.Operaciones.Proveedores.ProveedoresViewModel
+﻿// Archivo: Views/Proveedores/Form.cshtml
+// Se mantiene igual pero aseguramos que está optimizado
+
+@model Javo2.ViewModels.Operaciones.Proveedores.ProveedoresViewModel
 
 @{
     var isEdit = Model.ProveedorID > 0;
@@ -35,48 +38,48 @@
             var assignedProducts = [];
 
             // Initialize assigned products from the model
-        @foreach (var productID in Model.ProductosAsignados)
-        {
-            <text>
-                            assignedProducts.push(@productID);
-            </text>
-        }
+            @foreach (var productID in Model.ProductosAsignados)
+            {
+                <text>
+                assignedProducts.push(@productID);
+                </text>
+            }
 
-                $('#productSearch').autocomplete({
-                    source: function (request, response) {
-                        $.ajax({
-                            url: '@Url.Action("SearchProducts", "Proveedores")',
-                            data: { term: request.term },
-                            success: function (data) {
-                                response($.map(data, function (item) {
-                                    return {
-                                        label: item.label,
-                                        value: item.value
-                                    };
-                                }));
-                            }
-                        });
-                    },
-                    select: function (event, ui) {
-                        event.preventDefault();
-                        var productName = ui.item.label;
-                        var productID = ui.item.value;
-
-                        if (!assignedProducts.includes(productID)) {
-                            assignedProducts.push(productID);
-                            $('#assignedProducts').append(
-                                '<li class="list-group-item d-flex justify-content-between align-items-center" data-id="' + productID + '">' +
-                                productName +
-                                ' <button type="button" class="btn btn-link btn-sm remove-product">Eliminar</button>' +
-                                '<input type="hidden" name="ProductosAsignados" value="' + productID + '" />' +
-                                '</li>'
-                            );
+            $('#productSearch').autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '@Url.Action("SearchProducts", "Proveedores")',
+                        data: { term: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return {
+                                    label: item.label,
+                                    value: item.value
+                                };
+                            }));
                         }
+                    });
+                },
+                select: function (event, ui) {
+                    event.preventDefault();
+                    var productName = ui.item.label;
+                    var productID = ui.item.value;
 
-                        $(this).val('');
-                        return false;
+                    if (!assignedProducts.includes(productID)) {
+                        assignedProducts.push(productID);
+                        $('#assignedProducts').append(
+                            '<li class="list-group-item d-flex justify-content-between align-items-center" data-id="' + productID + '">' +
+                            productName +
+                            ' <button type="button" class="btn btn-link btn-sm remove-product">Eliminar</button>' +
+                            '<input type="hidden" name="ProductosAsignados" value="' + productID + '" />' +
+                            '</li>'
+                        );
                     }
-                });
+
+                    $(this).val('');
+                    return false;
+                }
+            });
 
             // Remove product from assigned list
             $('#assignedProducts').on('click', '.remove-product', function () {

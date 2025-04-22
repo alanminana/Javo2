@@ -1,5 +1,4 @@
-﻿// File: IServices/IVentaService.cs
-using Javo2.Models;
+﻿using Javo2.Models;
 using Javo2.ViewModels.Operaciones.Ventas;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -10,26 +9,38 @@ namespace Javo2.IServices
 {
     public interface IVentaService
     {
+        // CRUD básico
         Task<IEnumerable<Venta>> GetAllVentasAsync();
         Task<Venta?> GetVentaByIDAsync(int id);
         Task CreateVentaAsync(Venta venta);
         Task UpdateVentaAsync(Venta venta);
         Task DeleteVentaAsync(int id);
 
+        // Consultas específicas
         Task<IEnumerable<Venta>> GetVentasByEstadoAsync(EstadoVenta estado);
         Task<IEnumerable<Venta>> GetVentasByFechaAsync(DateTime? fechaInicio, DateTime? fechaFin);
         Task<IEnumerable<Venta>> GetVentasByClienteIDAsync(int clienteID);
         Task<IEnumerable<Venta>> GetVentasFilteredAsync(VentaFilterDto filterDto);
-
         Task<IEnumerable<Venta>> GetVentasAsync(VentaFilterDto filter);
-        Task<string> GenerarNumeroFacturaAsync();
         Task<IEnumerable<Venta>> GetVentasPendientesDeEntregaAsync();
+
+        // Generación de números
+        Task<string> GenerarNumeroFacturaAsync();
+
+        // Datos auxiliares
         Task<IEnumerable<FormaPago>> GetFormasPagoAsync();
         Task<IEnumerable<Banco>> GetBancosAsync();
 
-        Task ProcessVentaAsync(int VentaID);
+        // Flujo de autorización y entrega
+        Task AutorizarVentaAsync(int ventaID, string usuario);
+        Task RechazarVentaAsync(int ventaID, string usuario);
+        Task MarcarVentaComoEntregadaAsync(int ventaID, string usuario);
+
+        // Procesamiento
+        Task ProcessVentaAsync(int ventaID);
         Task UpdateEstadoVentaAsync(int id, EstadoVenta estado);
 
+        // SelectLists
         IEnumerable<SelectListItem> GetFormasPagoSelectList();
         IEnumerable<SelectListItem> GetBancosSelectList();
         IEnumerable<SelectListItem> GetTipoTarjetaSelectList();
@@ -37,6 +48,7 @@ namespace Javo2.IServices
         IEnumerable<SelectListItem> GetEntidadesElectronicasSelectList();
         IEnumerable<SelectListItem> GetPlanesFinanciamientoSelectList();
 
+        // Alias
         Task<Venta?> GetVentaByIdAsync(int id);
     }
 }

@@ -1,4 +1,4 @@
-﻿// File: Models/Producto.cs
+﻿// Models/Producto.cs
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +7,7 @@ namespace Javo2.Models
 {
     public class Producto
     {
-        public int ProductoID { get; set; } // Auto-incremental
+        public int ProductoID { get; set; }
 
         [Required]
         [Display(Name = "ID Alfa del Producto")]
@@ -39,7 +39,6 @@ namespace Javo2.Models
         [Display(Name = "Precio de Lista")]
         public decimal PLista { get; set; } = 0;
 
-        // Se agregan las propiedades de clasificación:
         public int RubroID { get; set; }
         public Rubro Rubro { get; set; } = new Rubro();
         public int SubRubroID { get; set; }
@@ -66,6 +65,19 @@ namespace Javo2.Models
         [Display(Name = "Proveedor")]
         public Proveedor Proveedor { get; set; } = new Proveedor();
 
+        // Nuevas propiedades
+        [Display(Name = "Usuario")]
+        public string Usuario { get; set; } = string.Empty;
+
+        [Display(Name = "Modificado Por")]
+        public string ModificadoPor { get; set; } = string.Empty;
+
+        [Display(Name = "Estado Comentario")]
+        public string EstadoComentario { get; set; } = string.Empty;
+
+        [Display(Name = "Deuda Total")]
+        public decimal DeudaTotal { get; set; } = 0;
+
         public enum EstadoProducto
         {
             Activo,
@@ -74,7 +86,6 @@ namespace Javo2.Models
         }
         public EstadoProducto Estado { get; set; } = EstadoProducto.Activo;
 
-        // Relación con Stock
         public StockItem? StockItem { get; set; }
     }
 }

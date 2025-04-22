@@ -1,5 +1,4 @@
-﻿// File: Services/VentaService.cs
-using Javo2.IServices;
+﻿using Javo2.IServices;
 using Javo2.Models;
 using Javo2.ViewModels.Operaciones.Ventas;
 using Microsoft.Extensions.Logging;
@@ -16,108 +15,463 @@ namespace Javo2.Services
     {
         private readonly ILogger<VentaService> _logger;
         private readonly IAuditoriaService _auditoriaService;
+        private readonly IStockService _stockService;
 
         private static List<Venta> _ventas = new List<Venta>();
         private static int _nextVentaID = 1;
         private readonly string _jsonFilePath = "Data/ventas.json";
         private static readonly object _lock = new object();
 
-        public VentaService(ILogger<VentaService> logger, IAuditoriaService auditoriaService)
+        public VentaService(
+            ILogger<VentaService> logger,
+            IAuditoriaService auditoriaService,
+            IStockService stockService)
         {
             _logger = logger;
             _auditoriaService = auditoriaService;
-            // Cargar ventas de forma asíncrona utilizando el método asíncrono del helper
+            _stockService = stockService;
             CargarDesdeJsonAsync().GetAwaiter().GetResult();
         }
 
+        #region CRUD Operations
+
         public async Task<IEnumerable<Venta>> GetAllVentasAsync()
         {
-            lock (_lock)
+            try
             {
-                return _ventas.ToList();
+                lock (_lock)
+                {
+                    _logger.LogInformation("GetAllVentasAsync => Total: {Count}", _ventas.Count);
+                    return _ventas.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener todas las ventas");
+                throw;
             }
         }
 
         public Task<Venta?> GetVentaByIDAsync(int id)
         {
-            lock (_lock)
+            try
             {
-                var venta = _ventas.FirstOrDefault(v => v.VentaID == id);
-                return Task.FromResult<Venta?>(venta);
+                lock (_lock)
+                {
+                    var venta = _ventas.FirstOrDefault(v => v.VentaID == id);
+                    _logger.LogInformation("GetVentaByIDAsync => ID: {ID}, Found: {Found}",
+                        id, venta != null);
+                    return Task.FromResult(venta);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener venta por ID: {ID}", id);
+                throw;
             }
         }
 
         public async Task CreateVentaAsync(Venta venta)
         {
-            lock (_lock)
+            try
             {
-                venta.VentaID = _nextVentaID++;
-                _ventas.Add(venta);
+                lock (_lock)
+                {
+                    venta.VentaID = _nextVentaID++;
+                    venta.FechaVenta = DateTime.Now;
+
+                    // Asegurarse de que se calculen los totales
+                    venta.PrecioTotal = venta.ProductosPresupuesto.Sum(p => p.PrecioTotal);
+                    venta.TotalProductos = venta.ProductosPresupuesto.Sum(p => p.Cantidad);
+
+                    _ventas.Add(venta);
+                    _logger.LogInformation("Venta creada => ID: {ID}, Total: {Total}, Estado: {Estado}",
+                        venta.VentaID, venta.PrecioTotal, venta.Estado);
+                }
+
+                await GuardarEnJsonAsync();
+
+                // Registrar en auditoría
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = venta.Usuario,
+                    Entidad = "Venta",
+                    Accion = "Create",
+                    LlavePrimaria = venta.VentaID.ToString(),
+                    Detalle = $"Cliente={venta.NombreCliente}, Total={venta.PrecioTotal}, Estado={venta.Estado}"
+                });
+
+                // IMPORTANTE: No se reduce el stock hasta que la venta sea autorizada
+                _logger.LogInformation("Venta en estado {Estado}. Stock no modificado.", venta.Estado);
             }
-            await GuardarEnJsonAsync();
-            _logger.LogInformation("Venta creada: {@Venta}", venta);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al crear venta");
+                throw;
+            }
         }
 
         public async Task UpdateVentaAsync(Venta venta)
         {
-            lock (_lock)
+            try
             {
-                var existing = _ventas.FirstOrDefault(v => v.VentaID == venta.VentaID);
-                if (existing != null)
+                Venta? existing;
+                EstadoVenta estadoAnterior;
+
+                lock (_lock)
                 {
-                    // Actualiza campos relevantes
-                    existing.FechaVenta = venta.FechaVenta;
-                    existing.NumeroFactura = venta.NumeroFactura;
-                    existing.NombreCliente = venta.NombreCliente;
-                    existing.TelefonoCliente = venta.TelefonoCliente;
-                    existing.DomicilioCliente = venta.DomicilioCliente;
-                    existing.LocalidadCliente = venta.LocalidadCliente;
-                    existing.CelularCliente = venta.CelularCliente;
-                    existing.LimiteCreditoCliente = venta.LimiteCreditoCliente;
-                    existing.SaldoCliente = venta.SaldoCliente;
-                    existing.SaldoDisponibleCliente = venta.SaldoDisponibleCliente;
-                    existing.FormaPagoID = venta.FormaPagoID;
-                    existing.BancoID = venta.BancoID;
-                    existing.TipoTarjeta = venta.TipoTarjeta;
-                    existing.Cuotas = venta.Cuotas;
-                    existing.EntidadElectronica = venta.EntidadElectronica;
-                    existing.PlanFinanciamiento = venta.PlanFinanciamiento;
-                    existing.Observaciones = venta.Observaciones;
-                    existing.Condiciones = venta.Condiciones;
-                    existing.Credito = venta.Credito;
-                    existing.ProductosPresupuesto = venta.ProductosPresupuesto;
-                    existing.PrecioTotal = venta.PrecioTotal;
-                    existing.TotalProductos = venta.TotalProductos;
-                    existing.AdelantoDinero = venta.AdelantoDinero;
-                    existing.DineroContado = venta.DineroContado;
-                    existing.MontoCheque = venta.MontoCheque;
-                    existing.NumeroCheque = venta.NumeroCheque;
-                    existing.Estado = venta.Estado;
+                    existing = _ventas.FirstOrDefault(v => v.VentaID == venta.VentaID);
+                    if (existing != null)
+                    {
+                        // Capturar estado anterior para auditoría y control de stock
+                        estadoAnterior = existing.Estado;
+
+                        // Actualizar campos
+                        existing.FechaVenta = venta.FechaVenta;
+                        existing.NumeroFactura = venta.NumeroFactura;
+                        existing.NombreCliente = venta.NombreCliente;
+                        existing.TelefonoCliente = venta.TelefonoCliente;
+                        existing.DomicilioCliente = venta.DomicilioCliente;
+                        existing.LocalidadCliente = venta.LocalidadCliente;
+                        existing.CelularCliente = venta.CelularCliente;
+                        existing.LimiteCreditoCliente = venta.LimiteCreditoCliente;
+                        existing.SaldoCliente = venta.SaldoCliente;
+                        existing.SaldoDisponibleCliente = venta.SaldoDisponibleCliente;
+
+                        // Forma de pago y campos relacionados
+                        existing.FormaPagoID = venta.FormaPagoID;
+                        existing.BancoID = venta.BancoID;
+                        existing.TipoTarjeta = venta.TipoTarjeta;
+                        existing.Cuotas = venta.Cuotas;
+                        existing.EntidadElectronica = venta.EntidadElectronica;
+                        existing.PlanFinanciamiento = venta.PlanFinanciamiento;
+
+                        // Otros campos
+                        existing.Observaciones = venta.Observaciones;
+                        existing.Condiciones = venta.Condiciones;
+                        existing.Credito = venta.Credito;
+                        existing.AdelantoDinero = venta.AdelantoDinero;
+                        existing.DineroContado = venta.DineroContado;
+                        existing.MontoCheque = venta.MontoCheque;
+                        existing.NumeroCheque = venta.NumeroCheque;
+
+                        // Productos y totales
+                        existing.ProductosPresupuesto = venta.ProductosPresupuesto;
+                        existing.PrecioTotal = venta.ProductosPresupuesto.Sum(p => p.PrecioTotal);
+                        existing.TotalProductos = venta.ProductosPresupuesto.Sum(p => p.Cantidad);
+
+                        // Estado
+                        existing.Estado = venta.Estado;
+
+                        _logger.LogInformation("Venta actualizada => ID: {ID}, Estado anterior: {EstadoAnterior}, Estado nuevo: {EstadoNuevo}",
+                            venta.VentaID, estadoAnterior, venta.Estado);
+                    }
+                    else
+                    {
+                        _logger.LogWarning("UpdateVentaAsync => Venta no encontrada. ID: {ID}", venta.VentaID);
+                        throw new KeyNotFoundException($"Venta con ID {venta.VentaID} no encontrada.");
+                    }
                 }
+
+                await GuardarEnJsonAsync();
+
+                // Gestionar stock según el cambio de estado
+                await GestionarStockPorCambioEstado(existing, estadoAnterior, venta.Estado);
+
+                // Registrar en auditoría
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = venta.Usuario,
+                    Entidad = "Venta",
+                    Accion = "Update",
+                    LlavePrimaria = venta.VentaID.ToString(),
+                    Detalle = $"Cliente={venta.NombreCliente}, Total={venta.PrecioTotal}, Estado anterior={estadoAnterior}, Estado nuevo={venta.Estado}"
+                });
             }
-            await GuardarEnJsonAsync();
-            _logger.LogInformation("Venta ID={ID} actualizada", venta.VentaID);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al actualizar venta ID: {ID}", venta.VentaID);
+                throw;
+            }
         }
 
         public async Task DeleteVentaAsync(int id)
         {
-            lock (_lock)
+            try
             {
-                var existing = _ventas.FirstOrDefault(v => v.VentaID == id);
-                if (existing != null)
+                Venta? venta;
+                lock (_lock)
                 {
-                    _ventas.Remove(existing);
+                    venta = _ventas.FirstOrDefault(v => v.VentaID == id);
+                    if (venta != null)
+                    {
+                        // Si la venta estaba en un estado que afectaba el stock, revertir
+                        if (venta.Estado == EstadoVenta.Autorizada ||
+                            venta.Estado == EstadoVenta.PendienteDeEntrega ||
+                            venta.Estado == EstadoVenta.Completada)
+                        {
+                            _logger.LogInformation("Revirtiendo stock para venta ID: {ID} en estado {Estado}", id, venta.Estado);
+                            _ = RevertirStockAsync(venta, "Eliminación de venta");
+                        }
+
+                        _ventas.Remove(venta);
+                        _logger.LogInformation("Venta eliminada => ID: {ID}", id);
+                    }
+                    else
+                    {
+                        _logger.LogWarning("DeleteVentaAsync => Venta no encontrada. ID: {ID}", id);
+                        throw new KeyNotFoundException($"Venta con ID {id} no encontrada.");
+                    }
+                }
+
+                await GuardarEnJsonAsync();
+
+                // Registrar en auditoría
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = "Sistema",
+                    Entidad = "Venta",
+                    Accion = "Delete",
+                    LlavePrimaria = id.ToString(),
+                    Detalle = $"Eliminada venta: Cliente={venta?.NombreCliente}, Total={venta?.PrecioTotal}, Estado={venta?.Estado}"
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar venta ID: {ID}", id);
+                throw;
+            }
+        }
+
+        public async Task AutorizarVentaAsync(int ventaId, string usuario)
+        {
+            _logger.LogInformation("AutorizarVentaAsync => VentaID={ID}, Usuario={Usuario}", ventaId, usuario);
+
+            var venta = await GetVentaByIDAsync(ventaId);
+            if (venta == null)
+            {
+                throw new KeyNotFoundException($"Venta {ventaId} no encontrada");
+            }
+
+            if (venta.Estado != EstadoVenta.PendienteDeAutorizacion)
+            {
+                throw new InvalidOperationException($"La venta {ventaId} no está pendiente de autorización");
+            }
+
+            // Cambiar estado a Autorizada
+            venta.Estado = EstadoVenta.Autorizada;
+
+            // Registrar quién autorizó
+            venta.Usuario = usuario;
+
+            await UpdateVentaAsync(venta);
+
+            // Registrar auditoría
+            await _auditoriaService?.RegistrarCambioAsync(new AuditoriaRegistro
+            {
+                FechaHora = DateTime.Now,
+                Usuario = usuario,
+                Entidad = "Venta",
+                Accion = "Autorizar",
+                LlavePrimaria = ventaId.ToString(),
+                Detalle = $"Venta autorizada: {venta.NumeroFactura}"
+            });
+
+            // Después de autorizar, cambiar a PendienteDeEntrega
+            venta.Estado = EstadoVenta.PendienteDeEntrega;
+            await UpdateVentaAsync(venta);
+        }
+
+        public async Task RechazarVentaAsync(int ventaId, string usuario)
+        {
+            _logger.LogInformation("RechazarVentaAsync => VentaID={ID}, Usuario={Usuario}", ventaId, usuario);
+
+            var venta = await GetVentaByIDAsync(ventaId);
+            if (venta == null)
+            {
+                throw new KeyNotFoundException($"Venta {ventaId} no encontrada");
+            }
+
+            if (venta.Estado != EstadoVenta.PendienteDeAutorizacion)
+            {
+                throw new InvalidOperationException($"La venta {ventaId} no está pendiente de autorización");
+            }
+
+            venta.Estado = EstadoVenta.Rechazada;
+            venta.Usuario = usuario;
+
+            await UpdateVentaAsync(venta);
+
+            // Registrar auditoría
+            await _auditoriaService?.RegistrarCambioAsync(new AuditoriaRegistro
+            {
+                FechaHora = DateTime.Now,
+                Usuario = usuario,
+                Entidad = "Venta",
+                Accion = "Rechazar",
+                LlavePrimaria = ventaId.ToString(),
+                Detalle = $"Venta rechazada: {venta.NumeroFactura}"
+            });
+        }
+
+        public async Task MarcarVentaComoEntregadaAsync(int ventaId, string usuario)
+        {
+            _logger.LogInformation("MarcarVentaComoEntregadaAsync => VentaID={ID}, Usuario={Usuario}", ventaId, usuario);
+
+            var venta = await GetVentaByIDAsync(ventaId);
+            if (venta == null)
+            {
+                throw new KeyNotFoundException($"Venta {ventaId} no encontrada");
+            }
+
+            if (venta.Estado != EstadoVenta.PendienteDeEntrega)
+            {
+                throw new InvalidOperationException($"La venta {ventaId} no está pendiente de entrega");
+            }
+
+            // Actualizar stock
+            foreach (var detalle in venta.ProductosPresupuesto)
+            {
+                var stockItem = await _stockService.GetStockItemByProductoIDAsync(detalle.ProductoID);
+                if (stockItem != null)
+                {
+                    await _stockService.RegistrarMovimientoAsync(new MovimientoStock
+                    {
+                        ProductoID = detalle.ProductoID,
+                        TipoMovimiento = "Salida",
+                        Cantidad = detalle.Cantidad,
+                        Motivo = $"Venta {venta.NumeroFactura} - Entrega"
+                    });
                 }
             }
-            await GuardarEnJsonAsync();
-            _logger.LogInformation("Venta ID={ID} eliminada", id);
+
+            // Cambiar estado a Completada
+            venta.Estado = EstadoVenta.Completada;
+            venta.Usuario = usuario;
+
+            await UpdateVentaAsync(venta);
+
+            // Registrar auditoría
+            await _auditoriaService?.RegistrarCambioAsync(new AuditoriaRegistro
+            {
+                FechaHora = DateTime.Now,
+                Usuario = usuario,
+                Entidad = "Venta",
+                Accion = "Entregar",
+                LlavePrimaria = ventaId.ToString(),
+                Detalle = $"Venta entregada: {venta.NumeroFactura} - Stock actualizado"
+            });
         }
+
+     
+
+      
+
+        private async Task GestionarStockPorCambioEstado(Venta venta, EstadoVenta estadoAnterior, EstadoVenta estadoNuevo)
+        {
+            try
+            {
+                // De cualquier estado a Autorizada: reducir stock
+                if (estadoAnterior != EstadoVenta.Autorizada && estadoNuevo == EstadoVenta.Autorizada)
+                {
+                    await ActualizarStockAsync(venta, "Venta autorizada");
+                }
+                // De Autorizada a Rechazada: revertir stock
+                else if (estadoAnterior == EstadoVenta.Autorizada && estadoNuevo == EstadoVenta.Rechazada)
+                {
+                    await RevertirStockAsync(venta, "Venta rechazada después de autorizada");
+                }
+                // De estado que afecta stock a Borrador: revertir stock
+                else if ((estadoAnterior == EstadoVenta.Autorizada ||
+                          estadoAnterior == EstadoVenta.PendienteDeEntrega ||
+                          estadoAnterior == EstadoVenta.Completada)
+                         && estadoNuevo == EstadoVenta.Borrador)
+                {
+                    await RevertirStockAsync(venta, "Venta revertida a borrador");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al gestionar stock por cambio de estado. VentaID: {ID}, Estado anterior: {EstadoAnterior}, Estado nuevo: {EstadoNuevo}",
+                    venta.VentaID, estadoAnterior, estadoNuevo);
+                // No propagamos el error para no afectar el flujo principal
+            }
+        }
+
+        private async Task ActualizarStockAsync(Venta venta, string motivo)
+        {
+            try
+            {
+                foreach (var detalle in venta.ProductosPresupuesto)
+                {
+                    if (detalle.ProductoID > 0 && detalle.Cantidad > 0)
+                    {
+                        var movimiento = new MovimientoStock
+                        {
+                            ProductoID = detalle.ProductoID,
+                            Fecha = DateTime.Now,
+                            TipoMovimiento = "Salida",
+                            Cantidad = detalle.Cantidad,
+                            Motivo = $"{motivo} - Venta #{venta.VentaID} - {venta.NumeroFactura}"
+                        };
+
+                        await _stockService.RegistrarMovimientoAsync(movimiento);
+                        _logger.LogInformation("Stock reducido => ProductoID: {ProductoID}, Cantidad: -{Cantidad}, Venta: {VentaID}, Motivo: {Motivo}",
+                            detalle.ProductoID, detalle.Cantidad, venta.VentaID, motivo);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al actualizar stock para venta ID: {ID}", venta.VentaID);
+                throw; // Propagamos el error para que la venta no se procese si hay problemas con el stock
+            }
+        }
+
+        private async Task RevertirStockAsync(Venta venta, string motivo)
+        {
+            try
+            {
+                foreach (var detalle in venta.ProductosPresupuesto)
+                {
+                    if (detalle.ProductoID > 0 && detalle.Cantidad > 0)
+                    {
+                        var movimiento = new MovimientoStock
+                        {
+                            ProductoID = detalle.ProductoID,
+                            Fecha = DateTime.Now,
+                            TipoMovimiento = "Entrada",
+                            Cantidad = detalle.Cantidad,
+                            Motivo = $"{motivo} - Venta #{venta.VentaID} - {venta.NumeroFactura}"
+                        };
+
+                        await _stockService.RegistrarMovimientoAsync(movimiento);
+                        _logger.LogInformation("Stock revertido => ProductoID: {ProductoID}, Cantidad: +{Cantidad}, Venta: {VentaID}, Motivo: {Motivo}",
+                            detalle.ProductoID, detalle.Cantidad, venta.VentaID, motivo);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al revertir stock para venta ID: {ID}", venta.VentaID);
+                // No propagamos el error para no afectar el flujo principal
+            }
+        }
+
+        #endregion
+
+        #region Queries
 
         public Task<IEnumerable<Venta>> GetVentasByEstadoAsync(EstadoVenta estado)
         {
             lock (_lock)
             {
                 var result = _ventas.Where(v => v.Estado == estado);
+                _logger.LogInformation("GetVentasByEstadoAsync => Estado: {Estado}, Count: {Count}",
+                    estado, result.Count());
                 return Task.FromResult(result);
             }
         }
@@ -126,12 +480,15 @@ namespace Javo2.Services
         {
             lock (_lock)
             {
-                var result = _ventas.AsEnumerable();
+                var query = _ventas.AsEnumerable();
+
                 if (fechaInicio.HasValue)
-                    result = result.Where(v => v.FechaVenta >= fechaInicio.Value);
+                    query = query.Where(v => v.FechaVenta >= fechaInicio.Value);
+
                 if (fechaFin.HasValue)
-                    result = result.Where(v => v.FechaVenta <= fechaFin.Value);
-                return Task.FromResult(result);
+                    query = query.Where(v => v.FechaVenta <= fechaFin.Value);
+
+                return Task.FromResult(query);
             }
         }
 
@@ -149,14 +506,19 @@ namespace Javo2.Services
             lock (_lock)
             {
                 var query = _ventas.AsEnumerable();
+
                 if (!string.IsNullOrEmpty(filterDto.NombreCliente))
                     query = query.Where(v => v.NombreCliente.Contains(filterDto.NombreCliente, StringComparison.OrdinalIgnoreCase));
+
                 if (filterDto.FechaInicio.HasValue)
                     query = query.Where(v => v.FechaVenta >= filterDto.FechaInicio.Value);
+
                 if (filterDto.FechaFin.HasValue)
                     query = query.Where(v => v.FechaVenta <= filterDto.FechaFin.Value);
+
                 if (!string.IsNullOrEmpty(filterDto.NumeroFactura))
                     query = query.Where(v => v.NumeroFactura.Contains(filterDto.NumeroFactura, StringComparison.OrdinalIgnoreCase));
+
                 return Task.FromResult(query);
             }
         }
@@ -170,7 +532,9 @@ namespace Javo2.Services
         {
             lock (_lock)
             {
-                var numero = $"FAC-{DateTime.Now:yyyyMMdd}-{_nextVentaID}";
+                var fecha = DateTime.Now.ToString("yyyyMMdd");
+                var numero = $"FAC-{fecha}-{_nextVentaID:D4}";
+                _logger.LogInformation("GenerarNumeroFacturaAsync => {Numero}", numero);
                 return Task.FromResult(numero);
             }
         }
@@ -184,9 +548,13 @@ namespace Javo2.Services
             }
         }
 
+        #endregion
+
+        #region Formas de Pago y Combos
+
         public Task<IEnumerable<FormaPago>> GetFormasPagoAsync()
         {
-            var formas = new List<FormaPago>
+            var formasPago = new List<FormaPago>
             {
                 new FormaPago { FormaPagoID = 1, Nombre = "Contado" },
                 new FormaPago { FormaPagoID = 2, Nombre = "Tarjeta de Crédito" },
@@ -195,7 +563,7 @@ namespace Javo2.Services
                 new FormaPago { FormaPagoID = 5, Nombre = "Pago Virtual" },
                 new FormaPago { FormaPagoID = 6, Nombre = "Crédito Personal" }
             };
-            return Task.FromResult<IEnumerable<FormaPago>>(formas);
+            return Task.FromResult<IEnumerable<FormaPago>>(formasPago);
         }
 
         public Task<IEnumerable<Banco>> GetBancosAsync()
@@ -204,82 +572,186 @@ namespace Javo2.Services
             {
                 new Banco { BancoID = 1, Nombre = "Banco Santander" },
                 new Banco { BancoID = 2, Nombre = "BBVA" },
-                new Banco { BancoID = 3, Nombre = "Banco Galicia" }
+                new Banco { BancoID = 3, Nombre = "Banco Galicia" },
+                new Banco { BancoID = 4, Nombre = "Banco Nación" },
+                new Banco { BancoID = 5, Nombre = "Banco Provincia" },
+                new Banco { BancoID = 6, Nombre = "Banco Ciudad" },
+                new Banco { BancoID = 7, Nombre = "Banco Macro" },
+                new Banco { BancoID = 8, Nombre = "HSBC" }
             };
             return Task.FromResult<IEnumerable<Banco>>(bancos);
         }
 
-        public Task ProcessVentaAsync(int VentaID)
-        {
-            lock (_lock)
-            {
-                var venta = _ventas.FirstOrDefault(v => v.VentaID == VentaID);
-                if (venta == null)
-                {
-                    throw new ArgumentException("Venta no encontrada");
-                }
-                venta.Estado = EstadoVenta.PendienteDeEntrega;
-                GuardarEnJson();
-                _logger.LogInformation("Venta ID={ID} procesada -> PendienteDeEntrega", VentaID);
-            }
-            return Task.CompletedTask;
-        }
-
-        public Task UpdateEstadoVentaAsync(int id, EstadoVenta estado)
-        {
-            lock (_lock)
-            {
-                var venta = _ventas.FirstOrDefault(v => v.VentaID == id);
-                if (venta != null)
-                {
-                    venta.Estado = estado;
-                    GuardarEnJson();
-                    _logger.LogInformation("Venta ID={ID} estado actualizado a {Estado}", id, estado);
-                }
-            }
-            return Task.CompletedTask;
-        }
-
         public IEnumerable<SelectListItem> GetFormasPagoSelectList()
         {
-            var formas = GetFormasPagoAsync().Result;
-            return formas.Select(fp => new SelectListItem { Value = fp.FormaPagoID.ToString(), Text = fp.Nombre });
+            var formasPago = GetFormasPagoAsync().Result;
+            return formasPago.Select(fp => new SelectListItem
+            {
+                Value = fp.FormaPagoID.ToString(),
+                Text = fp.Nombre
+            });
         }
 
         public IEnumerable<SelectListItem> GetBancosSelectList()
         {
             var bancos = GetBancosAsync().Result;
-            return bancos.Select(b => new SelectListItem { Value = b.BancoID.ToString(), Text = b.Nombre });
+            return bancos.Select(b => new SelectListItem
+            {
+                Value = b.BancoID.ToString(),
+                Text = b.Nombre
+            });
         }
 
         public IEnumerable<SelectListItem> GetTipoTarjetaSelectList()
         {
-            var tipos = new List<string> { "Visa", "MasterCard", "Amex" };
+            var tipos = new List<string> { "Visa", "MasterCard", "Amex", "Naranja", "Cabal" };
             return tipos.Select(t => new SelectListItem { Value = t, Text = t });
         }
 
         public IEnumerable<SelectListItem> GetCuotasSelectList()
         {
-            var cuotas = Enumerable.Range(1, 12).Select(c => c.ToString()).ToList();
-            return cuotas.Select(c => new SelectListItem { Value = c, Text = $"{c} cuotas" });
+            var cuotas = Enumerable.Range(1, 24).Select(c => c.ToString()).ToList();
+            return cuotas.Select(c => new SelectListItem
+            {
+                Value = c,
+                Text = $"{c} cuota{(c == "1" ? "" : "s")}"
+            });
         }
 
         public IEnumerable<SelectListItem> GetEntidadesElectronicasSelectList()
         {
-            var entidades = new List<string> { "PayPal", "MercadoPago", "Stripe" };
+            var entidades = new List<string>
+            {
+                "MercadoPago",
+                "Modo",
+                "BIMO",
+                "Cuenta DNI",
+                "QR"
+            };
             return entidades.Select(e => new SelectListItem { Value = e, Text = e });
         }
 
         public IEnumerable<SelectListItem> GetPlanesFinanciamientoSelectList()
         {
-            var planes = new List<string> { "Plan A", "Plan B", "Plan C" };
+            var planes = new List<string>
+            {
+                "Plan 6 cuotas",
+                "Plan 12 cuotas",
+                "Plan 18 cuotas",
+                "Plan 24 cuotas",
+                "Plan 36 cuotas"
+            };
             return planes.Select(p => new SelectListItem { Value = p, Text = p });
         }
+
+        #endregion
+
+        #region Procesamiento de Venta
+
+        public async Task ProcessVentaAsync(int ventaID)
+        {
+            try
+            {
+                Venta? venta;
+                lock (_lock)
+                {
+                    venta = _ventas.FirstOrDefault(v => v.VentaID == ventaID);
+                    if (venta == null)
+                    {
+                        throw new KeyNotFoundException($"Venta con ID {ventaID} no encontrada.");
+                    }
+
+                    if (venta.Estado != EstadoVenta.Autorizada)
+                    {
+                        throw new InvalidOperationException($"La venta debe estar autorizada para procesarla. Estado actual: {venta.Estado}");
+                    }
+
+                    // Cambiar estado a PendienteDeEntrega
+                    venta.Estado = EstadoVenta.PendienteDeEntrega;
+                }
+
+                await GuardarEnJsonAsync();
+
+                _logger.LogInformation("Venta procesada => ID: {ID}, Nuevo Estado: {Estado}",
+                    ventaID, venta.Estado);
+
+                // Registrar en auditoría
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = "Sistema",
+                    Entidad = "Venta",
+                    Accion = "Process",
+                    LlavePrimaria = ventaID.ToString(),
+                    Detalle = $"Venta procesada. Estado: {venta.Estado}"
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al procesar venta ID: {ID}", ventaID);
+                throw;
+            }
+        }
+
+        public async Task UpdateEstadoVentaAsync(int id, EstadoVenta estado)
+        {
+            try
+            {
+                Venta? venta;
+                EstadoVenta estadoAnterior;
+
+                lock (_lock)
+                {
+                    venta = _ventas.FirstOrDefault(v => v.VentaID == id);
+                    if (venta != null)
+                    {
+                        estadoAnterior = venta.Estado;
+                        venta.Estado = estado;
+
+                        _logger.LogInformation("Estado de venta actualizado => ID: {ID}, Estado anterior: {EstadoAnterior}, Estado nuevo: {Estado}",
+                            id, estadoAnterior, estado);
+                    }
+                    else
+                    {
+                        throw new KeyNotFoundException($"Venta con ID {id} no encontrada.");
+                    }
+                }
+
+                await GuardarEnJsonAsync();
+
+                // Gestionar stock según el cambio de estado
+                await GestionarStockPorCambioEstado(venta, estadoAnterior, estado);
+
+                // Registrar en auditoría
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = "Sistema",
+                    Entidad = "Venta",
+                    Accion = "UpdateEstado",
+                    LlavePrimaria = id.ToString(),
+                    Detalle = $"Estado actualizado de {estadoAnterior} a {estado}"
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al actualizar estado de venta ID: {ID}", id);
+                throw;
+            }
+        }
+
+        #endregion
+
+        #region Alias Methods
 
         public Task<Venta?> GetVentaByIdAsync(int id)
         {
             return GetVentaByIDAsync(id);
         }
+
+        #endregion
+
+        #region Private Methods
 
         private async Task CargarDesdeJsonAsync()
         {
@@ -289,11 +761,18 @@ namespace Javo2.Services
                 lock (_lock)
                 {
                     _ventas = data ?? new List<Venta>();
+
                     if (_ventas.Any())
                     {
                         _nextVentaID = _ventas.Max(v => v.VentaID) + 1;
                     }
-                    _logger.LogInformation("VentaService: {Count} ventas cargadas desde {File}", _ventas.Count, _jsonFilePath);
+                    else
+                    {
+                        _nextVentaID = 1;
+                    }
+
+                    _logger.LogInformation("VentaService: {Count} ventas cargadas desde {File}",
+                        _ventas.Count, _jsonFilePath);
                 }
             }
             catch (Exception ex)
@@ -314,32 +793,20 @@ namespace Javo2.Services
             {
                 snapshot = _ventas.ToList();
             }
+
             try
             {
                 await JsonFileHelper.SaveToJsonFileAsync(_jsonFilePath, snapshot);
-                _logger.LogInformation("VentaService: guardados {Count} ventas en {File}", snapshot.Count, _jsonFilePath);
+                _logger.LogInformation("VentaService: {Count} ventas guardadas en {File}",
+                    snapshot.Count, _jsonFilePath);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al guardar ventas en JSON");
+                throw;
             }
         }
 
-        // Método síncrono para uso en métodos que lo requieran.
-        private void GuardarEnJson()
-        {
-            lock (_lock)
-            {
-                try
-                {
-                    JsonFileHelper.SaveToJsonFile(_jsonFilePath, _ventas);
-                    _logger.LogInformation("VentaService: guardados {Count} ventas en {File}", _ventas.Count, _jsonFilePath);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error al guardar ventas en JSON");
-                }
-            }
-        }
+        #endregion
     }
 }

@@ -46,7 +46,7 @@ namespace Javo2.Helpers
             }
         }
 
-        // Métodos síncronos (por si se requieren en algún lugar)
+        // Métodos síncronos existentes...
         public static T LoadFromJsonFile<T>(string filePath) where T : new()
         {
             try

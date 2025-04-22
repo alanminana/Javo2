@@ -1,23 +1,31 @@
 ﻿@model IEnumerable<Javo2.ViewModels.Operaciones.Catalogo.RubroViewModel>
 
-@foreach (var rubro in Model)
+    @foreach (var rubro in Model)
 {
     <tr>
         <td>@rubro.Nombre</td>
         <td>
-            <ul>
+            @if (rubro.SubRubros != null && rubro.SubRubros.Any())
+            {
+            <ul class="list-unstyled mb-0">
                 @foreach (var subRubro in rubro.SubRubros)
-                {
-                    <li>@subRubro.Nombre</li>
-                }
+                    {
+                <li>@subRubro.Nombre</li>
+                    }
             </ul>
+            }
+            else
+            {
+            <span class="text-muted">Sin SubRubros</span>
+            }
         </td>
+        <td>@rubro.TotalStock</td>
         <td>
             <a asp-action="EditRubro" asp-route-id="@rubro.ID" class="btn btn-sm btn-warning me-1">
                 <i class="bi bi-pencil-square"></i>
             </a>
             <a asp-action="EditSubRubros" asp-route-rubroId="@rubro.ID" class="btn btn-sm btn-secondary me-1">
-                <i class="bi bi-pencil-square"></i> SubRubros
+                <i class="bi bi-list"></i> SubRubros
             </a>
             <a asp-action="DeleteRubro" asp-route-id="@rubro.ID" class="btn btn-sm btn-danger">
                 <i class="bi bi-trash"></i>
