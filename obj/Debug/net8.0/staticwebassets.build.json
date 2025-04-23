@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "Jqy0DwCj121nQXt7IXdHgdVDVh/1XL1Wa45FhTnya28=",
+  "Hash": "9XfT+IAYEr8iGBqXSxBBdQ/Aao+MN1jr8DzjmUQCPng=",
   "Source": "Javo2",
   "BasePath": "_content/Javo2",
   "Mode": "Default",
@@ -94,8 +94,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "ni17auism9",
-      "Integrity": "kVrjJUViRr+hz5GSa3PvSq62+tMY+S0cf1lv/vy4TTM=",
+      "Fingerprint": "w1zqzxhxay",
+      "Integrity": "9KordO+RifMVBydgOhXJhv3peXrV3o3d7Jrdblnb4DE=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\site.css"
@@ -122,6 +122,27 @@
       "OriginalItemSpec": "wwwroot\\favicon.ico"
     },
     {
+      "Identity": "D:\\github\\Javo2\\wwwroot\\js\\debug-helper.js",
+      "SourceId": "Javo2",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\github\\Javo2\\wwwroot\\",
+      "BasePath": "_content/Javo2",
+      "RelativePath": "js/debug-helper#[.{fingerprint}]?.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "tq17cozoyh",
+      "Integrity": "a998BRGx20rxf4NgJxJSufqaHc2DMNqs20m3xhQMZE4=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\debug-helper.js"
+    },
+    {
       "Identity": "D:\\github\\Javo2\\wwwroot\\js\\site.js",
       "SourceId": "Javo2",
       "SourceType": "Discovered",
@@ -141,6 +162,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\site.js"
+    },
+    {
+      "Identity": "D:\\github\\Javo2\\wwwroot\\js\\ventas.js",
+      "SourceId": "Javo2",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\github\\Javo2\\wwwroot\\",
+      "BasePath": "_content/Javo2",
+      "RelativePath": "js/ventas#[.{fingerprint}]?.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "8ahct3w2jz",
+      "Integrity": "gHRiKaCItKHpPAHAwRjmXlyoNItGnmDqGpby7aEHPXE=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\ventas.js"
     },
     {
       "Identity": "D:\\github\\Javo2\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
@@ -1434,7 +1476,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "3162"
+          "Value": "3285"
         },
         {
           "Name": "Content-Type",
@@ -1442,11 +1484,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"kVrjJUViRr+hz5GSa3PvSq62+tMY+S0cf1lv/vy4TTM=\""
+          "Value": "\"9KordO+RifMVBydgOhXJhv3peXrV3o3d7Jrdblnb4DE=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 22 Apr 2025 18:10:07 GMT"
+          "Value": "Tue, 22 Apr 2025 18:38:03 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1456,12 +1498,12 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-kVrjJUViRr+hz5GSa3PvSq62+tMY+S0cf1lv/vy4TTM="
+          "Value": "sha256-9KordO+RifMVBydgOhXJhv3peXrV3o3d7Jrdblnb4DE="
         }
       ]
     },
     {
-      "Route": "css/site.ni17auism9.css",
+      "Route": "css/site.w1zqzxhxay.css",
       "AssetFile": "D:\\github\\Javo2\\wwwroot\\css\\site.css",
       "Selectors": [],
       "ResponseHeaders": [
@@ -1471,7 +1513,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "3162"
+          "Value": "3285"
         },
         {
           "Name": "Content-Type",
@@ -1479,11 +1521,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"kVrjJUViRr+hz5GSa3PvSq62+tMY+S0cf1lv/vy4TTM=\""
+          "Value": "\"9KordO+RifMVBydgOhXJhv3peXrV3o3d7Jrdblnb4DE=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 22 Apr 2025 18:10:07 GMT"
+          "Value": "Tue, 22 Apr 2025 18:38:03 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1493,7 +1535,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "ni17auism9"
+          "Value": "w1zqzxhxay"
         },
         {
           "Name": "label",
@@ -1501,7 +1543,7 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-kVrjJUViRr+hz5GSa3PvSq62+tMY+S0cf1lv/vy4TTM="
+          "Value": "sha256-9KordO+RifMVBydgOhXJhv3peXrV3o3d7Jrdblnb4DE="
         }
       ]
     },
@@ -1752,6 +1794,88 @@
       ]
     },
     {
+      "Route": "js/debug-helper.js",
+      "AssetFile": "D:\\github\\Javo2\\wwwroot\\js\\debug-helper.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "987"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"a998BRGx20rxf4NgJxJSufqaHc2DMNqs20m3xhQMZE4=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 22 Apr 2025 18:49:57 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-a998BRGx20rxf4NgJxJSufqaHc2DMNqs20m3xhQMZE4="
+        }
+      ]
+    },
+    {
+      "Route": "js/debug-helper.tq17cozoyh.js",
+      "AssetFile": "D:\\github\\Javo2\\wwwroot\\js\\debug-helper.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "987"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"a998BRGx20rxf4NgJxJSufqaHc2DMNqs20m3xhQMZE4=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 22 Apr 2025 18:49:57 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "tq17cozoyh"
+        },
+        {
+          "Name": "label",
+          "Value": "js/debug-helper.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-a998BRGx20rxf4NgJxJSufqaHc2DMNqs20m3xhQMZE4="
+        }
+      ]
+    },
+    {
       "Route": "js/site.fr7q2aak1r.js",
       "AssetFile": "D:\\github\\Javo2\\wwwroot\\js\\site.js",
       "Selectors": [],
@@ -1830,6 +1954,88 @@
         {
           "Name": "integrity",
           "Value": "sha256-y/Ngd8W21UpuCUhEqGbUKDEqFnNfTjAfb24GhJJGUyM="
+        }
+      ]
+    },
+    {
+      "Route": "js/ventas.8ahct3w2jz.js",
+      "AssetFile": "D:\\github\\Javo2\\wwwroot\\js\\ventas.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "6965"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"gHRiKaCItKHpPAHAwRjmXlyoNItGnmDqGpby7aEHPXE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 22 Apr 2025 18:50:07 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "8ahct3w2jz"
+        },
+        {
+          "Name": "label",
+          "Value": "js/ventas.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-gHRiKaCItKHpPAHAwRjmXlyoNItGnmDqGpby7aEHPXE="
+        }
+      ]
+    },
+    {
+      "Route": "js/ventas.js",
+      "AssetFile": "D:\\github\\Javo2\\wwwroot\\js\\ventas.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "6965"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"gHRiKaCItKHpPAHAwRjmXlyoNItGnmDqGpby7aEHPXE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 22 Apr 2025 18:50:07 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-gHRiKaCItKHpPAHAwRjmXlyoNItGnmDqGpby7aEHPXE="
         }
       ]
     },

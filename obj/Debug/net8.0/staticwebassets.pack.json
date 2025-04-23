@@ -17,8 +17,16 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "D:\\github\\Javo2\\wwwroot\\js\\debug-helper.js",
+      "PackagePath": "staticwebassets\\js\\debug-helper.js"
+    },
+    {
       "Id": "D:\\github\\Javo2\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
+    },
+    {
+      "Id": "D:\\github\\Javo2\\wwwroot\\js\\ventas.js",
+      "PackagePath": "staticwebassets\\js\\ventas.js"
     },
     {
       "Id": "D:\\github\\Javo2\\wwwroot\\lib\\bootstrap\\LICENSE",

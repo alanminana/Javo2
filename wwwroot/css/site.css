@@ -1,175 +1,181 @@
-/* site.css */
+/* wwwroot/css/site.css */
 
-/* --- Global Body --- */
-body.bg-dark {
-    background-color: #212529 !important;
-    color: #f8f9fa !important;
+:root {
+    --dark-bg: #222;
+    --light-text: #f0f0f0;
+    --primary-color: #375a7f;
+    --secondary-color: #444;
+    --success-color: #00bc8c;
+    --danger-color: #e74c3c;
+    --warning-color: #f39c12;
+    --info-color: #3498db;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--dark-bg);
+    color: var(--light-text);
     margin: 0;
     padding: 0;
-    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
 }
 
-a,
-a.nav-link {
-    color: #bbb;
-    text-decoration: none;
-}
-
-    a:hover {
-        color: #fff;
-    }
-
-/* --- Sidebar --- */
 .sidebar {
-    /* El position: fixed se definió inline en _Layout, 
-       pero podrías moverlo aquí si prefieres. */
-    background-color: #1c1f23;
-    padding: 1rem;
+    background-color: #1a1a1a;
+    border-right: 1px solid #333;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
 }
 
-    .sidebar .nav-link {
-        border-radius: 5px;
-        margin-bottom: 0.3rem;
-    }
-
-        .sidebar .nav-link.active {
-            background-color: #495057;
-            color: #fff !important;
-        }
-
-/* --- Content Container --- */
 .content {
-    /* margin-left: 250px (inline en _Layout) */
-    background-color: #2b2b2b;
-    /* ajusta si quieres distinto color */
+    padding: 20px;
 }
 
-/* --- Footer --- */
-.footer {
-    border-top: 1px solid #444;
-    color: #aaa;
-}
-
-    .footer a.text-white:hover {
-        color: #fff;
-        text-decoration: underline;
-    }
-
-/* --- Cards --- */
-.card {
-    background-color: #343a40;
-    border: none;
-    border-radius: 8px;
-}
-
-    .card .card-title,
-    .card .card-text,
-    .card h5 {
-        color: #f8f9fa;
-    }
-
-/* --- Table (oscuro) --- */
-.table {
-    background-color: #343a40;
-    color: #f8f9fa;
-}
-
-    .table thead th {
-        background-color: #495057;
-        border-color: #565e64;
-    }
-
-    .table tbody tr {
-        border-color: #495057;
-    }
-
-        .table tbody tr:nth-of-type(odd) {
-            background-color: rgba(255, 255, 255, 0.03);
-        }
-
-        .table tbody tr:hover {
-            background-color: rgba(255, 255, 255, 0.07);
-        }
-
-/* --- Form Controls --- */
-.form-control,
-.form-select,
-textarea {
-    background-color: #343a40;
-    color: #fff;
-    border: 1px solid #495057;
-}
-
-.form-label {
-    color: #f8f9fa;
-}
-
-input.form-control:focus,
-select.form-select:focus,
-textarea.form-control:focus {
-    background-color: #3c4247;
-    color: #fff;
-    outline: none;
-    box-shadow: 0 0 0 0.2rem rgba(32, 39, 46, 0.25);
-}
-
-/* --- Buttons --- */
-.btn-primary {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
-}
-
-    .btn-primary:hover {
-        background-color: #0b5ed7;
-    }
-
-.btn-secondary {
-    background-color: #6c757d;
-    border-color: #6c757d;
-}
-
-    .btn-secondary:hover {
-        background-color: #5c636a;
-    }
-
-.btn-danger {
-    background-color: #dc3545;
-    border-color: #dc3545;
-}
-
-    .btn-danger:hover {
-        background-color: #bb2d3b;
-    }
-
-/* --- Dashboard Summary Cards --- */
+/* Tarjetas de resumen */
 .summary-cards {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 1rem;
+    gap: 15px;
+    margin-bottom: 20px;
 }
 
 .summary-card {
-    flex: 1 1 200px;
-    background-color: #343a40;
-    border: 1px solid #495057;
-    border-radius: 8px;
-    padding: 1rem;
-    text-align: center;
+    flex: 1;
+    min-width: 200px;
+    background-color: var(--secondary-color);
+    border-radius: 5px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
     .summary-card h5 {
-        color: #f8f9fa;
-        margin-bottom: 0.5rem;
+        margin-top: 0;
+        color: #ddd;
+        font-size: 0.9rem;
+        font-weight: 600;
     }
 
     .summary-card p {
-        color: #ccc;
-        font-size: 1.2rem;
+        font-size: 1.5rem;
+        margin-bottom: 0;
+        font-weight: bold;
     }
 
-/* --- Chart Container --- */
-.chart-container {
-    min-height: 250px;
-    /* background-color: transparent; */
+/* Tablas */
+.table-dark {
+    background-color: var(--secondary-color);
+    color: var(--light-text);
+}
+
+    .table-dark thead th {
+        background-color: #333;
+        border-bottom: 2px solid #555;
+    }
+
+    .table-dark tbody tr:hover {
+        background-color: #383838;
+    }
+
+/* Formularios */
+.card {
+    background-color: #333;
+    border: 1px solid #444;
+    border-radius: 5px;
+}
+
+.form-control, .form-select {
+    background-color: #444;
+    border: 1px solid #555;
+    color: #fff;
+}
+
+    .form-control:focus, .form-select:focus {
+        background-color: #444;
+        border-color: var(--primary-color);
+        color: #fff;
+        box-shadow: 0 0 0 0.25rem rgba(55, 90, 127, 0.25);
+    }
+
+    .form-control::placeholder {
+        color: #888;
+    }
+
+/* Badges */
+.badge {
+    padding: 0.4em 0.6em;
+    font-size: 0.75em;
+}
+
+/* Botones */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    border-color: #555;
+}
+
+.btn-success {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    border-color: var(--danger-color);
+}
+
+.btn-warning {
+    background-color: var(--warning-color);
+    border-color: var(--warning-color);
+    color: #212529;
+}
+
+.btn-info {
+    background-color: var(--info-color);
+    border-color: var(--info-color);
+}
+
+/* Modales */
+.modal-content {
+    background-color: #333;
+    color: var(--light-text);
+    border: 1px solid #444;
+}
+
+.modal-header {
+    border-bottom: 1px solid #444;
+}
+
+.modal-footer {
+    border-top: 1px solid #444;
+}
+
+/* Alerts */
+.alert {
+    border: 1px solid transparent;
+}
+
+.alert-info {
+    background-color: #254356;
+    border-color: #1f6fb2;
+    color: #cce5ff;
+}
+
+.alert-success {
+    background-color: #1a4731;
+    border-color: #176639;
+    color: #c3e6cb;
+}
+
+.alert-danger {
+    background-color: #5e2129;
+    border-color: #971f2e;
+    color: #f8d7da;
+}
+
+.alert-warning {
+    background-color: #523e02;
+    border-color: #a97f0a;
+    color: #fff3cd;
 }

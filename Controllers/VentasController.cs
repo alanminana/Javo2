@@ -418,6 +418,17 @@ namespace Javo2.Controllers
                 await _ventaService.AutorizarVentaAsync(id, User.Identity?.Name ?? "Desconocido");
                 _logger.LogInformation("Venta {ID} autorizada exitosamente", id);
 
+                // Registrar auditoría
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = User.Identity?.Name ?? "Desconocido",
+                    Entidad = "Venta",
+                    Accion = "Autorizar",
+                    LlavePrimaria = id.ToString(),
+                    Detalle = $"Venta autorizada: Cliente={venta.NombreCliente}, Total={venta.PrecioTotal}"
+                });
+
                 return Json(new { success = true, message = "Venta autorizada correctamente." });
             }
             catch (Exception ex)
@@ -460,6 +471,17 @@ namespace Javo2.Controllers
                 await _ventaService.RechazarVentaAsync(id, User.Identity?.Name ?? "Desconocido");
                 _logger.LogInformation("Venta {ID} rechazada exitosamente", id);
 
+                // Registrar auditoría
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = User.Identity?.Name ?? "Desconocido",
+                    Entidad = "Venta",
+                    Accion = "Rechazar",
+                    LlavePrimaria = id.ToString(),
+                    Detalle = $"Venta rechazada: Cliente={venta.NombreCliente}, Total={venta.PrecioTotal}"
+                });
+
                 return Json(new { success = true, message = "Venta rechazada correctamente." });
             }
             catch (Exception ex)
@@ -468,7 +490,6 @@ namespace Javo2.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
-
         // POST: Ventas/MarcarEntregada
         [HttpPost]
         [ValidateAntiForgeryToken]

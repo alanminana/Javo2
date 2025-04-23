@@ -1,7 +1,9 @@
 wwwroot\css\layout.cs
 wwwroot\css\site.css
 wwwroot\favicon.ico
+wwwroot\js\debug-helper.js
 wwwroot\js\site.js
+wwwroot\js\ventas.js
 wwwroot\lib\bootstrap\dist\css\bootstrap.css
 wwwroot\lib\bootstrap\dist\css\bootstrap.css.map
 wwwroot\lib\bootstrap\dist\css\bootstrap.min.css

@@ -1,5 +1,4 @@
-﻿@* Views/Ventas/Autorizaciones.cshtml *@
-@model IEnumerable<Javo2.ViewModels.Operaciones.Ventas.VentaListViewModel>
+﻿@model IEnumerable<Javo2.ViewModels.Operaciones.Ventas.VentaListViewModel>
 
     @{
     ViewBag.Title = "Ventas Pendientes de Autorización";
@@ -20,10 +19,8 @@
         </div>
     </div>
 
-    <!-- Formulario oculto para enviar token anti-falsificación -->
-    <form id="antiForgerySendForm">
-        @Html.AntiForgeryToken()
-    </form>
+    <!-- Anti-forgery token placed directly in the page -->
+    @Html.AntiForgeryToken()
 
     <!-- Tabla de Ventas Pendientes -->
     <div class="card p-3">
@@ -86,78 +83,9 @@
     </div>
 
     @section Scripts {
-        <script>
-        $(document).ready(function() {
-            // Obtener el token anti-falsificación
-            var token = $('input[name="__RequestVerificationToken"]').val();
+        <!-- Include the debug helper -->
+        <script src="~/js/debug-helper.js"></script>
 
-            // Autorizar venta
-            $('.autorizar-venta').click(function() {
-                const ventaId = $(this).data('id');
-                const $row = $(this).closest('tr');
-
-                if (confirm('¿Está seguro que desea autorizar esta venta?')) {
-                    $.ajax({
-                        url: '@Url.Action("Autorizar", "Ventas")',
-                        type: 'POST',
-                        data: { id: ventaId },
-                        headers: {
-                            'RequestVerificationToken': token
-                        },
-                        success: function(response) {
-                            if (response.success) {
-                                $row.fadeOut(400, function() {
-                                    $(this).remove();
-                                    if ($('table tbody tr').length === 0) {
-                                        location.reload();
-                                    }
-                                });
-                                alert("Venta autorizada correctamente");
-                            } else {
-                                alert(response.message || 'Error al autorizar la venta.');
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error("Error:", xhr, status, error);
-                            alert('Error al procesar la solicitud. Consulte la consola para más detalles.');
-                        }
-                    });
-                }
-            });
-
-            // Rechazar venta
-            $('.rechazar-venta').click(function() {
-                const ventaId = $(this).data('id');
-                const $row = $(this).closest('tr');
-
-                if (confirm('¿Está seguro que desea rechazar esta venta?')) {
-                    $.ajax({
-                        url: '@Url.Action("Rechazar", "Ventas")',
-                        type: 'POST',
-                        data: { id: ventaId },
-                        headers: {
-                            'RequestVerificationToken': token
-                        },
-                        success: function(response) {
-                            if (response.success) {
-                                $row.fadeOut(400, function() {
-                                    $(this).remove();
-                                    if ($('table tbody tr').length === 0) {
-                                        location.reload();
-                                    }
-                                });
-                                alert("Venta rechazada correctamente");
-                            } else {
-                                alert(response.message || 'Error al rechazar la venta.');
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error("Error:", xhr, status, error);
-                            alert('Error al procesar la solicitud. Consulte la consola para más detalles.');
-                        }
-                    });
-                }
-            });
-        });
-        </script>
+        <!-- Include the fixed ventas.js script -->
+        <script src="~/js/ventas.js"></script>
     }

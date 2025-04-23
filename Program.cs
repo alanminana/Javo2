@@ -13,6 +13,8 @@ using Microsoft.Extensions.Hosting;
 using System;
 
 var builder = WebApplication.CreateBuilder(args);
+Console.WriteLine($"CONTENT ROOT = {Directory.GetCurrentDirectory()}");
+Console.WriteLine($"WEB ROOT     = {builder.Environment.WebRootPath}");
 
 // Configuración de Logging
 builder.Logging.ClearProviders();

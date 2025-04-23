@@ -1,102 +1,122 @@
 ﻿@model IEnumerable<Javo2.ViewModels.Operaciones.Ventas.VentaListViewModel>
 
-    @{
+@{
     ViewBag.Title = "Ventas";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    }
+}
 
-    <h2 class="mb-4">@ViewBag.Title</h2>
+<h2 class="mb-4">@ViewBag.Title</h2>
 
-    <!-- Resumen / Tarjetas -->
-    <div class="summary-cards mb-4">
-        <div class="summary-card">
-            <h5>Total de Ventas</h5>
-            <p>@Model.Count()</p>
-        </div>
-        <div class="summary-card">
-            <h5>Pendientes de Autorización</h5>
-            <p>@Model.Count(v => v.Estado == "PendienteDeAutorizacion")</p>
-        </div>
-        <div class="summary-card">
-            <h5>Pendientes de Entrega</h5>
-            <p>@Model.Count(v => v.Estado == "PendienteDeEntrega")</p>
-        </div>
-        <div class="summary-card">
-            <h5>Total Facturado</h5>
-            <p>@Model.Sum(v => v.PrecioTotal).ToString("C")</p>
-        </div>
+<!-- Resumen / Tarjetas -->
+<div class="summary-cards mb-4">
+    <div class="summary-card">
+        <h5>Total de Ventas</h5>
+        <p>@Model.Count()</p>
     </div>
-
-    <!-- Barra de Acciones -->
-    <div class="mb-4">
-        <a asp-action="Create" class="btn btn-primary me-2">
-            <i class="bi bi-plus-circle me-1"></i> Nueva Venta
-        </a>
-        <a asp-action="Autorizaciones" class="btn btn-success me-2">
-            <i class="bi bi-check2-square me-1"></i> Autorizaciones
-        </a>
-        <a asp-action="EntregaProductos" class="btn btn-warning">
-            <i class="bi bi-truck me-1"></i> Entrega de Productos
-        </a>
+    <div class="summary-card">
+        <h5>Pendientes de Autorización</h5>
+        <p>@Model.Count(v => v.Estado == "PendienteDeAutorizacion")</p>
     </div>
-
-    <!-- Filtros de Búsqueda -->
-    <div class="card mb-4 p-4">
-        <form method="get" asp-action="Index" class="row g-3">
-            <div class="col-md-3">
-                <label for="FechaInicio" class="form-label">Desde:</label>
-                <input type="date" class="form-control" id="FechaInicio" name="FechaInicio"
-                       value="@ViewBag.FechaInicio?.ToString(" yyyy-MM-dd")" />
-            </div>
-            <div class="col-md-3">
-                <label for="FechaFin" class="form-label">Hasta:</label>
-                <input type="date" class="form-control" id="FechaFin" name="FechaFin"
-                       value="@ViewBag.FechaFin?.ToString(" yyyy-MM-dd")" />
-            </div>
-            <div class="col-md-3">
-                <label for="NombreCliente" class="form-label">Cliente:</label>
-                <input type="text" class="form-control" id="NombreCliente" name="NombreCliente"
-                       placeholder="Nombre del cliente" value="@ViewBag.NombreCliente" />
-            </div>
-            <div class="col-md-3">
-                <label for="NumeroFactura" class="form-label">Factura:</label>
-                <input type="text" class="form-control" id="NumeroFactura" name="NumeroFactura"
-                       placeholder="Número de factura" value="@ViewBag.NumeroFactura" />
-            </div>
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary me-2">
-                    <i class="bi bi-search me-1"></i> Buscar
-                </button>
-                <a asp-action="Index" class="btn btn-secondary">
-                    <i class="bi bi-x-circle me-1"></i> Limpiar
-                </a>
-                <a asp-action="ExportToExcel" class="btn btn-success float-end"
-                   asp-route-fechaInicio="@ViewBag.FechaInicio?.ToString(" yyyy-MM-dd")"
-                   asp-route-fechaFin="@ViewBag.FechaFin?.ToString(" yyyy-MM-dd")"
-                   asp-route-nombreCliente="@ViewBag.NombreCliente"
-                   asp-route-numeroFactura="@ViewBag.NumeroFactura">
-                    <i class="bi bi-file-earmark-excel me-1"></i> Exportar a Excel
-                </a>
-            </div>
-        </form>
+    <div class="summary-card">
+        <h5>Pendientes de Entrega</h5>
+        <p>@Model.Count(v => v.Estado == "PendienteDeEntrega")</p>
     </div>
+    <div class="summary-card">
+        <h5>Total Facturado</h5>
+        <p>@Model.Sum(v => v.PrecioTotal).ToString("C")</p>
+    </div>
+</div>
 
-    <!-- Tabla de Ventas -->
-    <div class="card p-3">
-        <div class="table-responsive">
-            <table class="table table-dark table-striped align-middle">
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Factura</th>
-                        <th>Cliente</th>
-                        <th>Total</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var venta in Model)
+<!-- Mensajes de éxito y error -->
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        <i class="bi bi-check-circle me-2"></i>
+        @TempData["Success"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        @TempData["Error"]
+    </div>
+}
+
+<!-- Barra de Acciones -->
+<div class="mb-4">
+    <a asp-action="Create" class="btn btn-primary me-2">
+        <i class="bi bi-plus-circle me-1"></i> Nueva Venta
+    </a>
+    <a asp-action="Autorizaciones" class="btn btn-success me-2">
+        <i class="bi bi-check2-square me-1"></i> Autorizaciones
+    </a>
+    <a asp-action="EntregaProductos" class="btn btn-warning">
+        <i class="bi bi-truck me-1"></i> Entrega de Productos
+    </a>
+</div>
+
+<!-- Anti-forgery token para AJAX -->
+@Html.AntiForgeryToken()
+
+<!-- Filtros de Búsqueda -->
+<div class="card mb-4 p-4">
+    <form method="get" asp-action="Index" class="row g-3">
+        <div class="col-md-3">
+            <label for="FechaInicio" class="form-label">Desde:</label>
+            <input type="date" class="form-control" id="FechaInicio" name="FechaInicio"
+                   value="@ViewBag.FechaInicio?.ToString("yyyy-MM-dd")" />
+        </div>
+        <div class="col-md-3">
+            <label for="FechaFin" class="form-label">Hasta:</label>
+            <input type="date" class="form-control" id="FechaFin" name="FechaFin"
+                   value="@ViewBag.FechaFin?.ToString("yyyy-MM-dd")" />
+        </div>
+        <div class="col-md-3">
+            <label for="NombreCliente" class="form-label">Cliente:</label>
+            <input type="text" class="form-control" id="NombreCliente" name="NombreCliente"
+                   placeholder="Nombre del cliente" value="@ViewBag.NombreCliente" />
+        </div>
+        <div class="col-md-3">
+            <label for="NumeroFactura" class="form-label">Factura:</label>
+            <input type="text" class="form-control" id="NumeroFactura" name="NumeroFactura"
+                   placeholder="Número de factura" value="@ViewBag.NumeroFactura" />
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary me-2">
+                <i class="bi bi-search me-1"></i> Buscar
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-x-circle me-1"></i> Limpiar
+            </a>
+            <a asp-action="ExportToExcel" class="btn btn-success float-end"
+               asp-route-fechaInicio="@ViewBag.FechaInicio?.ToString("yyyy-MM-dd")"
+               asp-route-fechaFin="@ViewBag.FechaFin?.ToString("yyyy-MM-dd")"
+               asp-route-nombreCliente="@ViewBag.NombreCliente"
+               asp-route-numeroFactura="@ViewBag.NumeroFactura">
+                <i class="bi bi-file-earmark-excel me-1"></i> Exportar a Excel
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- Tabla de Ventas -->
+<div class="card p-3">
+    <div class="table-responsive">
+        <table class="table table-dark table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Factura</th>
+                    <th>Cliente</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var venta in Model)
                 {
                     <tr>
                         <td>@venta.FechaVenta.ToString("dd/MM/yyyy")</td>
@@ -107,25 +127,25 @@
                             @switch (venta.Estado)
                             {
                                 case "Borrador":
-                            <span class="badge bg-secondary">Borrador</span>
+                                    <span class="badge bg-secondary">Borrador</span>
                                     break;
                                 case "PendienteDeAutorizacion":
-                            <span class="badge bg-warning text-dark">Pendiente de Autorización</span>
+                                    <span class="badge bg-warning text-dark">Pendiente de Autorización</span>
                                     break;
                                 case "Autorizada":
-                            <span class="badge bg-success">Autorizada</span>
+                                    <span class="badge bg-success">Autorizada</span>
                                     break;
                                 case "Rechazada":
-                            <span class="badge bg-danger">Rechazada</span>
+                                    <span class="badge bg-danger">Rechazada</span>
                                     break;
                                 case "PendienteDeEntrega":
-                            <span class="badge bg-info">Pendiente de Entrega</span>
+                                    <span class="badge bg-info">Pendiente de Entrega</span>
                                     break;
                                 case "Completada":
-                            <span class="badge bg-primary">Completada</span>
+                                    <span class="badge bg-primary">Completada</span>
                                     break;
                                 default:
-                            <span class="badge bg-secondary">@venta.Estado</span>
+                                    <span class="badge bg-secondary">@venta.Estado</span>
                                     break;
                             }
                         </td>
@@ -138,107 +158,52 @@
 
                                 @if (venta.Estado == "Borrador")
                                 {
-                                <a asp-action="Edit" asp-route-id="@venta.VentaID"
-                                   class="btn btn-warning btn-sm" title="Editar">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
+                                    <a asp-action="Edit" asp-route-id="@venta.VentaID"
+                                       class="btn btn-warning btn-sm" title="Editar">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
                                 }
 
                                 @if (venta.Estado == "PendienteDeAutorizacion")
                                 {
-                                <button type="button" class="btn btn-success btn-sm autorizar-venta"
-                                        data-id="@venta.VentaID" title="Autorizar">
-                                    <i class="bi bi-check-circle"></i>
-                                </button>
-                                <button type="button" class="btn btn-danger btn-sm rechazar-venta"
-                                        data-id="@venta.VentaID" title="Rechazar">
-                                    <i class="bi bi-x-circle"></i>
-                                </button>
+                                    <button type="button" class="btn btn-success btn-sm autorizar-venta"
+                                            data-id="@venta.VentaID" title="Autorizar">
+                                        <i class="bi bi-check-circle"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm rechazar-venta"
+                                            data-id="@venta.VentaID" title="Rechazar">
+                                        <i class="bi bi-x-circle"></i>
+                                    </button>
                                 }
 
                                 @if (venta.Estado == "Autorizada")
                                 {
-                                <a asp-action="Reimprimir" asp-route-id="@venta.VentaID"
-                                   class="btn btn-secondary btn-sm" title="Reimprimir">
-                                    <i class="bi bi-printer"></i>
-                                </a>
+                                    <a asp-action="Reimprimir" asp-route-id="@venta.VentaID"
+                                       class="btn btn-secondary btn-sm" title="Reimprimir">
+                                        <i class="bi bi-printer"></i>
+                                    </a>
                                 }
 
                                 @if (venta.Estado == "Borrador" || venta.Estado == "Rechazada")
                                 {
-                                <button type="button" class="btn btn-danger btn-sm eliminar-venta"
-                                        data-id="@venta.VentaID" title="Eliminar">
-                                    <i class="bi bi-trash"></i>
-                                </button>
+                                    <button type="button" class="btn btn-danger btn-sm eliminar-venta"
+                                            data-id="@venta.VentaID" title="Eliminar">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
                                 }
                             </div>
                         </td>
                     </tr>
                 }
-                </tbody>
-            </table>
-        </div>
+            </tbody>
+        </table>
     </div>
+</div>
 
-    @section Scripts {
-        <script>
-        $(document).ready(function() {
-            // Obtener el token anti-falsificación
-            var token = $('input[name="__RequestVerificationToken"]').val();
-
-            // Autorizar venta
-            $('.autorizar-venta').click(function() {
-                const ventaId = $(this).data('id');
-
-                if (confirm('¿Está seguro que desea autorizar esta venta?')) {
-                    $.ajax({
-                        url: '@Url.Action("Autorizar", "Ventas")',
-                        type: 'POST',
-                        data: { id: ventaId },
-                        headers: {
-                            'RequestVerificationToken': token
-                        },
-                        success: function(response) {
-                            if (response.success) {
-                                location.reload();
-                            } else {
-                                alert(response.message || 'Error al autorizar la venta.');
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error("Error:", xhr, status, error);
-                            alert('Error al procesar la solicitud. Consulte la consola para más detalles.');
-                        }
-                    });
-                }
-            });
-
-            // Rechazar venta
-            $('.rechazar-venta').click(function() {
-                const ventaId = $(this).data('id');
-
-                if (confirm('¿Está seguro que desea rechazar esta venta?')) {
-                    $.ajax({
-                        url: '@Url.Action("Rechazar", "Ventas")',
-                        type: 'POST',
-                        data: { id: ventaId },
-                        headers: {
-                            'RequestVerificationToken': token
-                        },
-                        success: function(response) {
-                            if (response.success) {
-                                location.reload();
-                            } else {
-                                alert(response.message || 'Error al rechazar la venta.');
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error("Error:", xhr, status, error);
-                            alert('Error al procesar la solicitud. Consulte la consola para más detalles.');
-                        }
-                    });
-                }
-            });
-        });
-        </script>
-    }
+@section Scripts {
+    <!-- Incluir el script de debug para ayudar a diagnosticar problemas -->
+    <script src="~/js/debug-helper.js"></script>
+    
+    <!-- Incluir el script principal de ventas -->
+    <script src="~/js/ventas.js"></script>
+}
