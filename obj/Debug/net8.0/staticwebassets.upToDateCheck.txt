@@ -1,4 +1,4 @@
-wwwroot\css\layout.cs
+wwwroot\css\layout.css
 wwwroot\css\site.css
 wwwroot\favicon.ico
 wwwroot\js\debug-helper.js

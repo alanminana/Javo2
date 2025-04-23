@@ -1,69 +1,108 @@
-﻿<!-- Views/Clientes/Form.cshtml -->
-@model Javo2.ViewModels.Operaciones.Clientes.ClientesViewModel
+﻿@model Javo2.ViewModels.Operaciones.Clientes.ClientesViewModel
 
-@{
-    var isEdit = Model.ClienteID > 0;
-    ViewBag.Title = isEdit ? "Editar Cliente" : "Crear Cliente";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-<h2 class="mb-4">@ViewBag.Title</h2>
-
-<div class="card p-4">
-    <form asp-action="@(isEdit ? "Edit" : "Create")" method="post" id="clienteForm">
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <input type="hidden" asp-for="ClienteID" />
-
-        @await Html.PartialAsync("_ClientesForm", Model)
-
-        <!-- Botones de acción -->
-        <div class="mb-4 text-end">
-            <button type="submit" class="btn btn-success">
-                <i class="bi bi-save me-1"></i> Guardar
-            </button>
-            <a asp-action="Index" class="btn btn-secondary">
-                <i class="bi bi-arrow-left me-1"></i> Cancelar
-            </a>
+<div>
+    <!-- Datos Personales -->
+    <div class="mb-4">
+        <h5 class="text-light border-bottom pb-2">Datos Personales</h5>
+        <div class="row g-3 mt-2">
+            <div class="col-md-6">
+                <label asp-for="Nombre" class="form-label text-light"></label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="invalid-feedback d-block"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Apellido" class="form-label text-light"></label>
+                <input asp-for="Apellido" class="form-control" />
+                <span asp-validation-for="Apellido" class="invalid-feedback d-block"></span>
+            </div>
         </div>
-    </form>
+        <div class="row g-3 mt-3">
+            <div class="col-md-4">
+                <label asp-for="DNI" class="form-label text-light"></label>
+                <input asp-for="DNI" class="form-control" />
+                <span asp-validation-for="DNI" class="invalid-feedback d-block"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Email" class="form-label text-light"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="invalid-feedback d-block"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Telefono" class="form-label text-light"></label>
+                <input asp-for="Telefono" class="form-control" />
+                <span asp-validation-for="Telefono" class="invalid-feedback d-block"></span>
+            </div>
+        </div>
+        <div class="row g-3 mt-3">
+            <div class="col-md-4">
+                <label asp-for="Celular" class="form-label text-light"></label>
+                <input asp-for="Celular" class="form-control" />
+                <span asp-validation-for="Celular" class="invalid-feedback d-block"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="TelefonoTrabajo" class="form-label text-light"></label>
+                <input asp-for="TelefonoTrabajo" class="form-control" />
+                <span asp-validation-for="TelefonoTrabajo" class="invalid-feedback d-block"></span>
+            </div>
+            <div class="col-md-4 d-flex align-items-center pt-2">
+                <div class="form-check">
+                    <input asp-for="Verificar" class="form-check-input" />
+                    <label asp-for="Verificar" class="form-check-label text-light"></label>
+                </div>
+                <span asp-validation-for="Verificar" class="invalid-feedback d-block"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Datos Domiciliarios -->
+    <div class="mb-4">
+        <h5 class="text-light border-bottom pb-2">Datos Domiciliarios</h5>
+        <div class="row g-3 mt-2">
+            <div class="col-md-6">
+                <label asp-for="Calle" class="form-label text-light"></label>
+                <input asp-for="Calle" class="form-control" />
+                <span asp-validation-for="Calle" class="invalid-feedback d-block"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="NumeroCalle" class="form-label text-light"></label>
+                <input asp-for="NumeroCalle" class="form-control" />
+                <span asp-validation-for="NumeroCalle" class="invalid-feedback d-block"></span>
+            </div>
+        </div>
+        <div class="row g-3 mt-3">
+            <div class="col-md-4">
+                <label asp-for="ProvinciaID" class="form-label text-light"></label>
+                <select asp-for="ProvinciaID" asp-items="Model.Provincias" class="form-select" id="ProvinciaID">
+                    <option value="">-- Seleccione una provincia --</option>
+                </select>
+                <span asp-validation-for="ProvinciaID" class="invalid-feedback d-block"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="CiudadID" class="form-label text-light"></label>
+                <select asp-for="CiudadID" asp-items="Model.Ciudades" class="form-select" id="CiudadID">
+                    <option value="">-- Seleccione una ciudad --</option>
+                </select>
+                <span asp-validation-for="CiudadID" class="invalid-feedback d-block"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="EstadoComentario" class="form-label text-light"></label>
+                <input asp-for="EstadoComentario" class="form-control" />
+                <span asp-validation-for="EstadoComentario" class="invalid-feedback d-block"></span>
+            </div>
+        </div>
+        <div class="row g-3 mt-3">
+            <div class="col-md-4">
+                <label asp-for="Localidad" class="form-label text-light"></label>
+                <input asp-for="Localidad" class="form-control" />
+            </div>
+            <div class="col-md-4">
+                <label asp-for="CodigoPostal" class="form-label text-light"></label>
+                <input asp-for="CodigoPostal" class="form-control" />
+            </div>
+            <div class="col-md-4">
+                <label asp-for="DescripcionDomicilio" class="form-label text-light"></label>
+                <input asp-for="DescripcionDomicilio" class="form-control" />
+            </div>
+        </div>
+    </div>
 </div>
-
-@section Scripts {
-    @await Html.PartialAsync("_ValidationScriptsPartial")
-
-    <script>
-        $(document).ready(function () {
-            $('#ProvinciaID').change(function () {
-                var provinciaID = $(this).val();
-                if (provinciaID) {
-                    $.ajax({
-                        url: '@Url.Action("GetCiudades", "Clientes")',
-                        type: 'GET',
-                        data: { provinciaID: provinciaID },
-                        success: function (data) {
-                            var ciudadDropdown = $('#CiudadID');
-                            ciudadDropdown.empty();
-                            ciudadDropdown.append('<option value="">Seleccione una ciudad</option>');
-
-                            $.each(data, function (index, ciudad) {
-                                ciudadDropdown.append($('<option></option>').val(ciudad.value).text(ciudad.text));
-                            });
-                        },
-                        error: function () {
-                            alert("Ocurrió un error al obtener las ciudades.");
-                        }
-                    });
-                } else {
-                    $('#CiudadID').empty().append('<option value="">Seleccione una ciudad</option>');
-                }
-            });
-
-            // Trigger change if editing
-            var initialProvinciaID = $('#ProvinciaID').val();
-            if (initialProvinciaID) {
-                $('#ProvinciaID').trigger('change');
-            }
-        });
-    </script>
-}

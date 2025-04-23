@@ -1,21 +1,40 @@
 ﻿@model IEnumerable<Javo2.ViewModels.Operaciones.Productos.ProductosViewModel>
-
 @foreach (var producto in Model)
 {
     <tr>
-        <td><input type="checkbox" name="ProductoIDs" value="@producto.ProductoID" /></td>
-        <td>@producto.Nombre</td>
-        <td>@producto.PCosto</td>
-        <td>@producto.PContado</td>
-        <td>@producto.PLista</td>
-        <td>@producto.CantidadDisponible</td> <!-- Nueva columna para mostrar stock -->
         <td>
-            <a asp-action="Edit" asp-route-id="@producto.ProductoID" class="btn btn-sm btn-warning me-1">
-                <i class="bi bi-pencil-square"></i> Editar
-            </a>
-            <a asp-action="Delete" asp-route-id="@producto.ProductoID" class="btn btn-sm btn-danger">
-                <i class="bi bi-trash"></i> Eliminar
-            </a>
+            <div class="form-check">
+                <input type="checkbox" name="ProductoIDs" value="@producto.ProductoID" class="form-check-input" id="prod-@producto.ProductoID" />
+                <label class="form-check-label" for="prod-@producto.ProductoID"></label>
+            </div>
+        </td>
+        <td>@producto.Nombre</td>
+        <td>@producto.PCosto.ToString("C")</td>
+        <td>@producto.PContado.ToString("C")</td>
+        <td>@producto.PLista.ToString("C")</td>
+        <td>
+            <span class="badge @(producto.CantidadDisponible>0?"bg-success":"bg-danger")">
+                @producto.CantidadDisponible
+            </span>
+        </td>
+        <td class="text-center">
+            <div class="btn-group" role="group" aria-label="Acciones para @producto.Nombre">
+                <a asp-action="Edit" asp-route-id="@producto.ProductoID" class="btn btn-sm btn-outline-warning" title="Editar">
+                    <i class="bi bi-pencil-square"></i>
+                    <span class="visually-hidden">Editar</span>
+                </a>
+                <a asp-action="Details" asp-route-id="@producto.ProductoID" class="btn btn-sm btn-outline-info" title="Detalles">
+                    <i class="bi bi-eye"></i>
+                    <span class="visually-hidden">Detalles</span>
+                </a>
+                <form asp-action="Delete" asp-route-id="@producto.ProductoID" method="post" class="d-inline" onsubmit="return confirm('¿Eliminar @producto.Nombre?');">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                        <i class="bi bi-trash"></i>
+                        <span class="visually-hidden">Eliminar</span>
+                    </button>
+                </form>
+            </div>
         </td>
     </tr>
 }

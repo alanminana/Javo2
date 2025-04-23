@@ -1,154 +1,136 @@
 ﻿@model IEnumerable<Javo2.ViewModels.Operaciones.Ventas.VentaListViewModel>
-
-    @{
+@{
     ViewBag.Title = "Ventas Pendientes de Entrega";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    }
-
-    <h2 class="mb-4">@ViewBag.Title</h2>
-
-    <!-- Resumen de Entregas -->
-    <div class="summary-cards mb-4">
-        <div class="summary-card">
-            <h5>Total Pendientes</h5>
-            <p>@Model.Count()</p>
-        </div>
-        <div class="summary-card">
-            <h5>Productos a Entregar</h5>
-            <p>@Model.Sum(v => v.TotalProductos)</p>
-        </div>
-        <div class="summary-card">
-            <h5>Monto Total</h5>
-            <p>@Model.Sum(v => v.PrecioTotal).ToString("C")</p>
-        </div>
-    </div>
-
-    <!-- Tabla de Ventas Pendientes de Entrega -->
-    <div class="card p-3">
-        <div class="table-responsive">
-            <table class="table table-dark table-striped align-middle">
-                <thead>
-                    <tr>
-                        <th>Fecha Venta</th>
-                        <th>Factura</th>
-                        <th>Cliente</th>
-                        <th>Productos</th>
-                        <th>Total</th>
-                        <th>Dirección</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var venta in Model)
-                {
-                    <tr>
-                        <td>@venta.FechaVenta.ToString("dd/MM/yyyy")</td>
-                        <td>@venta.NumeroFactura</td>
-                        <td>@venta.NombreCliente</td>
-                        <td>@venta.TotalProductos</td>
-                        <td>@venta.PrecioTotal.ToString("C")</td>
-                        <td>@venta.DomicilioCliente</td>
-                        <td>
-                            <div class="btn-group">
-                                <a asp-action="Details" asp-route-id="@venta.VentaID"
-                                   class="btn btn-info btn-sm" title="Ver Detalles">
-                                    <i class="bi bi-eye"></i> Detalles
-                                </a>
-                                <button type="button" class="btn btn-success btn-sm marcar-entregada"
-                                        data-id="@venta.VentaID" title="Marcar como Entregada">
-                                    <i class="bi bi-check-square"></i> Marcar Entregada
-                                </button>
-                                <a asp-action="Reimprimir" asp-route-id="@venta.VentaID"
-                                   class="btn btn-secondary btn-sm" title="Imprimir Remito">
-                                    <i class="bi bi-printer"></i> Remito
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                }
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    @if (!Model.Any())
-{
-    <div class="alert alert-info mt-3">
-        <i class="bi bi-info-circle me-2"></i>
-        No hay ventas pendientes de entrega en este momento.
-    </div>
 }
 
-    <div class="mt-3">
-        <a asp-action="Index" class="btn btn-secondary">
-            <i class="bi bi-arrow-left me-1"></i> Volver al Listado
+<section class="container-fluid py-3">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">@ViewBag.Title</h1>
+        <a asp-action="Index" class="btn btn-outline-light">
+            <i class="bi bi-arrow-left me-1"></i><span>Volver</span>
         </a>
     </div>
 
-    <!-- Modal para confirmar entrega -->
-    <div class="modal fade" id="confirmarEntregaModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Confirmar Entrega</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p>¿Está seguro que desea marcar esta venta como entregada?</p>
-                    <p class="text-muted">Esta acción finalizará el proceso de venta.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-success" id="confirmarEntrega">Confirmar Entrega</button>
-                </div>
+    <!-- Resumen de Entregas -->
+    <div class="summary-cards mb-4" role="region" aria-labelledby="entregaSummary">
+        <h2 id="entregaSummary" class="visually-hidden">Resumen de entregas</h2>
+        <div class="summary-card" onclick="reload()" style="cursor:pointer;">
+            <h5>Total Pendientes</h5>
+            <p class="display-6">@Model.Count()</p>
+            <small>Clic para refrescar</small>
+        </div>
+        <div class="summary-card">
+            <h5>Productos a Entregar</h5>
+            <p class="display-6">@Model.Sum(v => v.TotalProductos)</p>
+        </div>
+        <div class="summary-card">
+            <h5>Monto Total</h5>
+            <p class="display-6">@Model.Sum(v => v.PrecioTotal).ToString("C")</p>
+        </div>
+    </div>
+
+    <!-- Tabla de Ventas Pendientes -->
+    <div class="card shadow-sm bg-dark text-light mb-4">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-dark table-striped mb-0" aria-label="Ventas pendientes de entrega">
+                    <thead class="bg-secondary text-light">
+                        <tr>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Factura</th>
+                            <th scope="col">Cliente</th>
+                            <th scope="col">Productos</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Dirección</th>
+                            <th scope="col" class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var venta in Model)
+                        {
+                            <tr>
+                                <td>@venta.FechaVenta.ToString("dd/MM/yyyy")</td>
+                                <td>@venta.NumeroFactura</td>
+                                <td>@venta.NombreCliente</td>
+                                <td>@venta.TotalProductos</td>
+                                <td>@venta.PrecioTotal.ToString("C")</td>
+                                <td>@venta.DomicilioCliente</td>
+                                <td class="text-center">
+                                    <button type="button" class="btn btn-sm btn-success mark-delivered" data-id="@venta.VentaID" aria-label="Marcar entrega de @venta.NumeroFactura">
+                                        <i class="bi bi-truck" aria-hidden="true"></i>
+                                    </button>
+                                    <a asp-action="Details" asp-route-id="@venta.VentaID" class="btn btn-sm btn-outline-info" title="Detalles">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a asp-action="Reimprimir" asp-route-id="@venta.VentaID" class="btn btn-sm btn-outline-secondary" title="Imprimir remito">
+                                        <i class="bi bi-printer"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
-    @section Scripts {
-        <script>
-    $(document).ready(function() {
-        let ventaIdSeleccionada = null;
-
-        // Marcar como entregada
-        $('.marcar-entregada').click(function() {
-            ventaIdSeleccionada = $(this).data('id');
-            $('#confirmarEntregaModal').modal('show');
-        });
-
-        // Confirmar entrega
-        $('#confirmarEntrega').click(function() {
-            if (ventaIdSeleccionada) {
-                $('#confirmarEntregaModal').modal('hide');
-
-                $.ajax({
-                    url: '@Url.Action("MarcarEntregada", "Ventas")',
-                    type: 'POST',
-                    data: {
-                        id: ventaIdSeleccionada,
-                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            toastr.success('Venta marcada como entregada exitosamente');
-                            // Eliminar la fila de la tabla
-                            $(`tr button[data-id="${ventaIdSeleccionada}"]`).closest('tr').fadeOut(400, function() {
-                                $(this).remove();
-                                // Si no quedan más ventas, recargar la página
-                                if ($('.table tbody tr').length === 0) {
-                                    location.reload();
-                                }
-                            });
-                        } else {
-                            toastr.error(response.message || 'Error al marcar la venta como entregada');
-                        }
-                    },
-                    error: function() {
-                        toastr.error('Error al procesar la solicitud');
-                    }
-                });
-            }
-        });
-    });
-        </script>
+    <!-- Mensaje si no hay ventas -->
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>No hay ventas pendientes de entrega.
+        </div>
     }
+
+    <!-- Modal Confirmar Entrega -->
+    <div class="modal fade" id="confirmDeliveryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-light">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar Entrega</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Desea marcar esta venta como entregada?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" id="confirmDeliveryBtn">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        let selectedId = null;
+        function reload() { location.reload(); }
+        document.querySelectorAll('.mark-delivered').forEach(btn => {
+            btn.addEventListener('click', () => {
+                selectedId = btn.dataset.id;
+                var modal = new bootstrap.Modal(document.getElementById('confirmDeliveryModal'));
+                modal.show();
+            });
+        });
+        document.getElementById('confirmDeliveryBtn').addEventListener('click', () => {
+            fetch('@Url.Action("MarcarEntregada", "Ventas")', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify({ id: selectedId })
+            }).then(res => res.json())
+              .then(resp => {
+                  if (resp.success) {
+                      location.reload();
+                  } else {
+                      alert(resp.message || 'Error al procesar entrega');
+                  }
+              }).catch(() => alert('Error de red'));
+        });
+    </script>
+}

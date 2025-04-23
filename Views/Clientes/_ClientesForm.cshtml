@@ -1,107 +1,106 @@
-﻿<!-- Views/Clientes/_ClientesForm.cshtml -->
-@model Javo2.ViewModels.Operaciones.Clientes.ClientesViewModel
+﻿@model Javo2.ViewModels.Operaciones.Clientes.ClientesViewModel
 
 <div>
     <!-- Datos Personales -->
     <fieldset class="mb-4">
-        <legend>Datos Personales</legend>
+        <legend class="fs-5">Datos Personales</legend>
         <div class="row g-3">
             <div class="col-md-6">
-                <label asp-for="Nombre" class="form-label">Nombre</label>
+                <label asp-for="Nombre" class="form-label"></label>
                 <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
+                <span asp-validation-for="Nombre" class="invalid-feedback"></span>
             </div>
             <div class="col-md-6">
-                <label asp-for="Apellido" class="form-label">Apellido</label>
+                <label asp-for="Apellido" class="form-label"></label>
                 <input asp-for="Apellido" class="form-control" />
-                <span asp-validation-for="Apellido" class="text-danger"></span>
+                <span asp-validation-for="Apellido" class="invalid-feedback"></span>
             </div>
         </div>
-        <div class="row g-3 mt-2">
+        <div class="row g-3">
             <div class="col-md-4">
-                <label asp-for="DNI" class="form-label">DNI</label>
+                <label asp-for="DNI" class="form-label"></label>
                 <input asp-for="DNI" class="form-control" />
-                <span asp-validation-for="DNI" class="text-danger"></span>
+                <span asp-validation-for="DNI" class="invalid-feedback"></span>
             </div>
             <div class="col-md-4">
-                <label asp-for="Email" class="form-label">Email</label>
+                <label asp-for="Email" class="form-label"></label>
                 <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <span asp-validation-for="Email" class="invalid-feedback"></span>
             </div>
             <div class="col-md-4">
-                <label asp-for="Telefono" class="form-label">Teléfono</label>
+                <label asp-for="Telefono" class="form-label"></label>
                 <input asp-for="Telefono" class="form-control" />
-                <span asp-validation-for="Telefono" class="text-danger"></span>
+                <span asp-validation-for="Telefono" class="invalid-feedback"></span>
             </div>
         </div>
-        <div class="row g-3 mt-2">
+        <div class="row g-3">
             <div class="col-md-4">
-                <label asp-for="Celular" class="form-label">Celular</label>
+                <label asp-for="Celular" class="form-label"></label>
                 <input asp-for="Celular" class="form-control" />
-                <span asp-validation-for="Celular" class="text-danger"></span>
+                <span asp-validation-for="Celular" class="invalid-feedback"></span>
             </div>
             <div class="col-md-4">
-                <label asp-for="TelefonoTrabajo" class="form-label">Teléfono de Trabajo</label>
+                <label asp-for="TelefonoTrabajo" class="form-label"></label>
                 <input asp-for="TelefonoTrabajo" class="form-control" />
-                <span asp-validation-for="TelefonoTrabajo" class="text-danger"></span>
+                <span asp-validation-for="TelefonoTrabajo" class="invalid-feedback"></span>
             </div>
-            <div class="col-md-4">
-                <label asp-for="Verificar" class="form-label">Verificar</label>
-                <div class="form-check" style="margin-top: 8px">
-                    <input asp-for="Verificar" type="checkbox" class="form-check-input" />
-                    <span asp-validation-for="Verificar" class="text-danger"></span>
+            <div class="col-md-4 d-flex align-items-center">
+                <div class="form-check mt-2">
+                    <input asp-for="Verificar" class="form-check-input" />
+                    <label asp-for="Verificar" class="form-check-label"></label>
                 </div>
+                <span asp-validation-for="Verificar" class="invalid-feedback d-block"></span>
             </div>
         </div>
     </fieldset>
 
     <!-- Datos Domiciliarios -->
     <fieldset class="mb-4">
-        <legend>Datos Domiciliarios</legend>
+        <legend class="fs-5">Datos Domiciliarios</legend>
         <div class="row g-3">
             <div class="col-md-6">
-                <label asp-for="Calle" class="form-label">Calle</label>
+                <label asp-for="Calle" class="form-label"></label>
                 <input asp-for="Calle" class="form-control" />
-                <span asp-validation-for="Calle" class="text-danger"></span>
+                <span asp-validation-for="Calle" class="invalid-feedback"></span>
             </div>
             <div class="col-md-6">
-                <label asp-for="NumeroCalle" class="form-label">Número de Calle</label>
+                <label asp-for="NumeroCalle" class="form-label"></label>
                 <input asp-for="NumeroCalle" class="form-control" />
-                <span asp-validation-for="NumeroCalle" class="text-danger"></span>
+                <span asp-validation-for="NumeroCalle" class="invalid-feedback"></span>
             </div>
         </div>
-        <div class="row g-3 mt-2">
+        <div class="row g-3">
             <div class="col-md-4">
-                <label asp-for="ProvinciaID" class="form-label">Provincia</label>
+                <label asp-for="ProvinciaID" class="form-label"></label>
                 <select asp-for="ProvinciaID" asp-items="Model.Provincias" class="form-select" id="ProvinciaID">
                     <option value="">-- Seleccione una provincia --</option>
                 </select>
-                <span asp-validation-for="ProvinciaID" class="text-danger"></span>
+                <span asp-validation-for="ProvinciaID" class="invalid-feedback"></span>
             </div>
             <div class="col-md-4">
-                <label asp-for="CiudadID" class="form-label">Ciudad</label>
+                <label asp-for="CiudadID" class="form-label"></label>
                 <select asp-for="CiudadID" asp-items="Model.Ciudades" class="form-select" id="CiudadID">
                     <option value="">-- Seleccione una ciudad --</option>
                 </select>
-                <span asp-validation-for="CiudadID" class="text-danger"></span>
+                <span asp-validation-for="CiudadID" class="invalid-feedback"></span>
             </div>
             <div class="col-md-4">
-                <label asp-for="EstadoComentario" class="form-label">Estado Comentario</label>
+                <label asp-for="EstadoComentario" class="form-label"></label>
                 <input asp-for="EstadoComentario" class="form-control" />
-                <span asp-validation-for="EstadoComentario" class="text-danger"></span>
+                <span asp-validation-for="EstadoComentario" class="invalid-feedback"></span>
             </div>
         </div>
-        <div class="row g-3 mt-2">
+        <div class="row g-3">
             <div class="col-md-4">
-                <label asp-for="Localidad" class="form-label">Localidad</label>
+                <label asp-for="Localidad" class="form-label"></label>
                 <input asp-for="Localidad" class="form-control" />
             </div>
             <div class="col-md-4">
-                <label asp-for="CodigoPostal" class="form-label">Código Postal</label>
+                <label asp-for="CodigoPostal" class="form-label"></label>
                 <input asp-for="CodigoPostal" class="form-control" />
             </div>
             <div class="col-md-4">
-                <label asp-for="DescripcionDomicilio" class="form-label">Descripción Domicilio</label>
+                <label asp-for="DescripcionDomicilio" class="form-label"></label>
                 <input asp-for="DescripcionDomicilio" class="form-control" />
             </div>
         </div>

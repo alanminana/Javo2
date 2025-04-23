@@ -1,125 +1,107 @@
-﻿@model CatalogoIndexViewModel
+﻿@using Javo2.ViewModels.Operaciones.Catalogo
+@model CatalogoIndexViewModel
 @{
     ViewBag.Title = "Catálogo";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2 class="mb-4">@ViewBag.Title</h2>
+<section class="container-fluid py-3">
+    <!-- Encabezado del Catálogo -->
+    <div class="d-flex align-items-center mb-4">
+        <h1 class="h2 mb-0">@ViewBag.Title</h1>
+    </div>
 
-<!-- Tarjetas de Resumen -->
-<div class="summary-cards mb-4">
-    <div class="summary-card">
-        <h5>Total de Rubros</h5>
-        <p>@Model.Rubros.Count()</p>
-    </div>
-    <div class="summary-card">
-        <h5>Total de Marcas</h5>
-        <p>@Model.Marcas.Count()</p>
-    </div>
-    <div class="summary-card">
-        <h5>Total de SubRubros</h5>
-        <p>@Model.Rubros.SelectMany(r => r.SubRubros).Count()</p>
-    </div>
-</div>
-
-<!-- Formulario de Filtrado -->
-<div class="card mb-4 p-4">
-    <form id="filterForm" class="row g-3">
-        <div class="col-md-3">
-            <label for="filterField" class="form-label">Campo de Filtro</label>
-            <select class="form-select" id="filterField">
-                <option value="nombre">Nombre</option>
-            </select>
+    <!-- Resumen del Catálogo -->
+    <div class="summary-cards mb-4" role="region" aria-labelledby="catalogSummary">
+        <h2 id="catalogSummary" class="visually-hidden">Resumen del Catálogo</h2>
+        <div class="summary-card">
+            <h5>Total de Rubros</h5>
+            <p class="display-6">@Model.Rubros.Count()</p>
         </div>
-        <div class="col-md-3">
-            <label for="filterValue" class="form-label">Valor</label>
-            <input type="text" class="form-control" id="filterValue" placeholder="Ingrese valor del filtro" />
+        <div class="summary-card">
+            <h5>Total de Marcas</h5>
+            <p class="display-6">@Model.Marcas.Count()</p>
         </div>
-        <div class="col-md-6 align-self-end">
-            <button type="button" class="btn btn-primary me-2" id="applyFilter">
-                <i class="bi bi-filter me-2"></i> Aplicar Filtro
-            </button>
-            <button type="button" class="btn btn-secondary" id="clearFilter">
-                <i class="bi bi-x-circle me-2"></i> Limpiar Filtro
-            </button>
+        <div class="summary-card">
+            <h5>Total de SubRubros</h5>
+            <p class="display-6">@Model.Rubros.SelectMany(r => r.SubRubros).Count()</p>
         </div>
-    </form>
-</div>
-
-<!-- Tablas de Datos -->
-<div class="card p-3">
-    <h3 class="card-title mb-3">Rubros y SubRubros</h3>
-    <div class="table-responsive">
-        <table class="table table-dark table-striped">
-            <thead>
-                <tr>
-                    <th>Rubro</th>
-                    <th>SubRubros</th>
-                    <th>Total Stock</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="rubrosTableBody">
-                @await Html.PartialAsync("_RubrosTable", Model.Rubros)
-            </tbody>
-        </table>
     </div>
 
-    <hr class="my-4" />
-
-    <h3 class="card-title mb-3">Marcas</h3>
-    <div class="table-responsive">
-        <table class="table table-dark table-striped">
-            <thead>
-                <tr>
-                    <th>Marca</th>
-                    <th>Total Stock</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="marcasTableBody">
-                @await Html.PartialAsync("_MarcasTable", Model.Marcas)
-            </tbody>
-        </table>
+    <!-- Rubros y SubRubros -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-light d-flex justify-content-between align-items-center">
+            <h2 class="h5 mb-0">Rubros y SubRubros</h2>
+            <a asp-action="CreateRubro" class="btn btn-success btn-sm">
+                <i class="bi bi-plus-circle me-1"></i><span>Agregar Rubro</span>
+            </a>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-dark mb-0" aria-label="Listado de Rubros y SubRubros">
+                    <thead>
+                        <tr>
+                            <th scope="col">Rubro</th>
+                            <th scope="col">SubRubros</th>
+                            <th scope="col">Total Stock</th>
+                            <th scope="col" class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @await Html.PartialAsync("_RubrosTable", Model.Rubros)
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-</div>
 
-<!-- Botones para Agregar -->
-<div class="mt-3">
-    <a asp-action="CreateRubro" class="btn btn-success me-2">
-        <i class="bi bi-plus-circle me-2"></i> Agregar Rubro
-    </a>
-    <a asp-action="CreateMarca" class="btn btn-success">
-        <i class="bi bi-plus-circle me-2"></i> Agregar Marca
-    </a>
-</div>
+    <!-- Marcas -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-light d-flex justify-content-between align-items-center">
+            <h2 class="h5 mb-0">Marcas</h2>
+            <a asp-action="CreateMarca" class="btn btn-success btn-sm">
+                <i class="bi bi-plus-circle me-1"></i><span>Agregar Marca</span>
+            </a>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-dark mb-0" aria-label="Listado de Marcas">
+                    <thead>
+                        <tr>
+                            <th scope="col">Marca</th>
+                            <th scope="col">Total Stock</th>
+                            <th scope="col" class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @await Html.PartialAsync("_MarcasTable", Model.Marcas)
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
 
 @section Scripts {
-    <script>
-        $(document).ready(function () {
-            $('#applyFilter').click(function () {
-                var field = $('#filterField').val();
-                var value = $('#filterValue').val();
-                var filters = { Nombre: value };
-
-                $.ajax({
-                    url: '@Url.Action("FilterAsync", "Catalogo")',
-                    type: 'GET',
-                    data: filters,
-                    success: function (data) {
+    <script defer>
+        (function($) {
+            $(function() {
+                $('#applyFilter').on('click', function() {
+                    var term = $('#filterValue').val();
+                    $.get('@Url.Action("FilterAsync", "Catalogo")', { term: term })
+                     .done(function(data) {
                         $('#rubrosTableBody').html(data.rubrosPartial);
                         $('#marcasTableBody').html(data.marcasPartial);
-                    },
-                    error: function () {
-                        alert("Error al aplicar los filtros.");
-                    }
+                     })
+                     .fail(function() {
+                        alert('Error al aplicar filtro');
+                     });
+                });
+                $('#clearFilter').on('click', function() {
+                    $('#filterValue').val('').trigger('input');
+                    $('#applyFilter').click();
                 });
             });
-
-            $('#clearFilter').click(function () {
-                $('#filterValue').val('');
-                $('#applyFilter').click();
-            });
-        });
+        })(jQuery);
     </script>
 }

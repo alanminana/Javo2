@@ -1,53 +1,87 @@
-﻿// Archivo: Views/Proveedores/_ProveedoresForm.cshtml
-@model Javo2.ViewModels.Operaciones.Proveedores.ProveedoresViewModel
-
-@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+﻿@model Javo2.ViewModels.Operaciones.Proveedores.ProveedoresViewModel
 
 <div class="row">
     <div class="col-md-6">
         <div class="mb-3">
-            <label asp-for="Nombre" class="form-label"></label>
-            <input asp-for="Nombre" class="form-control" />
-            <span asp-validation-for="Nombre" class="text-danger"></span>
+            <label asp-for="Nombre" class="form-label text-light"></label>
+            <input asp-for="Nombre" class="form-control bg-secondary text-light" />
+            <span asp-validation-for="Nombre" class="invalid-feedback d-block"></span>
         </div>
         <div class="mb-3">
-            <label asp-for="Direccion" class="form-label"></label>
-            <input asp-for="Direccion" class="form-control" />
-            <span asp-validation-for="Direccion" class="text-danger"></span>
+            <label asp-for="Direccion" class="form-label text-light"></label>
+            <input asp-for="Direccion" class="form-control bg-secondary text-light" />
+            <span asp-validation-for="Direccion" class="invalid-feedback d-block"></span>
         </div>
         <div class="mb-3">
-            <label asp-for="Telefono" class="form-label"></label>
-            <input asp-for="Telefono" class="form-control" />
-            <span asp-validation-for="Telefono" class="text-danger"></span>
+            <label asp-for="Telefono" class="form-label text-light"></label>
+            <input asp-for="Telefono" class="form-control bg-secondary text-light" />
+            <span asp-validation-for="Telefono" class="invalid-feedback d-block"></span>
         </div>
         <div class="mb-3">
-            <label asp-for="Email" class="form-label"></label>
-            <input asp-for="Email" class="form-control" />
-            <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="CondicionesPago" class="form-label"></label>
-            <input asp-for="CondicionesPago" class="form-control" />
-            <span asp-validation-for="CondicionesPago" class="text-danger"></span>
+            <label asp-for="Email" class="form-label text-light"></label>
+            <input asp-for="Email" class="form-control bg-secondary text-light" />
+            <span asp-validation-for="Email" class="invalid-feedback d-block"></span>
         </div>
     </div>
     <div class="col-md-6">
         <div class="mb-3">
-            <label>Productos Asignados</label>
-            <input type="text" id="productSearch" class="form-control" placeholder="Buscar productos..." autocomplete="off" />
-            <ul id="assignedProducts" class="list-group mt-2">
-                @for (int i = 0; i < Model.ProductosAsignados.Count; i++)
-                {
-                    var productID = Model.ProductosAsignados[i];
-                    var productName = Model.ProductosAsignadosNombres.Count > i ? Model.ProductosAsignadosNombres[i] : "Nombre no disponible";
-
-                <li class="list-group-item d-flex justify-content-between align-items-center" data-id="@productID">
-                    @productName
-                    <button type="button" class="btn btn-link btn-sm remove-product">Eliminar</button>
-                    <input type="hidden" name="ProductosAsignados" value="@productID" />
-                </li>
-                }
-            </ul>
+            <label for="productSearch" class="form-label text-light">Productos Asignados</label>
+            <input type="text" id="productSearch" class="form-control bg-secondary text-light" placeholder="Buscar productos..." autocomplete="off" />
         </div>
+        <ul id="assignedProducts" class="list-group list-group-flush">
+            @for (int i = 0; i < Model.ProductosAsignados.Count; i++)
+            {
+                var pid = Model.ProductosAsignados[i];
+                var pname = Model.ProductosAsignadosNombres.ElementAtOrDefault(i) ?? "";
+                var stock = Model.ProductosAsignadosStocks.ElementAtOrDefault(i);
+                <li class="list-group-item d-flex justify-content-between align-items-center bg-secondary text-light" data-id="@pid">
+                    @pname (Stock: @stock)
+                    <button type="button" class="btn btn-link btn-sm remove-product" title="Eliminar">
+                        <i class="bi bi-x-circle" aria-hidden="true"></i>
+                        <span class="visually-hidden">Eliminar</span>
+                    </button>
+                    <input type="hidden" name="ProductosAsignados" value="@pid" />
+                </li>
+            }
+        </ul>
     </div>
 </div>
+
+@section Scripts {
+    <script defer src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script defer>
+        (function($) {
+            $(function() {
+                var assigned = [];
+                $('#assignedProducts li').each(function() {
+                    assigned.push($(this).data('id'));
+                });
+                $('#productSearch').autocomplete({
+                    source: function(req, resp) {
+                        $.getJSON('@Url.Action("SearchProducts", "Proveedores")', { term: req.term })
+                         .done(resp).fail(function() { alert('Error'); });
+                    },
+                    select: function(e, ui) {
+                        e.preventDefault();
+                        var id = ui.item.value, name=ui.item.label;
+                        if (!assigned.includes(id)) {
+                            assigned.push(id);
+                            $('#assignedProducts').append(
+                                `<li class="list-group-item d-flex justify-content-between align-items-center" data-id="${id}">`+
+                                `${name} <button type="button" class="btn btn-link btn-sm remove-product">Eliminar</button>`+
+                                `<input type="hidden" name="ProductosAsignados" value="${id}" />`+
+                                `</li>`);
+                        }
+                        $(this).val(''); return false;
+                    }
+                });
+                $('#assignedProducts').on('click', '.remove-product', function() {
+                    var li = $(this).closest('li'), id=li.data('id');
+                    assigned = assigned.filter(x=>x!=id); li.remove();
+                });
+            });
+        })(jQuery);
+    </script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+}

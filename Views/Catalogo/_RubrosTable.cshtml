@@ -1,35 +1,54 @@
 ﻿@model IEnumerable<Javo2.ViewModels.Operaciones.Catalogo.RubroViewModel>
-
-    @foreach (var rubro in Model)
+@foreach (var rubro in Model)
 {
     <tr>
-        <td>@rubro.Nombre</td>
+        <td scope="row">@rubro.Nombre</td>
         <td>
             @if (rubro.SubRubros != null && rubro.SubRubros.Any())
             {
-            <ul class="list-unstyled mb-0">
-                @foreach (var subRubro in rubro.SubRubros)
+                <ul class="list-unstyled mb-0">
+                    @foreach (var sub in rubro.SubRubros)
                     {
-                <li>@subRubro.Nombre</li>
+                        <li>@sub.Nombre</li>
                     }
-            </ul>
+                </ul>
             }
             else
             {
-            <span class="text-muted">Sin SubRubros</span>
+                <span class="text-muted">Sin SubRubros</span>
             }
         </td>
         <td>@rubro.TotalStock</td>
-        <td>
-            <a asp-action="EditRubro" asp-route-id="@rubro.ID" class="btn btn-sm btn-warning me-1">
-                <i class="bi bi-pencil-square"></i>
-            </a>
-            <a asp-action="EditSubRubros" asp-route-rubroId="@rubro.ID" class="btn btn-sm btn-secondary me-1">
-                <i class="bi bi-list"></i> SubRubros
-            </a>
-            <a asp-action="DeleteRubro" asp-route-id="@rubro.ID" class="btn btn-sm btn-danger">
-                <i class="bi bi-trash"></i>
-            </a>
+        <td class="text-center">
+            <div class="btn-group" role="group" aria-label="Acciones para @rubro.Nombre">
+                <a asp-action="EditRubro"
+                   asp-route-id="@rubro.ID"
+                   class="btn btn-sm btn-outline-warning"
+                   title="Editar rubro @rubro.Nombre">
+                    <i class="bi bi-pencil-square" aria-hidden="true"></i>
+                    <span class="visually-hidden">Editar</span>
+                </a>
+                <a asp-action="EditSubRubros"
+                   asp-route-rubroId="@rubro.ID"
+                   class="btn btn-sm btn-outline-info"
+                   title="Gestionar subrubros de @rubro.Nombre">
+                    <i class="bi bi-list" aria-hidden="true"></i>
+                    <span class="visually-hidden">SubRubros</span>
+                </a>
+                <form asp-action="DeleteRubro"
+                      asp-route-id="@rubro.ID"
+                      method="post"
+                      class="d-inline"
+                      onsubmit="return confirm('¿Seguro que deseas eliminar el rubro @rubro.Nombre?');">
+                    @Html.AntiForgeryToken()
+                    <button type="submit"
+                            class="btn btn-sm btn-outline-danger"
+                            title="Eliminar rubro @rubro.Nombre">
+                        <i class="bi bi-trash" aria-hidden="true"></i>
+                        <span class="visually-hidden">Eliminar</span>
+                    </button>
+                </form>
+            </div>
         </td>
     </tr>
 }

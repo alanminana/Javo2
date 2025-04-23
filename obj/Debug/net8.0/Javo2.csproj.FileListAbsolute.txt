@@ -94,3 +94,5 @@ D:\github\Javo2\bin\Debug\net8.0\Data\catalogo.json
 D:\github\Javo2\bin\Debug\net8.0\Data\productos.json
 D:\github\Javo2\bin\Debug\net8.0\Data\Backups\clientes_backup_20250422164617.json
 D:\github\Javo2\bin\Debug\net8.0\Data\ventas.json
+D:\github\Javo2\bin\Debug\net8.0\Data\Backups\clientes_backup_20250423150741.json
+D:\github\Javo2\bin\Debug\net8.0\Data\proveedores.json

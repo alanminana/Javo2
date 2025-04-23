@@ -1,60 +1,113 @@
 ﻿@using Javo2.ViewModels.Operaciones.Catalogo
 @model CatalogoIndexViewModel
+@{
+    ViewBag.Title = "Catálogo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-<div>
-    <h3>Rubros y SubRubros</h3>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Rubro</th>
-                <th>SubRubros</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var rubro in Model.Rubros)
-            {
-                <tr>
-                    <td>@rubro.Nombre</td>
-                    <td>
-                        <ul>
-                            @foreach (var subRubro in rubro.SubRubros)
-                            {
-                                <li>@subRubro.Nombre</li>
-                            }
-                        </ul>
-                    </td>
-                    <td>
-                        <a asp-action="EditRubro" asp-route-id="@rubro.ID" class="btn btn-sm btn-warning">Editar Rubro</a>
-                        <a asp-action="EditSubRubros" asp-route-rubroId="@rubro.ID" class="btn btn-sm btn-secondary">Editar SubRubros</a>
-                        <a asp-action="DeleteRubro" asp-route-id="@rubro.ID" class="btn btn-sm btn-danger">Eliminar Rubro</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<section class="container-fluid py-3">
+    <!-- Encabezado del Catálogo -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">@ViewBag.Title</h1>
+        <div>
+            <a asp-action="CreateRubro" class="btn btn-success me-2">
+                <i class="bi bi-plus-circle me-1" aria-hidden="true"></i><span>Agregar Rubro</span>
+            </a>
+            <a asp-action="CreateMarca" class="btn btn-success">
+                <i class="bi bi-plus-circle me-1" aria-hidden="true"></i><span>Agregar Marca</span>
+            </a>
+        </div>
+    </div>
 
-    <h3>Marcas</h3>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Marca</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var marca in Model.Marcas)
-            {
-                <tr>
-                    <td>@marca.Nombre</td>
-                    <td>
-                        <a asp-action="EditMarca" asp-route-id="@marca.ID" class="btn btn-sm btn-warning">Editar</a>
-                        <a asp-action="DeleteMarca" asp-route-id="@marca.ID" class="btn btn-sm btn-danger">Eliminar</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+    <!-- Resumen del Catálogo -->
+    <div class="summary-cards mb-4" role="region" aria-labelledby="catalogSummary">
+        <h2 id="catalogSummary" class="visually-hidden">Resumen del Catálogo</h2>
+        <div class="summary-card">
+            <h5>Total de Rubros</h5>
+            <p class="display-6">@Model.Rubros.Count()</p>
+        </div>
+        <div class="summary-card">
+            <h5>Total de Marcas</h5>
+            <p class="display-6">@Model.Marcas.Count()</p>
+        </div>
+        <div class="summary-card">
+            <h5>Total de SubRubros</h5>
+            <p class="display-6">@Model.Rubros.SelectMany(r => r.SubRubros).Count()</p>
+        </div>
+    </div>
 
+    <!-- Tablas de Rubros y Marcas -->
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-light">
+                    <h2 class="h5 mb-0">Rubros y SubRubros</h2>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-dark mb-0" aria-label="Listado de Rubros y SubRubros">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Rubro</th>
+                                    <th scope="col">SubRubros</th>
+                                    <th scope="col">Total Stock</th>
+                                    <th scope="col" class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @await Html.PartialAsync("_RubrosTable", Model.Rubros)
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-light">
+                    <h2 class="h5 mb-0">Marcas</h2>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-dark mb-0" aria-label="Listado de Marcas">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Marca</th>
+                                    <th scope="col">Total Stock</th>
+                                    <th scope="col" class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @await Html.PartialAsync("_MarcasTable", Model.Marcas)
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
+@section Scripts {
+    <script defer>
+        (function($) {
+            $(function() {
+                $('#applyFilter').on('click', function() {
+                    var term = $('#filterValue').val();
+                    $.get('@Url.Action("FilterAsync", "Catalogo")', { term: term })
+                     .done(function(data) {
+                        $('#rubrosTableBody').html(data.rubrosPartial);
+                        $('#marcasTableBody').html(data.marcasPartial);
+                     })
+                     .fail(function() {
+                        alert('Error al aplicar filtro');
+                     });
+                });
+                $('#clearFilter').on('click', function() {
+                    $('#filterValue').val('').trigger('input');
+                    $('#applyFilter').click();
+                });
+            });
+        })(jQuery);
+    </script>
+}

@@ -1,122 +1,111 @@
-﻿<!DOCTYPE html>
+﻿@* Layout.cshtml optimizado y librero *@
+@{
+    var menuItems = new[] {
+        new { Ctrl = "Clientes", Icon = "people-fill", Text = "Clientes" },
+        new { Ctrl = "Ventas", Icon = "cart-fill", Text = "Ventas" },
+        new { Ctrl = "Productos", Icon = "box-seam", Text = "Productos" },
+        new { Ctrl = "Catalogo", Icon = "bookmark-fill", Text = "Catálogo" },
+        new { Ctrl = "Proveedores", Icon = "truck-flatbed", Text = "Proveedores" },
+        new { Ctrl = "Promociones", Icon = "tag-fill", Text = "Promociones" },
+        new { Ctrl = "Auditoria", Icon = "journal-check", Text = "Auditoría" },
+        new { Ctrl = "Reportes", Icon = "bar-chart-fill", Text = "Reportes" }
+    };
+}
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@ViewBag.Title - The BuryCode</title>
 
-    <!-- Bootstrap CSS (v5.3.3) -->
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-          crossorigin="anonymous" />
-
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
     <!-- Bootstrap Icons -->
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
-
-    <!-- CSS Personalizado (tema oscuro) -->
-    <link rel="stylesheet" href="~/css/site.css" />
-
-    <!-- jQuery (v3.7.1) -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
-    <!-- Chart.js (v4.4.0) -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Custom CSS -->
+    <link href="~/css/site.css" rel="stylesheet" asp-append-version="true" />
 
     @RenderSection("Styles", required: false)
 </head>
-<body class="bg-dark text-white">
+<body class="bg-dark text-white d-flex flex-column min-vh-100">
 
-    <!-- Barra Lateral (Sidebar) con posición fija -->
-    <nav class="sidebar bg-dark text-white p-3"
-         style="width: 250px; position: fixed; top: 0; bottom: 0; z-index: 100;">
-        <a class="d-flex align-items-center mb-3 text-decoration-none text-white"
-           style="font-size:1.2rem;"
-           asp-controller="Home" asp-action="Index">
-            <span>The Bury<span>Code.</span></span>
-        </a>
-        <hr class="text-secondary" />
-        <ul class="nav nav-pills flex-column mb-auto">
-            <li class="nav-item">
-                <a asp-controller="Clientes" asp-action="Index"
-                   class="nav-link text-white @(ViewContext.RouteData.Values["controller"]?.ToString() == "Clientes" ? "active" : "")">
-                    <i class="bi bi-people-fill me-2"></i> Clientes
-                </a>
-            </li>
-            <li>
-                <a asp-controller="Ventas" asp-action="Index"
-                   class="nav-link text-white @(ViewContext.RouteData.Values["controller"]?.ToString() == "Ventas" ? "active" : "")">
-                    <i class="bi bi-cart-fill me-2"></i> Ventas
-                </a>
-            </li>
-            <li>
-                <a asp-controller="Productos" asp-action="Index"
-                   class="nav-link text-white @(ViewContext.RouteData.Values["controller"]?.ToString() == "Productos" ? "active" : "")">
-                    <i class="bi bi-box-seam me-2"></i> Productos
-                </a>
-            </li>
-            <li>
-                <a asp-controller="Catalogo" asp-action="Index"
-                   class="nav-link text-white @(ViewContext.RouteData.Values["controller"]?.ToString() == "Catalogo" ? "active" : "")">
-                    <i class="bi bi-bookmark-fill me-2"></i> Catálogo
-                </a>
-            </li>
-            <li>
-                <a asp-controller="Proveedores" asp-action="Index"
-                   class="nav-link text-white @(ViewContext.RouteData.Values["controller"]?.ToString() == "Proveedores" ? "active" : "")">
-                    <i class="bi bi-truck-flatbed me-2"></i> Proveedores
-                </a>
-            </li>
-            <li>
-                <a asp-controller="Promociones" asp-action="Index"
-                   class="nav-link text-white @(ViewContext.RouteData.Values["controller"]?.ToString() == "Promociones" ? "active" : "")">
-                    <i class="bi bi-tag-fill me-2"></i> Promociones
-                </a>
-            </li>
-            <li>
-                <a asp-controller="Auditoria" asp-action="Index"
-                   class="nav-link text-white @(ViewContext.RouteData.Values["controller"]?.ToString() == "Auditoria" ? "active" : "")">
-                    <i class="bi bi-journal-check me-2"></i> Auditoria
-                </a>
-            </li>
-            <li>
-                <a asp-controller="Reportes" asp-action="Index"
-                   class="nav-link text-white @(ViewContext.RouteData.Values["controller"]?.ToString() == "Reportes" ? "active" : "")">
-                    <i class="bi bi-bar-chart-fill me-2"></i> Reportes
-                </a>
-            </li>
-        </ul>
-        <hr class="text-secondary" />
-        <div>
-            <a asp-controller="Account" asp-action="Logout"
-               class="text-decoration-none text-white">
-                <i class="bi bi-box-arrow-right me-2"></i>
-                <strong>Salir</strong>
-            </a>
+    <!-- Mobile Navbar -->
+    <nav class="navbar navbar-dark bg-dark d-md-none">
+        <div class="container-fluid">
+            <button class="btn btn-outline-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-label="Abrir Menú">
+                <i class="bi bi-list"></i>
+            </button>
+            <a class="navbar-brand ms-2" asp-controller="Home" asp-action="Index">The BuryCode.</a>
         </div>
     </nav>
 
-    <!-- Contenido Principal (desplazado a la derecha con margin-left) -->
-    <div class="content"
-         style="margin-left: 250px; min-height: 100vh;">
-        <div class="container-fluid py-3">
-            <main role="main" class="pb-3">
+    <!-- Offcanvas Mobile Menu -->
+    <div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="mobileMenu" aria-labelledby="mobileMenuLabel">
+        <div class="offcanvas-header">
+            <h5 id="mobileMenuLabel" class="offcanvas-title">Menú</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="nav nav-pills flex-column mb-4">
+                @foreach (var item in menuItems)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-white @(ViewContext.RouteData.Values["controller"]?.ToString()==item.Ctrl?"active":"")" asp-controller="@item.Ctrl" asp-action="Index">
+                            <i class="bi bi-@item.Icon me-2"></i>@item.Text
+                        </a>
+                    </li>
+                }
+            </ul>
+            <hr />
+            <a class="d-flex align-items-center text-white text-decoration-none mt-auto" asp-controller="Account" asp-action="Logout">
+                <i class="bi bi-box-arrow-right me-2"></i><strong>Salir</strong>
+            </a>
+        </div>
+    </div>
+
+    <div class="container-fluid flex-grow-1">
+        <div class="row">
+            <!-- Sidebar Desktop -->
+            <aside class="col-12 col-md-3 col-xl-2 d-none d-md-block sidebar bg-dark text-white pt-3">
+                <a class="d-flex align-items-center mb-3 text-white text-decoration-none fs-5" asp-controller="Home" asp-action="Index">
+                    The Bury<span class="text-primary">Code.</span>
+                </a>
+                <hr class="border-secondary" />
+                <ul class="nav nav-pills flex-column mb-auto">
+                    @foreach (var item in menuItems)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-white @(ViewContext.RouteData.Values["controller"]?.ToString()==item.Ctrl?"active":"")" asp-controller="@item.Ctrl" asp-action="Index">
+                                <i class="bi bi-@item.Icon me-2"></i>@item.Text
+                            </a>
+                        </li>
+                    }
+                </ul>
+                <hr class="border-secondary" />
+                <a class="d-flex align-items-center text-white text-decoration-none mt-auto mb-3" asp-controller="Account" asp-action="Logout">
+                    <i class="bi bi-box-arrow-right me-2"></i><strong>Salir</strong>
+                </a>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="col-12 col-md-9 col-xl-10 py-3">
                 @RenderBody()
             </main>
         </div>
-        <footer class="footer border-top text-muted bg-dark py-3">
-            <div class="container">
-                &copy; @DateTime.Now.Year - Javo2 - <a asp-controller="Home" asp-action="Privacy" class="text-white">Privacidad</a>
-            </div>
-        </footer>
     </div>
 
-    <!-- Bootstrap Bundle (Popper + Bootstrap JS) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-            crossorigin="anonymous"></script>
+    <!-- Footer -->
+    <footer class="mt-auto py-3 bg-dark text-muted">
+        <div class="container-fluid">
+            &copy; @DateTime.Now.Year - Javo2 - <a asp-controller="Home" asp-action="Privacy" class="text-white text-decoration-none">Privacidad</a>
+        </div>
+    </footer>
 
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous" defer></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha384-..." crossorigin="anonymous" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-..." crossorigin="anonymous" defer></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>
