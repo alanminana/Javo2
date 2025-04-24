@@ -1,4 +1,4 @@
-﻿// Archivo: ViewModels/Operaciones/Productos/ProductosViewModel.cs
+﻿// ViewModels/Operaciones/Productos/ProductosViewModel.cs
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -77,6 +77,12 @@ namespace Javo2.ViewModels.Operaciones.Productos
         public IEnumerable<SelectListItem> Marcas { get; set; }
 
         [Display(Name = "Stock Disponible")]
+        [Range(0, int.MaxValue, ErrorMessage = "El stock debe ser un valor positivo")]
         public int CantidadDisponible { get; set; }
+
+        // Nuevo campo para editar el stock directamente
+        [Display(Name = "Stock Inicial")]
+        [Range(0, int.MaxValue, ErrorMessage = "El stock inicial debe ser un valor positivo")]
+        public int StockInicial { get; set; }
     }
 }

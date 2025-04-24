@@ -74,6 +74,40 @@
                             </div>
                         </fieldset>
 
+                        <!-- Stock -->
+                        <fieldset class="mb-4">
+                            <legend class="text-light">Inventario</legend>
+                            <div class="row g-3">
+                                @if (isEdit)
+                                {
+                                    <div class="col-md-6">
+                                        <label asp-for="CantidadDisponible" class="form-label text-light">Stock Actual</label>
+                                        <input asp-for="CantidadDisponible" readonly class="form-control bg-secondary text-light" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label asp-for="StockInicial" class="form-label text-light">Ajustar Stock</label>
+                                        <div class="input-group">
+                                            <input asp-for="StockInicial" type="number" class="form-control bg-secondary text-light" placeholder="0" />
+                                            <span class="input-group-text bg-secondary text-light">unidades</span>
+                                        </div>
+                                        <small class="form-text text-muted">Ingrese valor positivo para agregar, negativo para restar</small>
+                                        <span asp-validation-for="StockInicial" class="invalid-feedback d-block"></span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-md-6">
+                                        <label asp-for="StockInicial" class="form-label text-light">Stock Inicial</label>
+                                        <div class="input-group">
+                                            <input asp-for="StockInicial" type="number" class="form-control bg-secondary text-light" placeholder="0" />
+                                            <span class="input-group-text bg-secondary text-light">unidades</span>
+                                        </div>
+                                        <span asp-validation-for="StockInicial" class="invalid-feedback d-block"></span>
+                                    </div>
+                                }
+                            </div>
+                        </fieldset>
+
                         <!-- Clasificación -->
                         <fieldset class="mb-4">
                             <legend class="text-light">Clasificación</legend>
@@ -133,7 +167,7 @@
     </div>
 </section>
 
-<!-- Modales: sin cambios aquí, mantén tu código anterior para los modales -->
+<!-- Modales para agregar clasificaciones -->
 <div class="modal fade" id="rubroModal" tabindex="-1" aria-labelledby="rubroModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content bg-dark text-light">

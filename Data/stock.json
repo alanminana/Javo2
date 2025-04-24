@@ -106,5 +106,113 @@
       "Estado": 0,
       "StockItem": null
     }
+  },
+  {
+    "StockItemID": 3,
+    "ProductoID": 3,
+    "CantidadDisponible": 0,
+    "Producto": {
+      "ProductoID": 0,
+      "CodigoAlfa": "",
+      "CodigoBarra": "",
+      "Nombre": "",
+      "Descripcion": "",
+      "PCosto": 0,
+      "PContado": 0,
+      "PLista": 0,
+      "RubroID": 0,
+      "Rubro": {
+        "ID": 0,
+        "Nombre": "",
+        "SubRubros": []
+      },
+      "SubRubroID": 0,
+      "SubRubro": {
+        "ID": 0,
+        "Nombre": "",
+        "RubroID": 0,
+        "Rubro": {
+          "ID": 0,
+          "Nombre": "",
+          "SubRubros": []
+        }
+      },
+      "MarcaID": 0,
+      "Marca": null,
+      "PorcentajeIva": 21,
+      "FechaMod": "2025-04-24T00:10:26.1535038Z",
+      "FechaModPrecio": "2025-04-24T00:10:26.1535042Z",
+      "Entregable": false,
+      "NoListar": false,
+      "Proveedor": {
+        "ProveedorID": 0,
+        "Nombre": "",
+        "Direccion": "",
+        "Telefono": "",
+        "Email": "",
+        "CondicionesPago": "",
+        "ProductosAsignados": []
+      },
+      "Usuario": "",
+      "ModificadoPor": "",
+      "EstadoComentario": "",
+      "DeudaTotal": 0,
+      "Estado": 0,
+      "StockItem": null
+    }
+  },
+  {
+    "StockItemID": 4,
+    "ProductoID": 4,
+    "CantidadDisponible": 0,
+    "Producto": {
+      "ProductoID": 0,
+      "CodigoAlfa": "",
+      "CodigoBarra": "",
+      "Nombre": "",
+      "Descripcion": "",
+      "PCosto": 0,
+      "PContado": 0,
+      "PLista": 0,
+      "RubroID": 0,
+      "Rubro": {
+        "ID": 0,
+        "Nombre": "",
+        "SubRubros": []
+      },
+      "SubRubroID": 0,
+      "SubRubro": {
+        "ID": 0,
+        "Nombre": "",
+        "RubroID": 0,
+        "Rubro": {
+          "ID": 0,
+          "Nombre": "",
+          "SubRubros": []
+        }
+      },
+      "MarcaID": 0,
+      "Marca": null,
+      "PorcentajeIva": 21,
+      "FechaMod": "2025-04-24T00:10:26.2905906Z",
+      "FechaModPrecio": "2025-04-24T00:10:26.2905912Z",
+      "Entregable": false,
+      "NoListar": false,
+      "Proveedor": {
+        "ProveedorID": 0,
+        "Nombre": "",
+        "Direccion": "",
+        "Telefono": "",
+        "Email": "",
+        "CondicionesPago": "",
+        "ProductosAsignados": []
+      },
+      "Usuario": "",
+      "ModificadoPor": "",
+      "EstadoComentario": "",
+      "DeudaTotal": 0,
+      "Estado": 0,
+      "StockItem": null
+    }
   }
 ]

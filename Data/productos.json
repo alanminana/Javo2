@@ -7,7 +7,7 @@
     "Descripcion": "Descripci\u00F3n del producto inicial",
     "PCosto": 100,
     "PContado": 150,
-    "PLista": 106.288200,
+    "PLista": 77.484097800,
     "RubroID": 1,
     "Rubro": {
       "ID": 1,
@@ -133,7 +133,7 @@
     "Descripcion": "afeita",
     "PCosto": 24,
     "PContado": 24,
-    "PLista": 21.6,
+    "PLista": 15.7464,
     "RubroID": 1,
     "Rubro": {
       "ID": 1,
@@ -250,5 +250,103 @@
         "StockItem": null
       }
     }
+  },
+  {
+    "ProductoID": 3,
+    "CodigoAlfa": "P003",
+    "CodigoBarra": "776496620",
+    "Nombre": "qew",
+    "Descripcion": "qew",
+    "PCosto": 12,
+    "PContado": 121,
+    "PLista": 12,
+    "RubroID": 4,
+    "Rubro": {
+      "ID": 0,
+      "Nombre": "",
+      "SubRubros": []
+    },
+    "SubRubroID": 5,
+    "SubRubro": {
+      "ID": 0,
+      "Nombre": "",
+      "RubroID": 0,
+      "Rubro": {
+        "ID": 0,
+        "Nombre": "",
+        "SubRubros": []
+      }
+    },
+    "MarcaID": 4,
+    "Marca": null,
+    "PorcentajeIva": 21,
+    "FechaMod": "2025-04-23T21:10:26.1286068-03:00",
+    "FechaModPrecio": "2025-04-23T21:10:26.1286084-03:00",
+    "Entregable": false,
+    "NoListar": false,
+    "Proveedor": {
+      "ProveedorID": 0,
+      "Nombre": "",
+      "Direccion": "",
+      "Telefono": "",
+      "Email": "",
+      "CondicionesPago": "",
+      "ProductosAsignados": []
+    },
+    "Usuario": "",
+    "ModificadoPor": "Sistema",
+    "EstadoComentario": "",
+    "DeudaTotal": 0,
+    "Estado": 0,
+    "StockItem": null
+  },
+  {
+    "ProductoID": 4,
+    "CodigoAlfa": "P004",
+    "CodigoBarra": "179469123",
+    "Nombre": "qew",
+    "Descripcion": "qew",
+    "PCosto": 12,
+    "PContado": 121,
+    "PLista": 12,
+    "RubroID": 4,
+    "Rubro": {
+      "ID": 0,
+      "Nombre": "",
+      "SubRubros": []
+    },
+    "SubRubroID": 5,
+    "SubRubro": {
+      "ID": 0,
+      "Nombre": "",
+      "RubroID": 0,
+      "Rubro": {
+        "ID": 0,
+        "Nombre": "",
+        "SubRubros": []
+      }
+    },
+    "MarcaID": 4,
+    "Marca": null,
+    "PorcentajeIva": 21,
+    "FechaMod": "2025-04-23T21:10:26.2713254-03:00",
+    "FechaModPrecio": "2025-04-23T21:10:26.2713274-03:00",
+    "Entregable": false,
+    "NoListar": false,
+    "Proveedor": {
+      "ProveedorID": 0,
+      "Nombre": "",
+      "Direccion": "",
+      "Telefono": "",
+      "Email": "",
+      "CondicionesPago": "",
+      "ProductosAsignados": []
+    },
+    "Usuario": "",
+    "ModificadoPor": "Sistema",
+    "EstadoComentario": "",
+    "DeudaTotal": 0,
+    "Estado": 0,
+    "StockItem": null
   }
 ]
