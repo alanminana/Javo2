@@ -362,7 +362,77 @@ namespace Javo2.Controllers
                 Marcas = _mapper.Map<List<MarcaViewModel>>(marcas)
             };
         }
+        // Para crear Rubro vía AJAX
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateRubroAjax([FromForm] string Nombre)
+        {
+            if (string.IsNullOrWhiteSpace(Nombre))
+            {
+                return Json(new { success = false, message = "El nombre es obligatorio" });
+            }
 
+            try
+            {
+                var rubro = new Rubro { Nombre = Nombre };
+                await _catalogoService.CreateRubroAsync(rubro);
+                _logger.LogInformation("Rubro creado vía AJAX: {Nombre}", Nombre);
+                return Json(new { success = true, id = rubro.ID, name = rubro.Nombre });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al crear Rubro vía AJAX");
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        // Para crear SubRubro vía AJAX
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateSubRubroAjax([FromForm] string Nombre, [FromForm] int RubroID)
+        {
+            if (string.IsNullOrWhiteSpace(Nombre))
+            {
+                return Json(new { success = false, message = "El nombre es obligatorio" });
+            }
+
+            try
+            {
+                var subRubro = new SubRubro { Nombre = Nombre, RubroID = RubroID };
+                await _catalogoService.CreateSubRubroAsync(subRubro);
+                _logger.LogInformation("SubRubro creado vía AJAX: {Nombre} para RubroID {RubroID}", Nombre, RubroID);
+                return Json(new { success = true, id = subRubro.ID, name = subRubro.Nombre });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al crear SubRubro vía AJAX");
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        // Para crear Marca vía AJAX
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateMarcaAjax([FromForm] string Nombre)
+        {
+            if (string.IsNullOrWhiteSpace(Nombre))
+            {
+                return Json(new { success = false, message = "El nombre es obligatorio" });
+            }
+
+            try
+            {
+                var marca = new Marca { Nombre = Nombre };
+                await _catalogoService.CreateMarcaAsync(marca);
+                _logger.LogInformation("Marca creada vía AJAX: {Nombre}", Nombre);
+                return Json(new { success = true, id = marca.ID, name = marca.Nombre });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al crear Marca vía AJAX");
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
         private async Task PopulateTotalStockForRubrosAndMarcas(CatalogoIndexViewModel model)
         {
             var (rubrosStock, marcasStock) = await _productoService.GetRubrosMarcasStockAsync();
