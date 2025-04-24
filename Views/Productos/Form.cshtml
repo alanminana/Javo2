@@ -313,7 +313,7 @@
             $('#rubroSelect').change(function(){
               var id = $(this).val();
               var sub = $('#subRubroSelect').empty()
-                            .append('<option>Cargando...</option>');
+                          .append('<option>Cargando...</option>');
               $('#btnAddSubRubro').prop('disabled', !id);
               if(!id) { sub.html('<option>Seleccione...</option>'); return; }
               $.getJSON('@Url.Action("GetSubRubros", "Productos")',{rubroId:id})
@@ -322,16 +322,36 @@
                   data.forEach(i=> sub.append(
                     $('<option>').val(i.value).text(i.text)
                   ));
+                  console.log("SubRubros cargados para ID " + id + ": ", data);
                 })
-                .fail(()=>{
+                .fail((xhr, status, error)=>{
+                  console.error("Error cargando subrubros:", error, xhr.responseText);
                   sub.html('<option>Error al cargar</option>');
                 });
             });
 
+            // Forzar la carga inicial de subrubros para CREATE
+        @if (!isEdit)
+        {
+            <text>
+                    $(document).ready(function() {
+                      console.log("Iniciando carga de subrubros en CREATE");
+                      setTimeout(function() {
+                        $('#rubroSelect').trigger('change');
+                      }, 100);
+                    });
+            </text>
+        }
+
             // Inicializar si edición
         @if (isEdit && Model.SelectedRubroID > 0)
         {
-            <text>$('#rubroSelect').trigger('change');</text>
+            <text>
+                    $(document).ready(function() {
+                      console.log("Iniciando carga de subrubros en EDIT con ID: @Model.SelectedRubroID");
+                      $('#rubroSelect').trigger('change');
+                    });
+            </text>
         }
 
             // Create Rubro AJAX
@@ -362,7 +382,10 @@
 
             // Create SubRubro AJAX
             $('#saveSubRubroBtn').click(()=>{
-              var rubroId = $('#rubroIDForSubRubro').val();
+              var rubroId = $('#rubroSelect').val();
+              $('#rubroIDForSubRubro').val(rubroId);
+              $('#rubroForSubRubro').val($('#rubroSelect option:selected').text());
+
               var nombre = $('#nuevoSubRubroNombre').val().trim();
               if(!nombre){ $('#subRubroError').text('Requerido').show(); return; }
               $('#saveSubRubroBtn').prop('disabled',true).text('Guardando…');
@@ -382,6 +405,14 @@
               })
               .fail(()=> $('#subRubroError').text('Error de conexión').show())
               .always(()=> $('#saveSubRubroBtn').prop('disabled',false).text('Guardar'));
+            });
+
+            // Preparar modal SubRubro
+            $('#btnAddSubRubro').click(function() {
+              var rubroId = $('#rubroSelect').val();
+              var rubroText = $('#rubroSelect option:selected').text();
+              $('#rubroIDForSubRubro').val(rubroId);
+              $('#rubroForSubRubro').val(rubroText);
             });
 
             // Create Marca AJAX

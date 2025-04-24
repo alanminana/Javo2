@@ -72,6 +72,22 @@
           }
         }
       ]
+    },
+    {
+      "ID": 5,
+      "Nombre": "asdasd",
+      "SubRubros": [
+        {
+          "ID": 6,
+          "Nombre": "asdsda",
+          "RubroID": 5,
+          "Rubro": {
+            "ID": 0,
+            "Nombre": "",
+            "SubRubros": []
+          }
+        }
+      ]
     }
   ],
   "Marcas": [
@@ -92,7 +108,7 @@
       "Nombre": "das"
     }
   ],
-  "NextRubroID": 5,
-  "NextSubRubroID": 6,
+  "NextRubroID": 6,
+  "NextSubRubroID": 7,
   "NextMarcaID": 5
 }

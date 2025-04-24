@@ -7,7 +7,7 @@
     "Descripcion": "Descripci\u00F3n del producto inicial",
     "PCosto": 100,
     "PContado": 150,
-    "PLista": 62.76211921800,
+    "PLista": 56.485907296200,
     "RubroID": 1,
     "Rubro": {
       "ID": 1,
@@ -133,7 +133,7 @@
     "Descripcion": "afeita",
     "PCosto": 24,
     "PContado": 24,
-    "PLista": 12.754584,
+    "PLista": 11.4791256,
     "RubroID": 1,
     "Rubro": {
       "ID": 1,
@@ -491,7 +491,7 @@
     "Descripcion": "weqew|",
     "PCosto": 12,
     "PContado": 12,
-    "PLista": 10.8,
+    "PLista": 9.72,
     "RubroID": 1,
     "Rubro": {
       "ID": 1,
@@ -620,11 +620,137 @@
     "PLista": 12,
     "RubroID": 2,
     "Rubro": {
+      "ID": 2,
+      "Nombre": "Hogar",
+      "SubRubros": [
+        {
+          "ID": 3,
+          "Nombre": "Muebles",
+          "RubroID": 2,
+          "Rubro": {
+            "ID": 0,
+            "Nombre": "",
+            "SubRubros": []
+          }
+        },
+        {
+          "ID": 4,
+          "Nombre": "Electrodom\u00E9sticos",
+          "RubroID": 2,
+          "Rubro": {
+            "ID": 0,
+            "Nombre": "",
+            "SubRubros": []
+          }
+        }
+      ]
+    },
+    "SubRubroID": 2,
+    "SubRubro": {
+      "ID": 2,
+      "Nombre": "Computadoras",
+      "RubroID": 1,
+      "Rubro": {
+        "ID": 0,
+        "Nombre": "",
+        "SubRubros": []
+      }
+    },
+    "MarcaID": 1,
+    "Marca": {
+      "ID": 1,
+      "Nombre": "Marca A"
+    },
+    "PorcentajeIva": 21,
+    "FechaMod": "2025-04-23T22:36:17.2477952-03:00",
+    "FechaModPrecio": "2025-04-23T22:36:17.2478031-03:00",
+    "Entregable": false,
+    "NoListar": false,
+    "Proveedor": {
+      "ProveedorID": 0,
+      "Nombre": "",
+      "Direccion": "",
+      "Telefono": "",
+      "Email": "",
+      "CondicionesPago": "",
+      "ProductosAsignados": []
+    },
+    "Usuario": "",
+    "ModificadoPor": "Sistema",
+    "EstadoComentario": "",
+    "DeudaTotal": 0,
+    "Estado": 0,
+    "StockItem": {
+      "StockItemID": 7,
+      "ProductoID": 6,
+      "CantidadDisponible": 22,
+      "Producto": {
+        "ProductoID": 0,
+        "CodigoAlfa": "",
+        "CodigoBarra": "",
+        "Nombre": "",
+        "Descripcion": "",
+        "PCosto": 0,
+        "PContado": 0,
+        "PLista": 0,
+        "RubroID": 0,
+        "Rubro": {
+          "ID": 0,
+          "Nombre": "",
+          "SubRubros": []
+        },
+        "SubRubroID": 0,
+        "SubRubro": {
+          "ID": 0,
+          "Nombre": "",
+          "RubroID": 0,
+          "Rubro": {
+            "ID": 0,
+            "Nombre": "",
+            "SubRubros": []
+          }
+        },
+        "MarcaID": 0,
+        "Marca": null,
+        "PorcentajeIva": 21,
+        "FechaMod": "2025-04-24T01:36:17.302114Z",
+        "FechaModPrecio": "2025-04-24T01:36:17.3021143Z",
+        "Entregable": false,
+        "NoListar": false,
+        "Proveedor": {
+          "ProveedorID": 0,
+          "Nombre": "",
+          "Direccion": "",
+          "Telefono": "",
+          "Email": "",
+          "CondicionesPago": "",
+          "ProductosAsignados": []
+        },
+        "Usuario": "",
+        "ModificadoPor": "",
+        "EstadoComentario": "",
+        "DeudaTotal": 0,
+        "Estado": 0,
+        "StockItem": null
+      }
+    }
+  },
+  {
+    "ProductoID": 7,
+    "CodigoAlfa": "P007",
+    "CodigoBarra": "908238863",
+    "Nombre": "asd",
+    "Descripcion": "sad",
+    "PCosto": 21,
+    "PContado": 21,
+    "PLista": 21,
+    "RubroID": 5,
+    "Rubro": {
       "ID": 0,
       "Nombre": "",
       "SubRubros": []
     },
-    "SubRubroID": 2,
+    "SubRubroID": 6,
     "SubRubro": {
       "ID": 0,
       "Nombre": "",
@@ -635,11 +761,11 @@
         "SubRubros": []
       }
     },
-    "MarcaID": 1,
+    "MarcaID": 2,
     "Marca": null,
     "PorcentajeIva": 21,
-    "FechaMod": "2025-04-23T22:36:17.2477952-03:00",
-    "FechaModPrecio": "2025-04-23T22:36:17.2478031-03:00",
+    "FechaMod": "2025-04-24T11:33:05.1120028-03:00",
+    "FechaModPrecio": "2025-04-24T11:33:05.1120042-03:00",
     "Entregable": false,
     "NoListar": false,
     "Proveedor": {

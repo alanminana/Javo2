@@ -274,5 +274,17 @@
     "EsRevertido": false,
     "RollbackUser": "",
     "RollbackFecha": null
+  },
+  {
+    "ID": 24,
+    "FechaHora": "2025-04-24T11:33:05.2603998-03:00",
+    "Usuario": "Sistema",
+    "Entidad": "Producto",
+    "Accion": "Create",
+    "LlavePrimaria": "7",
+    "Detalle": "asd",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
   }
 ]

@@ -86,11 +86,18 @@ namespace Javo2.Controllers
         {
             try
             {
-                _logger.LogInformation("ProductosController: Create GET");
                 var model = new ProductosViewModel();
                 model.Rubros = await _dropdownService.GetRubrosAsync();
-                if (model.Rubros.Any()) model.SelectedRubroID = int.Parse(model.Rubros.First().Value);
-                await PopulateDropdownsAsync(model);
+
+                // Seleccionar explícitamente el primer rubro
+                if (model.Rubros.Any())
+                {
+                    model.SelectedRubroID = int.Parse(model.Rubros.First().Value);
+                    // Cargar explícitamente los subrubros del primer rubro
+                    model.SubRubros = await _dropdownService.GetSubRubrosAsync(model.SelectedRubroID);
+                }
+
+                model.Marcas = await _dropdownService.GetMarcasAsync();
                 return View("Form", model);
             }
             catch (Exception ex)
@@ -99,7 +106,6 @@ namespace Javo2.Controllers
                 return View("Error");
             }
         }
-
         // POST: Productos/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -280,13 +286,31 @@ namespace Javo2.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // AJAX: Obtener SubRubros
         [HttpGet]
         public async Task<IActionResult> GetSubRubros(int rubroId)
         {
-            if (rubroId <= 0) return Json(new List<SelectListItem>());
-            var items = await _dropdownService.GetSubRubrosAsync(rubroId);
-            return Json(items);
+            _logger.LogInformation("GetSubRubros recibió petición para rubroId: {0}", rubroId);
+
+            if (rubroId <= 0)
+            {
+                _logger.LogWarning("GetSubRubros: rubroId inválido: {0}", rubroId);
+                return Json(new List<SelectListItem>());
+            }
+
+            try
+            {
+                var items = await _dropdownService.GetSubRubrosAsync(rubroId);
+                _logger.LogInformation("GetSubRubros: Obtenidos {0} subrubros para rubroId {1}: {2}",
+                    items.Count(),
+                    rubroId,
+                    string.Join(", ", items.Select(i => i.Text)));
+                return Json(items);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error obteniendo subrubros para rubroId {0}", rubroId);
+                return Json(new List<SelectListItem>());
+            }
         }
 
         // POST: Productos/IncrementarPrecios
@@ -394,11 +418,23 @@ namespace Javo2.Controllers
         // Auxiliar: poblado de dropdowns
         private async Task PopulateDropdownsAsync(ProductosViewModel model)
         {
+            // Cargar rubros si no existen
             model.Rubros ??= await _dropdownService.GetRubrosAsync();
+
+            // Cargar marcas
             model.Marcas = await _dropdownService.GetMarcasAsync();
-            model.SubRubros = model.SelectedRubroID > 0
-                ? await _dropdownService.GetSubRubrosAsync(model.SelectedRubroID)
-                : new List<SelectListItem>();
+
+            // Cargar subrubros del rubro seleccionado
+            if (model.SelectedRubroID > 0)
+            {
+                _logger.LogInformation($"Cargando subrubros para RubroID: {model.SelectedRubroID}");
+                model.SubRubros = await _dropdownService.GetSubRubrosAsync(model.SelectedRubroID);
+                _logger.LogInformation($"SubRubros cargados: {model.SubRubros.Count()}");
+            }
+            else
+            {
+                model.SubRubros = new List<SelectListItem>();
+            }
         }
     }
 }
