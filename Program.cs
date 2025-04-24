@@ -1,20 +1,19 @@
-// Archivo: Program.cs
-
 using Javo2.Services;
 using Javo2.IServices;
 using Javo2.Services.Common;
 using Javo2.Middleware;
 using Javo2.IServices.Common;
 using AutoMapper;
-using Javo2;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.IO;
+using Javo2;
 
 var builder = WebApplication.CreateBuilder(args);
-Console.WriteLine($"CONTENT ROOT = {Directory.GetCurrentDirectory()}");
-Console.WriteLine($"WEB ROOT     = {builder.Environment.WebRootPath}");
+Console.WriteLine($"CONTENT ROOT = {Directory.GetCurrentDirectory()}");
+Console.WriteLine($"WEB ROOT     = {builder.Environment.WebRootPath}");
 
 // Configuración de Logging
 builder.Logging.ClearProviders();
@@ -25,33 +24,32 @@ builder.Logging.AddDebug();
 builder.Services.AddControllersWithViews();
 
 // Registro de servicios de la aplicación
-builder.Services.AddSingleton<IProductoService, ProductoService>();
-builder.Services.AddSingleton<IProveedorService, ProveedorService>();
-builder.Services.AddSingleton<ICatalogoService, CatalogoService>();
-builder.Services.AddSingleton<IProvinciaService, ProvinciaService>();
-builder.Services.AddSingleton<IStockService, StockService>();
-builder.Services.AddSingleton<IClienteService, ClienteService>();
-builder.Services.AddSingleton<IPromocionesService, PromocionesService>();
-builder.Services.AddSingleton<IAuditoriaService, AuditoriaService>();
-builder.Services.AddSingleton<IVentaService, VentaService>();
-builder.Services.AddSingleton<IProductoService, ProductoService>();
-builder.Services.AddSingleton<ICotizacionService, CotizacionService>();
-builder.Services.AddSingleton<IStockService, StockService>();
-
-builder.Services.AddSingleton<IClienteSearchService>(sp => 
-    sp.GetRequiredService<IClienteService>() as IClienteSearchService ?? 
-    throw new InvalidOperationException("ClienteService must implement IClienteSearchService"));
-// Servicios con ciclo de vida Scoped
+// Usar Scoped para servicios que dependen de otros Scoped
+builder.Services.AddScoped<IProductoService, ProductoService>();
+builder.Services.AddScoped<IProveedorService, ProveedorService>();
+builder.Services.AddScoped<ICatalogoService, CatalogoService>();
+builder.Services.AddScoped<IProvinciaService, ProvinciaService>();
+builder.Services.AddScoped<IStockService, StockService>();
+builder.Services.AddScoped<IClienteService, ClienteService>();
+builder.Services.AddScoped<IPromocionesService, PromocionesService>();
+builder.Services.AddScoped<IAuditoriaService, AuditoriaService>();
 builder.Services.AddScoped<IVentaService, VentaService>();
-builder.Services.AddScoped<IDropdownService, DropdownService>();
+builder.Services.AddScoped<ICotizacionService, CotizacionService>();
 
-// Registro de IAuditoriaService
-builder.Services.AddSingleton<IAuditoriaService, AuditoriaService>();
+// Devoluciones debe ser Scoped para poder inyectar IVentaService, IProductoService, etc.
+builder.Services.AddScoped<IDevolucionGarantiaService, DevolucionGarantiaService>();
+
+// Servicio de búsqueda de cliente
+builder.Services.AddScoped<IClienteSearchService>(sp =>
+    sp.GetRequiredService<IClienteService>() as IClienteSearchService
+    ?? throw new InvalidOperationException("ClienteService must implement IClienteSearchService"));
+
+// Otros servicios Scoped
+builder.Services.AddScoped<IDropdownService, DropdownService>();
 
 // Configuración de AutoMapper
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
-// Build de la aplicación
 var app = builder.Build();
 
 // Validación de la configuración de AutoMapper
@@ -68,8 +66,6 @@ catch (AutoMapper.AutoMapperConfigurationException ex)
     {
         Console.WriteLine($"- {failure}");
     }
-    // Opcional: detener la aplicación si hay errores de mapeo
-    // throw;
 }
 
 if (!app.Environment.IsDevelopment())
@@ -82,17 +78,12 @@ else
     app.UseDeveloperExceptionPage();
 }
 
-// Middleware personalizado para manejo de excepciones
 app.UseMiddleware<ExceptionHandlingMiddleware>();
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthorization();
 
-// Configuración de rutas
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

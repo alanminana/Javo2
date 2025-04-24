@@ -1,0 +1,171 @@
+﻿@model IEnumerable<Javo2.ViewModels.Operaciones.DevolucionGarantia.DevolucionGarantiaListViewModel>
+@{
+    ViewBag.Title = "Devoluciones, Cambios y Garantías";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="container-fluid py-3">
+    <!-- Encabezado con estadísticas -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">@ViewBag.Title</h1>
+        <a asp-action="Create" class="btn btn-success">
+            <i class="bi bi-plus-circle me-1"></i> Registrar Nuevo Caso
+        </a>
+    </div>
+
+    <!-- Tarjetas de resumen -->
+    <div class="summary-cards mb-4">
+        <div class="summary-card">
+            <h5>Total Casos</h5>
+            <p class="display-6">@Model.Count()</p>
+        </div>
+        <div class="summary-card">
+            <h5>Pendientes</h5>
+            <p class="display-6">@Model.Count(d => d.Estado == Javo2.Models.EstadoCaso.Pendiente)</p>
+        </div>
+        <div class="summary-card">
+            <h5>En Proceso</h5>
+            <p class="display-6">@Model.Count(d => d.Estado == Javo2.Models.EstadoCaso.EnProceso)</p>
+        </div>
+        <div class="summary-card">
+            <h5>Completados</h5>
+            <p class="display-6">@Model.Count(d => d.Estado == Javo2.Models.EstadoCaso.Completado)</p>
+        </div>
+    </div>
+
+    <!-- Alerts para mensajes -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    }
+    @if (TempData["Warning"] != null)
+    {
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-circle me-2"></i> @TempData["Warning"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    }
+
+    <!-- Tabla de devoluciones, cambios y garantías -->
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover table-striped align-middle mb-0">
+                    <thead class="bg-secondary text-light">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Cliente</th>
+                            <th scope="col">Factura</th>
+                            <th scope="col">Fecha Solicitud</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Productos</th>
+                            <th scope="col" class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.DevolucionGarantiaID</td>
+                                    <td>
+                                        @switch (item.TipoCaso)
+                                        {
+                                            case Javo2.Models.TipoCaso.Devolucion:
+                                                <span class="badge bg-info">Devolución</span>
+                                                break;
+                                            case Javo2.Models.TipoCaso.Cambio:
+                                                <span class="badge bg-primary">Cambio</span>
+                                                break;
+                                            case Javo2.Models.TipoCaso.Garantia:
+                                                <span class="badge bg-warning text-dark">Garantía</span>
+                                                break;
+                                            case Javo2.Models.TipoCaso.Reparacion:
+                                                <span class="badge bg-secondary">Reparación</span>
+                                                break;
+                                        }
+                                    </td>
+                                    <td>@item.NombreCliente</td>
+                                    <td>@item.NumeroFactura</td>
+                                    <td>@item.FechaSolicitud.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        @switch (item.Estado)
+                                        {
+                                            case Javo2.Models.EstadoCaso.Pendiente:
+                                                <span class="badge bg-warning text-dark">Pendiente</span>
+                                                break;
+                                            case Javo2.Models.EstadoCaso.EnProceso:
+                                                <span class="badge bg-primary">En Proceso</span>
+                                                break;
+                                            case Javo2.Models.EstadoCaso.Completado:
+                                                <span class="badge bg-success">Completado</span>
+                                                break;
+                                            case Javo2.Models.EstadoCaso.Rechazado:
+                                                <span class="badge bg-danger">Rechazado</span>
+                                                break;
+                                        }
+                                    </td>
+                                    <td>@item.CantidadProductos</td>
+                                    <td class="text-center">
+                                        <div class="btn-group" role="group">
+                                            <a asp-action="Details" asp-route-id="@item.DevolucionGarantiaID"
+                                               class="btn btn-sm btn-outline-info" title="Ver detalles">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            @if (item.Estado == Javo2.Models.EstadoCaso.Pendiente)
+                                            {
+                                                <a asp-action="Edit" asp-route-id="@item.DevolucionGarantiaID"
+                                                   class="btn btn-sm btn-outline-warning" title="Editar">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </a>
+                                                <a asp-action="Delete" asp-route-id="@item.DevolucionGarantiaID"
+                                                   class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                                    <i class="bi bi-trash"></i>
+                                                </a>
+                                            }
+                                            @if (item.Estado == Javo2.Models.EstadoCaso.EnProceso &&
+                                           item.TipoCaso == Javo2.Models.TipoCaso.Garantia)
+                                            {
+                                                <a asp-action="CompletarGarantia" asp-route-id="@item.DevolucionGarantiaID"
+                                                   class="btn btn-sm btn-outline-success" title="Completar Garantía">
+                                                    <i class="bi bi-check-circle"></i>
+                                                </a>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="8" class="text-center">No hay registros para mostrar</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        // Ocultar alertas después de 5 segundos
+        setTimeout(function() {
+            $('.alert').alert('close');
+        }, 5000);
+    </script>
+}
