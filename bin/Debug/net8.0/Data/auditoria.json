@@ -250,5 +250,29 @@
     "EsRevertido": false,
     "RollbackUser": "",
     "RollbackFecha": null
+  },
+  {
+    "ID": 22,
+    "FechaHora": "2025-04-23T21:39:38.1117333-03:00",
+    "Usuario": "Sistema",
+    "Entidad": "Producto",
+    "Accion": "Create",
+    "LlavePrimaria": "5",
+    "Detalle": "Nombre=errewwreer1, Rubro=Electr\u00F3nica, Marca=Marca B",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
+  },
+  {
+    "ID": 23,
+    "FechaHora": "2025-04-23T22:36:17.3530434-03:00",
+    "Usuario": "Sistema",
+    "Entidad": "Producto",
+    "Accion": "Create",
+    "LlavePrimaria": "6",
+    "Detalle": "saddsads",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
   }
 ]

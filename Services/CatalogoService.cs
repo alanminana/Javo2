@@ -208,6 +208,7 @@ namespace Javo2.Services
             }
         }
 
+        // In CatalogoService.cs
         public Task CreateSubRubroAsync(SubRubro subRubro)
         {
             if (string.IsNullOrWhiteSpace(subRubro.Nombre))
@@ -215,14 +216,14 @@ namespace Javo2.Services
 
             lock (_lock)
             {
-                subRubro.ID = _nextSubRubroID++;
                 var rubro = _rubros.FirstOrDefault(r => r.ID == subRubro.RubroID);
-                if (rubro != null)
-                {
-                    rubro.SubRubros.Add(subRubro);
-                    SaveCatalogoData();
-                    _logger.LogInformation("SubRubro creado: {Nombre}", subRubro.Nombre);
-                }
+                if (rubro == null)
+                    throw new KeyNotFoundException($"Rubro con ID {subRubro.RubroID} no encontrado.");
+
+                subRubro.ID = _nextSubRubroID++;
+                rubro.SubRubros.Add(subRubro);
+                SaveCatalogoData();
+                _logger.LogInformation("SubRubro creado: {Nombre}", subRubro.Nombre);
             }
 
             return Task.CompletedTask;

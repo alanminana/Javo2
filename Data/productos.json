@@ -7,7 +7,7 @@
     "Descripcion": "Descripci\u00F3n del producto inicial",
     "PCosto": 100,
     "PContado": 150,
-    "PLista": 69.7356880200,
+    "PLista": 62.76211921800,
     "RubroID": 1,
     "Rubro": {
       "ID": 1,
@@ -133,7 +133,7 @@
     "Descripcion": "afeita",
     "PCosto": 24,
     "PContado": 24,
-    "PLista": 14.17176,
+    "PLista": 12.754584,
     "RubroID": 1,
     "Rubro": {
       "ID": 1,
@@ -491,14 +491,140 @@
     "Descripcion": "weqew|",
     "PCosto": 12,
     "PContado": 12,
-    "PLista": 12,
+    "PLista": 10.8,
     "RubroID": 1,
+    "Rubro": {
+      "ID": 1,
+      "Nombre": "Electr\u00F3nica",
+      "SubRubros": [
+        {
+          "ID": 1,
+          "Nombre": "Televisores",
+          "RubroID": 1,
+          "Rubro": {
+            "ID": 0,
+            "Nombre": "",
+            "SubRubros": []
+          }
+        },
+        {
+          "ID": 2,
+          "Nombre": "Computadoras",
+          "RubroID": 1,
+          "Rubro": {
+            "ID": 0,
+            "Nombre": "",
+            "SubRubros": []
+          }
+        }
+      ]
+    },
+    "SubRubroID": 5,
+    "SubRubro": {
+      "ID": 5,
+      "Nombre": "test1",
+      "RubroID": 4,
+      "Rubro": {
+        "ID": 0,
+        "Nombre": "",
+        "SubRubros": []
+      }
+    },
+    "MarcaID": 2,
+    "Marca": {
+      "ID": 2,
+      "Nombre": "Marca B"
+    },
+    "PorcentajeIva": 12,
+    "FechaMod": "2025-04-23T21:39:38.0161979-03:00",
+    "FechaModPrecio": "2025-04-23T21:39:38.0162001-03:00",
+    "Entregable": false,
+    "NoListar": false,
+    "Proveedor": {
+      "ProveedorID": 0,
+      "Nombre": "",
+      "Direccion": "",
+      "Telefono": "",
+      "Email": "",
+      "CondicionesPago": "",
+      "ProductosAsignados": []
+    },
+    "Usuario": "",
+    "ModificadoPor": "Sistema",
+    "EstadoComentario": "",
+    "DeudaTotal": 0,
+    "Estado": 0,
+    "StockItem": {
+      "StockItemID": 5,
+      "ProductoID": 5,
+      "CantidadDisponible": 40,
+      "Producto": {
+        "ProductoID": 0,
+        "CodigoAlfa": "",
+        "CodigoBarra": "",
+        "Nombre": "",
+        "Descripcion": "",
+        "PCosto": 0,
+        "PContado": 0,
+        "PLista": 0,
+        "RubroID": 0,
+        "Rubro": {
+          "ID": 0,
+          "Nombre": "",
+          "SubRubros": []
+        },
+        "SubRubroID": 0,
+        "SubRubro": {
+          "ID": 0,
+          "Nombre": "",
+          "RubroID": 0,
+          "Rubro": {
+            "ID": 0,
+            "Nombre": "",
+            "SubRubros": []
+          }
+        },
+        "MarcaID": 0,
+        "Marca": null,
+        "PorcentajeIva": 21,
+        "FechaMod": "2025-04-24T00:39:38.053298Z",
+        "FechaModPrecio": "2025-04-24T00:39:38.0532984Z",
+        "Entregable": false,
+        "NoListar": false,
+        "Proveedor": {
+          "ProveedorID": 0,
+          "Nombre": "",
+          "Direccion": "",
+          "Telefono": "",
+          "Email": "",
+          "CondicionesPago": "",
+          "ProductosAsignados": []
+        },
+        "Usuario": "",
+        "ModificadoPor": "",
+        "EstadoComentario": "",
+        "DeudaTotal": 0,
+        "Estado": 0,
+        "StockItem": null
+      }
+    }
+  },
+  {
+    "ProductoID": 6,
+    "CodigoAlfa": "P006",
+    "CodigoBarra": "801912882",
+    "Nombre": "saddsads",
+    "Descripcion": "saadsssd",
+    "PCosto": 12,
+    "PContado": 12,
+    "PLista": 12,
+    "RubroID": 2,
     "Rubro": {
       "ID": 0,
       "Nombre": "",
       "SubRubros": []
     },
-    "SubRubroID": 5,
+    "SubRubroID": 2,
     "SubRubro": {
       "ID": 0,
       "Nombre": "",
@@ -509,11 +635,11 @@
         "SubRubros": []
       }
     },
-    "MarcaID": 2,
+    "MarcaID": 1,
     "Marca": null,
-    "PorcentajeIva": 12,
-    "FechaMod": "2025-04-23T21:39:38.0161979-03:00",
-    "FechaModPrecio": "2025-04-23T21:39:38.0162001-03:00",
+    "PorcentajeIva": 21,
+    "FechaMod": "2025-04-23T22:36:17.2477952-03:00",
+    "FechaModPrecio": "2025-04-23T22:36:17.2478031-03:00",
     "Entregable": false,
     "NoListar": false,
     "Proveedor": {

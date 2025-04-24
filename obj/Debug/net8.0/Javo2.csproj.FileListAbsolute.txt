@@ -83,7 +83,6 @@ D:\github\Javo2\obj\Debug\net8.0\staticwebassets\msbuild.build.Javo2.props
 D:\github\Javo2\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.Javo2.props
 D:\github\Javo2\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.Javo2.props
 D:\github\Javo2\obj\Debug\net8.0\staticwebassets.pack.json
-D:\github\Javo2\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 D:\github\Javo2\obj\Debug\net8.0\Javo2.csproj.Up2Date
 D:\github\Javo2\obj\Debug\net8.0\Javo2.dll
 D:\github\Javo2\obj\Debug\net8.0\refint\Javo2.dll
@@ -96,3 +95,4 @@ D:\github\Javo2\bin\Debug\net8.0\Data\Backups\clientes_backup_20250422164617.jso
 D:\github\Javo2\bin\Debug\net8.0\Data\ventas.json
 D:\github\Javo2\bin\Debug\net8.0\Data\Backups\clientes_backup_20250423150741.json
 D:\github\Javo2\bin\Debug\net8.0\Data\proveedores.json
+D:\github\Javo2\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

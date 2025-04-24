@@ -6,5 +6,13 @@
     "TipoMovimiento": "Entrada",
     "Cantidad": 40,
     "Motivo": "Stock inicial al crear producto"
+  },
+  {
+    "MovimientoStockID": 2,
+    "ProductoID": 6,
+    "Fecha": "2025-04-24T01:36:17.3325131Z",
+    "TipoMovimiento": "Entrada",
+    "Cantidad": 22,
+    "Motivo": "Stock inicial"
   }
 ]

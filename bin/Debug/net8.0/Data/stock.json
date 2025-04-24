@@ -214,5 +214,221 @@
       "Estado": 0,
       "StockItem": null
     }
+  },
+  {
+    "StockItemID": 5,
+    "ProductoID": 5,
+    "CantidadDisponible": 40,
+    "Producto": {
+      "ProductoID": 0,
+      "CodigoAlfa": "",
+      "CodigoBarra": "",
+      "Nombre": "",
+      "Descripcion": "",
+      "PCosto": 0,
+      "PContado": 0,
+      "PLista": 0,
+      "RubroID": 0,
+      "Rubro": {
+        "ID": 0,
+        "Nombre": "",
+        "SubRubros": []
+      },
+      "SubRubroID": 0,
+      "SubRubro": {
+        "ID": 0,
+        "Nombre": "",
+        "RubroID": 0,
+        "Rubro": {
+          "ID": 0,
+          "Nombre": "",
+          "SubRubros": []
+        }
+      },
+      "MarcaID": 0,
+      "Marca": null,
+      "PorcentajeIva": 21,
+      "FechaMod": "2025-04-24T00:39:38.053298Z",
+      "FechaModPrecio": "2025-04-24T00:39:38.0532984Z",
+      "Entregable": false,
+      "NoListar": false,
+      "Proveedor": {
+        "ProveedorID": 0,
+        "Nombre": "",
+        "Direccion": "",
+        "Telefono": "",
+        "Email": "",
+        "CondicionesPago": "",
+        "ProductosAsignados": []
+      },
+      "Usuario": "",
+      "ModificadoPor": "",
+      "EstadoComentario": "",
+      "DeudaTotal": 0,
+      "Estado": 0,
+      "StockItem": null
+    }
+  },
+  {
+    "StockItemID": 6,
+    "ProductoID": 5,
+    "CantidadDisponible": 40,
+    "Producto": {
+      "ProductoID": 0,
+      "CodigoAlfa": "",
+      "CodigoBarra": "",
+      "Nombre": "",
+      "Descripcion": "",
+      "PCosto": 0,
+      "PContado": 0,
+      "PLista": 0,
+      "RubroID": 0,
+      "Rubro": {
+        "ID": 0,
+        "Nombre": "",
+        "SubRubros": []
+      },
+      "SubRubroID": 0,
+      "SubRubro": {
+        "ID": 0,
+        "Nombre": "",
+        "RubroID": 0,
+        "Rubro": {
+          "ID": 0,
+          "Nombre": "",
+          "SubRubros": []
+        }
+      },
+      "MarcaID": 0,
+      "Marca": null,
+      "PorcentajeIva": 21,
+      "FechaMod": "2025-04-24T00:39:38.078428Z",
+      "FechaModPrecio": "2025-04-24T00:39:38.0784284Z",
+      "Entregable": false,
+      "NoListar": false,
+      "Proveedor": {
+        "ProveedorID": 0,
+        "Nombre": "",
+        "Direccion": "",
+        "Telefono": "",
+        "Email": "",
+        "CondicionesPago": "",
+        "ProductosAsignados": []
+      },
+      "Usuario": "",
+      "ModificadoPor": "",
+      "EstadoComentario": "",
+      "DeudaTotal": 0,
+      "Estado": 0,
+      "StockItem": null
+    }
+  },
+  {
+    "StockItemID": 7,
+    "ProductoID": 6,
+    "CantidadDisponible": 22,
+    "Producto": {
+      "ProductoID": 0,
+      "CodigoAlfa": "",
+      "CodigoBarra": "",
+      "Nombre": "",
+      "Descripcion": "",
+      "PCosto": 0,
+      "PContado": 0,
+      "PLista": 0,
+      "RubroID": 0,
+      "Rubro": {
+        "ID": 0,
+        "Nombre": "",
+        "SubRubros": []
+      },
+      "SubRubroID": 0,
+      "SubRubro": {
+        "ID": 0,
+        "Nombre": "",
+        "RubroID": 0,
+        "Rubro": {
+          "ID": 0,
+          "Nombre": "",
+          "SubRubros": []
+        }
+      },
+      "MarcaID": 0,
+      "Marca": null,
+      "PorcentajeIva": 21,
+      "FechaMod": "2025-04-24T01:36:17.302114Z",
+      "FechaModPrecio": "2025-04-24T01:36:17.3021143Z",
+      "Entregable": false,
+      "NoListar": false,
+      "Proveedor": {
+        "ProveedorID": 0,
+        "Nombre": "",
+        "Direccion": "",
+        "Telefono": "",
+        "Email": "",
+        "CondicionesPago": "",
+        "ProductosAsignados": []
+      },
+      "Usuario": "",
+      "ModificadoPor": "",
+      "EstadoComentario": "",
+      "DeudaTotal": 0,
+      "Estado": 0,
+      "StockItem": null
+    }
+  },
+  {
+    "StockItemID": 8,
+    "ProductoID": 6,
+    "CantidadDisponible": 22,
+    "Producto": {
+      "ProductoID": 0,
+      "CodigoAlfa": "",
+      "CodigoBarra": "",
+      "Nombre": "",
+      "Descripcion": "",
+      "PCosto": 0,
+      "PContado": 0,
+      "PLista": 0,
+      "RubroID": 0,
+      "Rubro": {
+        "ID": 0,
+        "Nombre": "",
+        "SubRubros": []
+      },
+      "SubRubroID": 0,
+      "SubRubro": {
+        "ID": 0,
+        "Nombre": "",
+        "RubroID": 0,
+        "Rubro": {
+          "ID": 0,
+          "Nombre": "",
+          "SubRubros": []
+        }
+      },
+      "MarcaID": 0,
+      "Marca": null,
+      "PorcentajeIva": 21,
+      "FechaMod": "2025-04-24T01:36:17.3155199Z",
+      "FechaModPrecio": "2025-04-24T01:36:17.3155206Z",
+      "Entregable": false,
+      "NoListar": false,
+      "Proveedor": {
+        "ProveedorID": 0,
+        "Nombre": "",
+        "Direccion": "",
+        "Telefono": "",
+        "Email": "",
+        "CondicionesPago": "",
+        "ProductosAsignados": []
+      },
+      "Usuario": "",
+      "ModificadoPor": "",
+      "EstadoComentario": "",
+      "DeudaTotal": 0,
+      "Estado": 0,
+      "StockItem": null
+    }
   }
 ]

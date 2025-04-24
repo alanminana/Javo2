@@ -367,8 +367,11 @@ namespace Javo2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateRubroAjax([FromForm] string Nombre)
         {
+            _logger.LogInformation("CatalogoController: CreateRubroAjax con Nombre={Nombre}", Nombre);
+
             if (string.IsNullOrWhiteSpace(Nombre))
             {
+                _logger.LogWarning("CatalogoController: CreateRubroAjax recibió un nombre vacío");
                 return Json(new { success = false, message = "El nombre es obligatorio" });
             }
 
@@ -376,36 +379,55 @@ namespace Javo2.Controllers
             {
                 var rubro = new Rubro { Nombre = Nombre };
                 await _catalogoService.CreateRubroAsync(rubro);
-                _logger.LogInformation("Rubro creado vía AJAX: {Nombre}", Nombre);
+                _logger.LogInformation("CatalogoController: Rubro creado vía AJAX con ID={ID}, Nombre={Nombre}",
+                    rubro.ID, Nombre);
                 return Json(new { success = true, id = rubro.ID, name = rubro.Nombre });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear Rubro vía AJAX");
+                _logger.LogError(ex, "CatalogoController: Error al crear Rubro vía AJAX con Nombre={Nombre}", Nombre);
                 return Json(new { success = false, message = ex.Message });
             }
         }
 
-        // Para crear SubRubro vía AJAX
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateSubRubroAjax([FromForm] string Nombre, [FromForm] int RubroID)
         {
+            _logger.LogInformation("CatalogoController: CreateSubRubroAjax con Nombre={Nombre}, RubroID={RubroID}",
+                Nombre, RubroID);
+
             if (string.IsNullOrWhiteSpace(Nombre))
             {
+                _logger.LogWarning("CatalogoController: CreateSubRubroAjax recibió un nombre vacío");
                 return Json(new { success = false, message = "El nombre es obligatorio" });
+            }
+
+            if (RubroID <= 0)
+            {
+                _logger.LogWarning("CatalogoController: CreateSubRubroAjax recibió un RubroID inválido: {RubroID}", RubroID);
+                return Json(new { success = false, message = "El Rubro es obligatorio" });
             }
 
             try
             {
+                var rubro = await _catalogoService.GetRubroByIDAsync(RubroID);
+                if (rubro == null)
+                {
+                    _logger.LogWarning("CatalogoController: CreateSubRubroAjax no encontró el Rubro con ID={RubroID}", RubroID);
+                    return Json(new { success = false, message = "El Rubro seleccionado no existe" });
+                }
+
                 var subRubro = new SubRubro { Nombre = Nombre, RubroID = RubroID };
                 await _catalogoService.CreateSubRubroAsync(subRubro);
-                _logger.LogInformation("SubRubro creado vía AJAX: {Nombre} para RubroID {RubroID}", Nombre, RubroID);
+                _logger.LogInformation("CatalogoController: SubRubro creado vía AJAX con ID={ID}, Nombre={Nombre}, RubroID={RubroID}",
+                    subRubro.ID, Nombre, RubroID);
                 return Json(new { success = true, id = subRubro.ID, name = subRubro.Nombre });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear SubRubro vía AJAX");
+                _logger.LogError(ex, "CatalogoController: Error al crear SubRubro vía AJAX con Nombre={Nombre}, RubroID={RubroID}",
+                    Nombre, RubroID);
                 return Json(new { success = false, message = ex.Message });
             }
         }
