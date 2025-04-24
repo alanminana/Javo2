@@ -112,6 +112,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/github/Javo2/Views/Productos/AjusteStockViewModel.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdG9zXEFqdXN0ZVN0b2NrVmlld01vZGVsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/github/Javo2/Views/Productos/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdG9zXERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -126,6 +130,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/github/Javo2/Views/Productos/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdG9zXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/Productos/MovimientosStock.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdG9zXE1vdmltaWVudG9zU3RvY2suY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/github/Javo2/Views/Productos/_ProductosForm.cshtml]

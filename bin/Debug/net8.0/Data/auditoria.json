@@ -226,5 +226,29 @@
     "EsRevertido": false,
     "RollbackUser": "",
     "RollbackFecha": null
+  },
+  {
+    "ID": 20,
+    "FechaHora": "2025-04-23T21:10:26.2203307-03:00",
+    "Usuario": "Sistema",
+    "Entidad": "Producto",
+    "Accion": "Create",
+    "LlavePrimaria": "3",
+    "Detalle": "Nombre=qew, Rubro=test, Marca=das",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
+  },
+  {
+    "ID": 21,
+    "FechaHora": "2025-04-23T21:10:26.3013328-03:00",
+    "Usuario": "Sistema",
+    "Entidad": "Producto",
+    "Accion": "Create",
+    "LlavePrimaria": "4",
+    "Detalle": "Nombre=qew, Rubro=test, Marca=das",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
   }
 ]

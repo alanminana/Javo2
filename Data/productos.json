@@ -7,7 +7,7 @@
     "Descripcion": "Descripci\u00F3n del producto inicial",
     "PCosto": 100,
     "PContado": 150,
-    "PLista": 77.484097800,
+    "PLista": 69.7356880200,
     "RubroID": 1,
     "Rubro": {
       "ID": 1,
@@ -133,7 +133,7 @@
     "Descripcion": "afeita",
     "PCosto": 24,
     "PContado": 24,
-    "PLista": 15.7464,
+    "PLista": 14.17176,
     "RubroID": 1,
     "Rubro": {
       "ID": 1,
@@ -262,15 +262,26 @@
     "PLista": 12,
     "RubroID": 4,
     "Rubro": {
-      "ID": 0,
-      "Nombre": "",
-      "SubRubros": []
+      "ID": 4,
+      "Nombre": "test",
+      "SubRubros": [
+        {
+          "ID": 5,
+          "Nombre": "test1",
+          "RubroID": 4,
+          "Rubro": {
+            "ID": 0,
+            "Nombre": "",
+            "SubRubros": []
+          }
+        }
+      ]
     },
     "SubRubroID": 5,
     "SubRubro": {
-      "ID": 0,
-      "Nombre": "",
-      "RubroID": 0,
+      "ID": 5,
+      "Nombre": "test1",
+      "RubroID": 4,
       "Rubro": {
         "ID": 0,
         "Nombre": "",
@@ -278,7 +289,10 @@
       }
     },
     "MarcaID": 4,
-    "Marca": null,
+    "Marca": {
+      "ID": 4,
+      "Nombre": "das"
+    },
     "PorcentajeIva": 21,
     "FechaMod": "2025-04-23T21:10:26.1286068-03:00",
     "FechaModPrecio": "2025-04-23T21:10:26.1286084-03:00",
@@ -298,7 +312,60 @@
     "EstadoComentario": "",
     "DeudaTotal": 0,
     "Estado": 0,
-    "StockItem": null
+    "StockItem": {
+      "StockItemID": 3,
+      "ProductoID": 3,
+      "CantidadDisponible": 0,
+      "Producto": {
+        "ProductoID": 0,
+        "CodigoAlfa": "",
+        "CodigoBarra": "",
+        "Nombre": "",
+        "Descripcion": "",
+        "PCosto": 0,
+        "PContado": 0,
+        "PLista": 0,
+        "RubroID": 0,
+        "Rubro": {
+          "ID": 0,
+          "Nombre": "",
+          "SubRubros": []
+        },
+        "SubRubroID": 0,
+        "SubRubro": {
+          "ID": 0,
+          "Nombre": "",
+          "RubroID": 0,
+          "Rubro": {
+            "ID": 0,
+            "Nombre": "",
+            "SubRubros": []
+          }
+        },
+        "MarcaID": 0,
+        "Marca": null,
+        "PorcentajeIva": 21,
+        "FechaMod": "2025-04-24T00:10:26.1535038Z",
+        "FechaModPrecio": "2025-04-24T00:10:26.1535042Z",
+        "Entregable": false,
+        "NoListar": false,
+        "Proveedor": {
+          "ProveedorID": 0,
+          "Nombre": "",
+          "Direccion": "",
+          "Telefono": "",
+          "Email": "",
+          "CondicionesPago": "",
+          "ProductosAsignados": []
+        },
+        "Usuario": "",
+        "ModificadoPor": "",
+        "EstadoComentario": "",
+        "DeudaTotal": 0,
+        "Estado": 0,
+        "StockItem": null
+      }
+    }
   },
   {
     "ProductoID": 4,
@@ -310,6 +377,122 @@
     "PContado": 121,
     "PLista": 12,
     "RubroID": 4,
+    "Rubro": {
+      "ID": 4,
+      "Nombre": "test",
+      "SubRubros": [
+        {
+          "ID": 5,
+          "Nombre": "test1",
+          "RubroID": 4,
+          "Rubro": {
+            "ID": 0,
+            "Nombre": "",
+            "SubRubros": []
+          }
+        }
+      ]
+    },
+    "SubRubroID": 5,
+    "SubRubro": {
+      "ID": 5,
+      "Nombre": "test1",
+      "RubroID": 4,
+      "Rubro": {
+        "ID": 0,
+        "Nombre": "",
+        "SubRubros": []
+      }
+    },
+    "MarcaID": 4,
+    "Marca": {
+      "ID": 4,
+      "Nombre": "das"
+    },
+    "PorcentajeIva": 21,
+    "FechaMod": "2025-04-23T21:10:26.2713254-03:00",
+    "FechaModPrecio": "2025-04-23T21:10:26.2713274-03:00",
+    "Entregable": false,
+    "NoListar": false,
+    "Proveedor": {
+      "ProveedorID": 0,
+      "Nombre": "",
+      "Direccion": "",
+      "Telefono": "",
+      "Email": "",
+      "CondicionesPago": "",
+      "ProductosAsignados": []
+    },
+    "Usuario": "",
+    "ModificadoPor": "Sistema",
+    "EstadoComentario": "",
+    "DeudaTotal": 0,
+    "Estado": 0,
+    "StockItem": {
+      "StockItemID": 4,
+      "ProductoID": 4,
+      "CantidadDisponible": 0,
+      "Producto": {
+        "ProductoID": 0,
+        "CodigoAlfa": "",
+        "CodigoBarra": "",
+        "Nombre": "",
+        "Descripcion": "",
+        "PCosto": 0,
+        "PContado": 0,
+        "PLista": 0,
+        "RubroID": 0,
+        "Rubro": {
+          "ID": 0,
+          "Nombre": "",
+          "SubRubros": []
+        },
+        "SubRubroID": 0,
+        "SubRubro": {
+          "ID": 0,
+          "Nombre": "",
+          "RubroID": 0,
+          "Rubro": {
+            "ID": 0,
+            "Nombre": "",
+            "SubRubros": []
+          }
+        },
+        "MarcaID": 0,
+        "Marca": null,
+        "PorcentajeIva": 21,
+        "FechaMod": "2025-04-24T00:10:26.2905906Z",
+        "FechaModPrecio": "2025-04-24T00:10:26.2905912Z",
+        "Entregable": false,
+        "NoListar": false,
+        "Proveedor": {
+          "ProveedorID": 0,
+          "Nombre": "",
+          "Direccion": "",
+          "Telefono": "",
+          "Email": "",
+          "CondicionesPago": "",
+          "ProductosAsignados": []
+        },
+        "Usuario": "",
+        "ModificadoPor": "",
+        "EstadoComentario": "",
+        "DeudaTotal": 0,
+        "Estado": 0,
+        "StockItem": null
+      }
+    }
+  },
+  {
+    "ProductoID": 5,
+    "CodigoAlfa": "P005",
+    "CodigoBarra": "508025528",
+    "Nombre": "errewwreer1",
+    "Descripcion": "weqew|",
+    "PCosto": 12,
+    "PContado": 12,
+    "PLista": 12,
+    "RubroID": 1,
     "Rubro": {
       "ID": 0,
       "Nombre": "",
@@ -326,11 +509,11 @@
         "SubRubros": []
       }
     },
-    "MarcaID": 4,
+    "MarcaID": 2,
     "Marca": null,
-    "PorcentajeIva": 21,
-    "FechaMod": "2025-04-23T21:10:26.2713254-03:00",
-    "FechaModPrecio": "2025-04-23T21:10:26.2713274-03:00",
+    "PorcentajeIva": 12,
+    "FechaMod": "2025-04-23T21:39:38.0161979-03:00",
+    "FechaModPrecio": "2025-04-23T21:39:38.0162001-03:00",
     "Entregable": false,
     "NoListar": false,
     "Proveedor": {

@@ -1,0 +1,80 @@
+﻿@model Javo2.ViewModels.Operaciones.Stock.AjusteStockViewModel
+@inject Javo2.IServices.IProductoService ProductoService
+
+@{
+    ViewBag.Title = "Ajuste de Stock";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    // Obtengo el producto para mostrar nombre y descripción
+    var producto = await ProductoService.GetProductoByIDAsync(Model.ProductoID);
+}
+
+<section class="container-fluid py-3">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="card shadow-sm bg-dark text-light">
+                <div class="card-header">
+                    <h2 class="h5 mb-0">@ViewBag.Title</h2>
+                </div>
+                <div class="card-body">
+                    <!-- Información del producto -->
+                    <div class="mb-4">
+                        <h4>@(producto?.Nombre ?? $"Producto ID: {Model.ProductoID}")</h4>
+                        @if (!string.IsNullOrWhiteSpace(producto?.Descripcion))
+                        {
+                            <p class="text-muted">@producto.Descripcion</p>
+                        }
+                    </div>
+
+                    <!-- Formulario de ajuste de stock -->
+                    <form asp-action="AjusteStock" method="post" novalidate>
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="ProductoID" />
+
+                        <div class="mb-3">
+                            <label asp-for="CantidadActual" class="form-label text-light">Cantidad Actual</label>
+                            <input asp-for="CantidadActual"
+                                   class="form-control bg-secondary text-light"
+                                   readonly />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="NuevaCantidad" class="form-label text-light">Nueva Cantidad</label>
+                            <input asp-for="NuevaCantidad"
+                                   type="number"
+                                   min="0"
+                                   class="form-control bg-secondary text-light" />
+                            <span asp-validation-for="NuevaCantidad" class="invalid-feedback d-block"></span>
+                            <small class="text-muted">
+                                Ingrese la cantidad total deseada. El sistema calculará el movimiento necesario.
+                            </small>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Motivo" class="form-label text-light">Motivo del Ajuste</label>
+                            <textarea asp-for="Motivo"
+                                      class="form-control bg-secondary text-light"
+                                      rows="3"
+                                      placeholder="Explique brevemente el motivo del ajuste de stock..."></textarea>
+                            <span asp-validation-for="Motivo" class="invalid-feedback d-block"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary me-2">
+                                <i class="bi bi-save me-1"></i>
+                                Guardar
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-light">
+                                <i class="bi bi-arrow-left me-1"></i>
+                                Volver
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

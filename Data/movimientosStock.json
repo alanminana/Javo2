@@ -1,1 +1,10 @@
-﻿
+[
+  {
+    "MovimientoStockID": 1,
+    "ProductoID": 5,
+    "Fecha": "2025-04-24T00:39:38.0910901Z",
+    "TipoMovimiento": "Entrada",
+    "Cantidad": 40,
+    "Motivo": "Stock inicial al crear producto"
+  }
+]

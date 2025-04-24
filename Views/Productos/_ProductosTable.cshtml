@@ -21,17 +21,20 @@
             <div class="btn-group" role="group" aria-label="Acciones para @producto.Nombre">
                 <a asp-action="Edit" asp-route-id="@producto.ProductoID" class="btn btn-sm btn-outline-warning" title="Editar">
                     <i class="bi bi-pencil-square"></i>
-                    <span class="visually-hidden">Editar</span>
                 </a>
                 <a asp-action="Details" asp-route-id="@producto.ProductoID" class="btn btn-sm btn-outline-info" title="Detalles">
                     <i class="bi bi-eye"></i>
-                    <span class="visually-hidden">Detalles</span>
+                </a>
+                <a asp-action="AjusteStock" asp-route-id="@producto.ProductoID" class="btn btn-sm btn-outline-primary" title="Ajustar Stock">
+                    <i class="bi bi-gear"></i>
+                </a>
+                <a asp-action="MovimientosStock" asp-route-id="@producto.ProductoID" class="btn btn-sm btn-outline-success" title="Ver Movimientos de Stock">
+                    <i class="bi bi-list-ol"></i>
                 </a>
                 <form asp-action="Delete" asp-route-id="@producto.ProductoID" method="post" class="d-inline" onsubmit="return confirm('¿Eliminar @producto.Nombre?');">
                     @Html.AntiForgeryToken()
                     <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
                         <i class="bi bi-trash"></i>
-                        <span class="visually-hidden">Eliminar</span>
                     </button>
                 </form>
             </div>

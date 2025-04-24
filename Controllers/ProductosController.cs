@@ -6,6 +6,7 @@ using Javo2.IServices;
 using Javo2.IServices.Common;
 using Javo2.Models;
 using Javo2.ViewModels.Operaciones.Productos;
+using Javo2.ViewModels.Operaciones.Stock;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
@@ -339,3 +340,278 @@ namespace Javo2.Controllers
                 return View("Form", model);
             }
         }
+
+        // GET: Productos/Delete/5
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                _logger.LogInformation("ProductosController: Delete GET con ID={ID}", id);
+                var producto = await _productoService.GetProductoByIDAsync(id);
+                if (producto == null)
+                {
+                    _logger.LogWarning("Producto con ID={ID} no encontrado", id);
+                    return NotFound();
+                }
+                var model = _mapper.Map<ProductosViewModel>(producto);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en Delete GET de Productos");
+                return View("Error");
+            }
+        }
+
+        // POST: Productos/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            try
+            {
+                _logger.LogInformation("ProductosController: DeleteConfirmed POST con ID={ID}", id);
+                await _productoService.DeleteProductoAsync(id);
+                _logger.LogInformation("Producto ID={ID} eliminado correctamente", id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar producto");
+                return View("Error");
+            }
+        }
+
+        // AJAX: Get SubRubros for a Rubro
+        [HttpGet]
+        public async Task<IActionResult> GetSubRubros(int rubroId)
+        {
+            try
+            {
+                _logger.LogInformation("ProductosController: GetSubRubros GET con RubroID={ID}", rubroId);
+                var subRubros = await _dropdownService.GetSubRubrosAsync(rubroId);
+                return Json(subRubros);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener subrubros");
+                return Json(new List<SelectListItem>());
+            }
+        }
+
+        // POST: Productos/IncrementarPrecios
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> IncrementarPrecios(string ProductoIDs, decimal porcentaje, bool isAumento)
+        {
+            try
+            {
+                _logger.LogInformation("ProductosController: IncrementarPrecios POST con Productos={Productos}, Porcentaje={Porcentaje}, EsAumento={EsAumento}",
+                    ProductoIDs, porcentaje, isAumento);
+
+                if (string.IsNullOrEmpty(ProductoIDs))
+                {
+                    return Json(new { success = false, message = "Debe seleccionar al menos un producto." });
+                }
+
+                var ids = ProductoIDs.Split(',').Select(id => int.Parse(id)).ToList();
+
+                await _productoService.AdjustPricesAsync(ids, porcentaje, isAumento);
+
+                // Registrar en auditoría
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = User.Identity?.Name ?? "Sistema",
+                    Entidad = "Producto",
+                    Accion = "UpdatePrices",
+                    LlavePrimaria = string.Join(",", ids),
+                    Detalle = $"Ajuste de precios en {porcentaje}% ({(isAumento ? "Aumento" : "Descuento")})"
+                });
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al ajustar precios de productos");
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        // GET: Productos/AjusteStock/5
+        public async Task<IActionResult> AjusteStock(int id)
+        {
+            try
+            {
+                _logger.LogInformation("ProductosController: AjusteStock GET con ID={ID}", id);
+                var producto = await _productoService.GetProductoByIDAsync(id);
+                if (producto == null)
+                {
+                    _logger.LogWarning("Producto con ID={ID} no encontrado", id);
+                    return NotFound();
+                }
+
+                var model = new AjusteStockViewModel
+                {
+                    ProductoID = producto.ProductoID,
+                    CantidadActual = producto.StockItem?.CantidadDisponible ?? 0,
+                    NuevaCantidad = 0,
+                    Motivo = string.Empty
+                };
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en AjusteStock GET");
+                return View("Error");
+            }
+        }
+
+        // POST: Productos/AjusteStock/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AjusteStock(AjusteStockViewModel model)
+        {
+            try
+            {
+                _logger.LogInformation("ProductosController: AjusteStock POST con ProductoID={ID}", model.ProductoID);
+
+                if (!ModelState.IsValid)
+                {
+                    LogModelStateErrors();
+                    return View(model);
+                }
+
+                var stockItem = await _stockService.GetStockItemByProductoIDAsync(model.ProductoID);
+                int cantidadActual = stockItem?.CantidadDisponible ?? 0;
+
+                if (stockItem == null)
+                {
+                    stockItem = new StockItem
+                    {
+                        ProductoID = model.ProductoID,
+                        CantidadDisponible = model.NuevaCantidad
+                    };
+                    await _stockService.CreateStockItemAsync(stockItem);
+                }
+                else
+                {
+                    int diferencia = model.NuevaCantidad - cantidadActual;
+                    stockItem.CantidadDisponible = model.NuevaCantidad;
+                    await _stockService.UpdateStockItemAsync(stockItem);
+                }
+
+                // Registrar movimiento
+                var tipoMovimiento = model.NuevaCantidad > cantidadActual ? "Entrada" : "Salida";
+                var cantidad = Math.Abs(model.NuevaCantidad - cantidadActual);
+
+                if (cantidad > 0) // Solo registrar si hay cambio
+                {
+                    var movimiento = new MovimientoStock
+                    {
+                        ProductoID = model.ProductoID,
+                        TipoMovimiento = tipoMovimiento,
+                        Cantidad = cantidad,
+                        Motivo = model.Motivo
+                    };
+
+                    await _stockService.RegistrarMovimientoAsync(movimiento);
+                }
+
+                TempData["Success"] = "Stock ajustado correctamente.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en AjusteStock POST");
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(model);
+            }
+        }
+
+        // GET: Productos/Filter
+        [HttpGet]
+        public async Task<IActionResult> Filter(ProductoFilterDtoViewModel filters)
+        {
+            try
+            {
+                _logger.LogInformation("ProductosController: Filter GET con filtros={@Filters}", filters);
+
+                // Convertir a DTO
+                var filterDto = new ProductoFilterDto
+                {
+                    Nombre = filters.Nombre,
+                    Categoria = filters.Categoria,
+                    PrecioMinimo = filters.PrecioMinimo,
+                    PrecioMaximo = filters.PrecioMaximo,
+                    Codigo = filters.Codigo,
+                    Rubro = filters.Rubro,
+                    SubRubro = filters.SubRubro,
+                    Marca = filters.Marca
+                };
+
+                var productos = await _productoService.FilterProductosAsync(filterDto);
+                var model = _mapper.Map<List<ProductosViewModel>>(productos);
+
+                return PartialView("_ProductosTable", model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en Filter de Productos");
+                return PartialView("_ProductosTable", new List<ProductosViewModel>());
+            }
+        }
+
+        // GET: Productos/MovimientosStock/5
+        [HttpGet]
+        public async Task<IActionResult> MovimientosStock(int id)
+        {
+            try
+            {
+                _logger.LogInformation("ProductosController: MovimientosStock GET con ID={ID}", id);
+                var producto = await _productoService.GetProductoByIDAsync(id);
+                if (producto == null)
+                {
+                    _logger.LogWarning("Producto con ID={ID} no encontrado", id);
+                    return NotFound();
+                }
+
+                var stockItem = await _stockService.GetStockItemByProductoIDAsync(id);
+                var movimientos = await _stockService.GetMovimientosByProductoIDAsync(id);
+
+                var model = new StockItemViewModel
+                {
+                    StockItemID = stockItem?.StockItemID ?? 0,
+                    ProductoID = id,
+                    NombreProducto = producto.Nombre,
+                    CantidadDisponible = stockItem?.CantidadDisponible ?? 0,
+                    Movimientos = _mapper.Map<IEnumerable<MovimientoStockViewModel>>(movimientos)
+                };
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en MovimientosStock GET");
+                return View("Error");
+            }
+        }
+
+        // Private methods
+        private async Task PopulateDropdownsAsync(ProductosViewModel model)
+        {
+            model.Rubros = await _dropdownService.GetRubrosAsync();
+            model.Marcas = await _dropdownService.GetMarcasAsync();
+
+            if (model.SelectedRubroID > 0)
+            {
+                model.SubRubros = await _dropdownService.GetSubRubrosAsync(model.SelectedRubroID);
+            }
+            else
+            {
+                model.SubRubros = new List<SelectListItem>();
+            }
+        }
+    }
+}

@@ -30,9 +30,18 @@ namespace Javo2.Services
         {
             lock (_lock)
             {
-                _stockItems = JsonFileHelper.LoadFromJsonFile<List<StockItem>>(_stockFilePath) ?? new List<StockItem>();
-                _movimientos = JsonFileHelper.LoadFromJsonFile<List<MovimientoStock>>(_movimientosFilePath) ?? new List<MovimientoStock>();
-                _logger.LogInformation("Stock data loaded: {Count} items and {MovCount} movimientos.", _stockItems.Count, _movimientos.Count);
+                try
+                {
+                    _stockItems = JsonFileHelper.LoadFromJsonFile<List<StockItem>>(_stockFilePath) ?? new List<StockItem>();
+                    _movimientos = JsonFileHelper.LoadFromJsonFile<List<MovimientoStock>>(_movimientosFilePath) ?? new List<MovimientoStock>();
+                    _logger.LogInformation("Stock data loaded: {Count} items and {MovCount} movimientos.", _stockItems.Count, _movimientos.Count);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error loading stock data, initializing with empty collections");
+                    _stockItems = new List<StockItem>();
+                    _movimientos = new List<MovimientoStock>();
+                }
             }
         }
 
@@ -46,6 +55,7 @@ namespace Javo2.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error saving stock data.");
+                throw; // Re-throw to let calling code handle it
             }
         }
 
@@ -59,6 +69,7 @@ namespace Javo2.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error saving movimientos data.");
+                throw; // Re-throw to let calling code handle it
             }
         }
 
