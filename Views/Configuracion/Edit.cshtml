@@ -1,0 +1,89 @@
+﻿<!-- Views/Configuracion/Edit.cshtml -->
+@model Javo2.Models.ConfiguracionSistema
+@{
+    ViewBag.Title = "Editar Configuración";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="container-fluid py-3">
+    <div class="card shadow-sm bg-dark text-light">
+        <div class="card-header">
+            <h2 class="h5 mb-0">@ViewBag.Title</h2>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="ConfiguracionID" />
+                <input type="hidden" asp-for="Modulo" />
+                <input type="hidden" asp-for="Clave" />
+                <input type="hidden" asp-for="TipoDato" />
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Módulo</label>
+                        <input class="form-control bg-secondary text-light" value="@Model.Modulo" readonly />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Clave</label>
+                        <input class="form-control bg-secondary text-light" value="@Model.Clave" readonly />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Valor" class="form-label">Valor</label>
+                        <input asp-for="Valor" class="form-control bg-dark text-light" />
+                        <span asp-validation-for="Valor" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Tipo de Dato</label>
+                        <input class="form-control bg-secondary text-light" value="@Model.TipoDato" readonly />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Descripcion" class="form-label">Descripción</label>
+                    <textarea asp-for="Descripcion" class="form-control bg-dark text-light" rows="3"></textarea>
+                    <span asp-validation-for="Descripcion" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <a asp-action="Index" asp-route-modulo="@Model.Modulo" class="btn btn-outline-secondary me-2">
+                        <i class="bi bi-arrow-left me-1"></i>Volver
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save me-1"></i>Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        // Validación según el tipo de dato
+        $(function() {
+            const tipoDato = '@Model.TipoDato';
+            const valorInput = $('#Valor');
+
+            valorInput.on('input', function() {
+                let isValid = true;
+                const valor = $(this).val();
+
+                if (tipoDato === 'int') {
+                    isValid = /^\d+$/.test(valor);
+                } else if (tipoDato === 'decimal') {
+                    isValid = /^\d+(\.\d+)?$/.test(valor);
+                } else if (tipoDato === 'bool') {
+                    isValid = valor === 'true' || valor === 'false';
+                }
+
+                if (isValid) {
+                    $(this).removeClass('is-invalid').addClass('is-valid');
+                } else {
+                    $(this).removeClass('is-valid').addClass('is-invalid');
+                }
+            });
+        });
+    </script>
+}

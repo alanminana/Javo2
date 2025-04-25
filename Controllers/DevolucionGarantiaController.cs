@@ -23,6 +23,8 @@ namespace Javo2.Controllers
         private readonly IStockService _stockService;
         private readonly IMapper _mapper;
 
+
+
         public DevolucionGarantiaController(
             IDevolucionGarantiaService devolucionService,
             IVentaService ventaService,
@@ -68,7 +70,6 @@ namespace Javo2.Controllers
         }
 
         // GET: DevolucionGarantia/Create
-        // GET: DevolucionGarantia/Create
         public IActionResult Create()
         {
             var model = new DevolucionGarantiaViewModel
@@ -77,9 +78,9 @@ namespace Javo2.Controllers
                 TiposCaso = GetTiposCasoSelectList(),
                 Motivos = GetMotivosSelectList()
             };
-            // antes: return View(model);
-            return View("Create", model);
+            return View("Form", model); // Usar Form en lugar de Create
         }
+
 
         // POST: DevolucionGarantia/BuscarVenta
         [HttpPost]

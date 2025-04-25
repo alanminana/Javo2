@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Javo2.ViewModels.Operaciones.Productos
 {
-    public class AjustePrecioViewModel
+    public class ConfiguracionIndexViewModel
     {
         [Required(ErrorMessage = "Seleccione al menos un producto.")]
         public List<int> ProductoIDs { get; set; } = new List<int>();

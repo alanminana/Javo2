@@ -8,20 +8,22 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
 <section class="container-fluid py-3">
     <div class="card shadow-sm bg-dark text-light">
         <div class="card-header">
             <h2 class="h5 mb-0">@ViewBag.Title</h2>
         </div>
-        <div class="card-body">
-            <form asp-action="@(isEdit ? "Edit" : "Create")" method="post" id="formDevolucion">
+        <<div class="card-body">
+            <form asp-action="@(isEdit ? "Edit" : "Create")" method="post">
                 @Html.AntiForgeryToken()
                 @if (isEdit)
                 {
+                    <input type="hidden" asp-for="DevolucionGarantiaID" />
                     @Html.HiddenFor(m => m.DevolucionGarantiaID)
                 }
 
-                @* Paso 1: Buscar Venta (solo en Create) *@
+                
                 @if (!isEdit)
                 {
                     <div id="paso1" class="mb-4">

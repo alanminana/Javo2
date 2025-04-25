@@ -1,0 +1,103 @@
+﻿<!-- Views/Configuracion/Index.cshtml -->
+@model Javo2.ViewModels.Configuracion.ConfiguracionIndexViewModel
+@{
+    ViewBag.Title = "Configuración del Sistema";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="container-fluid py-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">@ViewBag.Title</h1>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm bg-dark text-light">
+        <div class="card-body">
+            <!-- Pestañas de Módulos -->
+            <ul class="nav nav-tabs mb-4" id="configuracionTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link @(string.IsNullOrEmpty(Model.ModuloSeleccionado) ? "active" : "")"
+                            id="todos-tab"
+                            data-bs-toggle="tab"
+                            data-bs-target="#todos"
+                            type="button"
+                            role="tab"
+                            aria-controls="todos"
+                            aria-selected="@(string.IsNullOrEmpty(Model.ModuloSeleccionado) ? "true" : "false")">
+                        Todos
+                    </button>
+                </li>
+                @foreach (var modulo in Model.Modulos)
+                {
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link @(modulo == Model.ModuloSeleccionado ? "active" : "")"
+                                id="@modulo-tab"
+                                data-bs-toggle="tab"
+                                data-bs-target="#@modulo"
+                                type="button"
+                                role="tab"
+                                aria-controls="@modulo"
+                                aria-selected="@(modulo == Model.ModuloSeleccionado ? "true" : "false")">
+                            @modulo
+                        </button>
+                    </li>
+                }
+            </ul>
+
+            <!-- Contenido de las Pestañas -->
+            <div class="tab-content" id="configuracionTabContent">
+                <div class="tab-pane fade @(string.IsNullOrEmpty(Model.ModuloSeleccionado) ? "show active" : "")"
+                     id="todos"
+                     role="tabpanel"
+                     aria-labelledby="todos-tab">
+                    @await Html.PartialAsync("_ConfiguracionTable", Model.Configuraciones)
+                </div>
+
+                @foreach (var modulo in Model.Modulos)
+                {
+                    <div class="tab-pane fade @(modulo == Model.ModuloSeleccionado ? "show active" : "")"
+                         id="@modulo"
+                         role="tabpanel"
+                         aria-labelledby="@modulo-tab">
+                        @await Html.PartialAsync("_ConfiguracionTable", Model.Configuraciones.Where(c => c.Modulo == modulo).ToList())
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        // Activar pestaña según URL
+        $(function() {
+            // Conservar la pestaña seleccionada al recargar
+            let url = new URL(window.location.href);
+            let modulo = url.searchParams.get('modulo');
+
+            if (modulo) {
+                $(`#${modulo}-tab`).tab('show');
+            } else {
+                $('#todos-tab').tab('show');
+            }
+
+            // Actualizar URL al cambiar de pestaña
+            $('.nav-link').on('click', function() {
+                let selModulo = $(this).attr('id').replace('-tab', '');
+                if (selModulo === 'todos') {
+                    url.searchParams.delete('modulo');
+                } else {
+                    url.searchParams.set('modulo', selModulo);
+                }
+                history.replaceState(null, '', url);
+            });
+        });
+    </script>
+}

@@ -13,6 +13,7 @@ namespace Javo2.Services
 {
     public class ProductoService : IProductoService
     {
+        private readonly IConfiguracionService _configuracionService;
         private readonly ILogger<ProductoService> _logger;
         private readonly ICatalogoService _catalogoService;
         private readonly IStockService _stockService;
@@ -27,13 +28,15 @@ namespace Javo2.Services
             ILogger<ProductoService> logger,
             ICatalogoService catalogoService,
             IStockService stockService,
-            IPromocionesService promocionesService
+            IPromocionesService promocionesService,
+            IConfiguracionService configuracionService
         )
         {
             _logger = logger;
             _catalogoService = catalogoService;
             _stockService = stockService;
             _promocionesService = promocionesService;
+            _configuracionService = configuracionService;
 
             _logger.LogInformation("ProductoService: Inicializando servicio");
             CargarDesdeJsonAsync().GetAwaiter().GetResult();
@@ -212,11 +215,28 @@ namespace Javo2.Services
 
             return producto;
         }
+        private async Task AplicarReglasPrecios(Producto producto)
+        {
+            // Obtener porcentajes desde la configuración
+            var porcentajeLista = await _configuracionService.GetValorAsync("Productos", "PorcentajeGananciaPLista", 84m);
+            var porcentajeContado = await _configuracionService.GetValorAsync("Productos", "PorcentajeGananciaPContado", 50m);
 
+            // Aplicar reglas
+            if (producto.PContado <= 0) // Solo calcular si no se ingresó un valor específico
+            {
+                producto.PContado = Math.Round(producto.PCosto * (1 + porcentajeContado / 100m), 2);
+            }
+
+            // PLista siempre se calcula
+            producto.PLista = Math.Round(producto.PCosto * (1 + porcentajeLista / 100m), 2);
+        }
         public async Task CreateProductoAsync(Producto producto)
         {
             _logger.LogInformation("CreateProductoAsync: {Nombre}", producto.Nombre);
             ValidateProducto(producto);
+
+            // Aplicar reglas de precios antes de crear el producto
+            await AplicarReglasPrecios(producto);
 
             lock (_lock)
             {
@@ -244,6 +264,9 @@ namespace Javo2.Services
             _logger.LogInformation("UpdateProductoAsync: ID={ID}", producto.ProductoID);
             ValidateProducto(producto);
 
+            // Aplicar reglas de precios antes de actualizar el producto
+            await AplicarReglasPrecios(producto);
+
             lock (_lock)
             {
                 var existingProducto = _productos.FirstOrDefault(p => p.ProductoID == producto.ProductoID);
@@ -257,7 +280,7 @@ namespace Javo2.Services
                 existingProducto.Descripcion = producto.Descripcion;
                 existingProducto.PCosto = producto.PCosto;
                 existingProducto.PContado = producto.PContado;
-                existingProducto.PLista = producto.PLista;
+                existingProducto.PLista = producto.PLista;  // Se ha aplicado la regla de precios
                 existingProducto.PorcentajeIva = producto.PorcentajeIva;
                 existingProducto.RubroID = producto.RubroID;
                 existingProducto.SubRubroID = producto.SubRubroID;
@@ -348,9 +371,11 @@ namespace Javo2.Services
                     var producto = _productos.FirstOrDefault(p => p.ProductoID == id);
                     if (producto != null)
                     {
+                        // Ajustar PCosto
                         producto.PCosto *= factor;
-                        producto.PContado *= factor;
-                        producto.PLista *= factor;
+
+                        // Aplicar reglas de precios para recalcular PContado y PLista
+                        AplicarReglasPrecios(producto).GetAwaiter().GetResult();
                         producto.FechaModPrecio = DateTime.Now;
 
                         _logger.LogInformation("Precio ajustado para producto ID={ID}", id);

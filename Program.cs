@@ -35,6 +35,7 @@ builder.Services.AddScoped<IPromocionesService, PromocionesService>();
 builder.Services.AddScoped<IAuditoriaService, AuditoriaService>();
 builder.Services.AddScoped<IVentaService, VentaService>();
 builder.Services.AddScoped<ICotizacionService, CotizacionService>();
+builder.Services.AddScoped<IConfiguracionService, ConfiguracionService>();
 
 // Devoluciones debe ser Scoped para poder inyectar IVentaService, IProductoService, etc.
 builder.Services.AddScoped<IDevolucionGarantiaService, DevolucionGarantiaService>();

@@ -29,14 +29,14 @@ namespace Javo2.Controllers
         [HttpGet]
         public IActionResult Form()
         {
-            var model = new AjustePrecioViewModel();
+            var model = new ConfiguracionIndexViewModel();
             return View(model); // Se debe crear Views/AjustePrecios/Form.cshtml
         }
 
         // POST: AjustePrecios/Form
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Form(AjustePrecioViewModel model)
+        public async Task<IActionResult> Form(ConfiguracionIndexViewModel model)
         {
             if (!ModelState.IsValid)
             {

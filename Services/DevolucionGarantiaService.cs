@@ -41,6 +41,93 @@ namespace Javo2.Services
 
             CargarDesdeJsonAsync().GetAwaiter().GetResult();
         }
+        private void SeedData()
+        {
+            lock (_lock)
+            {
+                _devoluciones = new List<DevolucionGarantia>
+        {
+            new DevolucionGarantia
+            {
+                DevolucionGarantiaID = 1,
+                VentaID = 1, // Referencia a una venta existente
+                NombreCliente = "weqwe weqwe",
+                FechaSolicitud = DateTime.Now,
+                TipoCaso = TipoCaso.Devolucion,
+                Motivo = "Producto defectuoso",
+                Descripcion = "El producto presentaba fallas al encenderlo",
+                Estado = EstadoCaso.Pendiente,
+                Usuario = "Sistema",
+                Items = new List<ItemDevolucionGarantia>
+                {
+                    new ItemDevolucionGarantia
+                    {
+                        ProductoID = 1,
+                        NombreProducto = "Producto Inicial",
+                        Cantidad = 1,
+                        PrecioUnitario = 150,
+                        ProductoDanado = true,
+                        EstadoProducto = "Defectuoso"
+                    }
+                }
+            },
+            new DevolucionGarantia
+            {
+                DevolucionGarantiaID = 2,
+                VentaID = 2,
+                NombreCliente = "weqwe weqwe",
+                FechaSolicitud = DateTime.Now.AddDays(-5),
+                TipoCaso = TipoCaso.Cambio,
+                Motivo = "Cambio de producto",
+                Descripcion = "Cliente desea cambiar por un modelo diferente",
+                Estado = EstadoCaso.Pendiente,
+                Usuario = "Sistema",
+                Items = new List<ItemDevolucionGarantia>
+                {
+                    new ItemDevolucionGarantia
+                    {
+                        ProductoID = 2,
+                        NombreProducto = "Afeitadora",
+                        Cantidad = 1,
+                        PrecioUnitario = 24,
+                        ProductoDanado = false,
+                        EstadoProducto = "Funcional"
+                    }
+                },
+                CambiosProducto = new List<CambioProducto>
+                {
+                    new CambioProducto
+                    {
+                        ProductoOriginalID = 2,
+                        NombreProductoOriginal = "Afeitadora",
+                        ProductoNuevoID = 5,
+                        NombreProductoNuevo = "errewwreer1",
+                        Cantidad = 1,
+                        DiferenciaPrecio = 0
+                    }
+                }
+            }
+        };
+
+                _nextDevolucionID = _devoluciones.Max(d => d.DevolucionGarantiaID) + 1;
+                SaveData();
+                _logger.LogInformation("DevolucionGarantiaService: Datos semilla creados con {Count} devoluciones", _devoluciones.Count);
+            }
+        }
+
+        private void SaveData()
+        {
+            try
+            {
+                JsonFileHelper.SaveToJsonFile(_jsonFilePath, _devoluciones);
+                _logger.LogInformation("DevolucionGarantiaService: Datos guardados en {File}", _jsonFilePath);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al guardar datos de devoluciones");
+                throw;
+            }
+        }
 
         private async Task CargarDesdeJsonAsync()
         {
@@ -53,24 +140,21 @@ namespace Javo2.Services
                     if (_devoluciones.Any())
                     {
                         _nextDevolucionID = _devoluciones.Max(d => d.DevolucionGarantiaID) + 1;
-                        _nextItemID = _devoluciones.SelectMany(d => d.Items).Any() ?
-                            _devoluciones.SelectMany(d => d.Items).Max(i => i.ItemDevolucionGarantiaID) + 1 : 1;
-                        _nextCambioID = _devoluciones.SelectMany(d => d.CambiosProducto).Any() ?
-                            _devoluciones.SelectMany(d => d.CambiosProducto).Max(c => c.CambioProductoID) + 1 : 1;
+                    }
+                    else
+                    {
+                        SeedData(); // Crear datos iniciales si está vacío
                     }
                 }
-                _logger.LogInformation("Devoluciones cargadas: {Count}", _devoluciones.Count);
+                _logger.LogInformation("DevolucionGarantiaService: {Count} devoluciones cargadas", _devoluciones.Count);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al cargar devoluciones desde JSON");
                 _devoluciones = new List<DevolucionGarantia>();
-                _nextDevolucionID = 1;
-                _nextItemID = 1;
-                _nextCambioID = 1;
+                SeedData();
             }
         }
-
         private async Task GuardarEnJsonAsync()
         {
             try
