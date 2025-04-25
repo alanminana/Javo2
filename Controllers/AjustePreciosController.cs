@@ -1,5 +1,6 @@
 ﻿// File: Controllers/AjustePreciosController.cs
 using Javo2.IServices;
+using Javo2.IServices.Authentication;
 using Javo2.ViewModels.Operaciones.Productos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

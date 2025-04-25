@@ -1,5 +1,6 @@
 ﻿// File: Services/AjustePrecioService.cs
 using Javo2.IServices;
+using Javo2.IServices.Authentication;
 using Javo2.Models;
 using Microsoft.Extensions.Logging;
 using System;
