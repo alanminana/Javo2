@@ -131,9 +131,9 @@
     "CodigoBarra": "546084531",
     "Nombre": "afeitadora",
     "Descripcion": "afeita",
-    "PCosto": 24,
-    "PContado": 24,
-    "PLista": 11.4791256,
+    "PCosto": 48.96,
+    "PContado": 73.44,
+    "PLista": 49.45,
     "RubroID": 1,
     "Rubro": {
       "ID": 1,
@@ -179,7 +179,7 @@
     },
     "PorcentajeIva": 21,
     "FechaMod": "2025-04-23T15:12:19.82925-03:00",
-    "FechaModPrecio": "2025-04-23T15:12:46.0090122-03:00",
+    "FechaModPrecio": "2025-04-25T14:53:57.0477284-03:00",
     "Entregable": false,
     "NoListar": false,
     "Proveedor": {
@@ -766,6 +766,55 @@
     "PorcentajeIva": 21,
     "FechaMod": "2025-04-24T11:33:05.1120028-03:00",
     "FechaModPrecio": "2025-04-24T11:33:05.1120042-03:00",
+    "Entregable": false,
+    "NoListar": false,
+    "Proveedor": {
+      "ProveedorID": 0,
+      "Nombre": "",
+      "Direccion": "",
+      "Telefono": "",
+      "Email": "",
+      "CondicionesPago": "",
+      "ProductosAsignados": []
+    },
+    "Usuario": "",
+    "ModificadoPor": "Sistema",
+    "EstadoComentario": "",
+    "DeudaTotal": 0,
+    "Estado": 0,
+    "StockItem": null
+  },
+  {
+    "ProductoID": 8,
+    "CodigoAlfa": "P008",
+    "CodigoBarra": "699417760",
+    "Nombre": "sadsdasad",
+    "Descripcion": "sdasd",
+    "PCosto": 12,
+    "PContado": 18.0,
+    "PLista": 12.12,
+    "RubroID": 2,
+    "Rubro": {
+      "ID": 0,
+      "Nombre": "",
+      "SubRubros": []
+    },
+    "SubRubroID": 7,
+    "SubRubro": {
+      "ID": 0,
+      "Nombre": "",
+      "RubroID": 0,
+      "Rubro": {
+        "ID": 0,
+        "Nombre": "",
+        "SubRubros": []
+      }
+    },
+    "MarcaID": 2,
+    "Marca": null,
+    "PorcentajeIva": 21.00,
+    "FechaMod": "2025-04-25T14:52:14.6739482-03:00",
+    "FechaModPrecio": "2025-04-25T14:52:14.6739514-03:00",
     "Entregable": false,
     "NoListar": false,
     "Proveedor": {

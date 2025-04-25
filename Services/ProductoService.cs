@@ -222,12 +222,7 @@ namespace Javo2.Services
             var porcentajeContado = await _configuracionService.GetValorAsync("Productos", "PorcentajeGananciaPContado", 50m);
 
             // Aplicar reglas
-            if (producto.PContado <= 0) // Solo calcular si no se ingresó un valor específico
-            {
-                producto.PContado = Math.Round(producto.PCosto * (1 + porcentajeContado / 100m), 2);
-            }
-
-            // PLista siempre se calcula
+            producto.PContado = Math.Round(producto.PCosto * (1 + porcentajeContado / 100m), 2);
             producto.PLista = Math.Round(producto.PCosto * (1 + porcentajeLista / 100m), 2);
         }
         public async Task CreateProductoAsync(Producto producto)

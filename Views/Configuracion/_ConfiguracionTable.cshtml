@@ -1,0 +1,66 @@
+﻿@model IEnumerable<Javo2.Models.ConfiguracionSistema>
+
+<div class="table-responsive">
+    <table class="table table-dark table-hover">
+        <thead>
+            <tr>
+                <th>Configuración</th>
+                <th>Valor</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var config in Model)
+            {
+                <tr>
+                    <td>
+                        <div class="fw-bold">@GetNombreAmigable(config.Clave)</div>
+                        <small class="text-muted">@config.Descripcion</small>
+                    </td>
+                    <td>
+                        @if (config.TipoDato == "decimal" || config.TipoDato == "int")
+                        {
+                            if (config.Clave.Contains("Porcentaje"))
+                            {
+                                <span class="fw-bold">@config.Valor%</span>
+                            }
+                            else
+                            {
+                                <span class="fw-bold">@config.Valor</span>
+                            }
+                        }
+                        else if (config.TipoDato == "bool")
+                        {
+                            <span class="badge @(bool.Parse(config.Valor) ? "bg-success" : "bg-danger")">
+                                @(bool.Parse(config.Valor) ? "Activado" : "Desactivado")
+                            </span>
+                        }
+                        else
+                        {
+                            @config.Valor
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@config.ConfiguracionID" class="btn btn-sm btn-primary">
+                            <i class="bi bi-pencil-square"></i> Editar
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@functions {
+    public string GetNombreAmigable(string clave)
+    {
+        return clave switch
+        {
+            "PorcentajeGananciaPLista" => "Porcentaje Ganancia Precio Lista",
+            "PorcentajeGananciaPContado" => "Porcentaje Ganancia Precio Contado",
+            "LimiteCreditoDefault" => "Límite de Crédito Predeterminado",
+            "DiasVencimientoFactura" => "Días para Vencimiento de Facturas",
+            _ => clave.Replace("Porcentaje", "% ").Replace("Default", "Predeterminado")
+        };
+    }
+}

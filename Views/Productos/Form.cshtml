@@ -1,444 +1,418 @@
 ﻿@model Javo2.ViewModels.Operaciones.Productos.ProductosViewModel
-@inject Javo2.IServices.IProductoService ProductoService
 
-@{
-    var isEdit = Model.ProductoID > 0;
-    ViewBag.Title = isEdit ? "Editar Producto" : "Crear Producto";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+<div class="card bg-dark text-light">
+    <div class="card-body">
+        <form asp-action="@(Model.ProductoID > 0 ? "Edit" : "Create")" method="post">
+            <input type="hidden" asp-for="ProductoID" />
+            <input type="hidden" asp-for="ModificadoPor" value="@(User.Identity?.Name ?? "Sistema")" />
 
-    // Cargar producto para mostrar nombre/descr en edición
-    var producto = isEdit
-        ? await ProductoService.GetProductoByIDAsync(Model.ProductoID)
-        : null;
-}
+            <!-- Campos que no deben ser modificados manualmente -->
+            <input type="hidden" asp-for="PContado" />
+            <input type="hidden" asp-for="PLista" />
 
-<section class="container-fluid py-3">
-    <div class="row justify-content-center">
-        <div class="col-12 col-md-10 col-lg-8">
-            <div class="card shadow-sm bg-dark text-light">
-                <div class="card-header">
-                    <h2 class="h5 mb-0">@ViewBag.Title</h2>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="Nombre" class="form-label">Nombre del Producto</label>
+                    <input asp-for="Nombre" class="form-control bg-dark text-light" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
                 </div>
-                <div class="card-body">
-                    @if (producto != null)
+                <div class="col-md-6">
+                    <label asp-for="SelectedRubroID" class="form-label">Rubro</label>
+                    <div class="input-group">
+                        <select asp-for="SelectedRubroID" asp-items="Model.Rubros" class="form-select bg-dark text-light" id="rubroDropdown">
+                            <option value="">-- Seleccione Rubro --</option>
+                        </select>
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#nuevoRubroModal">
+                            <i class="bi bi-plus-circle"></i>
+                        </button>
+                    </div>
+                    <span asp-validation-for="SelectedRubroID" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="SelectedSubRubroID" class="form-label">SubRubro</label>
+                    <div class="input-group">
+                        <select asp-for="SelectedSubRubroID" asp-items="Model.SubRubros" class="form-select bg-dark text-light" id="subRubroDropdown">
+                            <option value="">-- Seleccione SubRubro --</option>
+                        </select>
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#nuevoSubRubroModal" id="btnAddSubRubro">
+                            <i class="bi bi-plus-circle"></i>
+                        </button>
+                    </div>
+                    <span asp-validation-for="SelectedSubRubroID" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="SelectedMarcaID" class="form-label">Marca</label>
+                    <div class="input-group">
+                        <select asp-for="SelectedMarcaID" asp-items="Model.Marcas" class="form-select bg-dark text-light">
+                            <option value="">-- Seleccione Marca --</option>
+                        </select>
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#nuevaMarcaModal">
+                            <i class="bi bi-plus-circle"></i>
+                        </button>
+                    </div>
+                    <span asp-validation-for="SelectedMarcaID" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label asp-for="PCosto" class="form-label">Precio de Costo</label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input asp-for="PCosto" class="form-control bg-dark text-light" id="pCosto" />
+                    </div>
+                    <span asp-validation-for="PCosto" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Precio de Contado (calculado)</label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input id="pContadoDisplay" class="form-control bg-dark text-light" readonly />
+                    </div>
+                    <small class="text-muted">Cálculo automático</small>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Precio de Lista (calculado)</label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input id="pListaDisplay" class="form-control bg-dark text-light" readonly />
+                    </div>
+                    <small class="text-muted">Cálculo automático</small>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="PorcentajeIva" class="form-label">Porcentaje IVA</label>
+                    <div class="input-group">
+                        <input asp-for="PorcentajeIva" class="form-control bg-dark text-light" />
+                        <span class="input-group-text">%</span>
+                    </div>
+                    <span asp-validation-for="PorcentajeIva" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="StockInicial" class="form-label">Stock Inicial</label>
+                    <input asp-for="StockInicial" class="form-control bg-dark text-light" value="@(Model.ProductoID > 0 ? 0 : 0)" />
+                    <span asp-validation-for="StockInicial" class="text-danger"></span>
+                    @if (Model.ProductoID > 0)
                     {
-                        <div class="mb-4">
-                            <h4>@producto.Nombre</h4>
-                            @if (!string.IsNullOrWhiteSpace(producto.Descripcion))
-                            {
-                                <p class="text-muted">@producto.Descripcion</p>
-                            }
-                        </div>
+                        <small class="text-info">Cantidad actual: @Model.CantidadDisponible. Use ajuste de stock para cambios mayores.</small>
                     }
-
-                    <form asp-action="@(isEdit ? "Edit" : "Create")" method="post" novalidate>
-                        @Html.AntiForgeryToken()
-                        @Html.HiddenFor(m => m.ProductoID)
-                        @Html.HiddenFor(m => m.ModificadoPor)
-
-                        <!-- Información Básica -->
-                        <fieldset class="mb-4">
-                            <legend class="text-light">Información Básica</legend>
-                            <div class="row g-3">
-                                <div class="col-12">
-                                    <label asp-for="Nombre" class="form-label text-light">Nombre</label>
-                                    <input asp-for="Nombre"
-                                           class="form-control bg-secondary text-light"
-                                           placeholder="Ingrese nombre" />
-                                    <span asp-validation-for="Nombre" class="invalid-feedback d-block"></span>
-                                </div>
-                                <div class="col-12">
-                                    <label asp-for="Descripcion" class="form-label text-light">Descripción</label>
-                                    <textarea asp-for="Descripcion"
-                                              class="form-control bg-secondary text-light"
-                                              rows="3"
-                                              placeholder="Describe el producto"></textarea>
-                                    <span asp-validation-for="Descripcion" class="invalid-feedback d-block"></span>
-                                </div>
-                            </div>
-                        </fieldset>
-
-                        <!-- Precios e IVA -->
-                        <fieldset class="mb-4">
-                            <legend class="text-light">Precios e IVA</legend>
-                            <div class="row g-3">
-                                <div class="col-md-6 col-lg-3">
-                                    <label asp-for="PCosto" class="form-label text-light">Precio Costo</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-secondary text-light">$</span>
-                                        <input asp-for="PCosto"
-                                               type="number" step="0.01"
-                                               class="form-control bg-secondary text-light"
-                                               placeholder="0.00" />
-                                    </div>
-                                    <span asp-validation-for="PCosto" class="invalid-feedback d-block"></span>
-                                </div>
-                                <div class="col-md-6 col-lg-3">
-                                    <label asp-for="PContado" class="form-label text-light">Precio Contado</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-secondary text-light">$</span>
-                                        <input asp-for="PContado"
-                                               type="number" step="0.01"
-                                               class="form-control bg-secondary text-light"
-                                               placeholder="0.00" />
-                                    </div>
-                                    <span asp-validation-for="PContado" class="invalid-feedback d-block"></span>
-                                </div>
-                                <div class="col-md-6 col-lg-3">
-                                    <label asp-for="PLista" class="form-label text-light">Precio Lista</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-secondary text-light">$</span>
-                                        <input asp-for="PLista"
-                                               type="number" step="0.01"
-                                               class="form-control bg-secondary text-light"
-                                               placeholder="0.00" />
-                                    </div>
-                                    <span asp-validation-for="PLista" class="invalid-feedback d-block"></span>
-                                </div>
-                                <div class="col-md-6 col-lg-3">
-                                    <label asp-for="PorcentajeIva" class="form-label text-light">% IVA</label>
-                                    <div class="input-group">
-                                        <input asp-for="PorcentajeIva"
-                                               type="number" step="0.01"
-                                               class="form-control bg-secondary text-light"
-                                               placeholder="21" />
-                                        <span class="input-group-text bg-secondary text-light">%</span>
-                                    </div>
-                                    <span asp-validation-for="PorcentajeIva" class="invalid-feedback d-block"></span>
-                                </div>
-                            </div>
-                        </fieldset>
-
-                        <!-- Inventario -->
-                        <fieldset class="mb-4">
-                            <legend class="text-light">Inventario</legend>
-                            <div class="row g-3">
-                                @if (isEdit)
-                                {
-                                    <div class="col-md-6">
-                                        <label asp-for="CantidadDisponible" class="form-label text-light">Stock Actual</label>
-                                        <input asp-for="CantidadDisponible"
-                                               readonly
-                                               class="form-control bg-secondary text-light" />
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label asp-for="StockInicial" class="form-label text-light">Ajustar Stock</label>
-                                        <div class="input-group">
-                                            <input asp-for="StockInicial"
-                                                   type="number"
-                                                   class="form-control bg-secondary text-light"
-                                                   placeholder="0" />
-                                            <span class="input-group-text bg-secondary text-light">unidades</span>
-                                        </div>
-                                        <small class="form-text text-muted">
-                                            Positivo para sumar, negativo para restar
-                                        </small>
-                                        <span asp-validation-for="StockInicial" class="invalid-feedback d-block"></span>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class="col-md-6">
-                                        <label asp-for="StockInicial" class="form-label text-light">Stock Inicial</label>
-                                        <div class="input-group">
-                                            <input asp-for="StockInicial"
-                                                   type="number"
-                                                   class="form-control bg-secondary text-light"
-                                                   placeholder="0" />
-                                            <span class="input-group-text bg-secondary text-light">unidades</span>
-                                        </div>
-                                        <span asp-validation-for="StockInicial" class="invalid-feedback d-block"></span>
-                                    </div>
-                                }
-                            </div>
-                        </fieldset>
-
-                        <!-- Clasificación -->
-                        <fieldset class="mb-4">
-                            <legend class="text-light">Clasificación</legend>
-                            <div class="row g-3">
-                                <div class="col-md-4">
-                                    <label asp-for="SelectedRubroID" class="form-label text-light">Rubro</label>
-                                    <div class="input-group">
-                                        <select asp-for="SelectedRubroID"
-                                                class="form-select bg-secondary text-light"
-                                                asp-items="Model.Rubros"
-                                                id="rubroSelect">
-                                            <option value="">Seleccione Rubro</option>
-                                        </select>
-                                        <button type="button"
-                                                class="btn btn-outline-light"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#rubroModal"
-                                                title="Añadir Rubro">
-                                            <i class="bi bi-plus-lg"></i>
-                                        </button>
-                                    </div>
-                                    <span asp-validation-for="SelectedRubroID" class="invalid-feedback d-block"></span>
-                                </div>
-                                <div class="col-md-4">
-                                    <label asp-for="SelectedSubRubroID" class="form-label text-light">SubRubro</label>
-                                    <div class="input-group">
-                                        <select asp-for="SelectedSubRubroID"
-                                                class="form-select bg-secondary text-light"
-                                                asp-items="Model.SubRubros"
-                                                id="subRubroSelect">
-                                            <option value="">Seleccione SubRubro</option>
-                                        </select>
-                                        <button type="button"
-                                                class="btn btn-outline-light"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#subRubroModal"
-                                                id="btnAddSubRubro"
-                                                disabled
-                                                title="Añadir SubRubro">
-                                            <i class="bi bi-plus-lg"></i>
-                                        </button>
-                                    </div>
-                                    <span asp-validation-for="SelectedSubRubroID" class="invalid-feedback d-block"></span>
-                                </div>
-                                <div class="col-md-4">
-                                    <label asp-for="SelectedMarcaID" class="form-label text-light">Marca</label>
-                                    <div class="input-group">
-                                        <select asp-for="SelectedMarcaID"
-                                                class="form-select bg-secondary text-light"
-                                                asp-items="Model.Marcas"
-                                                id="marcaSelect">
-                                            <option value="">Seleccione Marca</option>
-                                        </select>
-                                        <button type="button"
-                                                class="btn btn-outline-light"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#marcaModal"
-                                                title="Añadir Marca">
-                                            <i class="bi bi-plus-lg"></i>
-                                        </button>
-                                    </div>
-                                    <span asp-validation-for="SelectedMarcaID" class="invalid-feedback d-block"></span>
-                                </div>
-                            </div>
-                        </fieldset>
-
-                        <!-- Acciones -->
-                        <div class="d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary me-2">
-                                <i class="bi bi-save me-1"></i>
-                                @(isEdit ? "Actualizar" : "Crear")
-                            </button>
-                            <a asp-action="Index" class="btn btn-outline-light">
-                                <i class="bi bi-arrow-left me-1"></i> Volver
-                            </a>
-                        </div>
-                    </form>
                 </div>
             </div>
-        </div>
-    </div>
-</section>
 
-<!-- Modal Rubro -->
-<div class="modal fade" id="rubroModal" tabindex="-1" aria-labelledby="rubroModalLabel" aria-hidden="true">
+            <div class="mb-3">
+                <label asp-for="Descripcion" class="form-label">Descripción</label>
+                <textarea asp-for="Descripcion" class="form-control bg-dark text-light" rows="3"></textarea>
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <a asp-action="Index" class="btn btn-outline-secondary me-2">
+                    <i class="bi bi-arrow-left"></i> Volver
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save"></i> Guardar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Nuevo Rubro -->
+<div class="modal fade" id="nuevoRubroModal" tabindex="-1" aria-labelledby="nuevoRubroModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content bg-dark text-light">
             <div class="modal-header">
-                <h5 id="rubroModalLabel" class="modal-title">Agregar Nuevo Rubro</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <h5 class="modal-title" id="nuevoRubroModalLabel">Crear Nuevo Rubro</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
-                <label for="nuevoRubroNombre" class="form-label">Nombre del Rubro</label>
-                <input id="nuevoRubroNombre" class="form-control bg-secondary text-light" />
-                <div id="rubroError" class="invalid-feedback"></div>
+                <div class="mb-3">
+                    <label for="nombreRubro" class="form-label">Nombre del Rubro</label>
+                    <input type="text" class="form-control bg-dark text-light" id="nombreRubro" />
+                    <div id="errorRubro" class="text-danger"></div>
+                </div>
             </div>
             <div class="modal-footer">
-                <button data-bs-dismiss="modal" class="btn btn-secondary">Cancelar</button>
-                <button id="saveRubroBtn" class="btn btn-success">Guardar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnGuardarRubro">Guardar</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal SubRubro -->
-<div class="modal fade" id="subRubroModal" tabindex="-1" aria-labelledby="subRubroModalLabel" aria-hidden="true">
+<!-- Modal Nuevo SubRubro -->
+<div class="modal fade" id="nuevoSubRubroModal" tabindex="-1" aria-labelledby="nuevoSubRubroModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content bg-dark text-light">
             <div class="modal-header">
-                <h5 id="subRubroModalLabel" class="modal-title">Agregar Nuevo SubRubro</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <h5 class="modal-title" id="nuevoSubRubroModalLabel">Crear Nuevo SubRubro</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
-                <input type="hidden" id="rubroIDForSubRubro" />
-                <label for="rubroForSubRubro" class="form-label">Rubro</label>
-                <input id="rubroForSubRubro" readonly class="form-control bg-secondary text-light mb-3" />
-                <label for="nuevoSubRubroNombre" class="form-label">Nombre del SubRubro</label>
-                <input id="nuevoSubRubroNombre" class="form-control bg-secondary text-light" />
-                <div id="subRubroError" class="invalid-feedback"></div>
+                <div class="mb-3">
+                    <label for="rubroID" class="form-label">Rubro</label>
+                    <select class="form-select bg-dark text-light" id="rubroID" disabled>
+                        <option value="">-- Seleccione Rubro --</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="nombreSubRubro" class="form-label">Nombre del SubRubro</label>
+                    <input type="text" class="form-control bg-dark text-light" id="nombreSubRubro" />
+                    <div id="errorSubRubro" class="text-danger"></div>
+                </div>
             </div>
             <div class="modal-footer">
-                <button data-bs-dismiss="modal" class="btn btn-secondary">Cancelar</button>
-                <button id="saveSubRubroBtn" class="btn btn-success">Guardar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnGuardarSubRubro">Guardar</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal Marca -->
-<div class="modal fade" id="marcaModal" tabindex="-1" aria-labelledby="marcaModalLabel" aria-hidden="true">
+<!-- Modal Nueva Marca -->
+<div class="modal fade" id="nuevaMarcaModal" tabindex="-1" aria-labelledby="nuevaMarcaModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content bg-dark text-light">
             <div class="modal-header">
-                <h5 id="marcaModalLabel" class="modal-title">Agregar Nueva Marca</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <h5 class="modal-title" id="nuevaMarcaModalLabel">Crear Nueva Marca</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
-                <label for="nuevoMarcaNombre" class="form-label">Nombre de la Marca</label>
-                <input id="nuevoMarcaNombre" class="form-control bg-secondary text-light" />
-                <div id="marcaError" class="invalid-feedback"></div>
+                <div class="mb-3">
+                    <label for="nombreMarca" class="form-label">Nombre de la Marca</label>
+                    <input type="text" class="form-control bg-dark text-light" id="nombreMarca" />
+                    <div id="errorMarca" class="text-danger"></div>
+                </div>
             </div>
             <div class="modal-footer">
-                <button data-bs-dismiss="modal" class="btn btn-secondary">Cancelar</button>
-                <button id="saveMarcaBtn" class="btn btn-success">Guardar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnGuardarMarca">Guardar</button>
             </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
-    @await Html.PartialAsync("_ValidationScriptsPartial")
-    <script defer>
-        (function($){
-          $(function(){
-            const token = $('input[name="__RequestVerificationToken"]').val();
+    <script>
+        $(function() {
+            const porcentajeGananciaPContado = 50; // Valor por defecto
+            const porcentajeGananciaPLista = 84; // Valor por defecto
 
-            // Al cambiar rubro: recargar subrubros + habilitar botón
-            $('#rubroSelect').change(function(){
-              var id = $(this).val();
-              var sub = $('#subRubroSelect').empty()
-                          .append('<option>Cargando...</option>');
-              $('#btnAddSubRubro').prop('disabled', !id);
-              if(!id) { sub.html('<option>Seleccione...</option>'); return; }
-              $.getJSON('@Url.Action("GetSubRubros", "Productos")',{rubroId:id})
-                .done(data=>{
-                  sub.empty().append('<option>Seleccione SubRubro</option>');
-                  data.forEach(i=> sub.append(
-                    $('<option>').val(i.value).text(i.text)
-                  ));
-                  console.log("SubRubros cargados para ID " + id + ": ", data);
-                })
-                .fail((xhr, status, error)=>{
-                  console.error("Error cargando subrubros:", error, xhr.responseText);
-                  sub.html('<option>Error al cargar</option>');
+            // Función para actualizar los precios calculados
+            function actualizarPrecios() {
+                const pCosto = parseFloat($('#pCosto').val()) || 0;
+                const pContado = pCosto * (1 + porcentajeGananciaPContado / 100);
+                const pLista = pCosto * (1 + porcentajeGananciaPLista / 100);
+
+                $('#pContadoDisplay').val(pContado.toFixed(2));
+                $('#pListaDisplay').val(pLista.toFixed(2));
+
+                // Actualizar los campos ocultos que se enviarán con el formulario
+                $('#PContado').val(pContado.toFixed(2));
+                $('#PLista').val(pLista.toFixed(2));
+            }
+
+            // Llamar a la función al cargar la página
+            actualizarPrecios();
+
+            // Actualizar precios cuando cambie el precio de costo
+            $('#pCosto').on('input', function() {
+                actualizarPrecios();
+            });
+
+            // Cargar subrubros cuando cambia el rubro
+            $('#rubroDropdown').change(function() {
+                var rubroId = $(this).val();
+                cargarSubRubros(rubroId);
+            });
+
+            function cargarSubRubros(rubroId) {
+                if (rubroId) {
+                    // Actualizar lista desplegable de SubRubros
+                    $.getJSON('@Url.Action("GetSubRubros")', { rubroId: rubroId }, function(data) {
+                        var subRubroSelect = $('#subRubroDropdown');
+                        var currentSubRubroId = '@Model.SelectedSubRubroID';
+
+                        subRubroSelect.empty();
+                        subRubroSelect.append($('<option></option>').val('').text('-- Seleccione SubRubro --'));
+
+                        $.each(data, function(index, item) {
+                            var option = $('<option></option>').val(item.value).text(item.text);
+                            if (item.value == currentSubRubroId) {
+                                option.attr('selected', 'selected');
+                            }
+                            subRubroSelect.append(option);
+                        });
+                    });
+
+                    // Actualizar también el select en el modal de SubRubro
+                    $('#rubroID').val(rubroId);
+                    $('#btnAddSubRubro').prop('disabled', false);
+                } else {
+                    $('#subRubroDropdown').empty().append($('<option></option>').val('').text('-- Seleccione SubRubro --'));
+                    $('#btnAddSubRubro').prop('disabled', true);
+                }
+            }
+
+            // Si ya hay un rubro seleccionado al cargar la página, cargar sus subrubros
+            var selectedRubroId = $('#rubroDropdown').val();
+            if (selectedRubroId) {
+                cargarSubRubros(selectedRubroId);
+            } else {
+                $('#btnAddSubRubro').prop('disabled', true);
+            }
+
+            // Al abrir el modal de SubRubro, cargar el rubro seleccionado
+            $('#nuevoSubRubroModal').on('show.bs.modal', function (e) {
+                var rubroId = $('#rubroDropdown').val();
+                var rubroText = $('#rubroDropdown option:selected').text();
+
+                if (!rubroId) {
+                    $('#errorSubRubro').text('Debe seleccionar un Rubro primero');
+                    $('#btnGuardarSubRubro').prop('disabled', true);
+                    return;
+                }
+
+                $('#errorSubRubro').text('');
+                $('#btnGuardarSubRubro').prop('disabled', false);
+                $('#rubroID').empty().append($('<option></option>').val(rubroId).text(rubroText));
+            });
+
+            // Guardar nuevo Rubro
+            $('#btnGuardarRubro').click(function() {
+                var nombre = $('#nombreRubro').val();
+                if (!nombre) {
+                    $('#errorRubro').text('El nombre es obligatorio');
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("CreateRubroAjax", "Catalogo")',
+                    type: 'POST',
+                    data: {
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+                        Nombre: nombre
+                    },
+                    success: function(result) {
+                        if (result.success) {
+                            // Agregar nuevo rubro a la lista desplegable
+                            $('#rubroDropdown').append($('<option></option>')
+                                .val(result.id)
+                                .text(result.name)
+                                .attr('selected', 'selected')
+                            );
+
+                            // Limpiar modal y cerrarlo
+                            $('#nombreRubro').val('');
+                            $('#nuevoRubroModal').modal('hide');
+
+                            // Actualizar SubRubros
+                            cargarSubRubros(result.id);
+
+                            // Mostrar notificación
+                            toastr.success('Rubro creado correctamente');
+                        } else {
+                            $('#errorRubro').text(result.message);
+                        }
+                    },
+                    error: function() {
+                        $('#errorRubro').text('Error al crear el Rubro');
+                    }
                 });
             });
 
-            // Forzar la carga inicial de subrubros para CREATE
-        @if (!isEdit)
-        {
-            <text>
-                    $(document).ready(function() {
-                      console.log("Iniciando carga de subrubros en CREATE");
-                      setTimeout(function() {
-                        $('#rubroSelect').trigger('change');
-                      }, 100);
-                    });
-            </text>
-        }
+            // Guardar nuevo SubRubro
+            $('#btnGuardarSubRubro').click(function() {
+                var rubroId = $('#rubroID').val();
+                var nombre = $('#nombreSubRubro').val();
 
-            // Inicializar si edición
-        @if (isEdit && Model.SelectedRubroID > 0)
-        {
-            <text>
-                    $(document).ready(function() {
-                      console.log("Iniciando carga de subrubros en EDIT con ID: @Model.SelectedRubroID");
-                      $('#rubroSelect').trigger('change');
-                    });
-            </text>
-        }
-
-            // Create Rubro AJAX
-            $('#saveRubroBtn').click(()=>{
-              var nombre = $('#nuevoRubroNombre').val().trim();
-              if(!nombre){
-                $('#rubroError').text('Requerido').show();
-                return;
-              }
-              $('#saveRubroBtn').prop('disabled',true).text('Guardando…');
-              $.post('@Url.Action("CreateRubroAjax", "Catalogo")',
-                { Nombre:nombre, __RequestVerificationToken:token })
-              .done(resp=>{
-                if(resp.success){
-                  $('#rubroSelect')
-                    .append($('<option>').val(resp.id).text(resp.name))
-                    .val(resp.id).trigger('change');
-                  $('#rubroModal').modal('hide');
-                  $('#nuevoRubroNombre').val('');
-                  $('#rubroError').hide();
-                } else {
-                  $('#rubroError').text(resp.message).show();
+                if (!rubroId) {
+                    $('#errorSubRubro').text('Debe seleccionar un Rubro');
+                    return;
                 }
-              })
-              .fail(()=> $('#rubroError').text('Error de conexión').show())
-              .always(()=> $('#saveRubroBtn').prop('disabled',false).text('Guardar'));
-            });
 
-            // Create SubRubro AJAX
-            $('#saveSubRubroBtn').click(()=>{
-              var rubroId = $('#rubroSelect').val();
-              $('#rubroIDForSubRubro').val(rubroId);
-              $('#rubroForSubRubro').val($('#rubroSelect option:selected').text());
-
-              var nombre = $('#nuevoSubRubroNombre').val().trim();
-              if(!nombre){ $('#subRubroError').text('Requerido').show(); return; }
-              $('#saveSubRubroBtn').prop('disabled',true).text('Guardando…');
-              $.post('@Url.Action("CreateSubRubroAjax", "Catalogo")',
-                { Nombre:nombre, RubroID:rubroId, __RequestVerificationToken:token })
-              .done(resp=>{
-                if(resp.success){
-                  $('#subRubroSelect')
-                    .append($('<option>').val(resp.id).text(resp.name))
-                    .val(resp.id);
-                  $('#subRubroModal').modal('hide');
-                  $('#nuevoSubRubroNombre').val('');
-                  $('#subRubroError').hide();
-                } else {
-                  $('#subRubroError').text(resp.message).show();
+                if (!nombre) {
+                    $('#errorSubRubro').text('El nombre es obligatorio');
+                    return;
                 }
-              })
-              .fail(()=> $('#subRubroError').text('Error de conexión').show())
-              .always(()=> $('#saveSubRubroBtn').prop('disabled',false).text('Guardar'));
+
+                $.ajax({
+                    url: '@Url.Action("CreateSubRubroAjax", "Catalogo")',
+                    type: 'POST',
+                    data: {
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+                        Nombre: nombre,
+                        RubroID: rubroId
+                    },
+                    success: function(result) {
+                        if (result.success) {
+                            // Agregar nuevo subrubro a la lista desplegable
+                            $('#subRubroDropdown').append($('<option></option>')
+                                .val(result.id)
+                                .text(result.name)
+                                .attr('selected', 'selected')
+                            );
+
+                            // Limpiar modal y cerrarlo
+                            $('#nombreSubRubro').val('');
+                            $('#nuevoSubRubroModal').modal('hide');
+
+                            // Mostrar notificación
+                            toastr.success('SubRubro creado correctamente');
+                        } else {
+                            $('#errorSubRubro').text(result.message);
+                        }
+                    },
+                    error: function() {
+                        $('#errorSubRubro').text('Error al crear el SubRubro');
+                    }
+                });
             });
 
-            // Preparar modal SubRubro
-            $('#btnAddSubRubro').click(function() {
-              var rubroId = $('#rubroSelect').val();
-              var rubroText = $('#rubroSelect option:selected').text();
-              $('#rubroIDForSubRubro').val(rubroId);
-              $('#rubroForSubRubro').val(rubroText);
-            });
-
-            // Create Marca AJAX
-            $('#saveMarcaBtn').click(()=>{
-              var nombre = $('#nuevoMarcaNombre').val().trim();
-              if(!nombre){ $('#marcaError').text('Requerido').show(); return; }
-              $('#saveMarcaBtn').prop('disabled',true).text('Guardando…');
-              $.post('@Url.Action("CreateMarcaAjax", "Catalogo")',
-                { Nombre:nombre, __RequestVerificationToken:token })
-              .done(resp=>{
-                if(resp.success){
-                  $('#marcaSelect')
-                    .append($('<option>').val(resp.id).text(resp.name))
-                    .val(resp.id);
-                  $('#marcaModal').modal('hide');
-                  $('#nuevoMarcaNombre').val('');
-                  $('#marcaError').hide();
-                } else {
-                  $('#marcaError').text(resp.message).show();
+            // Guardar nueva Marca
+            $('#btnGuardarMarca').click(function() {
+                var nombre = $('#nombreMarca').val();
+                if (!nombre) {
+                    $('#errorMarca').text('El nombre es obligatorio');
+                    return;
                 }
-              })
-              .fail(()=> $('#marcaError').text('Error de conexión').show())
-              .always(()=> $('#saveMarcaBtn').prop('disabled',false).text('Guardar'));
-            });
 
-          });
-        })(jQuery);
+                $.ajax({
+                    url: '@Url.Action("CreateMarcaAjax", "Catalogo")',
+                    type: 'POST',
+                    data: {
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+                        Nombre: nombre
+                    },
+                    success: function(result) {
+                        if (result.success) {
+                            // Agregar nueva marca a la lista desplegable
+                            $('#SelectedMarcaID').append($('<option></option>')
+                                .val(result.id)
+                                .text(result.name)
+                                .attr('selected', 'selected')
+                            );
+
+                            // Limpiar modal y cerrarlo
+                            $('#nombreMarca').val('');
+                            $('#nuevaMarcaModal').modal('hide');
+
+                            // Mostrar notificación
+                            toastr.success('Marca creada correctamente');
+                        } else {
+                            $('#errorMarca').text(result.message);
+                        }
+                    },
+                    error: function() {
+                        $('#errorMarca').text('Error al crear la Marca');
+                    }
+                });
+            });
+        });
     </script>
 }

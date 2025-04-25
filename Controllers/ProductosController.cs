@@ -79,7 +79,6 @@ namespace Javo2.Controllers
                 return View("Error");
             }
         }
-
         // GET: Productos/Create
         [HttpGet]
         public async Task<IActionResult> Create()
@@ -106,6 +105,7 @@ namespace Javo2.Controllers
                 return View("Error");
             }
         }
+
         // POST: Productos/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -113,6 +113,8 @@ namespace Javo2.Controllers
         {
             model.ModificadoPor = User.Identity?.Name ?? "Sistema";
             ModelState.Remove(nameof(model.ModificadoPor));
+            ModelState.Remove(nameof(model.PContado)); // No validar estos campos
+            ModelState.Remove(nameof(model.PLista));   // ya que se calculan automáticamente
 
             if (!ModelState.IsValid)
             {
@@ -136,6 +138,7 @@ namespace Javo2.Controllers
                     return View("Form", model);
                 }
 
+                // Solo mapear PCosto, los demás precios se calculan por el servicio
                 var producto = new Producto
                 {
                     CodigoAlfa = _productoService.GenerarProductoIDAlfa(),
@@ -143,8 +146,6 @@ namespace Javo2.Controllers
                     Nombre = model.Nombre,
                     Descripcion = model.Descripcion,
                     PCosto = model.PCosto,
-                    PContado = model.PContado,
-                    PLista = model.PLista,
                     PorcentajeIva = model.PorcentajeIva,
                     RubroID = rubro.ID,
                     SubRubroID = sub.ID,
@@ -155,7 +156,9 @@ namespace Javo2.Controllers
                     Estado = Producto.EstadoProducto.Activo
                 };
 
+                // El servicio aplicará las reglas de precios automáticamente
                 await _productoService.CreateProductoAsync(producto);
+
                 if (model.StockInicial > 0)
                 {
                     var stockItem = new StockItem { ProductoID = producto.ProductoID, CantidadDisponible = model.StockInicial };
@@ -180,6 +183,7 @@ namespace Javo2.Controllers
                     Detalle = producto.Nombre
                 });
 
+                TempData["Success"] = "Producto creado exitosamente";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -191,18 +195,6 @@ namespace Javo2.Controllers
             }
         }
 
-        // GET: Productos/Edit/5
-        [HttpGet]
-        public async Task<IActionResult> Edit(int id)
-        {
-            var producto = await _productoService.GetProductoByIDAsync(id);
-            if (producto == null) return NotFound();
-            var model = _mapper.Map<ProductosViewModel>(producto);
-            model.StockInicial = 0;
-            await PopulateDropdownsAsync(model);
-            return View("Form", model);
-        }
-
         // POST: Productos/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -210,62 +202,78 @@ namespace Javo2.Controllers
         {
             model.ModificadoPor = User.Identity?.Name ?? "Sistema";
             ModelState.Remove(nameof(model.ModificadoPor));
+            ModelState.Remove(nameof(model.PContado)); // No validar estos campos
+            ModelState.Remove(nameof(model.PLista));   // ya que se calculan automáticamente
+
             if (!ModelState.IsValid)
             {
                 LogModelStateErrors();
                 await PopulateDropdownsAsync(model);
                 return View("Form", model);
             }
-            var existing = await _productoService.GetProductoByIDAsync(model.ProductoID);
-            if (existing == null) return NotFound();
 
-            existing.Nombre = model.Nombre;
-            existing.Descripcion = model.Descripcion;
-            existing.PCosto = model.PCosto;
-            existing.PContado = model.PContado;
-            existing.PLista = model.PLista;
-            existing.PorcentajeIva = model.PorcentajeIva;
-            existing.RubroID = model.SelectedRubroID;
-            existing.SubRubroID = model.SelectedSubRubroID;
-            existing.MarcaID = model.SelectedMarcaID;
-            existing.FechaMod = DateTime.Now;
-            existing.ModificadoPor = model.ModificadoPor;
-
-            await _productoService.UpdateProductoAsync(existing);
-            if (model.StockInicial != 0)
+            try
             {
-                var stockItem = await _stockService.GetStockItemByProductoIDAsync(model.ProductoID);
-                if (stockItem == null)
+                var existing = await _productoService.GetProductoByIDAsync(model.ProductoID);
+                if (existing == null) return NotFound();
+
+                // Solo actualizar los campos que el usuario debe controlar
+                existing.Nombre = model.Nombre;
+                existing.Descripcion = model.Descripcion;
+                existing.PCosto = model.PCosto;  // Solo actualizamos PCosto
+                existing.PorcentajeIva = model.PorcentajeIva;
+                existing.RubroID = model.SelectedRubroID;
+                existing.SubRubroID = model.SelectedSubRubroID;
+                existing.MarcaID = model.SelectedMarcaID;
+                existing.FechaMod = DateTime.Now;
+                existing.ModificadoPor = model.ModificadoPor;
+
+                // El servicio aplicará automáticamente las reglas para actualizar PContado y PLista
+                await _productoService.UpdateProductoAsync(existing);
+
+                if (model.StockInicial != 0)
                 {
-                    stockItem = new StockItem { ProductoID = model.ProductoID, CantidadDisponible = Math.Max(0, model.StockInicial) };
-                    await _stockService.CreateStockItemAsync(stockItem);
+                    var stockItem = await _stockService.GetStockItemByProductoIDAsync(model.ProductoID);
+                    if (stockItem == null)
+                    {
+                        stockItem = new StockItem { ProductoID = model.ProductoID, CantidadDisponible = Math.Max(0, model.StockInicial) };
+                        await _stockService.CreateStockItemAsync(stockItem);
+                    }
+                    else
+                    {
+                        stockItem.CantidadDisponible = Math.Max(0, stockItem.CantidadDisponible + model.StockInicial);
+                        await _stockService.UpdateStockItemAsync(stockItem);
+                    }
+                    await _stockService.RegistrarMovimientoAsync(new MovimientoStock
+                    {
+                        ProductoID = model.ProductoID,
+                        Fecha = DateTime.Now,
+                        TipoMovimiento = model.StockInicial > 0 ? "Entrada" : "Salida",
+                        Cantidad = Math.Abs(model.StockInicial),
+                        Motivo = "Ajuste manual"
+                    });
                 }
-                else
+
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
                 {
-                    stockItem.CantidadDisponible = Math.Max(0, stockItem.CantidadDisponible + model.StockInicial);
-                    await _stockService.UpdateStockItemAsync(stockItem);
-                }
-                await _stockService.RegistrarMovimientoAsync(new MovimientoStock
-                {
-                    ProductoID = model.ProductoID,
-                    Fecha = DateTime.Now,
-                    TipoMovimiento = model.StockInicial > 0 ? "Entrada" : "Salida",
-                    Cantidad = Math.Abs(model.StockInicial),
-                    Motivo = "Ajuste manual"
+                    FechaHora = DateTime.Now,
+                    Usuario = model.ModificadoPor,
+                    Entidad = "Producto",
+                    Accion = "Update",
+                    LlavePrimaria = model.ProductoID.ToString(),
+                    Detalle = model.Nombre
                 });
+
+                TempData["Success"] = "Producto actualizado exitosamente";
+                return RedirectToAction(nameof(Index));
             }
-
-            await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+            catch (Exception ex)
             {
-                FechaHora = DateTime.Now,
-                Usuario = model.ModificadoPor,
-                Entidad = "Producto",
-                Accion = "Update",
-                LlavePrimaria = model.ProductoID.ToString(),
-                Detalle = model.Nombre
-            });
-
-            return RedirectToAction(nameof(Index));
+                _logger.LogError(ex, "Error al actualizar producto");
+                ModelState.AddModelError(string.Empty, ex.Message);
+                await PopulateDropdownsAsync(model);
+                return View("Form", model);
+            }
         }
 
         // GET: Productos/Delete/5
@@ -419,7 +427,7 @@ namespace Javo2.Controllers
         private async Task PopulateDropdownsAsync(ProductosViewModel model)
         {
             // Cargar rubros si no existen
-            model.Rubros ??= await _dropdownService.GetRubrosAsync();
+            model.Rubros = await _dropdownService.GetRubrosAsync();
 
             // Cargar marcas
             model.Marcas = await _dropdownService.GetMarcasAsync();
@@ -430,6 +438,12 @@ namespace Javo2.Controllers
                 _logger.LogInformation($"Cargando subrubros para RubroID: {model.SelectedRubroID}");
                 model.SubRubros = await _dropdownService.GetSubRubrosAsync(model.SelectedRubroID);
                 _logger.LogInformation($"SubRubros cargados: {model.SubRubros.Count()}");
+            }
+            else if (model.Rubros.Any())
+            {
+                // Si no hay rubro seleccionado pero hay rubros disponibles, seleccionar el primero
+                model.SelectedRubroID = int.Parse(model.Rubros.First().Value);
+                model.SubRubros = await _dropdownService.GetSubRubrosAsync(model.SelectedRubroID);
             }
             else
             {

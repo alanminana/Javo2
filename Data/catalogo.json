@@ -49,6 +49,16 @@
             "Nombre": "",
             "SubRubros": []
           }
+        },
+        {
+          "ID": 7,
+          "Nombre": "dsasda",
+          "RubroID": 2,
+          "Rubro": {
+            "ID": 0,
+            "Nombre": "",
+            "SubRubros": []
+          }
         }
       ]
     },
@@ -109,6 +119,6 @@
     }
   ],
   "NextRubroID": 6,
-  "NextSubRubroID": 7,
+  "NextSubRubroID": 8,
   "NextMarcaID": 5
 }

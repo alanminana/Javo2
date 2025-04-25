@@ -1,8 +1,19 @@
-﻿<!-- Views/Configuracion/Edit.cshtml -->
-@model Javo2.Models.ConfiguracionSistema
+﻿@model Javo2.Models.ConfiguracionSistema
 @{
     ViewBag.Title = "Editar Configuración";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string GetNombreAmigable(string clave)
+    {
+        return clave switch
+        {
+            "PorcentajeGananciaPLista" => "Porcentaje Ganancia Precio Lista",
+            "PorcentajeGananciaPContado" => "Porcentaje Ganancia Precio Contado",
+            "LimiteCreditoDefault" => "Límite de Crédito Predeterminado",
+            "DiasVencimientoFactura" => "Días para Vencimiento de Facturas",
+            _ => clave.Replace("Porcentaje", "% ").Replace("Default", "Predeterminado")
+        };
+    }
 }
 
 <section class="container-fluid py-3">
@@ -18,32 +29,42 @@
                 <input type="hidden" asp-for="TipoDato" />
 
                 <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label class="form-label">Módulo</label>
-                        <input class="form-control bg-secondary text-light" value="@Model.Modulo" readonly />
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Clave</label>
-                        <input class="form-control bg-secondary text-light" value="@Model.Clave" readonly />
+                    <div class="col-md-12">
+                        <h4>@GetNombreAmigable(Model.Clave)</h4>
+                        <p class="text-muted">@Model.Descripcion</p>
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label asp-for="Valor" class="form-label">Valor</label>
-                        <input asp-for="Valor" class="form-control bg-dark text-light" />
+                        @if (Model.TipoDato == "decimal" || Model.TipoDato == "int")
+                        {
+                            if (Model.Clave.Contains("Porcentaje"))
+                            {
+                                <div class="input-group">
+                                    <input asp-for="Valor" class="form-control bg-dark text-light" />
+                                    <span class="input-group-text">%</span>
+                                </div>
+                            }
+                            else
+                            {
+                                <input asp-for="Valor" class="form-control bg-dark text-light" />
+                            }
+                        }
+                        else if (Model.TipoDato == "bool")
+                        {
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" asp-for="Valor" checked="@(Model.Valor == "true")" />
+                                <label class="form-check-label" for="Valor">Activar</label>
+                            </div>
+                        }
+                        else
+                        {
+                            <input asp-for="Valor" class="form-control bg-dark text-light" />
+                        }
                         <span asp-validation-for="Valor" class="text-danger"></span>
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Tipo de Dato</label>
-                        <input class="form-control bg-secondary text-light" value="@Model.TipoDato" readonly />
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="Descripcion" class="form-label">Descripción</label>
-                    <textarea asp-for="Descripcion" class="form-control bg-dark text-light" rows="3"></textarea>
-                    <span asp-validation-for="Descripcion" class="text-danger"></span>
                 </div>
 
                 <div class="d-flex justify-content-end">
@@ -74,8 +95,6 @@
                     isValid = /^\d+$/.test(valor);
                 } else if (tipoDato === 'decimal') {
                     isValid = /^\d+(\.\d+)?$/.test(valor);
-                } else if (tipoDato === 'bool') {
-                    isValid = valor === 'true' || valor === 'false';
                 }
 
                 if (isValid) {

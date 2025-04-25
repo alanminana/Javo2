@@ -1,5 +1,4 @@
-﻿<!-- Views/Configuracion/Index.cshtml -->
-@model Javo2.ViewModels.Configuracion.ConfiguracionIndexViewModel
+﻿@model Javo2.ViewModels.Configuracion.ConfiguracionIndexViewModel
 @{
     ViewBag.Title = "Configuración del Sistema";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -45,7 +44,7 @@
                                 role="tab"
                                 aria-controls="@modulo"
                                 aria-selected="@(modulo == Model.ModuloSeleccionado ? "true" : "false")">
-                            @modulo
+                            <i class="bi @GetModuloIcon(modulo) me-1"></i> @modulo
                         </button>
                     </li>
                 }
@@ -57,7 +56,64 @@
                      id="todos"
                      role="tabpanel"
                      aria-labelledby="todos-tab">
-                    @await Html.PartialAsync("_ConfiguracionTable", Model.Configuraciones)
+
+                    <div class="row row-cols-1 row-cols-md-2 g-4">
+                        @foreach (var modulo in Model.Modulos)
+                        {
+                            <div class="col">
+                                <div class="card bg-secondary h-100">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">
+                                            <i class="bi @GetModuloIcon(modulo) me-2"></i>
+                                            @modulo
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="list-group list-group-flush bg-transparent">
+                                            @foreach (var config in Model.Configuraciones.Where(c => c.Modulo == modulo))
+                                            {
+                                                <div class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <span class="fw-bold">@GetNombreAmigable(config.Clave)</span>
+                                                        <br />
+                                                        <small class="text-muted">@config.Descripcion</small>
+                                                    </div>
+                                                    <div class="d-flex align-items-center">
+                                                        <span class="me-3">
+                                                            @if (config.TipoDato == "decimal" || config.TipoDato == "int")
+                                                            {
+                                                                if (config.Clave.Contains("Porcentaje"))
+                                                                {
+                                                                    <span class="badge bg-primary">@config.Valor%</span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="badge bg-info">@config.Valor</span>
+                                                                }
+                                                            }
+                                                            else if (config.TipoDato == "bool")
+                                                            {
+                                                                <span class="badge @(bool.Parse(config.Valor) ? "bg-success" : "bg-danger")">
+                                                                    @(bool.Parse(config.Valor) ? "Activado" : "Desactivado")
+                                                                </span>
+                                                            }
+                                                            else
+                                                            {
+                                                                @config.Valor
+                                                            }
+                                                        </span>
+                                                        <a asp-action="Edit" asp-route-id="@config.ConfiguracionID" class="btn btn-sm btn-primary">
+                                                            <i class="bi bi-pencil-square"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
                 </div>
 
                 @foreach (var modulo in Model.Modulos)
@@ -66,7 +122,60 @@
                          id="@modulo"
                          role="tabpanel"
                          aria-labelledby="@modulo-tab">
-                        @await Html.PartialAsync("_ConfiguracionTable", Model.Configuraciones.Where(c => c.Modulo == modulo).ToList())
+
+                        <div class="card bg-secondary">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="bi @GetModuloIcon(modulo) me-2"></i>
+                                    Configuraciones de @modulo
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row row-cols-1 row-cols-md-2 g-4">
+                                    @foreach (var config in Model.Configuraciones.Where(c => c.Modulo == modulo))
+                                    {
+                                        <div class="col">
+                                            <div class="card bg-dark h-100">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">@GetNombreAmigable(config.Clave)</h5>
+                                                    <p class="card-text">@config.Descripcion</p>
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <span class="fs-4">
+                                                                @if (config.TipoDato == "decimal" || config.TipoDato == "int")
+                                                                {
+                                                                    if (config.Clave.Contains("Porcentaje"))
+                                                                    {
+                                                                        <span class="text-primary fw-bold">@config.Valor%</span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span class="fw-bold">@config.Valor</span>
+                                                                    }
+                                                                }
+                                                                else if (config.TipoDato == "bool")
+                                                                {
+                                                                    <span class="badge @(bool.Parse(config.Valor) ? "bg-success" : "bg-danger")">
+                                                                        @(bool.Parse(config.Valor) ? "Activado" : "Desactivado")
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    @config.Valor
+                                                                }
+                                                            </span>
+                                                        </div>
+                                                        <a asp-action="Edit" asp-route-id="@config.ConfiguracionID" class="btn btn-primary">
+                                                            <i class="bi bi-pencil-square me-1"></i> Editar
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 }
             </div>
@@ -100,4 +209,30 @@
             });
         });
     </script>
+}
+
+@functions {
+    public string GetNombreAmigable(string clave)
+    {
+        return clave switch
+        {
+            "PorcentajeGananciaPLista" => "% Ganancia Precio Lista",
+            "PorcentajeGananciaPContado" => "% Ganancia Precio Contado",
+            "LimiteCreditoDefault" => "Límite de Crédito Predeterminado",
+            "DiasVencimientoFactura" => "Días Vencimiento Facturas",
+            _ => clave.Replace("Porcentaje", "% ").Replace("Default", "Predeterminado")
+        };
+    }
+
+    public string GetModuloIcon(string modulo)
+    {
+        return modulo switch
+        {
+            "Productos" => "bi-box-seam",
+            "Clientes" => "bi-people-fill",
+            "Ventas" => "bi-cart-fill",
+            "Sistema" => "bi-gear-fill",
+            _ => "bi-sliders"
+        };
+    }
 }

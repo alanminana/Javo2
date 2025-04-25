@@ -1,54 +1,152 @@
 ﻿@model Javo2.ViewModels.Operaciones.Productos.ProductosViewModel
-<pre>@Html.Raw(Json.Serialize(Model))</pre>
 
-<div class="row">
-    <div class="col-md-6">
-        <div class="mb-3">
-            <label asp-for="Nombre" class="form-label"></label>
-            <input asp-for="Nombre" class="form-control" />
-            <span asp-validation-for="Nombre" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="Descripcion" class="form-label"></label>
-            <textarea asp-for="Descripcion" class="form-control"></textarea>
-            <span asp-validation-for="Descripcion" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="PCosto" class="form-label"></label>
-            <input asp-for="PCosto" class="form-control" />
-            <span asp-validation-for="PCosto" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="PContado" class="form-label"></label>
-            <input asp-for="PContado" class="form-control" />
-            <span asp-validation-for="PContado" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="PLista" class="form-label"></label>
-            <input asp-for="PLista" class="form-control" />
-            <span asp-validation-for="PLista" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="PorcentajeIva" class="form-label"></label>
-            <input asp-for="PorcentajeIva" class="form-control" />
-            <span asp-validation-for="PorcentajeIva" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="mb-3">
-            <label asp-for="SelectedRubroID" class="form-label">Rubro</label>
-            <select asp-for="SelectedRubroID" class="form-control" asp-items="Model.Rubros" id="rubroSelect"></select>
-            <span asp-validation-for="SelectedRubroID" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="SelectedSubRubroID" class="form-label">SubRubro</label>
-            <select asp-for="SelectedSubRubroID" class="form-control" asp-items="Model.SubRubros" id="subRubroSelect"></select>
-            <span asp-validation-for="SelectedSubRubroID" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="SelectedMarcaID" class="form-label">Marca</label>
-            <select asp-for="SelectedMarcaID" class="form-select" asp-items="Model.Marcas"></select>
-            <span asp-validation-for="SelectedMarcaID" class="text-danger"></span>
-        </div>
+<div class="card bg-dark text-light">
+    <div class="card-body">
+        <form asp-action="@(Model.ProductoID > 0 ? "Edit" : "Create")" method="post">
+            <input type="hidden" asp-for="ProductoID" />
+            <input type="hidden" asp-for="ModificadoPor" value="@(User.Identity?.Name ?? "Sistema")" />
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="Nombre" class="form-label"></label>
+                    <input asp-for="Nombre" class="form-control" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="SelectedRubroID" class="form-label"></label>
+                    <select asp-for="SelectedRubroID" asp-items="Model.Rubros" class="form-select" id="rubroDropdown">
+                        <option value="">-- Seleccione Rubro --</option>
+                    </select>
+                    <span asp-validation-for="SelectedRubroID" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="SelectedSubRubroID" class="form-label"></label>
+                    <select asp-for="SelectedSubRubroID" asp-items="Model.SubRubros" class="form-select" id="subRubroDropdown">
+                        <option value="">-- Seleccione SubRubro --</option>
+                    </select>
+                    <span asp-validation-for="SelectedSubRubroID" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="SelectedMarcaID" class="form-label"></label>
+                    <select asp-for="SelectedMarcaID" asp-items="Model.Marcas" class="form-select">
+                        <option value="">-- Seleccione Marca --</option>
+                    </select>
+                    <span asp-validation-for="SelectedMarcaID" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label asp-for="PCosto" class="form-label"></label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input asp-for="PCosto" class="form-control" id="pCosto" />
+                    </div>
+                    <span asp-validation-for="PCosto" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="PContado" class="form-label"></label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input asp-for="PContado" class="form-control" readonly />
+                    </div>
+                    <small class="text-muted">Calculado automáticamente</small>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="PLista" class="form-label"></label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input asp-for="PLista" class="form-control" readonly />
+                    </div>
+                    <small class="text-muted">Calculado automáticamente</small>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="PorcentajeIva" class="form-label"></label>
+                    <div class="input-group">
+                        <input asp-for="PorcentajeIva" class="form-control" />
+                        <span class="input-group-text">%</span>
+                    </div>
+                    <span asp-validation-for="PorcentajeIva" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="StockInicial" class="form-label"></label>
+                    <input asp-for="StockInicial" class="form-control" value="@(Model.ProductoID > 0 ? 0 : 0)" />
+                    <span asp-validation-for="StockInicial" class="text-danger"></span>
+                    @if (Model.ProductoID > 0)
+                    {
+                        <small class="text-info">Cantidad actual: @Model.CantidadDisponible. Use ajuste de stock para cambios mayores.</small>
+                    }
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Descripcion" class="form-label"></label>
+                <textarea asp-for="Descripcion" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <a asp-action="Index" class="btn btn-outline-secondary me-2">
+                    <i class="bi bi-arrow-left"></i> Volver
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save"></i> Guardar
+                </button>
+            </div>
+        </form>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(function() {
+            // Cargar subrubros cuando cambia el rubro
+            $('#rubroDropdown').change(function() {
+                var rubroId = $(this).val();
+                if (rubroId) {
+                    $.getJSON('@Url.Action("GetSubRubros")', { rubroId: rubroId }, function(data) {
+                        var subRubroSelect = $('#subRubroDropdown');
+                        subRubroSelect.empty();
+                        subRubroSelect.append($('<option></option>').val('').text('-- Seleccione SubRubro --'));
+                        $.each(data, function(index, item) {
+                            subRubroSelect.append($('<option></option>').val(item.value).text(item.text));
+                        });
+                    });
+                } else {
+                    $('#subRubroDropdown').empty().append($('<option></option>').val('').text('-- Seleccione SubRubro --'));
+                }
+            });
+
+            // Al cambiar el precio de costo, simular cálculo para mostrar (no afecta el valor real)
+            $('#pCosto').on('input', function() {
+                const pCosto = parseFloat($(this).val()) || 0;
+                const pContadoPorc = @(await GetConfigValue("Productos", "PorcentajeGananciaPContado", 50));
+                const pListaPorc = @(await GetConfigValue("Productos", "PorcentajeGananciaPLista", 84));
+
+                const pContado = pCosto * (1 + pContadoPorc / 100);
+                const pLista = pCosto * (1 + pListaPorc / 100);
+
+                $('#PContado').val(pContado.toFixed(2));
+                $('#PLista').val(pLista.toFixed(2));
+            });
+        });
+    </script>
+}
+
+@functions {
+    private async Task<decimal> GetConfigValue(string modulo, string clave, decimal valorPorDefecto)
+    {
+        var configuracionService = Context.RequestServices.GetService<Javo2.IServices.IConfiguracionService>();
+        if (configuracionService != null)
+        {
+            return await configuracionService.GetValorAsync(modulo, clave, valorPorDefecto);
+        }
+        return valorPorDefecto;
+    }
+}
