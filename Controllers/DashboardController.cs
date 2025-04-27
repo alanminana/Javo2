@@ -1,4 +1,5 @@
-﻿// 1. Controllers/Security/DashboardController.cs (continuación)
+﻿// Controllers/SecurityDashboardController.cs
+using Javo2.Controllers.Base;
 using Javo2.IServices.Authentication;
 using Javo2.ViewModels.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -8,26 +9,25 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Javo2.Controllers.Security
+namespace Javo2.Controllers
 {
     [Authorize]
-    public class SecurityDashboardController : Controller
+    public class SecurityDashboardController : BaseController
     {
         private readonly IUsuarioService _usuarioService;
         private readonly IRolService _rolService;
         private readonly IPermisoService _permisoService;
-        private readonly ILogger<SecurityDashboardController> _logger;
 
         public SecurityDashboardController(
             IUsuarioService usuarioService,
             IRolService rolService,
             IPermisoService permisoService,
             ILogger<SecurityDashboardController> logger)
+            : base(logger)
         {
             _usuarioService = usuarioService;
             _rolService = rolService;
             _permisoService = permisoService;
-            _logger = logger;
         }
 
         [Authorize(Policy = "Permission:configuracion.ver")]
@@ -40,7 +40,7 @@ namespace Javo2.Controllers.Security
                 var roles = await _rolService.GetAllRolesAsync();
                 var permisos = await _permisoService.GetAllPermisosAsync();
 
-                var dashboardViewModel = new SecurityDashboardViewModel
+                var dashboardViewModel = new UsuarioViewModels
                 {
                     TotalUsuarios = usuarios.Count(),
                     UsuariosActivos = usuarios.Count(u => u.Activo),
@@ -81,4 +81,3 @@ namespace Javo2.Controllers.Security
         }
     }
 }
-

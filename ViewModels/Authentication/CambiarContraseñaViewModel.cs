@@ -1,11 +1,9 @@
-﻿
-using Javo2.Models.Authentication;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿// ViewModels/Authentication/CambiarContraseñaViewModel.cs
 using System.ComponentModel.DataAnnotations;
 
 namespace Javo2.ViewModels.Authentication
 {
-    public class UsuarioViewModels
+    public class CambiarContraseñaViewModel
     {
         [Required(ErrorMessage = "La contraseña actual es obligatoria")]
         [DataType(DataType.Password)]
@@ -24,4 +22,3 @@ namespace Javo2.ViewModels.Authentication
         public string ConfirmarContraseña { get; set; }
     }
 }
-

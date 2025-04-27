@@ -1,6 +1,4 @@
-﻿// 5. Views/Login/Index.cshtml
-// Vista mejorada para el login
-@model Javo2.ViewModels.Authentication.LoginViewModel
+﻿@model Javo2.ViewModels.Authentication.LoginViewModel
 @{
     ViewData["Title"] = "Iniciar sesión";
     Layout = "~/Views/Shared/_LayoutLogin.cshtml";
@@ -17,7 +15,7 @@
             <h2 class="card-title h5 mb-0 text-center">Iniciar Sesión</h2>
         </div>
         <div class="card-body">
-            <form asp-action="Index" method="post" class="login-form">
+            <form asp-action="Login" method="post" class="login-form">
                 @if (!ModelState.IsValid)
                 {
                     <div class="alert alert-danger" role="alert">
@@ -59,6 +57,11 @@
                 <button type="submit" class="btn btn-primary login-btn">
                     <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar sesión
                 </button>
+
+                @if (!string.IsNullOrEmpty(ViewBag.ReturnUrl))
+                {
+                    <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+                }
             </form>
         </div>
         <div class="card-footer py-3 text-center">

@@ -1,4 +1,4 @@
-﻿// Controllers/Authentication/UsuariosController.cs
+﻿// Controllers/UsuariosController.cs
 using Javo2.Controllers.Base;
 using Javo2.IServices.Authentication;
 using Javo2.Models.Authentication;
@@ -12,9 +12,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Javo2.Controllers.Authentication
+namespace Javo2.Controllers
 {
-    [Authorize(Policy = "PermisoPolitica")]
+    [Authorize(Policy = "Permission:usuarios.ver")]
     public class UsuariosController : BaseController
     {
         private readonly IUsuarioService _usuarioService;
@@ -31,7 +31,6 @@ namespace Javo2.Controllers.Authentication
         }
 
         // GET: Usuarios
-        [Authorize(Policy = "Permission:usuarios.ver")]
         public async Task<IActionResult> Index()
         {
             try
@@ -47,7 +46,6 @@ namespace Javo2.Controllers.Authentication
         }
 
         // GET: Usuarios/Details/5
-        [Authorize(Policy = "Permission:usuarios.ver")]
         public async Task<IActionResult> Details(int id)
         {
             try
