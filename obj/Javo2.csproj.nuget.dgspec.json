@@ -91,6 +91,10 @@
               "target": "Package",
               "version": "[6.0.0, )"
             },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.9.0, )"
+            },
             "jQuery": {
               "target": "Package",
               "version": "[3.7.1, )"

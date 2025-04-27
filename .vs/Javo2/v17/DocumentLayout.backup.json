@@ -3,12 +3,128 @@
   "WorkspaceRootPath": "D:\\github\\Javo2\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\extensions\\mvcextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:extensions\\mvcextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\iservices\\authentication\\iusuarioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:iservices\\authentication\\iusuarioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\roles\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\roles\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\roles\\form.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\roles\\form.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\roles\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\roles\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\shared\\_authmanagementmenu.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\shared\\_authmanagementmenu.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\shared\\_securitynav.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\shared\\_securitynav.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\shared\\_userinfo.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\shared\\_userinfo.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\auth\\cambiarcontrase\u00F1a.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\auth\\cambiarcontrase\u00F1a.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\services\\authentication\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:services\\authentication\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\services\\authentication\\permisoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:services\\authentication\\permisoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\services\\authentication\\rolservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:services\\authentication\\rolservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\services\\authentication\\usuarioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:services\\authentication\\usuarioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\extensions\\authenticationstartupextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:extensions\\authenticationstartupextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\extensions\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:extensions\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\controllers\\securitydashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:controllers\\securitydashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\models\\authentication\\rolpermiso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:models\\authentication\\rolpermiso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\models\\authentication\\usuariorol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:models\\authentication\\usuariorol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\models\\authentication\\rol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:models\\authentication\\rol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\models\\authentication\\permiso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:models\\authentication\\permiso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\models\\authentication\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:models\\authentication\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\viewmodels\\authentication\\usuarioviewmodels.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:viewmodels\\authentication\\usuarioviewmodels.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\securitydashboard\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\securitydashboard\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\auth\\accessdenied.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\auth\\accessdenied.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\auth\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\auth\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\viewmodels\\authentication\\cambiarcontrase\u00F1aviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:viewmodels\\authentication\\cambiarcontrase\u00F1aviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\viewmodels\\authentication\\perfilviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:viewmodels\\authentication\\perfilviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\extensions\\mvcextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:extensions\\mvcextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\perfil\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -19,28 +135,8 @@
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\perfil\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\viewmodels\\authentication\\perfilviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:viewmodels\\authentication\\perfilviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\viewmodels\\authentication\\securitydashboardviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:viewmodels\\authentication\\securitydashboardviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\controllers\\perfilcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:controllers\\perfilcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\services\\authentication\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:services\\authentication\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\shared\\_userinfo.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\shared\\_userinfo.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\shared\\_confnav.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -55,28 +151,12 @@
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\usuarios\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\shared\\_securitynav.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\shared\\_securitynav.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\roles\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\roles\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\securitydashboard\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\securitydashboard\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\account\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\account\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\auth\\accessdenied.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\auth\\accessdenied.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\iservices\\authentication\\iusuarioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:iservices\\authentication\\iusuarioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\iservices\\authentication\\irolservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -85,14 +165,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\iservices\\authentication\\ipermisoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:iservices\\authentication\\ipermisoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\auth\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\auth\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\iservices\\authentication\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -115,10 +187,6 @@
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\permisos\\form.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\auth\\cambiarcontrase\u00F1a.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\auth\\cambiarcontrase\u00F1a.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\controllers\\configuracioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:controllers\\configuracioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -131,24 +199,8 @@
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\configuracion\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\shared\\_authmanagementmenu.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\shared\\_authmanagementmenu.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\permisos\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\permisos\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\controllers\\usuarioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:controllers\\usuarioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\services\\authentication\\rolservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:services\\authentication\\rolservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\controllers\\rolescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -162,266 +214,58 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "MvcExtensions.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Extensions\\MvcExtensions.cs",
-              "RelativeDocumentMoniker": "Extensions\\MvcExtensions.cs",
-              "ToolTip": "D:\\github\\Javo2\\Extensions\\MvcExtensions.cs",
-              "RelativeToolTip": "Extensions\\MvcExtensions.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAwwBcAAAD9AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-27T14:37:18.369Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "Edit.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Perfil\\Edit.cshtml",
-              "RelativeDocumentMoniker": "Views\\Perfil\\Edit.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Perfil\\Edit.cshtml",
-              "RelativeToolTip": "Views\\Perfil\\Edit.cshtml",
-              "ViewState": "AgIAAEwAAAAAAAAAAAAwwFwAAAABAAAAAAAAAA==",
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Roles\\Details.cshtml",
+              "RelativeDocumentMoniker": "Views\\Roles\\Details.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Roles\\Details.cshtml",
+              "RelativeToolTip": "Views\\Roles\\Details.cshtml",
+              "ViewState": "AgIAAGwAAAAAAAAAAAAwwHIAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-27T14:36:38.977Z",
+              "WhenOpened": "2025-04-27T16:27:21.933Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Perfil\\Index.cshtml",
-              "RelativeDocumentMoniker": "Views\\Perfil\\Index.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Perfil\\Index.cshtml",
-              "RelativeToolTip": "Views\\Perfil\\Index.cshtml",
-              "ViewState": "AgIAAF4AAAAAAAAAAAAwwGwAAAAAAAAAAAAAAA==",
+              "Title": "Form.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Roles\\Form.cshtml",
+              "RelativeDocumentMoniker": "Views\\Roles\\Form.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Roles\\Form.cshtml",
+              "RelativeToolTip": "Views\\Roles\\Form.cshtml",
+              "ViewState": "AgIAAHsAAAAAAAAAAAAwwIkAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-27T14:36:15.75Z",
+              "WhenOpened": "2025-04-27T16:26:40.237Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "PerfilViewModel.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\ViewModels\\Authentication\\PerfilViewModel.cs",
-              "RelativeDocumentMoniker": "ViewModels\\Authentication\\PerfilViewModel.cs",
-              "ToolTip": "D:\\github\\Javo2\\ViewModels\\Authentication\\PerfilViewModel.cs",
-              "RelativeToolTip": "ViewModels\\Authentication\\PerfilViewModel.cs",
-              "ViewState": "AgIAADsAAAAAAAAAAAA/wEkAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-27T14:35:13.233Z",
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Roles\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Roles\\Index.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Roles\\Index.cshtml",
+              "RelativeToolTip": "Views\\Roles\\Index.cshtml",
+              "ViewState": "AgIAAEcAAAAAAAAAAAAwwFUAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-27T16:26:20.615Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 6,
-              "Title": "PerfilController.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\PerfilController.cs",
-              "RelativeDocumentMoniker": "Controllers\\PerfilController.cs",
-              "ToolTip": "D:\\github\\Javo2\\Controllers\\PerfilController.cs",
-              "RelativeToolTip": "Controllers\\PerfilController.cs",
-              "ViewState": "AgIAALUAAAAAAAAAAAAwwMMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-27T14:34:31.035Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "_UserInfo.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Shared\\_UserInfo.cshtml",
-              "RelativeDocumentMoniker": "Views\\Shared\\_UserInfo.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Shared\\_UserInfo.cshtml",
-              "RelativeToolTip": "Views\\Shared\\_UserInfo.cshtml",
-              "ViewState": "AgIAADMAAAAAAAAAAAAwwEEAAAAAAAAAAAAAAA==",
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAGUAAAAAAAAAAAAwwHMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-27T14:30:56.703Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "Filter.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Usuarios\\Filter.cshtml",
-              "RelativeDocumentMoniker": "Views\\Usuarios\\Filter.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Usuarios\\Filter.cshtml",
-              "RelativeToolTip": "Views\\Usuarios\\Filter.cshtml",
-              "ViewState": "AgIAAC4AAAAAAAAAAAAwwDwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-27T14:30:20.253Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "AuthService.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Services\\Authentication\\AuthService.cs",
-              "RelativeDocumentMoniker": "Services\\Authentication\\AuthService.cs",
-              "ToolTip": "D:\\github\\Javo2\\Services\\Authentication\\AuthService.cs",
-              "RelativeToolTip": "Services\\Authentication\\AuthService.cs",
-              "ViewState": "AgIAAFUAAAAAAAAAAAAwwFsAAAAgAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-27T14:26:54.721Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AccountController.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Extensions\\AccountController.cs",
-              "RelativeDocumentMoniker": "Extensions\\AccountController.cs",
-              "ToolTip": "D:\\github\\Javo2\\Extensions\\AccountController.cs",
-              "RelativeToolTip": "Extensions\\AccountController.cs",
-              "ViewState": "AgIAAKoAAAAAAAAAAAAwwLgAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-27T06:10:28.153Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "_SecurityNav.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Shared\\_SecurityNav.cshtml",
-              "RelativeDocumentMoniker": "Views\\Shared\\_SecurityNav.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Shared\\_SecurityNav.cshtml",
-              "RelativeToolTip": "Views\\Shared\\_SecurityNav.cshtml",
-              "ViewState": "AgIAADIAAAAAAAAAAAAwwEAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-27T14:29:16.448Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "DashboardController.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\DashboardController.cs",
-              "RelativeDocumentMoniker": "Controllers\\DashboardController.cs",
-              "ToolTip": "D:\\github\\Javo2\\Controllers\\DashboardController.cs",
-              "RelativeToolTip": "Controllers\\DashboardController.cs",
-              "ViewState": "AgIAAEYAAAAAAAAAAAAwwFQAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-27T06:46:41.395Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "SecurityDashboardViewModel.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\ViewModels\\Authentication\\SecurityDashboardViewModel.cs",
-              "RelativeDocumentMoniker": "ViewModels\\Authentication\\SecurityDashboardViewModel.cs",
-              "ToolTip": "D:\\github\\Javo2\\ViewModels\\Authentication\\SecurityDashboardViewModel.cs",
-              "RelativeToolTip": "ViewModels\\Authentication\\SecurityDashboardViewModel.cs",
-              "ViewState": "AgIAAAsAAAAAAAAAAAA/wBkAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-27T06:47:44.743Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "Delete.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Roles\\Delete.cshtml",
-              "RelativeDocumentMoniker": "Views\\Roles\\Delete.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Roles\\Delete.cshtml",
-              "RelativeToolTip": "Views\\Roles\\Delete.cshtml",
-              "ViewState": "AgIAADAAAAAAAAAAAAAwwD4AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-27T06:49:32.173Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\SecurityDashboard\\Index.cshtml",
-              "RelativeDocumentMoniker": "Views\\SecurityDashboard\\Index.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\SecurityDashboard\\Index.cshtml",
-              "RelativeToolTip": "Views\\SecurityDashboard\\Index.cshtml",
-              "ViewState": "AgIAAMkAAAAAAAAAAAAwwNcAAAAKAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-27T06:49:00.454Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "_ConfNav.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Shared\\_ConfNav.cshtml",
-              "RelativeDocumentMoniker": "Views\\Shared\\_ConfNav.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Shared\\_ConfNav.cshtml",
-              "RelativeToolTip": "Views\\Shared\\_ConfNav.cshtml",
-              "ViewState": "AgIAAAoAAAAAAAAAAAAAABAAAAADAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-27T06:17:25.233Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "Create.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Usuarios\\Create.cshtml",
-              "RelativeDocumentMoniker": "Views\\Usuarios\\Create.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Usuarios\\Create.cshtml",
-              "RelativeToolTip": "Views\\Usuarios\\Create.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFkAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-27T06:45:00.495Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "Register.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Account\\Register.cshtml",
-              "RelativeDocumentMoniker": "Views\\Account\\Register.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Account\\Register.cshtml",
-              "RelativeToolTip": "Views\\Account\\Register.cshtml",
-              "ViewState": "AgIAAEkAAAAAAAAAAAAwwFkAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-27T06:44:12.208Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 22,
-              "Title": "LoginController.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\LoginController.cs",
-              "RelativeDocumentMoniker": "Controllers\\LoginController.cs",
-              "ToolTip": "D:\\github\\Javo2\\Controllers\\LoginController.cs",
-              "RelativeToolTip": "Controllers\\LoginController.cs",
-              "ViewState": "AgIAAKIAAAAAAAAAAAAAAKIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-27T06:39:14.757Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 23,
-              "Title": "IAuthService.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\IServices\\Authentication\\IAuthService.cs",
-              "RelativeDocumentMoniker": "IServices\\Authentication\\IAuthService.cs",
-              "ToolTip": "D:\\github\\Javo2\\IServices\\Authentication\\IAuthService.cs",
-              "RelativeToolTip": "IServices\\Authentication\\IAuthService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAQwAwAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-27T06:37:56.785Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 24,
-              "Title": "login.css",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\css\\login.css",
-              "RelativeDocumentMoniker": "wwwroot\\css\\login.css",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\css\\login.css",
-              "RelativeToolTip": "wwwroot\\css\\login.css",
-              "ViewState": "AgIAACUAAAAAAAAAAAAIwDMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2025-04-27T06:37:13.247Z",
+              "WhenOpened": "2025-04-27T16:22:57.797Z",
               "EditorCaption": ""
             },
             {
@@ -430,97 +274,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
-              "Title": "Login.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Auth\\Login.cshtml",
-              "RelativeDocumentMoniker": "Views\\Auth\\Login.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Auth\\Login.cshtml",
-              "RelativeToolTip": "Views\\Auth\\Login.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAE0AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-27T06:12:51.451Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 20,
-              "Title": "IPermisoService.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\IServices\\Authentication\\IPermisoService.cs",
-              "RelativeDocumentMoniker": "IServices\\Authentication\\IPermisoService.cs",
-              "ToolTip": "D:\\github\\Javo2\\IServices\\Authentication\\IPermisoService.cs",
-              "RelativeToolTip": "IServices\\Authentication\\IPermisoService.cs",
-              "ViewState": "AgIAAAIAAAAAAAAAAAAwwBAAAAABAAAAAAAAAA==",
+              "DocumentIndex": 10,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Services\\Authentication\\AuthService.cs",
+              "RelativeDocumentMoniker": "Services\\Authentication\\AuthService.cs",
+              "ToolTip": "D:\\github\\Javo2\\Services\\Authentication\\AuthService.cs",
+              "RelativeToolTip": "Services\\Authentication\\AuthService.cs",
+              "ViewState": "AgIAAGEAAAAAAAAAAAAwwG8AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-27T06:09:08.061Z",
+              "WhenOpened": "2025-04-27T14:26:54.721Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
-              "Title": "IRolService.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\IServices\\Authentication\\IRolService.cs",
-              "RelativeDocumentMoniker": "IServices\\Authentication\\IRolService.cs",
-              "ToolTip": "D:\\github\\Javo2\\IServices\\Authentication\\IRolService.cs",
-              "RelativeToolTip": "IServices\\Authentication\\IRolService.cs",
-              "ViewState": "AgIAAAgAAAAAAAAAAAAwwBYAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-27T06:08:11.309Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 18,
-              "Title": "IUsuarioService.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\IServices\\Authentication\\IUsuarioService.cs",
-              "RelativeDocumentMoniker": "IServices\\Authentication\\IUsuarioService.cs",
-              "ToolTip": "D:\\github\\Javo2\\IServices\\Authentication\\IUsuarioService.cs",
-              "RelativeToolTip": "IServices\\Authentication\\IUsuarioService.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAA/wBwAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-27T06:09:19.571Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "AccessDenied.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Auth\\AccessDenied.cshtml",
-              "RelativeDocumentMoniker": "Views\\Auth\\AccessDenied.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Auth\\AccessDenied.cshtml",
-              "RelativeToolTip": "Views\\Auth\\AccessDenied.cshtml",
-              "ViewState": "AgIAAAoAAAAAAAAAAAAAwBwAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-27T06:12:26.661Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 25,
-              "Title": "_LayoutLogin.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Shared\\_LayoutLogin.cshtml",
-              "RelativeDocumentMoniker": "Views\\Shared\\_LayoutLogin.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Shared\\_LayoutLogin.cshtml",
-              "RelativeToolTip": "Views\\Shared\\_LayoutLogin.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACkAAAAHAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-27T06:35:29.857Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 29,
-              "Title": "ConfiguracionController.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\ConfiguracionController.cs",
-              "RelativeDocumentMoniker": "Controllers\\ConfiguracionController.cs",
-              "ToolTip": "D:\\github\\Javo2\\Controllers\\ConfiguracionController.cs",
-              "RelativeToolTip": "Controllers\\ConfiguracionController.cs",
-              "ViewState": "AgIAAJAAAAAAAAAAAAAwwJ4AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-27T06:15:26.176Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 9,
               "Title": "CambiarContrase\u00F1a.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Auth\\CambiarContrase\u00F1a.cshtml",
               "RelativeDocumentMoniker": "Views\\Auth\\CambiarContrase\u00F1a.cshtml",
@@ -533,7 +300,493 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "LoginController.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\LoginController.cs",
+              "RelativeDocumentMoniker": "Controllers\\LoginController.cs",
+              "ToolTip": "D:\\github\\Javo2\\Controllers\\LoginController.cs*",
+              "RelativeToolTip": "Controllers\\LoginController.cs*",
+              "ViewState": "AgIAAM8AAAAAAAAAAAAAwNAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-27T06:39:14.757Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "IUsuarioService.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\IServices\\Authentication\\IUsuarioService.cs",
+              "RelativeDocumentMoniker": "IServices\\Authentication\\IUsuarioService.cs",
+              "ToolTip": "D:\\github\\Javo2\\IServices\\Authentication\\IUsuarioService.cs",
+              "RelativeToolTip": "IServices\\Authentication\\IUsuarioService.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAA/wBsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-27T06:09:19.571Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "PermisoService.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Services\\Authentication\\PermisoService.cs",
+              "RelativeDocumentMoniker": "Services\\Authentication\\PermisoService.cs",
+              "ToolTip": "D:\\github\\Javo2\\Services\\Authentication\\PermisoService.cs",
+              "RelativeToolTip": "Services\\Authentication\\PermisoService.cs",
+              "ViewState": "AgIAAAgBAAAAAAAAAAAwwBYBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-27T16:03:38.309Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "D:\\github\\Javo2\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAE4AAAAAAAAAAAAwwFwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-27T06:13:34.528Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "_UserInfo.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Shared\\_UserInfo.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_UserInfo.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Shared\\_UserInfo.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_UserInfo.cshtml",
+              "ViewState": "AgIAACAAAAAAAAAAAAAwwC4AAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-27T14:30:56.703Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "_AuthManagementMenu.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Shared\\_AuthManagementMenu.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_AuthManagementMenu.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Shared\\_AuthManagementMenu.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_AuthManagementMenu.cshtml",
+              "ViewState": "AgIAADIAAAAAAAAAAAAwwEAAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-27T06:14:16.478Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "UsuarioService.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Services\\Authentication\\UsuarioService.cs",
+              "RelativeDocumentMoniker": "Services\\Authentication\\UsuarioService.cs",
+              "ToolTip": "D:\\github\\Javo2\\Services\\Authentication\\UsuarioService.cs",
+              "RelativeToolTip": "Services\\Authentication\\UsuarioService.cs",
+              "ViewState": "AgIAAIgBAAAAAAAAAAAwwJYBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-27T16:03:49.086Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "_SecurityNav.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Shared\\_SecurityNav.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_SecurityNav.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Shared\\_SecurityNav.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_SecurityNav.cshtml",
+              "ViewState": "AgIAAC8AAAAAAAAAAAAwwD0AAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-27T14:29:16.448Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "AuthenticationStartupExtensions.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Extensions\\AuthenticationStartupExtensions.cs",
+              "RelativeDocumentMoniker": "Extensions\\AuthenticationStartupExtensions.cs",
+              "ToolTip": "D:\\github\\Javo2\\Extensions\\AuthenticationStartupExtensions.cs",
+              "RelativeToolTip": "Extensions\\AuthenticationStartupExtensions.cs",
+              "ViewState": "AgIAAD0AAAAAAAAAAAAwwEsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-27T16:03:08.599Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "RolPermiso.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Models\\Authentication\\RolPermiso.cs",
+              "RelativeDocumentMoniker": "Models\\Authentication\\RolPermiso.cs",
+              "ToolTip": "D:\\github\\Javo2\\Models\\Authentication\\RolPermiso.cs",
+              "RelativeToolTip": "Models\\Authentication\\RolPermiso.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAYwAgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-27T16:01:23.868Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "UsuarioRol.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Models\\Authentication\\UsuarioRol.cs",
+              "RelativeDocumentMoniker": "Models\\Authentication\\UsuarioRol.cs",
+              "ToolTip": "D:\\github\\Javo2\\Models\\Authentication\\UsuarioRol.cs",
+              "RelativeToolTip": "Models\\Authentication\\UsuarioRol.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAYwAgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-27T16:01:36.239Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "Rol.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Models\\Authentication\\Rol.cs",
+              "RelativeDocumentMoniker": "Models\\Authentication\\Rol.cs",
+              "ToolTip": "D:\\github\\Javo2\\Models\\Authentication\\Rol.cs",
+              "RelativeToolTip": "Models\\Authentication\\Rol.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAA/wBUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-27T16:01:08.736Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "Permiso.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Models\\Authentication\\Permiso.cs",
+              "RelativeDocumentMoniker": "Models\\Authentication\\Permiso.cs",
+              "ToolTip": "D:\\github\\Javo2\\Models\\Authentication\\Permiso.cs",
+              "RelativeToolTip": "Models\\Authentication\\Permiso.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAA8wBwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-27T15:57:28.275Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "RolService.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Services\\Authentication\\RolService.cs",
+              "RelativeDocumentMoniker": "Services\\Authentication\\RolService.cs",
+              "ToolTip": "D:\\github\\Javo2\\Services\\Authentication\\RolService.cs",
+              "RelativeToolTip": "Services\\Authentication\\RolService.cs",
+              "ViewState": "AgIAAEMBAAAAAAAAAAAwwEsBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-27T06:08:34.101Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "Usuario.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Models\\Authentication\\Usuario.cs",
+              "RelativeDocumentMoniker": "Models\\Authentication\\Usuario.cs",
+              "ToolTip": "D:\\github\\Javo2\\Models\\Authentication\\Usuario.cs",
+              "RelativeToolTip": "Models\\Authentication\\Usuario.cs",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAAAC0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-27T15:56:32.874Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "DashboardController.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\DashboardController.cs",
+              "RelativeDocumentMoniker": "Controllers\\DashboardController.cs",
+              "ToolTip": "D:\\github\\Javo2\\Controllers\\DashboardController.cs",
+              "RelativeToolTip": "Controllers\\DashboardController.cs",
+              "ViewState": "AgIAAEQAAAAAAAAAAAAwwFIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-27T06:46:41.395Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "SecurityDashboardController.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\SecurityDashboardController.cs",
+              "RelativeDocumentMoniker": "Controllers\\SecurityDashboardController.cs",
+              "ToolTip": "D:\\github\\Javo2\\Controllers\\SecurityDashboardController.cs",
+              "RelativeToolTip": "Controllers\\SecurityDashboardController.cs",
+              "ViewState": "AgIAAEMAAAAAAAAAAAAwwFEAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-27T06:08:51.403Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "AccountController.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Extensions\\AccountController.cs",
+              "RelativeDocumentMoniker": "Extensions\\AccountController.cs",
+              "ToolTip": "D:\\github\\Javo2\\Extensions\\AccountController.cs",
+              "RelativeToolTip": "Extensions\\AccountController.cs",
+              "ViewState": "AgIAAKsAAAAAAAAAAAAswLgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-27T06:10:28.153Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Auth\\Login.cshtml",
+              "RelativeDocumentMoniker": "Views\\Auth\\Login.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Auth\\Login.cshtml",
+              "RelativeToolTip": "Views\\Auth\\Login.cshtml",
+              "ViewState": "AgIAAEEAAAAAAAAAAAAwwEgAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-27T06:12:51.451Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "AccessDenied.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Auth\\AccessDenied.cshtml",
+              "RelativeDocumentMoniker": "Views\\Auth\\AccessDenied.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Auth\\AccessDenied.cshtml",
+              "RelativeToolTip": "Views\\Auth\\AccessDenied.cshtml",
+              "ViewState": "AgIAABMAAAAAAAAAAAAwwCEAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-27T06:12:26.661Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "UsuarioViewModels.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\ViewModels\\Authentication\\UsuarioViewModels.cs",
+              "RelativeDocumentMoniker": "ViewModels\\Authentication\\UsuarioViewModels.cs",
+              "ToolTip": "D:\\github\\Javo2\\ViewModels\\Authentication\\UsuarioViewModels.cs",
+              "RelativeToolTip": "ViewModels\\Authentication\\UsuarioViewModels.cs",
+              "ViewState": "AgIAAFIAAAAAAAAAAAAswFkAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-27T06:47:44.743Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\SecurityDashboard\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\SecurityDashboard\\Index.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\SecurityDashboard\\Index.cshtml",
+              "RelativeToolTip": "Views\\SecurityDashboard\\Index.cshtml",
+              "ViewState": "AgIAAMkAAAAAAAAAAAAwwNcAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-27T06:49:00.454Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "CambiarContrase\u00F1aViewModel.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\ViewModels\\Authentication\\CambiarContrase\u00F1aViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModels\\Authentication\\CambiarContrase\u00F1aViewModel.cs",
+              "ToolTip": "D:\\github\\Javo2\\ViewModels\\Authentication\\CambiarContrase\u00F1aViewModel.cs",
+              "RelativeToolTip": "ViewModels\\Authentication\\CambiarContrase\u00F1aViewModel.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAowBgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-27T14:53:49.125Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "PerfilViewModel.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\ViewModels\\Authentication\\PerfilViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModels\\Authentication\\PerfilViewModel.cs",
+              "ToolTip": "D:\\github\\Javo2\\ViewModels\\Authentication\\PerfilViewModel.cs",
+              "RelativeToolTip": "ViewModels\\Authentication\\PerfilViewModel.cs",
+              "ViewState": "AgIAADwAAAAAAAAAAAAswEkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-27T14:35:13.233Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "MvcExtensions.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Extensions\\MvcExtensions.cs",
+              "RelativeDocumentMoniker": "Extensions\\MvcExtensions.cs",
+              "ToolTip": "D:\\github\\Javo2\\Extensions\\MvcExtensions.cs",
+              "RelativeToolTip": "Extensions\\MvcExtensions.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAwwBcAAAD9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-27T14:37:18.369Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "Filter.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Usuarios\\Filter.cshtml",
+              "RelativeDocumentMoniker": "Views\\Usuarios\\Filter.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Usuarios\\Filter.cshtml",
+              "RelativeToolTip": "Views\\Usuarios\\Filter.cshtml",
+              "ViewState": "AgIAAC4AAAAAAAAAAAAwwDwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-27T14:30:20.253Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "PerfilController.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\PerfilController.cs",
+              "RelativeDocumentMoniker": "Controllers\\PerfilController.cs",
+              "ToolTip": "D:\\github\\Javo2\\Controllers\\PerfilController.cs",
+              "RelativeToolTip": "Controllers\\PerfilController.cs",
+              "ViewState": "AgIAALUAAAAAAAAAAAAwwMMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-27T14:34:31.035Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Perfil\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Perfil\\Index.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Perfil\\Index.cshtml",
+              "RelativeToolTip": "Views\\Perfil\\Index.cshtml",
+              "ViewState": "AgIAAF4AAAAAAAAAAAAwwGwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-27T14:36:15.75Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 31,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Perfil\\Edit.cshtml",
+              "RelativeDocumentMoniker": "Views\\Perfil\\Edit.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Perfil\\Edit.cshtml",
+              "RelativeToolTip": "Views\\Perfil\\Edit.cshtml",
+              "ViewState": "AgIAAEwAAAAAAAAAAAAwwFwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-27T14:36:38.977Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "Delete.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Roles\\Delete.cshtml",
+              "RelativeDocumentMoniker": "Views\\Roles\\Delete.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Roles\\Delete.cshtml",
+              "RelativeToolTip": "Views\\Roles\\Delete.cshtml",
+              "ViewState": "AgIAADAAAAAAAAAAAAAwwD4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-27T06:49:32.173Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "_ConfNav.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Shared\\_ConfNav.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_ConfNav.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Shared\\_ConfNav.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_ConfNav.cshtml",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAAABAAAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-27T06:17:25.233Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Usuarios\\Create.cshtml",
+              "RelativeDocumentMoniker": "Views\\Usuarios\\Create.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Usuarios\\Create.cshtml",
+              "RelativeToolTip": "Views\\Usuarios\\Create.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-27T06:45:00.495Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 38,
+              "Title": "Register.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Account\\Register.cshtml",
+              "RelativeDocumentMoniker": "Views\\Account\\Register.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Account\\Register.cshtml",
+              "RelativeToolTip": "Views\\Account\\Register.cshtml",
+              "ViewState": "AgIAAEkAAAAAAAAAAAAwwFkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-27T06:44:12.208Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 41,
+              "Title": "IAuthService.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\IServices\\Authentication\\IAuthService.cs",
+              "RelativeDocumentMoniker": "IServices\\Authentication\\IAuthService.cs",
+              "ToolTip": "D:\\github\\Javo2\\IServices\\Authentication\\IAuthService.cs",
+              "RelativeToolTip": "IServices\\Authentication\\IAuthService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAQwAwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-27T06:37:56.785Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 42,
+              "Title": "login.css",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\css\\login.css",
+              "RelativeDocumentMoniker": "wwwroot\\css\\login.css",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\css\\login.css",
+              "RelativeToolTip": "wwwroot\\css\\login.css",
+              "ViewState": "AgIAACUAAAAAAAAAAAAIwDMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-04-27T06:37:13.247Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 40,
+              "Title": "IPermisoService.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\IServices\\Authentication\\IPermisoService.cs",
+              "RelativeDocumentMoniker": "IServices\\Authentication\\IPermisoService.cs",
+              "ToolTip": "D:\\github\\Javo2\\IServices\\Authentication\\IPermisoService.cs",
+              "RelativeToolTip": "IServices\\Authentication\\IPermisoService.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAwwBAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-27T06:09:08.061Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 39,
+              "Title": "IRolService.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\IServices\\Authentication\\IRolService.cs",
+              "RelativeDocumentMoniker": "IServices\\Authentication\\IRolService.cs",
+              "ToolTip": "D:\\github\\Javo2\\IServices\\Authentication\\IRolService.cs",
+              "RelativeToolTip": "IServices\\Authentication\\IRolService.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAwwBYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-27T06:08:11.309Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 43,
+              "Title": "_LayoutLogin.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Shared\\_LayoutLogin.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_LayoutLogin.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Shared\\_LayoutLogin.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_LayoutLogin.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACkAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-27T06:35:29.857Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 46,
+              "Title": "ConfiguracionController.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\ConfiguracionController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ConfiguracionController.cs",
+              "ToolTip": "D:\\github\\Javo2\\Controllers\\ConfiguracionController.cs",
+              "RelativeToolTip": "Controllers\\ConfiguracionController.cs",
+              "ViewState": "AgIAAJAAAAAAAAAAAAAwwJ4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-27T06:15:26.176Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 48,
               "Title": "Edit.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Configuracion\\Edit.cshtml",
               "RelativeDocumentMoniker": "Views\\Configuracion\\Edit.cshtml",
@@ -545,7 +798,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 44,
               "Title": "Delete.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Permisos\\Delete.cshtml",
               "RelativeDocumentMoniker": "Views\\Permisos\\Delete.cshtml",
@@ -557,7 +810,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
+              "DocumentIndex": 47,
               "Title": "Seguridad.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Configuracion\\Seguridad.cshtml",
               "RelativeDocumentMoniker": "Views\\Configuracion\\Seguridad.cshtml",
@@ -569,31 +822,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
-              "Title": "_AuthManagementMenu.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Shared\\_AuthManagementMenu.cshtml",
-              "RelativeDocumentMoniker": "Views\\Shared\\_AuthManagementMenu.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Shared\\_AuthManagementMenu.cshtml",
-              "RelativeToolTip": "Views\\Shared\\_AuthManagementMenu.cshtml",
-              "ViewState": "AgIAADIAAAAAAAAAAAAwwEAAAAAGAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-27T06:14:16.478Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 33,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "D:\\github\\Javo2\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-27T06:13:34.528Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 45,
               "Title": "Form.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Permisos\\Form.cshtml",
               "RelativeDocumentMoniker": "Views\\Permisos\\Form.cshtml",
@@ -605,7 +834,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
+              "DocumentIndex": 49,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Permisos\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Permisos\\Index.cshtml",
@@ -617,31 +846,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 35,
-              "Title": "UsuariosController.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\UsuariosController.cs",
-              "RelativeDocumentMoniker": "Controllers\\UsuariosController.cs",
-              "ToolTip": "D:\\github\\Javo2\\Controllers\\UsuariosController.cs",
-              "RelativeToolTip": "Controllers\\UsuariosController.cs",
-              "ViewState": "AgIAAKkBAAAAAAAAAAAwwLcBAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-27T06:08:51.403Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 36,
-              "Title": "RolService.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Services\\Authentication\\RolService.cs",
-              "RelativeDocumentMoniker": "Services\\Authentication\\RolService.cs",
-              "ToolTip": "D:\\github\\Javo2\\Services\\Authentication\\RolService.cs",
-              "RelativeToolTip": "Services\\Authentication\\RolService.cs",
-              "ViewState": "AgIAAD4BAAAAAAAAAAAwwEwBAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-27T06:08:34.101Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 37,
+              "DocumentIndex": 50,
               "Title": "RolesController.cs",
               "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\RolesController.cs",
               "RelativeDocumentMoniker": "Controllers\\RolesController.cs",

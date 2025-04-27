@@ -1,5 +1,4 @@
-﻿// Services/Authentication/PermisoService.cs
-using Javo2.Helpers;
+﻿using Javo2.Helpers;
 using Javo2.IServices.Authentication;
 using Javo2.Models.Authentication;
 using Microsoft.Extensions.Logging;
@@ -248,6 +247,32 @@ namespace Javo2.Services.Authentication
             }
 
             _logger.LogInformation("Permiso eliminado: {PermisoID}", id);
+            return true;
+        }
+
+        public async Task<IEnumerable<Permiso>> GetPermisosByModuloAsync(string modulo)
+        {
+            lock (_lock)
+            {
+                return _permisos.Where(p => p.Grupo.Equals(modulo, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+        }
+
+        public async Task<bool> ToggleEstadoAsync(int id)
+        {
+            lock (_lock)
+            {
+                var permiso = _permisos.FirstOrDefault(p => p.PermisoID == id);
+                if (permiso == null)
+                {
+                    return false;
+                }
+
+                permiso.Activo = !permiso.Activo;
+                GuardarEnJson();
+            }
+
+            _logger.LogInformation("Estado del permiso {PermisoID} cambiado a {Estado}", id, _permisos.FirstOrDefault(p => p.PermisoID == id)?.Activo);
             return true;
         }
     }

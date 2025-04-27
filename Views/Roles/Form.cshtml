@@ -1,6 +1,7 @@
 ﻿@model Javo2.ViewModels.Authentication.RolFormViewModel
 @{
-    ViewData["Title"] = Model.EsEdicion ? "Editar Rol" : "Crear Rol";
+    bool isEdit = Model.EsEdicion;
+    ViewData["Title"] = isEdit ? "Editar Rol" : "Crear Rol";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -10,10 +11,10 @@
             <h2 class="h4 mb-0">@ViewData["Title"]</h2>
         </div>
         <div class="card-body">
-            <form asp-action="@(Model.EsEdicion ? "Edit" : "Create")" method="post">
+            <form asp-action="@(isEdit ? "Edit" : "Create")" method="post">
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
                 
-                @if (Model.EsEdicion)
+                @if (isEdit)
                 {
                     <input type="hidden" asp-for="Rol.RolID" />
                     <input type="hidden" asp-for="Rol.EsSistema" />
@@ -21,17 +22,17 @@
 
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label asp-for="Rol.Nombre" class="form-label"></label>
+                        <label asp-for="Rol.Nombre" class="form-label">Nombre</label>
                         <input asp-for="Rol.Nombre" class="form-control bg-dark text-light" 
-                               @(Model.EsEdicion && Model.Rol.EsSistema ? "readonly" : "") />
+                               @(isEdit && Model.Rol.EsSistema ? "readonly" : "") />
                         <span asp-validation-for="Rol.Nombre" class="text-danger"></span>
-                        @if (Model.EsEdicion && Model.Rol.EsSistema)
+                        @if (isEdit && Model.Rol.EsSistema)
                         {
                             <small class="text-muted">No se puede cambiar el nombre de un rol del sistema.</small>
                         }
                     </div>
                     <div class="col-md-6">
-                        <label asp-for="Rol.Descripcion" class="form-label"></label>
+                        <label asp-for="Rol.Descripcion" class="form-label">Descripción</label>
                         <input asp-for="Rol.Descripcion" class="form-control bg-dark text-light" />
                         <span asp-validation-for="Rol.Descripcion" class="text-danger"></span>
                     </div>

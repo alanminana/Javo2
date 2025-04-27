@@ -1,6 +1,4 @@
-﻿// 7. Views/Shared/_UserInfo.cshtml
-// Parcial para mostrar información del usuario actual
-@using System.Security.Claims
+﻿@using System.Security.Claims
 @{
     var userName = User.Identity.Name;
     var fullName = $"{User.FindFirst(ClaimTypes.GivenName)?.Value ?? ""} {User.FindFirst(ClaimTypes.Surname)?.Value ?? ""}".Trim();
@@ -46,20 +44,4 @@
             </form>
         </li>
     </ul>
-</div>
-
-// 8. Views/Shared/_Layout.cshtml (Actualizado)
-// Solo las partes que se deben modificar para integrar el sistema de autenticación
-<!-- Añadir esto en la sección del header -->
-<div class="navbar-nav ml-auto">
-    @if (User.Identity.IsAuthenticated)
-    {
-        <partial name="_UserInfo" />
-    }
-    else
-    {
-        <a class="nav-link" asp-controller="Login" asp-action="Index">
-            <i class="bi bi-box-arrow-in-right me-1"></i>Iniciar Sesión
-        </a>
-    }
 </div>

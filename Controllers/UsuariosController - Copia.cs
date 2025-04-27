@@ -15,15 +15,15 @@ using System.Threading.Tasks;
 namespace Javo2.Controllers
 {
     [Authorize(Policy = "Permission:usuarios.ver")]
-    public class UsuariosController : BaseController
+    public class SecurityDashboardController : BaseController
     {
         private readonly IUsuarioService _usuarioService;
         private readonly IRolService _rolService;
 
-        public UsuariosController(
+        public SecurityDashboardController(
             IUsuarioService usuarioService,
             IRolService rolService,
-            ILogger<UsuariosController> logger)
+            ILogger<SecurityDashboardController> logger)
             : base(logger)
         {
             _usuarioService = usuarioService;

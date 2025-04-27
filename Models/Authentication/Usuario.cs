@@ -1,5 +1,4 @@
-﻿// Models/Authentication/Usuario.cs
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -12,6 +11,10 @@ namespace Javo2.Models.Authentication
         [Required(ErrorMessage = "El nombre de usuario es obligatorio")]
         [Display(Name = "Nombre de usuario")]
         public string NombreUsuario { get; set; }
+
+        [Required(ErrorMessage = "La contraseña es obligatoria")]
+        [Display(Name = "Contraseña")]
+        public string Contraseña { get; set; }
 
         [Required(ErrorMessage = "El nombre es obligatorio")]
         [Display(Name = "Nombre")]
@@ -26,9 +29,6 @@ namespace Javo2.Models.Authentication
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        // La contraseña no se expone en el modelo
-        public string Contraseña { get; set; }
-
         [Display(Name = "Activo")]
         public bool Activo { get; set; } = true;
 
@@ -41,7 +41,6 @@ namespace Javo2.Models.Authentication
         [Display(Name = "Creado por")]
         public string CreadoPor { get; set; }
 
-        // Relaciones
         public List<UsuarioRol> Roles { get; set; } = new List<UsuarioRol>();
     }
 }

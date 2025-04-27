@@ -1,4 +1,5 @@
 ﻿
+
 // 7. IServices/Authentication/IRolService.cs
 // Interfaz más completa para el servicio de roles
 using Javo2.Models.Authentication;

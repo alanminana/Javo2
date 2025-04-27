@@ -1,4 +1,5 @@
-﻿// IServices/Authentication/IPermisoService.cs
+﻿// 6. IServices/Authentication/IPermisoService.cs
+// Interfaz más completa para el servicio de permisos
 using Javo2.Models.Authentication;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,5 +14,7 @@ namespace Javo2.IServices.Authentication
         Task<bool> CreatePermisoAsync(Permiso permiso);
         Task<bool> UpdatePermisoAsync(Permiso permiso);
         Task<bool> DeletePermisoAsync(int id);
+        Task<IEnumerable<Permiso>> GetPermisosByModuloAsync(string modulo);
+        Task<bool> ToggleEstadoAsync(int id);
     }
 }

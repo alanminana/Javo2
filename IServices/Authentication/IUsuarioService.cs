@@ -1,6 +1,4 @@
-﻿
-
-// 8. IServices/Authentication/IUsuarioService.cs
+﻿// 8. IServices/Authentication/IUsuarioService.cs
 // Interfaz más completa para el servicio de usuarios
 using Javo2.Models.Authentication;
 using System.Collections.Generic;

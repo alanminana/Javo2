@@ -1,5 +1,4 @@
-﻿// Models/Authentication/Permiso.cs
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Javo2.Models.Authentication
 {
@@ -7,11 +6,11 @@ namespace Javo2.Models.Authentication
     {
         public int PermisoID { get; set; }
 
-        [Required(ErrorMessage = "El nombre del permiso es obligatorio")]
+        [Required(ErrorMessage = "El nombre es obligatorio")]
         [Display(Name = "Nombre")]
         public string Nombre { get; set; }
 
-        [Required(ErrorMessage = "El código del permiso es obligatorio")]
+        [Required(ErrorMessage = "El código es obligatorio")]
         [Display(Name = "Código")]
         public string Codigo { get; set; }
 
@@ -21,10 +20,10 @@ namespace Javo2.Models.Authentication
         [Display(Name = "Grupo")]
         public string Grupo { get; set; }
 
+        [Display(Name = "Es sistema")]
+        public bool EsSistema { get; set; }
+
         [Display(Name = "Activo")]
         public bool Activo { get; set; } = true;
-
-        [Display(Name = "Es de sistema")]
-        public bool EsSistema { get; set; } = false;
     }
 }

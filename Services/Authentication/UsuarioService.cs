@@ -367,5 +367,41 @@ namespace Javo2.Services.Authentication
             var permisos = await GetPermisosUsuarioAsync(usuarioID);
             return permisos.Any(p => p.Codigo == codigoPermiso);
         }
+
+        public async Task<bool> ToggleEstadoAsync(int id)
+        {
+            lock (_lock)
+            {
+                var usuario = _usuarios.FirstOrDefault(u => u.UsuarioID == id);
+                if (usuario == null)
+                {
+                    return false;
+                }
+
+                usuario.Activo = !usuario.Activo;
+                GuardarEnJson();
+            }
+
+            _logger.LogInformation("Estado de usuario {UsuarioID} cambiado a {Estado}", id, _usuarios.FirstOrDefault(u => u.UsuarioID == id)?.Activo);
+            return true;
+        }
+
+        public async Task<IEnumerable<Usuario>> BuscarUsuariosAsync(string termino)
+        {
+            if (string.IsNullOrWhiteSpace(termino))
+            {
+                return await GetAllUsuariosAsync();
+            }
+
+            lock (_lock)
+            {
+                return _usuarios.Where(u =>
+                    u.NombreUsuario.Contains(termino, StringComparison.OrdinalIgnoreCase) ||
+                    u.Nombre.Contains(termino, StringComparison.OrdinalIgnoreCase) ||
+                    u.Apellido.Contains(termino, StringComparison.OrdinalIgnoreCase) ||
+                    u.Email.Contains(termino, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+        }
     }
 }

@@ -1,6 +1,4 @@
-﻿// 5. Views/Shared/_SecurityNav.cshtml
-// Menú de navegación para sección de seguridad
-@using System.Security.Claims
+﻿@using System.Security.Claims
 
 @{
     bool tienePermisoUsuarios = User.HasClaim(c => c.Type == "Permission" && c.Value == "usuarios.ver");

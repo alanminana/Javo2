@@ -1,8 +1,4 @@
-﻿
-// 9. Services/Authentication/AuthService.cs
-// Implementación del servicio de autenticación
-using Javo2.Helpers;
-using Javo2.IServices.Authentication;
+﻿using Javo2.IServices.Authentication;
 using Javo2.Models.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -84,34 +80,33 @@ namespace Javo2.Services.Authentication
                 }
 
                 // Crear token
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? "JavoDevelopmentSecurityKey2024"));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
                 var expires = DateTime.Now.AddHours(3);
 
+                var token = new JwtSecurityToken(
+                    issuer: _configuration["Jwt:Issuer"] ?? "JavoIssuer",
+                    audience: _configuration["Jwt:Audience"] ?? "JavoAudience",
+                    claims: claims,
+                    expires: expires,
+                    signingCredentials: creds
+                );
 
-var token = new JwtSecurityToken(
-    issuer: _configuration["Jwt:Issuer"],
-    audience: _configuration["Jwt:Audience"],
-    claims: claims,
-    expires: expires,
-    signingCredentials: creds
-);
-
-return new JwtSecurityTokenHandler().WriteToken(token);
+                return new JwtSecurityTokenHandler().WriteToken(token);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al generar token JWT para el usuario {Username}", username);
-return null;
+                return null;
             }
         }
 
         public async Task<bool> RevokeTokenAsync(string username)
-{
-    // En un entorno real, aquí se implementaría la revocación del token
-    // Por ejemplo, agregando el token a una lista negra en una base de datos
-    _logger.LogInformation("Token revocado para el usuario: {Username}", username);
-    return await Task.FromResult(true);
-}
+        {
+            // En un entorno real, aquí se implementaría la revocación del token
+            // Por ejemplo, agregando el token a una lista negra en una base de datos
+            _logger.LogInformation("Token revocado para el usuario: {Username}", username);
+            return await Task.FromResult(true);
+        }
     }
 }
