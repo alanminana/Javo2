@@ -1,0 +1,175 @@
+﻿@model Javo2.Models.Authentication.Permiso
+@{
+    bool isEdit = Model.PermisoID > 0;
+    ViewData["Title"] = isEdit ? "Editar Permiso" : "Crear Permiso";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    
+    var grupos = new List<string> { 
+        "General",
+        "Usuarios", 
+        "Roles", 
+        "Permisos", 
+        "Ventas", 
+        "Productos", 
+        "Clientes", 
+        "Reportes", 
+        "Configuración" 
+    };
+}
+
+<section class="container-fluid py-3">
+    <div class="card shadow-sm bg-dark text-light">
+        <div class="card-header">
+            <h2 class="h4 mb-0">@ViewData["Title"]</h2>
+        </div>
+        <div class="card-body">
+            <form asp-action="@(isEdit ? "Edit" : "Create")" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                @if (isEdit)
+                {
+                    <input type="hidden" asp-for="PermisoID" />
+                    <input type="hidden" asp-for="EsSistema" />
+                }
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Nombre" class="form-label">Nombre</label>
+                        <input asp-for="Nombre" class="form-control bg-dark text-light" 
+                               @(isEdit && Model.EsSistema ? "readonly" : "") />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                        @if (isEdit && Model.EsSistema)
+                        {
+                            <small class="text-muted">No se puede cambiar el nombre de un permiso del sistema.</small>
+                        }
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Codigo" class="form-label">Código</label>
+                        <input asp-for="Codigo" class="form-control bg-dark text-light"
+                               @(isEdit && Model.EsSistema ? "readonly" : "") />
+                        <span asp-validation-for="Codigo" class="text-danger"></span>
+                        @if (isEdit && Model.EsSistema)
+                        {
+                            <small class="text-muted">No se puede cambiar el código de un permiso del sistema.</small>
+                        }
+                        else
+                        {
+                            <small class="text-muted">Ejemplo: "productos.crear", "ventas.autorizar"</small>
+                        }
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Grupo" class="form-label">Grupo</label>
+                        <select asp-for="Grupo" class="form-control bg-dark text-light">
+                            @foreach (var grupo in grupos)
+                            {
+                                <option value="@grupo" @(Model.Grupo == grupo ? "selected" : "")>@grupo</option>
+                            }
+                        </select>
+                        <span asp-validation-for="Grupo" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Activo" class="form-label">Estado</label>
+                        <div class="form-check form-switch mt-2">
+                            <input asp-for="Activo" class="form-check-input" type="checkbox" role="switch" />
+                            <label class="form-check-label" for="Activo">Activo</label>
+                        </div>
+                        <span asp-validation-for="Activo" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Descripcion" class="form-label">Descripción</label>
+                    <textarea asp-for="Descripcion" class="form-control bg-dark text-light" rows="3"></textarea>
+                    <span asp-validation-for="Descripcion" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Volver
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save me-1"></i> Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Ayuda para generar el código a partir del nombre
+        document.addEventListener('DOMContentLoaded', function() {
+            const nombreInput = document.getElementById('Nombre');
+            const codigoInput = document.getElementById('Codigo');
+            const grupoSelect = document.getElementById('Grupo');
+            
+            // Solo si es formulario de creación y los campos no son de solo lectura
+            if (nombreInput && codigoInput && !nombreInput.readOnly && !codigoInput.readOnly) {
+                nombreInput.addEventListener('input', function() {
+                    // Solo generar si el código está vacío o el usuario no lo ha modificado manualmente
+                    if (codigoInput.value === '' || codigoInput._lastGenerated) {
+                        const grupo = grupoSelect.value.toLowerCase();
+                        const accion = nombreInput.value.toLowerCase()
+                            .replace(/^(ver|crear|editar|eliminar|autorizar|rechazar|ajustar)\s+/i, '') // Quitar verbo al inicio si existe
+                            .trim()
+                            .replace(/\s+/g, '.'); // Reemplazar espacios por puntos
+                        
+                        // Determinar el verbo basado en el nombre
+                        let verbo = '';
+                        if (/^ver\s+/i.test(nombreInput.value)) verbo = 'ver';
+                        else if (/^crear\s+/i.test(nombreInput.value)) verbo = 'crear';
+                        else if (/^editar\s+/i.test(nombreInput.value)) verbo = 'editar';
+                        else if (/^eliminar\s+/i.test(nombreInput.value)) verbo = 'eliminar';
+                        else if (/^autorizar\s+/i.test(nombreInput.value)) verbo = 'autorizar';
+                        else if (/^rechazar\s+/i.test(nombreInput.value)) verbo = 'rechazar';
+                        else if (/^ajustar\s+/i.test(nombreInput.value)) verbo = 'ajustar';
+                        
+                        // Generar código
+                        if (grupo === 'general') {
+                            codigoInput.value = accion.toLowerCase();
+                        } else {
+                            // Convertir grupo a singular si es posible
+                            let grupoSingular = grupo;
+                            if (grupo === 'usuarios') grupoSingular = 'usuario';
+                            else if (grupo === 'roles') grupoSingular = 'rol';
+                            else if (grupo === 'permisos') grupoSingular = 'permiso';
+                            else if (grupo === 'ventas') grupoSingular = 'venta';
+                            else if (grupo === 'productos') grupoSingular = 'producto';
+                            else if (grupo === 'clientes') grupoSingular = 'cliente';
+                            else if (grupo === 'reportes') grupoSingular = 'reporte';
+                            else if (grupo === 'configuración') grupoSingular = 'configuracion';
+                            
+                            if (verbo) {
+                                codigoInput.value = grupoSingular.toLowerCase() + '.' + verbo;
+                            } else {
+                                codigoInput.value = grupoSingular.toLowerCase() + '.' + accion.toLowerCase();
+                            }
+                        }
+                        
+                        // Marcar que el código fue generado automáticamente
+                        codigoInput._lastGenerated = true;
+                    }
+                });
+                
+                // Cuando el usuario modifica manualmente el código, dejar de generarlo automáticamente
+                codigoInput.addEventListener('input', function() {
+                    codigoInput._lastGenerated = false;
+                });
+                
+                // Cuando cambia el grupo, actualizar el código si se estaba generando automáticamente
+                grupoSelect.addEventListener('change', function() {
+                    if (codigoInput._lastGenerated) {
+                        // Simular un cambio en el nombre para regenerar el código
+                        const event = new Event('input', { bubbles: true });
+                        nombreInput.dispatchEvent(event);
+                    }
+                });
+            }
+        });
+    </script>
+}

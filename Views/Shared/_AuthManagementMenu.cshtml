@@ -1,0 +1,65 @@
+﻿@using System.Security.Claims
+
+@{
+    bool tienePermisoUsuarios = User.HasClaim(c => c.Type == "Permission" && c.Value == "usuarios.ver");
+    bool tienePermisoRoles = User.HasClaim(c => c.Type == "Permission" && c.Value == "roles.ver");
+    bool tienePermisoPermisos = User.HasClaim(c => c.Type == "Permission" && c.Value == "permisos.ver");
+}
+
+<div class="card shadow-sm bg-dark text-light mb-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-shield-lock me-2"></i>Administración de Seguridad</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="list-group list-group-flush">
+            @if (tienePermisoUsuarios)
+            {
+                <a asp-controller="Usuarios" asp-action="Index" class="list-group-item list-group-item-action bg-dark text-light border-secondary">
+                    <div class="d-flex w-100 justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-people-fill me-2"></i>Gestión de Usuarios
+                        </div>
+                        <i class="bi bi-chevron-right"></i>
+                    </div>
+                    <small class="text-muted">Crear, editar y administrar usuarios del sistema</small>
+                </a>
+            }
+
+            @if (tienePermisoRoles)
+            {
+                <a asp-controller="Roles" asp-action="Index" class="list-group-item list-group-item-action bg-dark text-light border-secondary">
+                    <div class="d-flex w-100 justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-person-badge-fill me-2"></i>Gestión de Roles
+                        </div>
+                        <i class="bi bi-chevron-right"></i>
+                    </div>
+                    <small class="text-muted">Administrar roles y sus permisos asociados</small>
+                </a>
+            }
+
+            @if (tienePermisoPermisos)
+            {
+                <a asp-controller="Permisos" asp-action="Index" class="list-group-item list-group-item-action bg-dark text-light border-secondary">
+                    <div class="d-flex w-100 justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-key-fill me-2"></i>Gestión de Permisos
+                        </div>
+                        <i class="bi bi-chevron-right"></i>
+                    </div>
+                    <small class="text-muted">Configurar permisos de acceso para funcionalidades del sistema</small>
+                </a>
+            }
+
+            <a asp-controller="Auth" asp-action="CambiarContraseña" class="list-group-item list-group-item-action bg-dark text-light border-secondary">
+                <div class="d-flex w-100 justify-content-between align-items-center">
+                    <div>
+                        <i class="bi bi-lock-fill me-2"></i>Cambiar Contraseña
+                    </div>
+                    <i class="bi bi-chevron-right"></i>
+                </div>
+                <small class="text-muted">Cambiar su contraseña de acceso al sistema</small>
+            </a>
+        </div>
+    </div>
+</div>

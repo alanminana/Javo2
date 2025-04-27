@@ -1,0 +1,124 @@
+﻿@{
+    ViewData["Title"] = "Configuración de Seguridad";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="container-fluid py-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">@ViewData["Title"]</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            @await Html.PartialAsync("_AuthManagementMenu")
+
+            <div class="card shadow-sm bg-dark text-light">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Acerca de la Gestión de Seguridad</h5>
+                </div>
+                <div class="card-body">
+                    <p>El módulo de gestión de seguridad permite configurar qué usuarios tienen acceso al sistema y qué acciones pueden realizar dentro de él.</p>
+
+                    <h6 class="mt-4">Conceptos clave:</h6>
+                    <ul>
+                        <li><strong>Usuario</strong>: Una cuenta de usuario que puede acceder al sistema.</li>
+                        <li><strong>Rol</strong>: Un conjunto de permisos que se puede asignar a uno o más usuarios.</li>
+                        <li><strong>Permiso</strong>: Una capacidad individual para realizar una acción específica en el sistema.</li>
+                    </ul>
+
+                    <h6 class="mt-4">Roles predefinidos:</h6>
+                    <ul>
+                        <li><strong>Administrador</strong>: Acceso completo a todas las funcionalidades del sistema.</li>
+                        <li><strong>Gerente</strong>: Acceso a funciones gerenciales como reportes, autorización de ventas, etc.</li>
+                        <li><strong>Vendedor</strong>: Acceso limitado a funciones de ventas, productos y clientes.</li>
+                    </ul>
+
+                    <div class="alert alert-info mt-4">
+                        <i class="bi bi-lightbulb me-2"></i>
+                        <strong>Recomendación:</strong> Por seguridad, asegúrese de que cada usuario tenga solo los permisos necesarios para realizar sus tareas específicas.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm bg-dark text-light mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-shield-check me-2"></i>Estado de Seguridad</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6>Resumen</h6>
+                        <dl class="row mb-0">
+                            <dt class="col-sm-8">Usuarios activos:</dt>
+                            <dd class="col-sm-4 text-end">@ViewBag.UsuariosActivos</dd>
+
+                            <dt class="col-sm-8">Roles definidos:</dt>
+                            <dd class="col-sm-4 text-end">@ViewBag.RolesCount</dd>
+
+                            <dt class="col-sm-8">Permisos totales:</dt>
+                            <dd class="col-sm-4 text-end">@ViewBag.PermisosCount</dd>
+                        </dl>
+                    </div>
+
+                    <div class="alert alert-secondary bg-secondary text-light">
+                        <i class="bi bi-clock-history me-2"></i>
+                        <small>Último acceso: @(User.Identity.IsAuthenticated ? ViewBag.UltimoAcceso?.ToString("dd/MM/yyyy HH:mm") ?? "No disponible" : "No disponible")</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm bg-dark text-light">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-question-circle me-2"></i>Ayuda</h5>
+                </div>
+                <div class="card-body">
+                    <h6>Preguntas frecuentes</h6>
+                    <div class="accordion" id="faqAccordion">
+                        <div class="accordion-item bg-dark text-light border-secondary">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-secondary text-light" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#faq1">
+                                    ¿Cómo crear un nuevo usuario?
+                                </button>
+                            </h2>
+                            <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Para crear un nuevo usuario, vaya a la sección "Gestión de Usuarios" y haga clic en el botón "Crear Usuario". Complete el formulario con los datos del usuario y asígnele uno o más roles.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item bg-dark text-light border-secondary">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-secondary text-light" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#faq2">
+                                    ¿Cómo asignar permisos?
+                                </button>
+                            </h2>
+                            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Los permisos se asignan a través de roles. Para modificar los permisos de un rol, vaya a la sección "Gestión de Roles", seleccione el rol deseado y edite los permisos asociados. Los usuarios heredarán los permisos de todos los roles que tengan asignados.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item bg-dark text-light border-secondary">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-secondary text-light" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#faq3">
+                                    ¿Qué hacer si un usuario olvida su contraseña?
+                                </button>
+                            </h2>
+                            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Un administrador puede editar el usuario desde la sección "Gestión de Usuarios" y establecer una nueva contraseña para el usuario. Al ingresar al sistema, el usuario deberá cambiar su contraseña.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

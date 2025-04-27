@@ -7,49 +7,19 @@ namespace Javo2.IServices.Authentication
 {
     public interface IRolService
     {
-        /// <summary>
-        /// Obtiene todos los roles del sistema
-        /// </summary>
         Task<IEnumerable<Rol>> GetAllRolesAsync();
-
-        /// <summary>
-        /// Obtiene un rol por su ID
-        /// </summary>
         Task<Rol> GetRolByIDAsync(int id);
-
-        /// <summary>
-        /// Obtiene un rol por su nombre
-        /// </summary>
         Task<Rol> GetRolByNombreAsync(string nombre);
-
-        /// <summary>
-        /// Crea un nuevo rol en el sistema
-        /// </summary>
-        Task<bool> CreateRolAsync(Rol rol);
-
-        /// <summary>
-        /// Actualiza un rol existente
-        /// </summary>
+        Task<int> CreateRolAsync(Rol rol);
         Task<bool> UpdateRolAsync(Rol rol);
-
-        /// <summary>
-        /// Elimina un rol del sistema
-        /// </summary>
         Task<bool> DeleteRolAsync(int id);
 
-        /// <summary>
-        /// Asigna un permiso a un rol
-        /// </summary>
+        // Métodos para gestionar permisos asociados a roles
+        Task<IEnumerable<Permiso>> GetPermisosByRolIDAsync(int rolID);
         Task<bool> AsignarPermisoAsync(int rolID, int permisoID);
-
-        /// <summary>
-        /// Quita un permiso de un rol
-        /// </summary>
         Task<bool> QuitarPermisoAsync(int rolID, int permisoID);
 
-        /// <summary>
-        /// Obtiene todos los permisos asignados a un rol
-        /// </summary>
-        Task<IEnumerable<Permiso>> GetPermisosByRolIDAsync(int rolID);
+        // Métodos para verificar si un rol tiene un permiso específico
+        Task<bool> TienePermisoAsync(int rolID, string codigoPermiso);
     }
 }

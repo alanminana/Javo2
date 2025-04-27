@@ -1,0 +1,272 @@
+﻿@model Dictionary<string, List<Javo2.Models.Authentication.Permiso>>
+@{
+    ViewData["Title"] = "Gestión de Permisos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="container-fluid py-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">@ViewData["Title"]</h1>
+        <a asp-action="Create" class="btn btn-success btn-sm">
+            <i class="bi bi-plus-circle me-1"></i> Crear Permiso
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm bg-dark text-light">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Permisos por grupo</h5>
+                <div class="input-group" style="width: 300px;">
+                    <input type="text" id="searchPermiso" class="form-control bg-dark text-light" placeholder="Buscar permiso...">
+                    <button class="btn btn-outline-secondary" type="button" id="clearSearch">
+                        <i class="bi bi-x-circle"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="accordion" id="permisosAccordion">
+                @foreach (var grupo in Model.OrderBy(g => g.Key))
+                {
+                    <div class="accordion-item bg-dark text-light border-secondary">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed bg-secondary text-light" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#grupo-@grupo.Key.Replace(" ", "-")">
+                                <i class="bi bi-folder me-2"></i>
+                                @grupo.Key (@grupo.Value.Count permisos)
+                            </button>
+                        </h2>
+                        <div id="grupo-@grupo.Key.Replace(" ", "-")" class="accordion-collapse collapse" data-bs-parent="#permisosAccordion">
+                            <div class="accordion-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-dark table-hover table-striped mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th>Código</th>
+                                                <th>Descripción</th>
+                                                <th>Estado</th>
+                                                <th>Tipo</th>
+                                                <th class="text-center">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var permiso in grupo.Value.OrderBy(p => p.Nombre))
+                                            {
+                                                <tr class="permiso-row">
+                                                    <td>@permiso.Nombre</td>
+                                                    <td><code>@permiso.Codigo</code></td>
+                                                    <td>@permiso.Descripcion</td>
+                                                    <td>
+                                                        @if (permiso.Activo)
+                                                        {
+                                                            <span class="badge bg-success">Activo</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge bg-danger">Inactivo</span>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (permiso.EsSistema)
+                                                        {
+                                                            <span class="badge bg-primary">Sistema</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge bg-secondary">Personalizado</span>
+                                                        }
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <div class="btn-group" role="group">
+                                                            @if (!permiso.EsSistema)
+                                                            {
+                                                                <a asp-action="Edit" asp-route-id="@permiso.PermisoID" class="btn btn-sm btn-outline-primary" title="Editar">
+                                                                    <i class="bi bi-pencil-square"></i>
+                                                                </a>
+                                                                <a asp-action="Delete" asp-route-id="@permiso.PermisoID" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                                                    <i class="bi bi-trash"></i>
+                                                                </a>
+                                                            }
+                                                            <button type="button" class="btn btn-sm btn-outline-@(permiso.Activo ? "warning" : "success") toggle-estado"
+                                                                    data-id="@permiso.PermisoID" data-estado="@permiso.Activo.ToString().ToLower()"
+                                                                    title="@(permiso.Activo ? "Desactivar" : "Activar")" @(permiso.EsSistema ? "disabled" : "")>
+                                                                <i class="bi @(permiso.Activo ? "bi-toggle-on" : "bi-toggle-off")"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal para confirmar cambio de estado -->
+<div class="modal fade" id="estadoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+                <h5 class="modal-title" id="estadoModalLabel">Cambiar estado de permiso</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p id="estadoModalMessage">¿Está seguro que desea cambiar el estado de este permiso?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="confirmEstadoBtn">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Token para solicitudes AJAX
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+            // Botones de cambio de estado
+            document.querySelectorAll('.toggle-estado').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (this.disabled) return;
+
+                    const id = this.dataset.id;
+                    const estado = this.dataset.estado === 'true';
+                    const nombrePermiso = this.closest('tr').querySelector('td:first-child').textContent;
+
+                    // Configurar el modal
+                    document.getElementById('estadoModalMessage').textContent =
+                        `¿Está seguro que desea ${estado ? 'desactivar' : 'activar'} el permiso "${nombrePermiso}"?`;
+
+                    // Configurar botón de confirmación
+                    const confirmBtn = document.getElementById('confirmEstadoBtn');
+                    confirmBtn.onclick = function() {
+                        // Enviar solicitud AJAX
+                        fetch(`@Url.Action("ToggleEstado", "Permisos")/${id}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'RequestVerificationToken': token
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Cerrar modal
+                                bootstrap.Modal.getInstance(document.getElementById('estadoModal')).hide();
+
+                                // Mostrar notificación
+                                const alert = document.createElement('div');
+                                alert.className = 'alert alert-success alert-dismissible fade show';
+                                alert.innerHTML = `<i class="bi bi-check-circle me-2"></i> ${data.message}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>`;
+                                document.querySelector('.container-fluid').prepend(alert);
+
+                                // Actualizar UI
+                                const row = document.querySelector(`[data-id="${id}"]`).closest('tr');
+                                const estadoCell = row.querySelector('td:nth-child(4)');
+                                const toggleBtn = row.querySelector('.toggle-estado');
+
+                                if (data.estado) {
+                                    estadoCell.innerHTML = '<span class="badge bg-success">Activo</span>';
+                                    toggleBtn.innerHTML = '<i class="bi bi-toggle-on"></i>';
+                                    toggleBtn.title = 'Desactivar';
+                                    toggleBtn.dataset.estado = 'true';
+                                    toggleBtn.classList.remove('btn-outline-success');
+                                    toggleBtn.classList.add('btn-outline-warning');
+                                } else {
+                                    estadoCell.innerHTML = '<span class="badge bg-danger">Inactivo</span>';
+                                    toggleBtn.innerHTML = '<i class="bi bi-toggle-off"></i>';
+                                    toggleBtn.title = 'Activar';
+                                    toggleBtn.dataset.estado = 'false';
+                                    toggleBtn.classList.remove('btn-outline-warning');
+                                    toggleBtn.classList.add('btn-outline-success');
+                                }
+                            } else {
+                                // Mostrar error
+                                alert(data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Ha ocurrido un error al cambiar el estado del permiso');
+                        });
+                    };
+
+                    // Mostrar modal
+                    const modal = new bootstrap.Modal(document.getElementById('estadoModal'));
+                    modal.show();
+                });
+            });
+
+            // Funcionalidad de búsqueda
+            const searchInput = document.getElementById('searchPermiso');
+            const clearSearchBtn = document.getElementById('clearSearch');
+
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const searchValue = this.value.toLowerCase();
+
+                    // Buscar en todas las filas
+                    document.querySelectorAll('.permiso-row').forEach(row => {
+                        const content = row.textContent.toLowerCase();
+                        const visible = content.includes(searchValue);
+                        row.style.display = visible ? '' : 'none';
+                    });
+
+                    // Mostrar/ocultar grupos según si tienen filas visibles
+                    document.querySelectorAll('.accordion-item').forEach(item => {
+                        const grupo = item.querySelector('.accordion-collapse');
+                        const visibleRows = grupo.querySelectorAll('.permiso-row[style="display: none;"]').length <
+                                           grupo.querySelectorAll('.permiso-row').length;
+
+                        if (searchValue && visibleRows) {
+                            // Expandir el grupo si hay resultados y hay texto en la búsqueda
+                            bootstrap.Collapse.getOrCreateInstance(grupo).show();
+                        }
+                    });
+                });
+
+                clearSearchBtn.addEventListener('click', function() {
+                    searchInput.value = '';
+                    searchInput.dispatchEvent(new Event('input'));
+
+                    // Colapsar todos los grupos
+                    document.querySelectorAll('.accordion-collapse.show').forEach(grupo => {
+                        bootstrap.Collapse.getOrCreateInstance(grupo).hide();
+                    });
+                });
+            }
+        });
+    </script>
+}
+                });
+            });
+        })(jQuery);
+    </script>
+}

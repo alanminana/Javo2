@@ -1,0 +1,16 @@
+﻿@using System.Security.Claims
+
+@{
+    bool tienePermisoConfiguracion = User.HasClaim(c => c.Type == "Permission" && c.Value == "configuracion.ver");
+    bool tienePermisoSeguridad = User.Identity.IsAuthenticated;
+
+    // Determinar si la sección actual está activa
+    string currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+    string currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    bool isConfigActive = currentController == "Configuracion";
+    bool isSecurityActive = (currentController == "Configuracion" && currentAction == "Seguridad") ||
+                           (currentController == "Usuarios" || currentController == "Roles" || currentController == "Permisos");
+}
+
+<div class="dropdown">
+    <a class="nav-link dropdown-toggle @(isConfigActive ? "active" : "")" href="#" role="button"
