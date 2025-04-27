@@ -1,4 +1,6 @@
-﻿// IServices/Authentication/IRolService.cs
+﻿
+// 7. IServices/Authentication/IRolService.cs
+// Interfaz más completa para el servicio de roles
 using Javo2.Models.Authentication;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,13 +15,9 @@ namespace Javo2.IServices.Authentication
         Task<int> CreateRolAsync(Rol rol);
         Task<bool> UpdateRolAsync(Rol rol);
         Task<bool> DeleteRolAsync(int id);
-
-        // Métodos para gestionar permisos asociados a roles
         Task<IEnumerable<Permiso>> GetPermisosByRolIDAsync(int rolID);
         Task<bool> AsignarPermisoAsync(int rolID, int permisoID);
         Task<bool> QuitarPermisoAsync(int rolID, int permisoID);
-
-        // Métodos para verificar si un rol tiene un permiso específico
         Task<bool> TienePermisoAsync(int rolID, string codigoPermiso);
     }
 }

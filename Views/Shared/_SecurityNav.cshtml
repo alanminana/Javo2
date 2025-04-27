@@ -1,0 +1,64 @@
+﻿// 5. Views/Shared/_SecurityNav.cshtml
+// Menú de navegación para sección de seguridad
+@using System.Security.Claims
+
+@{
+    bool tienePermisoUsuarios = User.HasClaim(c => c.Type == "Permission" && c.Value == "usuarios.ver");
+    bool tienePermisoRoles = User.HasClaim(c => c.Type == "Permission" && c.Value == "roles.ver");
+    bool tienePermisoPermisos = User.HasClaim(c => c.Type == "Permission" && c.Value == "permisos.ver");
+    bool tienePermisoConfiguracion = User.HasClaim(c => c.Type == "Permission" && c.Value == "configuracion.ver");
+
+    string controller = ViewContext.RouteData.Values["controller"]?.ToString();
+}
+
+<div class="card shadow-sm bg-dark text-light mb-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-shield-lock me-2"></i>Menú de Seguridad</h5>
+    </div>
+    <div class="card-body p-0">
+        <ul class="nav nav-pills flex-column">
+            <li class="nav-item">
+                <a class="nav-link @(controller == "SecurityDashboard" ? "active" : "")" asp-controller="SecurityDashboard" asp-action="Index">
+                    <i class="bi bi-speedometer2 me-2"></i>Panel de Control
+                </a>
+            </li>
+            @if (tienePermisoUsuarios)
+            {
+                <li class="nav-item">
+                    <a class="nav-link @(controller == "Usuarios" ? "active" : "")" asp-controller="Usuarios" asp-action="Index">
+                        <i class="bi bi-people-fill me-2"></i>Usuarios
+                    </a>
+                </li>
+            }
+            @if (tienePermisoRoles)
+            {
+                <li class="nav-item">
+                    <a class="nav-link @(controller == "Roles" ? "active" : "")" asp-controller="Roles" asp-action="Index">
+                        <i class="bi bi-person-badge-fill me-2"></i>Roles
+                    </a>
+                </li>
+            }
+            @if (tienePermisoPermisos)
+            {
+                <li class="nav-item">
+                    <a class="nav-link @(controller == "Permisos" ? "active" : "")" asp-controller="Permisos" asp-action="Index">
+                        <i class="bi bi-key-fill me-2"></i>Permisos
+                    </a>
+                </li>
+            }
+            @if (tienePermisoConfiguracion)
+            {
+                <li class="nav-item">
+                    <a class="nav-link @(controller == "Configuracion" ? "active" : "")" asp-controller="Configuracion" asp-action="Seguridad">
+                        <i class="bi bi-gear-fill me-2"></i>Configuración
+                    </a>
+                </li>
+            }
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Auth" asp-action="CambiarContraseña">
+                    <i class="bi bi-lock-fill me-2"></i>Cambiar Contraseña
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

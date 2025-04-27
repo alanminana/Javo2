@@ -1,0 +1,65 @@
+﻿// 7. Views/Shared/_UserInfo.cshtml
+// Parcial para mostrar información del usuario actual
+@using System.Security.Claims
+@{
+    var userName = User.Identity.Name;
+    var fullName = $"{User.FindFirst(ClaimTypes.GivenName)?.Value ?? ""} {User.FindFirst(ClaimTypes.Surname)?.Value ?? ""}".Trim();
+    var roles = User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+}
+
+<div class="dropdown">
+    <button class="btn btn-dark dropdown-toggle d-flex align-items-center" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <div class="d-flex align-items-center">
+            <div class="rounded-circle bg-secondary text-light d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                <i class="bi bi-person-fill"></i>
+            </div>
+            <div class="d-none d-md-block">
+                <div class="small text-light">@userName</div>
+            </div>
+        </div>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end bg-dark text-light" aria-labelledby="userDropdown">
+        <li>
+            <div class="dropdown-item-text">
+                <div class="fw-bold">@fullName</div>
+                <div class="small text-muted">@userName</div>
+                @if (roles.Any())
+                {
+                    <div class="mt-1">
+                        @foreach (var rol in roles)
+                        {
+                            <span class="badge bg-secondary">@rol</span>
+                        }
+                    </div>
+                }
+            </div>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item text-light" asp-controller="Perfil" asp-action="Index"><i class="bi bi-person me-2"></i>Mi Perfil</a></li>
+        <li><a class="dropdown-item text-light" asp-controller="Auth" asp-action="CambiarContraseña"><i class="bi bi-lock me-2"></i>Cambiar Contraseña</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+            <form asp-controller="Auth" asp-action="Logout" method="post" class="dropdown-item p-0">
+                <button type="submit" class="btn btn-link text-light text-decoration-none w-100 text-start px-3 py-1">
+                    <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
+                </button>
+            </form>
+        </li>
+    </ul>
+</div>
+
+// 8. Views/Shared/_Layout.cshtml (Actualizado)
+// Solo las partes que se deben modificar para integrar el sistema de autenticación
+<!-- Añadir esto en la sección del header -->
+<div class="navbar-nav ml-auto">
+    @if (User.Identity.IsAuthenticated)
+    {
+        <partial name="_UserInfo" />
+    }
+    else
+    {
+        <a class="nav-link" asp-controller="Login" asp-action="Index">
+            <i class="bi bi-box-arrow-in-right me-1"></i>Iniciar Sesión
+        </a>
+    }
+</div>

@@ -1,0 +1,108 @@
+﻿@model Javo2.ViewModels.Authentication.PerfilViewModel
+@{
+    ViewData["Title"] = "Mi Perfil";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="container-fluid py-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">
+            <i class="bi bi-person-circle me-2"></i>@ViewData["Title"]
+        </h1>
+        <a asp-action="Edit" class="btn btn-primary btn-sm">
+            <i class="bi bi-pencil-square me-1"></i>Editar Perfil
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+            <i class="bi bi-check-circle me-2"></i>@TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card bg-dark text-light shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <div class="d-inline-block rounded-circle bg-secondary p-3">
+                            <i class="bi bi-person-fill" style="font-size: 4rem;"></i>
+                        </div>
+                    </div>
+                    <h5 class="card-title mb-1">@Model.Nombre @Model.Apellido</h5>
+                    <p class="text-muted mb-3">@Model.NombreUsuario</p>
+
+                    <div class="d-flex justify-content-center mb-3">
+                        @foreach (var rol in Model.Roles)
+                        {
+                            <span class="badge bg-primary me-1">@rol.Nombre</span>
+                        }
+                    </div>
+
+                    <div class="text-start">
+                        <p class="mb-1"><strong>Email:</strong> @Model.Email</p>
+                        <p class="mb-1"><strong>Fecha de registro:</strong> @Model.FechaCreacion.ToString("dd/MM/yyyy")</p>
+                        <p class="mb-0"><strong>Último acceso:</strong> @(Model.UltimoAcceso.HasValue ? Model.UltimoAcceso.Value.ToString("dd/MM/yyyy HH:mm") : "Nunca")</p>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <a asp-controller="Auth" asp-action="CambiarContraseña" class="btn btn-outline-light btn-sm">
+                        <i class="bi bi-key-fill me-1"></i>Cambiar Contraseña
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card bg-dark text-light shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-shield-lock me-2"></i>Permisos del Usuario</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Permisos != null && Model.Permisos.Any())
+                    {
+                        <div class="accordion" id="permisosAccordion">
+                            @{
+                                var gruposPermisos = Model.Permisos.GroupBy(p => p.Grupo ?? "General").OrderBy(g => g.Key);
+                            }
+
+                            @foreach (var grupo in gruposPermisos)
+                            {
+                                var grupoId = grupo.Key.Replace(" ", "").ToLower();
+                                <div class="accordion-item bg-dark text-light border-secondary">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed bg-secondary text-light" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#@grupoId">
+                                            @grupo.Key (@grupo.Count() permisos)
+                                        </button>
+                                    </h2>
+                                    <div id="@grupoId" class="accordion-collapse collapse" data-bs-parent="#permisosAccordion">
+                                        <div class="accordion-body">
+                                            <ul class="list-group list-group-flush bg-transparent">
+                                                @foreach (var permiso in grupo.OrderBy(p => p.Nombre))
+                                                {
+                                                    <li class="list-group-item bg-dark text-light border-secondary d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <span>@permiso.Nombre</span>
+                                                            <small class="d-block text-muted">@permiso.Codigo</small>
+                                                        </div>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-center">No tienes permisos asignados.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,216 @@
+﻿@model Javo2.ViewModels.Authentication.SecurityDashboardViewModel
+@{
+    ViewData["Title"] = "Panel de Seguridad";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="container-fluid py-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">
+            <i class="bi bi-shield-lock me-2"></i>@ViewData["Title"]
+        </h1>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2 bg-dark text-light">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Usuarios
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold">@Model.TotalUsuarios</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-people-fill fa-2x text-gray-300" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2 bg-dark text-light">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Usuarios Activos
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold">@Model.UsuariosActivos</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-person-check-fill fa-2x text-gray-300" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2 bg-dark text-light">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Roles
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold">@Model.TotalRoles</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-person-badge-fill fa-2x text-gray-300" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2 bg-dark text-light">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Permisos
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold">@Model.TotalPermisos</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-key-fill fa-2x text-gray-300" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-6 col-lg-6">
+            <div class="card shadow mb-4 bg-dark text-light">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold">Últimos Usuarios Registrados</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Usuario</th>
+                                    <th>Nombre</th>
+                                    <th>Fecha Registro</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.UltimosUsuariosRegistrados != null && Model.UltimosUsuariosRegistrados.Any())
+                                {
+                                    foreach (var usuario in Model.UltimosUsuariosRegistrados)
+                                    {
+                                        <tr>
+                                            <td>@usuario.NombreUsuario</td>
+                                            <td>@usuario.NombreCompleto</td>
+                                            <td>@usuario.FechaCreacion.ToString("dd/MM/yyyy HH:mm")</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="3" class="text-center">No hay usuarios registrados.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-6 col-lg-6">
+            <div class="card shadow mb-4 bg-dark text-light">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold">Últimos Accesos al Sistema</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Usuario</th>
+                                    <th>Nombre</th>
+                                    <th>Último Acceso</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.UltimosAccesos != null && Model.UltimosAccesos.Any())
+                                {
+                                    foreach (var usuario in Model.UltimosAccesos)
+                                    {
+                                        <tr>
+                                            <td>@usuario.NombreUsuario</td>
+                                            <td>@usuario.NombreCompleto</td>
+                                            <td>@usuario.UltimoAcceso?.ToString("dd/MM/yyyy HH:mm")</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="3" class="text-center">No hay registros de acceso.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-12 col-lg-12">
+            <div class="card shadow mb-4 bg-dark text-light">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold">Gestión de Seguridad</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-4 mb-4">
+                            <div class="card bg-secondary text-white shadow">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-people-fill me-2"></i>Usuarios</h5>
+                                    <p class="card-text">Administre los usuarios del sistema, cree nuevas cuentas y gestione roles.</p>
+                                    <a asp-controller="Usuarios" asp-action="Index" class="btn btn-light btn-sm">
+                                        <i class="bi bi-arrow-right me-1"></i>Ir a Usuarios
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 mb-4">
+                            <div class="card bg-secondary text-white shadow">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-person-badge-fill me-2"></i>Roles</h5>
+                                    <p class="card-text">Configure los roles del sistema y sus permisos asociados.</p>
+                                    <a asp-controller="Roles" asp-action="Index" class="btn btn-light btn-sm">
+                                        <i class="bi bi-arrow-right me-1"></i>Ir a Roles
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 mb-4">
+                            <div class="card bg-secondary text-white shadow">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-key-fill me-2"></i>Permisos</h5>
+                                    <p class="card-text">Gestione los permisos del sistema y defina el acceso a funcionalidades.</p>
+                                    <a asp-controller="Permisos" asp-action="Index" class="btn btn-light btn-sm">
+                                        <i class="bi bi-arrow-right me-1"></i>Ir a Permisos
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

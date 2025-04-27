@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Javo2.ViewModels.Authentication
 {
-    public class CambiarContraseñaViewModel
+    public class SecurityDashboardViewModel
     {
         [Required(ErrorMessage = "La contraseña actual es obligatoria")]
         [DataType(DataType.Password)]

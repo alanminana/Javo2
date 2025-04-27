@@ -1,4 +1,5 @@
-﻿@model Javo2.ViewModels.Authentication.RolDetailsViewModel
+﻿/ 4. Views/Roles/Delete.cshtml (Completando el archivo parcial)
+@model Javo2.ViewModels.Authentication.RolDetailsViewModel
 @{
     ViewData["Title"] = "Eliminar Rol";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -12,7 +13,7 @@
         <div class="card-body">
             <div class="alert alert-danger">
                 <h3 class="h5"><i class="bi bi-exclamation-triangle me-2"></i>¿Está seguro que desea eliminar este rol?</h3>
-                <p class="mb-0">Esta acción no se puede deshacer y eliminará los permisos asignados a este rol.</p>
+                <p class="mb-0">Esta acción no se puede deshacer y eliminará la asignación de este rol a los usuarios asociados.</p>
             </div>
 
             <dl class="row mt-4">
@@ -31,4 +32,31 @@
                     {
                         <div class="mb-2">Este rol tiene @Model.Permisos.Count permisos asignados:</div>
                         <div class="d-flex flex-wrap gap-1">
-                            @foreach (var permiso in Model.Permisos.OrderBy(p => p
+                            @foreach (var permiso in Model.Permisos.OrderBy(p => p.Grupo).ThenBy(p => p.Nombre))
+                            {
+                                <span class="badge bg-secondary">@permiso.Nombre</span>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <span class="text-muted">Este rol no tiene permisos asignados.</span>
+                    }
+                </dd>
+            </dl>
+
+            <div class="d-flex justify-content-end gap-2 mt-4">
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i> Cancelar
+                </a>
+                <form asp-action="Delete" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.Rol.RolID" />
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash me-1"></i> Eliminar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

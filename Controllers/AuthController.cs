@@ -150,12 +150,12 @@ namespace Javo2.Controllers.Authentication
         [HttpGet]
         public IActionResult CambiarContraseña()
         {
-            return View(new CambiarContraseñaViewModel());
+            return View(new SecurityDashboardViewModel());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CambiarContraseña(CambiarContraseñaViewModel model)
+        public async Task<IActionResult> CambiarContraseña(SecurityDashboardViewModel model)
         {
             if (!ModelState.IsValid)
             {

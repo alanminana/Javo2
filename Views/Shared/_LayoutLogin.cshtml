@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿// 1. Views/Shared/_LayoutLogin.cshtml
+// Este archivo es necesario para la página de login, que debe tener un layout diferente
+@{
+    ViewData["Title"] = ViewData["Title"] ?? "Login";
+}
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
@@ -14,9 +19,9 @@
     <link href="~/css/site.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/css/login.css" rel="stylesheet" asp-append-version="true" />
 </head>
-<body class="bg-dark">
+<body class="bg-dark text-light">
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" class="pb-3 min-vh-100 d-flex align-items-center justify-content-center">
             @RenderBody()
         </main>
     </div>

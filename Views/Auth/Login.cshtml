@@ -1,59 +1,71 @@
-﻿@model Javo2.ViewModels.Authentication.LoginViewModel
+﻿// 5. Views/Login/Index.cshtml
+// Vista mejorada para el login
+@model Javo2.ViewModels.Authentication.LoginViewModel
 @{
     ViewData["Title"] = "Iniciar sesión";
     Layout = "~/Views/Shared/_LayoutLogin.cshtml";
 }
 
-<div class="row justify-content-center">
-    <div class="col-md-6 col-lg-4">
-        <div class="card shadow-lg border-0 rounded-lg mt-5 bg-dark text-light">
-            <div class="card-header">
-                <h3 class="text-center font-weight-light my-4">Iniciar Sesión</h3>
-            </div>
-            <div class="card-body">
-                <form asp-action="Login" method="post">
-                    @if (ViewData.ModelState.ErrorCount > 0)
-                    {
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach (var modelState in ViewData.ModelState.Values)
+<div class="login-container">
+    <div class="text-center mb-4">
+        <img src="~/img/logo.png" alt="Javo2 Logo" class="app-logo" onerror="this.src='/img/placeholder-logo.png'; this.onerror=null;">
+        <h1 class="h3 mb-3 fw-normal text-light">Javo2 Sistema de Gestión</h1>
+    </div>
+
+    <div class="card login-card">
+        <div class="card-header py-3">
+            <h2 class="card-title h5 mb-0 text-center">Iniciar Sesión</h2>
+        </div>
+        <div class="card-body">
+            <form asp-action="Index" method="post" class="login-form">
+                @if (!ModelState.IsValid)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <ul class="mb-0 ps-3">
+                            @foreach (var modelState in ViewContext.ModelState.Values)
+                            {
+                                foreach (var error in modelState.Errors)
                                 {
-                                    foreach (var error in modelState.Errors)
-                                    {
-                                        <li>@error.ErrorMessage</li>
-                                    }
+                                    <li>@error.ErrorMessage</li>
                                 }
-                            </ul>
-                        </div>
-                    }
-
-                    <div class="form-floating mb-3">
-                        <input asp-for="NombreUsuario" class="form-control bg-secondary text-light" id="NombreUsuario" autocomplete="username" />
-                        <label asp-for="NombreUsuario" class="text-light"></label>
-                        <span asp-validation-for="NombreUsuario" class="text-danger"></span>
+                            }
+                        </ul>
                     </div>
+                }
 
-                    <div class="form-floating mb-3">
-                        <input asp-for="Contraseña" class="form-control bg-secondary text-light" id="Contraseña" autocomplete="current-password" />
-                        <label asp-for="Contraseña" class="text-light"></label>
-                        <span asp-validation-for="Contraseña" class="text-danger"></span>
+                <div class="mb-3">
+                    <label asp-for="NombreUsuario" class="form-label">Usuario</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                        <input asp-for="NombreUsuario" class="form-control" autocomplete="username" autofocus />
                     </div>
-
-                    <div class="form-check mb-3">
-                        <input asp-for="RecordarMe" class="form-check-input" />
-                        <label asp-for="RecordarMe" class="form-check-label"></label>
-                    </div>
-
-                    <div class="d-flex align-items-center justify-content-center mt-4 mb-0">
-                        <button type="submit" class="btn btn-primary">Iniciar sesión</button>
-                    </div>
-                </form>
-            </div>
-            <div class="card-footer text-center py-3">
-                <div class="small">
-                    <p>Javo2 - Sistema de Gestión</p>
+                    <span asp-validation-for="NombreUsuario" class="text-danger"></span>
                 </div>
-            </div>
+
+                <div class="mb-3">
+                    <label asp-for="Contraseña" class="form-label">Contraseña</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                        <input asp-for="Contraseña" class="form-control" autocomplete="current-password" />
+                    </div>
+                    <span asp-validation-for="Contraseña" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input asp-for="RecordarMe" class="form-check-input" />
+                    <label asp-for="RecordarMe" class="form-check-label">Recordar credenciales</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary login-btn">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar sesión
+                </button>
+            </form>
+        </div>
+        <div class="card-footer py-3 text-center">
+            <small class="text-muted">
+                &copy; Javo2 - @DateTime.Now.Year
+                <br>Todos los derechos reservados
+            </small>
         </div>
     </div>
 </div>

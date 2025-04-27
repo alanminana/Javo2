@@ -1,0 +1,90 @@
+﻿// 9. Views/Account/Register.cshtml
+// Vista para registrar nuevos usuarios
+@model Javo2.ViewModels.Authentication.RegisterViewModel
+@{
+    ViewData["Title"] = "Registrar Usuario";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-lg border-0 rounded-lg mt-5 bg-dark text-light">
+            <div class="card-header">
+                <h3 class="text-center font-weight-light my-4">Crear Cuenta</h3>
+            </div>
+            <div class="card-body">
+                <form asp-action="Register" method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3 mb-md-0">
+                                <input asp-for="NombreUsuario" class="form-control bg-secondary text-light" id="inputUserName" placeholder="Usuario" />
+                                <label for="inputUserName" class="text-light">Nombre de usuario</label>
+                                <span asp-validation-for="NombreUsuario" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input asp-for="Email" class="form-control bg-secondary text-light" id="inputEmail" placeholder="nombre@ejemplo.com" />
+                                <label for="inputEmail" class="text-light">Correo electrónico</label>
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3 mb-md-0">
+                                <input asp-for="Nombre" class="form-control bg-secondary text-light" id="inputFirstName" placeholder="Nombre" />
+                                <label for="inputFirstName" class="text-light">Nombre</label>
+                                <span asp-validation-for="Nombre" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input asp-for="Apellido" class="form-control bg-secondary text-light" id="inputLastName" placeholder="Apellido" />
+                                <label for="inputLastName" class="text-light">Apellido</label>
+                                <span asp-validation-for="Apellido" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3 mb-md-0">
+                                <input asp-for="Contraseña" class="form-control bg-secondary text-light" id="inputPassword" type="password" placeholder="Contraseña" />
+                                <label for="inputPassword" class="text-light">Contraseña</label>
+                                <span asp-validation-for="Contraseña" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3 mb-md-0">
+                                <input asp-for="ConfirmarContraseña" class="form-control bg-secondary text-light" id="inputPasswordConfirm" type="password" placeholder="Confirmar contraseña" />
+                                <label for="inputPasswordConfirm" class="text-light">Confirmar contraseña</label>
+                                <span asp-validation-for="ConfirmarContraseña" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 mb-0">
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-block">Crear cuenta</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center py-3">
+                <div class="small">
+                    <a asp-action="Login" class="text-light">¿Ya tienes una cuenta? Inicia sesión</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
