@@ -1,0 +1,190 @@
+﻿@model IEnumerable<Javo2.Models.Authentication.Usuario>
+@{
+    ViewData["Title"] = "Gestión de Usuarios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="container-fluid py-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">@ViewData["Title"]</h1>
+        <a asp-action="Create" class="btn btn-success btn-sm">
+            <i class="bi bi-person-plus me-1"></i> Crear Usuario
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm bg-dark text-light">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-dark align-middle mb-0">
+                    <thead class="bg-secondary text-light">
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Roles</th>
+                            <th>Estado</th>
+                            <th>Último acceso</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.NombreUsuario</td>
+                                <td>@item.Nombre @item.Apellido</td>
+                                <td>@item.Email</td>
+                                <td>
+                                    <span class="small">@(String.Join(", ", item.Roles.Count))</span>
+                                </td>
+                                <td>
+                                    @if (item.Activo)
+                                    {
+                                        <span class="badge bg-success">Activo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Inactivo</span>
+                                    }
+                                </td>
+                                <td>
+                                    @(item.UltimoAcceso.HasValue ? item.UltimoAcceso.Value.ToString("dd/MM/yyyy HH:mm") : "Nunca")
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+                                        <a asp-action="Edit" asp-route-id="@item.UsuarioID" class="btn btn-sm btn-outline-primary" title="Editar">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        <a asp-action="Details" asp-route-id="@item.UsuarioID" class="btn btn-sm btn-outline-info" title="Detalles">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.UsuarioID" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-outline-warning toggle-estado"
+                                                data-id="@item.UsuarioID" data-estado="@item.Activo.ToString().ToLower()"
+                                                title="@(item.Activo ? "Desactivar" : "Activar")">
+                                            <i class="bi @(item.Activo ? "bi-toggle-on" : "bi-toggle-off")"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal para confirmar cambio de estado -->
+<div class="modal fade" id="estadoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+                <h5 class="modal-title" id="estadoModalLabel">Cambiar estado de usuario</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p id="estadoModalMessage">¿Está seguro que desea cambiar el estado de este usuario?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="confirmEstadoBtn">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Token para solicitudes AJAX
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+            // Botones de cambio de estado
+            document.querySelectorAll('.toggle-estado').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    const estado = this.dataset.estado === 'true';
+                    const username = this.closest('tr').querySelector('td:first-child').textContent;
+
+                    // Configurar el modal
+                    document.getElementById('estadoModalMessage').textContent =
+                        `¿Está seguro que desea ${estado ? 'desactivar' : 'activar'} al usuario "${username}"?`;
+
+                    // Configurar botón de confirmación
+                    const confirmBtn = document.getElementById('confirmEstadoBtn');
+                    confirmBtn.onclick = function() {
+                        // Enviar solicitud AJAX
+                        fetch(`@Url.Action("ToggleEstado", "Usuarios")/${id}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'RequestVerificationToken': token
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Cerrar modal
+                                bootstrap.Modal.getInstance(document.getElementById('estadoModal')).hide();
+
+                                // Mostrar notificación
+                                const alert = document.createElement('div');
+                                alert.className = 'alert alert-success alert-dismissible fade show';
+                                alert.innerHTML = `<i class="bi bi-check-circle me-2"></i> ${data.message}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>`;
+                                document.querySelector('.container-fluid').prepend(alert);
+
+                                // Actualizar UI
+                                const row = document.querySelector(`[data-id="${id}"]`).closest('tr');
+                                const estadoCell = row.querySelector('td:nth-child(5)');
+                                const toggleBtn = row.querySelector('.toggle-estado');
+
+                                if (data.estado) {
+                                    estadoCell.innerHTML = '<span class="badge bg-success">Activo</span>';
+                                    toggleBtn.innerHTML = '<i class="bi bi-toggle-on"></i>';
+                                    toggleBtn.title = 'Desactivar';
+                                    toggleBtn.dataset.estado = 'true';
+                                } else {
+                                    estadoCell.innerHTML = '<span class="badge bg-danger">Inactivo</span>';
+                                    toggleBtn.innerHTML = '<i class="bi bi-toggle-off"></i>';
+                                    toggleBtn.title = 'Activar';
+                                    toggleBtn.dataset.estado = 'false';
+                                }
+                            } else {
+                                // Mostrar error
+                                alert(data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Ha ocurrido un error al cambiar el estado del usuario');
+                        });
+                    };
+
+                    // Mostrar modal
+                    const modal = new bootstrap.Modal(document.getElementById('estadoModal'));
+                    modal.show();
+                });
+            });
+        });
+    </script>
+}

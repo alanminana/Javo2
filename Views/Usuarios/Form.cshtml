@@ -1,0 +1,122 @@
+﻿@model Javo2.ViewModels.Authentication.UsuarioFormViewModel
+@{
+    ViewData["Title"] = Model.EsEdicion ? "Editar Usuario" : "Crear Usuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="container-fluid py-3">
+    <div class="card shadow-sm bg-dark text-light">
+        <div class="card-header">
+            <h2 class="h4 mb-0">@ViewData["Title"]</h2>
+        </div>
+        <div class="card-body">
+            <form asp-action="@(Model.EsEdicion ? "Edit" : "Create")" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                @if (Model.EsEdicion)
+                {
+                    <input type="hidden" asp-for="Usuario.UsuarioID" />
+                }
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Usuario.NombreUsuario" class="form-label"></label>
+                        <input asp-for="Usuario.NombreUsuario" class="form-control bg-dark text-light" />
+                        <span asp-validation-for="Usuario.NombreUsuario" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Usuario.Email" class="form-label"></label>
+                        <input asp-for="Usuario.Email" class="form-control bg-dark text-light" />
+                        <span asp-validation-for="Usuario.Email" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Usuario.Nombre" class="form-label"></label>
+                        <input asp-for="Usuario.Nombre" class="form-control bg-dark text-light" />
+                        <span asp-validation-for="Usuario.Nombre" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Usuario.Apellido" class="form-label"></label>
+                        <input asp-for="Usuario.Apellido" class="form-control bg-dark text-light" />
+                        <span asp-validation-for="Usuario.Apellido" class="text-danger"></span>
+                    </div>
+                </div>
+
+                @if (!Model.EsEdicion)
+                {
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="Contraseña" class="form-label"></label>
+                            <input asp-for="Contraseña" class="form-control bg-dark text-light" />
+                            <span asp-validation-for="Contraseña" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="ConfirmarContraseña" class="form-label"></label>
+                            <input asp-for="ConfirmarContraseña" class="form-control bg-dark text-light" />
+                            <span asp-validation-for="ConfirmarContraseña" class="text-danger"></span>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="Contraseña" class="form-label">Nueva Contraseña (opcional)</label>
+                            <input asp-for="Contraseña" class="form-control bg-dark text-light" />
+                            <small class="text-muted">Dejar en blanco para mantener la contraseña actual</small>
+                            <span asp-validation-for="Contraseña" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="ConfirmarContraseña" class="form-label"></label>
+                            <input asp-for="ConfirmarContraseña" class="form-control bg-dark text-light" />
+                            <span asp-validation-for="ConfirmarContraseña" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input asp-for="Usuario.Activo" class="form-check-input" />
+                        <label asp-for="Usuario.Activo" class="form-check-label"></label>
+                    </div>
+                }
+
+                <div class="mb-4">
+                    <input type="hidden" asp-for="Usuario.CreadoPor" value="@User.Identity.Name" />
+                    <label class="form-label">Roles</label>
+                    <div class="card bg-secondary">
+                        <div class="card-body">
+                            @foreach (var rol in Model.RolesDisponibles)
+                            {
+                                <div class="form-check">
+                                    <input type="checkbox"
+                                           class="form-check-input"
+                                           id="rol-@rol.Value"
+                                           name="RolesSeleccionados"
+                                           value="@rol.Value"
+                                    @(Model.RolesSeleccionados.Contains(int.Parse(rol.Value)) ? "checked" : "") />
+                                    <label class="form-check-label" for="rol-@rol.Value">@rol.Text</label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Volver
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save me-1"></i> Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -10,35 +10,38 @@ namespace Javo2.Models.Authentication
         public int UsuarioID { get; set; }
 
         [Required(ErrorMessage = "El nombre de usuario es obligatorio")]
-        [StringLength(50, MinimumLength = 3, ErrorMessage = "El nombre de usuario debe tener entre 3 y 50 caracteres")]
+        [Display(Name = "Nombre de usuario")]
         public string NombreUsuario { get; set; }
 
-        [Required(ErrorMessage = "La contraseña es obligatoria")]
-        public string Contraseña { get; set; }
-
         [Required(ErrorMessage = "El nombre es obligatorio")]
-        [StringLength(100, ErrorMessage = "El nombre debe tener menos de 100 caracteres")]
+        [Display(Name = "Nombre")]
         public string Nombre { get; set; }
 
         [Required(ErrorMessage = "El apellido es obligatorio")]
-        [StringLength(100, ErrorMessage = "El apellido debe tener menos de 100 caracteres")]
+        [Display(Name = "Apellido")]
         public string Apellido { get; set; }
 
         [Required(ErrorMessage = "El email es obligatorio")]
-        [EmailAddress(ErrorMessage = "El formato del email no es válido")]
+        [EmailAddress(ErrorMessage = "El email no es válido")]
+        [Display(Name = "Email")]
         public string Email { get; set; }
 
+        // La contraseña no se expone en el modelo
+        public string Contraseña { get; set; }
+
+        [Display(Name = "Activo")]
         public bool Activo { get; set; } = true;
 
+        [Display(Name = "Fecha de creación")]
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
 
+        [Display(Name = "Último acceso")]
         public DateTime? UltimoAcceso { get; set; }
 
+        [Display(Name = "Creado por")]
         public string CreadoPor { get; set; }
 
+        // Relaciones
         public List<UsuarioRol> Roles { get; set; } = new List<UsuarioRol>();
-
-        // Propiedad de navegación completa para facilitar acceso
-        public string NombreCompleto => $"{Nombre} {Apellido}";
     }
 }

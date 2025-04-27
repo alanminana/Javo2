@@ -286,5 +286,41 @@
     "EsRevertido": false,
     "RollbackUser": "",
     "RollbackFecha": null
+  },
+  {
+    "ID": 25,
+    "FechaHora": "2025-04-25T14:52:14.7381845-03:00",
+    "Usuario": "Sistema",
+    "Entidad": "Producto",
+    "Accion": "Create",
+    "LlavePrimaria": "8",
+    "Detalle": "sadsdasad",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
+  },
+  {
+    "ID": 26,
+    "FechaHora": "2025-04-25T14:53:47.8866183-03:00",
+    "Usuario": "Sistema",
+    "Entidad": "Producto",
+    "Accion": "UpdatePrices",
+    "LlavePrimaria": "2",
+    "Detalle": "Aumento 2%",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
+  },
+  {
+    "ID": 27,
+    "FechaHora": "2025-04-25T14:53:57.097742-03:00",
+    "Usuario": "Sistema",
+    "Entidad": "Producto",
+    "Accion": "UpdatePrices",
+    "LlavePrimaria": "2",
+    "Detalle": "Aumento 100%",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
   }
 ]

@@ -71,7 +71,6 @@ D:\github\Javo2\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Security.Cryptog
 D:\github\Javo2\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 D:\github\Javo2\obj\Debug\net8.0\scopedcss\Views\Shared\_ConfirmDelete.cshtml.rz.scp.css
 D:\github\Javo2\obj\Debug\net8.0\scopedcss\Views\Shared\_FilterForm.cshtml.rz.scp.css
-D:\github\Javo2\obj\Debug\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 D:\github\Javo2\obj\Debug\net8.0\scopedcss\bundle\Javo2.styles.css
 D:\github\Javo2\obj\Debug\net8.0\scopedcss\projectbundle\Javo2.bundle.scp.css
 D:\github\Javo2\obj\Debug\net8.0\staticwebassets.build.json
@@ -98,3 +97,5 @@ D:\github\Javo2\bin\Debug\net8.0\Data\proveedores.json
 D:\github\Javo2\bin\Debug\net8.0\Data\devoluciones.json
 D:\github\Javo2\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 D:\github\Javo2\bin\Debug\net8.0\Data\configuracion.json
+D:\github\Javo2\obj\Debug\net8.0\scopedcss\Views\Shared\_LayoutLogin.cshtml.rz.scp.css
+D:\github\Javo2\obj\Debug\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css

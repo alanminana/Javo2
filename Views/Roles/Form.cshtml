@@ -1,0 +1,137 @@
+﻿@model Javo2.ViewModels.Authentication.RolFormViewModel
+@{
+    ViewData["Title"] = Model.EsEdicion ? "Editar Rol" : "Crear Rol";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="container-fluid py-3">
+    <div class="card shadow-sm bg-dark text-light">
+        <div class="card-header">
+            <h2 class="h4 mb-0">@ViewData["Title"]</h2>
+        </div>
+        <div class="card-body">
+            <form asp-action="@(Model.EsEdicion ? "Edit" : "Create")" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                
+                @if (Model.EsEdicion)
+                {
+                    <input type="hidden" asp-for="Rol.RolID" />
+                    <input type="hidden" asp-for="Rol.EsSistema" />
+                }
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Rol.Nombre" class="form-label"></label>
+                        <input asp-for="Rol.Nombre" class="form-control bg-dark text-light" 
+                               @(Model.EsEdicion && Model.Rol.EsSistema ? "readonly" : "") />
+                        <span asp-validation-for="Rol.Nombre" class="text-danger"></span>
+                        @if (Model.EsEdicion && Model.Rol.EsSistema)
+                        {
+                            <small class="text-muted">No se puede cambiar el nombre de un rol del sistema.</small>
+                        }
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Rol.Descripcion" class="form-label"></label>
+                        <input asp-for="Rol.Descripcion" class="form-control bg-dark text-light" />
+                        <span asp-validation-for="Rol.Descripcion" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Permisos</label>
+                    <div class="accordion" id="permisosAccordion">
+                        @foreach (var grupo in Model.GruposPermisos)
+                        {
+                            <div class="accordion-item bg-dark text-light border-secondary">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed bg-secondary text-light" type="button" 
+                                            data-bs-toggle="collapse" data-bs-target="#grupo-@grupo.Key.Replace(" ", "-")">
+                                        @grupo.Key (@grupo.Value.Count permisos)
+                                    </button>
+                                </h2>
+                                <div id="grupo-@grupo.Key.Replace(" ", "-")" class="accordion-collapse collapse" data-bs-parent="#permisosAccordion">
+                                    <div class="accordion-body">
+                                        <div class="row">
+                                            @foreach (var permiso in grupo.Value)
+                                            {
+                                                <div class="col-md-6 mb-2">
+                                                    <div class="form-check">
+                                                        <input type="checkbox" 
+                                                               class="form-check-input" 
+                                                               id="permiso-@permiso.PermisoID" 
+                                                               name="PermisosSeleccionados" 
+                                                               value="@permiso.PermisoID" 
+                                                               @(Model.PermisosSeleccionados.Contains(permiso.PermisoID) ? "checked" : "") />
+                                                        <label class="form-check-label" for="permiso-@permiso.PermisoID">
+                                                            @permiso.Nombre
+                                                            <small class="d-block text-muted">@permiso.Codigo</small>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Volver
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save me-1"></i> Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Abrir el primer grupo de permisos
+            document.querySelector('.accordion-button').click();
+            
+            // Añadir botones de selección rápida para cada grupo
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                const grupoId = header.querySelector('.accordion-button').getAttribute('data-bs-target');
+                const contenido = document.querySelector(grupoId);
+                
+                // Crear botones
+                const btnContainer = document.createElement('div');
+                btnContainer.className = 'd-flex gap-2 mb-3';
+                
+                const btnSeleccionarTodos = document.createElement('button');
+                btnSeleccionarTodos.type = 'button';
+                btnSeleccionarTodos.className = 'btn btn-sm btn-outline-primary';
+                btnSeleccionarTodos.textContent = 'Seleccionar todos';
+                btnSeleccionarTodos.addEventListener('click', () => {
+                    contenido.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                        cb.checked = true;
+                    });
+                });
+                
+                const btnDeseleccionarTodos = document.createElement('button');
+                btnDeseleccionarTodos.type = 'button';
+                btnDeseleccionarTodos.className = 'btn btn-sm btn-outline-secondary';
+                btnDeseleccionarTodos.textContent = 'Deseleccionar todos';
+                btnDeseleccionarTodos.addEventListener('click', () => {
+                    contenido.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                        cb.checked = false;
+                    });
+                });
+                
+                btnContainer.appendChild(btnSeleccionarTodos);
+                btnContainer.appendChild(btnDeseleccionarTodos);
+                
+                // Insertar al principio del contenido
+                contenido.querySelector('.accordion-body').prepend(btnContainer);
+            });
+        });
+    </script>
+}

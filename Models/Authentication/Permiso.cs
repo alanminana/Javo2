@@ -1,5 +1,4 @@
 ﻿// Models/Authentication/Permiso.cs
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Javo2.Models.Authentication
@@ -8,21 +7,24 @@ namespace Javo2.Models.Authentication
     {
         public int PermisoID { get; set; }
 
-        [Required(ErrorMessage = "El código del permiso es obligatorio")]
-        [StringLength(100, MinimumLength = 2, ErrorMessage = "El código del permiso debe tener entre 2 y 100 caracteres")]
-        public string Codigo { get; set; }
-
         [Required(ErrorMessage = "El nombre del permiso es obligatorio")]
-        [StringLength(100, MinimumLength = 2, ErrorMessage = "El nombre del permiso debe tener entre 2 y 100 caracteres")]
+        [Display(Name = "Nombre")]
         public string Nombre { get; set; }
 
-        [StringLength(255, ErrorMessage = "La descripción debe tener menos de 255 caracteres")]
+        [Required(ErrorMessage = "El código del permiso es obligatorio")]
+        [Display(Name = "Código")]
+        public string Codigo { get; set; }
+
+        [Display(Name = "Descripción")]
         public string Descripcion { get; set; }
 
-        public string Modulo { get; set; }
+        [Display(Name = "Grupo")]
+        public string Grupo { get; set; }
 
+        [Display(Name = "Activo")]
+        public bool Activo { get; set; } = true;
+
+        [Display(Name = "Es de sistema")]
         public bool EsSistema { get; set; } = false;
-
-        public List<RolPermiso> Roles { get; set; } = new List<RolPermiso>();
     }
 }
