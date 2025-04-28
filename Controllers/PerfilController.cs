@@ -1,5 +1,4 @@
-﻿// 11. Controllers/PerfilController.cs
-// Controlador para gestionar el perfil del usuario
+﻿// Controllers/PerfilController.cs
 using Javo2.Controllers.Base;
 using Javo2.IServices.Authentication;
 using Javo2.ViewModels.Authentication;
