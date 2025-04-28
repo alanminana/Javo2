@@ -1,24 +1,16 @@
-﻿// 4. Controllers/Auth/LoginController.cs
-// Controlador para autenticación más completo
-using DocumentFormat.OpenXml.EMMA;
-using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
-using DocumentFormat.OpenXml.Wordprocessing;
+﻿// Controllers/LoginController.cs
 using Javo2.IServices.Authentication;
-using Javo2.Models.Authentication;
 using Javo2.ViewModels.Authentication;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using Serilog;
 using System;
 using System.Collections.Generic;
-using System.Reflection.Emit;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Javo2.Controllers.Auth
+namespace Javo2.Controllers
 {
     public class LoginController : Controller
     {
@@ -160,7 +152,3 @@ namespace Javo2.Controllers.Auth
         }
     }
 }
-
-
-
-

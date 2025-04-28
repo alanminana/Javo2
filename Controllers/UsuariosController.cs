@@ -15,15 +15,15 @@ using System.Threading.Tasks;
 namespace Javo2.Controllers
 {
     [Authorize(Policy = "Permission:usuarios.ver")]
-    public class SecurityDashboardController : BaseController
+    public class UsuariosController : BaseController
     {
         private readonly IUsuarioService _usuarioService;
         private readonly IRolService _rolService;
 
-        public SecurityDashboardController(
+        public UsuariosController(
             IUsuarioService usuarioService,
             IRolService rolService,
-            ILogger<SecurityDashboardController> logger)
+            ILogger<UsuariosController> logger)
             : base(logger)
         {
             _usuarioService = usuarioService;
@@ -31,11 +31,48 @@ namespace Javo2.Controllers
         }
 
         // GET: Usuarios
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(UsuarioFilterViewModel filtro = null)
         {
             try
             {
-                var usuarios = await _usuarioService.GetAllUsuariosAsync();
+                // Preparar filtro
+                if (filtro == null)
+                {
+                    filtro = new UsuarioFilterViewModel();
+                }
+
+                // Preparar roles para el filtro
+                var roles = await _rolService.GetAllRolesAsync();
+                ViewBag.Roles = roles.Select(r => new SelectListItem
+                {
+                    Value = r.RolID.ToString(),
+                    Text = r.Nombre
+                });
+
+                // Filtrar usuarios
+                IEnumerable<Usuario> usuarios;
+                if (!string.IsNullOrEmpty(filtro.Termino))
+                {
+                    usuarios = await _usuarioService.BuscarUsuariosAsync(filtro.Termino);
+                }
+                else
+                {
+                    usuarios = await _usuarioService.GetAllUsuariosAsync();
+                }
+
+                // Aplicar filtro por estado
+                if (filtro.Activo.HasValue)
+                {
+                    usuarios = usuarios.Where(u => u.Activo == filtro.Activo.Value);
+                }
+
+                // Aplicar filtro por rol
+                if (filtro.RolID > 0)
+                {
+                    usuarios = usuarios.Where(u =>
+                        u.Roles.Any(r => r.RolID == filtro.RolID));
+                }
+
                 return View(usuarios);
             }
             catch (Exception ex)
@@ -406,20 +443,13 @@ namespace Javo2.Controllers
         {
             try
             {
-                var usuario = await _usuarioService.GetUsuarioByIDAsync(id);
-                if (usuario == null)
-                {
-                    return NotFound();
-                }
-
-                // Cambiar estado
-                usuario.Activo = !usuario.Activo;
-                var result = await _usuarioService.UpdateUsuarioAsync(usuario);
-
+                var result = await _usuarioService.ToggleEstadoAsync(id);
                 if (!result)
                 {
                     return Json(new { success = false, message = "No se pudo actualizar el estado del usuario" });
                 }
+
+                var usuario = await _usuarioService.GetUsuarioByIDAsync(id);
 
                 return Json(new
                 {

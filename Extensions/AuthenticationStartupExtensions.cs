@@ -1,4 +1,5 @@
 ﻿using Javo2.IServices.Authentication;
+using Javo2.Services;
 using Javo2.Services.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;

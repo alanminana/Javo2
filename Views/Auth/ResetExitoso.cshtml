@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Contraseña Restablecida";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-lg border-0 rounded-lg mt-5 bg-dark text-light">
+            <div class="card-header bg-success text-white">
+                <h3 class="text-center font-weight-light my-4">
+                    <i class="bi bi-check-circle-fill me-2"></i>Contraseña Restablecida
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <i class="bi bi-unlock-fill text-success" style="font-size: 4rem;"></i>
+                </div>
+
+                <h4 class="text-center mb-3">¡Contraseña restablecida con éxito!</h4>
+
+                <p class="text-center">
+                    Su contraseña ha sido restablecida correctamente. Ahora puede iniciar sesión con su nueva contraseña.
+                </p>
+
+                <div class="d-grid gap-2 mt-4">
+                    <a asp-controller="Auth" asp-action="Login" class="btn btn-primary">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Iniciar Sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

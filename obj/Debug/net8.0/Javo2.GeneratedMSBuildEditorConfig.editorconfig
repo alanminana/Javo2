@@ -40,6 +40,22 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/github/Javo2/Views/Auth/OlvideContraseña.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxPbHZpZGVDb250cmFzZcOxYS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/Auth/ResetearContraseña.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxSZXNldGVhckNvbnRyYXNlw7FhLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/Auth/ResetExitoso.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxSZXNldEV4aXRvc28uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/Auth/TokenInvalido.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxUb2tlbkludmFsaWRvLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/github/Javo2/Views/Catalogo/CreateMarca.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29cQ3JlYXRlTWFyY2EuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
