@@ -16,7 +16,7 @@
         </div>
         <div class="card-body">
             <form asp-action="Login" method="post" class="login-form">
-                @if (!ModelState.IsValid)
+                @if (!ViewData.ModelState.IsValid)
                 {
                     <div class="alert alert-danger" role="alert">
                         <ul class="mb-0 ps-3">
