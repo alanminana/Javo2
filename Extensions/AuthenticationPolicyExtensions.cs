@@ -28,25 +28,32 @@ namespace Javo2.Extensions
                     options.AccessDeniedPath = "/Auth/AccessDenied";
                     options.ExpireTimeSpan = TimeSpan.FromHours(3);
                     options.SlidingExpiration = true;
+                    // Asegurarse de que las cookies se envíen solo por HTTPS en producción
+                    options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.SameAsRequest;
                 });
 
             // Configurar políticas de autorización
             services.AddAuthorization(options =>
             {
-                // Política para verificar permisos específicos
+                // Excepciones para rutas que no requieren autenticación
+                options.AddPolicy("AllowAnonymous", policy => policy.RequireAssertion(_ => true));
+
+                // Política base para todos los permisos
                 options.AddPolicy("PermisoPolitica", policy =>
                 {
                     policy.RequireAuthenticatedUser();
                 });
 
-                // Crear políticas para cada permiso común
+                // Crear políticas para cada permiso específico
                 CreatePermissionPolicies(options, new[]
                 {
                     "usuarios.ver", "usuarios.crear", "usuarios.editar", "usuarios.eliminar",
                     "roles.ver", "roles.crear", "roles.editar", "roles.eliminar",
                     "permisos.ver", "permisos.crear", "permisos.editar", "permisos.eliminar",
-                    "ventas.ver", "ventas.crear", "ventas.editar", "ventas.eliminar", "ventas.autorizar", "ventas.rechazar",
-                    "productos.ver", "productos.crear", "productos.editar", "productos.eliminar", "productos.ajustarprecios",
+                    "ventas.ver", "ventas.crear", "ventas.editar", "ventas.eliminar",
+                    "ventas.autorizar", "ventas.rechazar",
+                    "productos.ver", "productos.crear", "productos.editar", "productos.eliminar",
+                    "productos.ajustarprecios",
                     "clientes.ver", "clientes.crear", "clientes.editar", "clientes.eliminar",
                     "reportes.ver", "reportes.exportar",
                     "configuracion.ver", "configuracion.editar"
@@ -61,17 +68,8 @@ namespace Javo2.Extensions
             foreach (var code in permissionCodes)
             {
                 options.AddPolicy($"Permission:{code}", policy =>
-                    policy.RequireAssertion(context =>
-                        context.User.HasClaim(c => c.Type == "Permission" && c.Value == code)));
+                    policy.RequireClaim("Permission", code));
             }
-        }
-
-        public static IApplicationBuilder UseAuthenticationConfig(this IApplicationBuilder app)
-        {
-            app.UseAuthentication();
-            app.UseAuthorization();
-
-            return app;
         }
     }
 }

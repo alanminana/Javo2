@@ -14,6 +14,7 @@ using Javo2.Services;
 using Javo2.Services.Authentication;
 using Javo2.Services.Common;
 using Javo2.Models.Authentication;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 Console.WriteLine($"CONTENT ROOT = {Directory.GetCurrentDirectory()}");
@@ -25,7 +26,11 @@ builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
 // Agregar servicios al contenedor.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    // Agregar filtro de autorización global
+    options.Filters.Add(new AuthorizeFilter());
+});
 
 // Registro de servicios de autenticación
 builder.Services.AddAuthenticationServices();
@@ -87,7 +92,7 @@ else
     app.UseDeveloperExceptionPage();
 }
 
-// Middleware para encabezados de seguridad (modificado para ser menos restrictivo)
+// Middleware para encabezados de seguridad
 app.Use(async (context, next) =>
 {
     // Agregar encabezados de seguridad con configuración más permisiva
@@ -118,32 +123,6 @@ app.UseRouting();
 // Middleware de autenticación y autorización
 app.UseAuthentication();
 app.UseAuthorization();
-
-// Middleware para verificar autenticación y redirigir a login
-app.Use(async (context, next) =>
-{
-    // Permitir acceso a recursos estáticos
-    if (context.Request.Path.StartsWithSegments("/css") ||
-        context.Request.Path.StartsWithSegments("/js") ||
-        context.Request.Path.StartsWithSegments("/lib") ||
-        context.Request.Path.StartsWithSegments("/img"))
-    {
-        await next();
-        return;
-    }
-
-    // Permitir acceso a rutas de autenticación sin estar autenticado
-    if (!context.User.Identity.IsAuthenticated &&
-        !context.Request.Path.StartsWithSegments("/Auth") &&
-        !context.Request.Path.StartsWithSegments("/ResetPassword") &&
-        !context.Request.Path.StartsWithSegments("/ConfiguracionInicial"))
-    {
-        context.Response.Redirect("/Auth/Login");
-        return;
-    }
-
-    await next();
-});
 
 // Configurar rutas
 app.MapControllerRoute(

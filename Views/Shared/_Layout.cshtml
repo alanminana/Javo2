@@ -1,18 +1,30 @@
 ﻿@{
     var menuItems = new[] {
-        new { Ctrl = "Home", Icon = "house-fill", Text = "Inicio" },
-        new { Ctrl = "Clientes", Icon = "people-fill", Text = "Clientes" },
-        new { Ctrl = "Ventas", Icon = "cart-fill", Text = "Ventas" },
-        new { Ctrl = "Productos", Icon = "box-seam", Text = "Productos" },
-        new { Ctrl = "Catalogo", Icon = "bookmark-fill", Text = "Catálogo" },
-        new { Ctrl = "Proveedores", Icon = "truck-flatbed", Text = "Proveedores" },
-        new { Ctrl = "Promociones", Icon = "tag-fill", Text = "Promociones" },
-        new { Ctrl = "DevolucionGarantia", Icon = "journal-check", Text = "Devoluciones/Garantías" },
-        new { Ctrl = "Reportes", Icon = "bar-chart-fill", Text = "Reportes" },
-        new { Ctrl = "Configuracion", Icon = "gear-fill", Text = "Configuración" },
-        new { Ctrl = "SecurityDashboard", Icon = "shield-lock", Text = "Seguridad" }
+        new { Ctrl = "Home", Icon = "house-fill", Text = "Inicio", Permiso = (string)null },
+        new { Ctrl = "Clientes", Icon = "people-fill", Text = "Clientes", Permiso = "clientes.ver" },
+        new { Ctrl = "Ventas", Icon = "cart-fill", Text = "Ventas", Permiso = "ventas.ver" },
+        new { Ctrl = "Productos", Icon = "box-seam", Text = "Productos", Permiso = "productos.ver" },
+        new { Ctrl = "Catalogo", Icon = "bookmark-fill", Text = "Catálogo", Permiso = "productos.ver" },
+        new { Ctrl = "Proveedores", Icon = "truck-flatbed", Text = "Proveedores", Permiso = "productos.ver" },
+        new { Ctrl = "Promociones", Icon = "tag-fill", Text = "Promociones", Permiso = "productos.ver" },
+        new { Ctrl = "DevolucionGarantia", Icon = "journal-check", Text = "Devoluciones/Garantías", Permiso = "ventas.ver" },
+        new { Ctrl = "Reportes", Icon = "bar-chart-fill", Text = "Reportes", Permiso = "reportes.ver" },
+        new { Ctrl = "Configuracion", Icon = "gear-fill", Text = "Configuración", Permiso = "configuracion.ver" },
+        new { Ctrl = "SecurityDashboard", Icon = "shield-lock", Text = "Seguridad", Permiso = "usuarios.ver" }
     };
 }
+
+@using System.Security.Claims
+
+@functions {
+    bool TienePermiso(string permiso)
+    {
+        if (string.IsNullOrEmpty(permiso))
+            return true;
+        return User.HasClaim(c => c.Type == "Permission" && c.Value == permiso);
+    }
+}
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -58,11 +70,14 @@
             <ul class="nav nav-pills flex-column mb-4">
                 @foreach (var item in menuItems)
                 {
-                    <li class="nav-item">
-                        <a class="nav-link text-white @(ViewContext.RouteData.Values["controller"]?.ToString()==item.Ctrl?"active":"")" asp-controller="@item.Ctrl" asp-action="Index">
-                            <i class="bi bi-@item.Icon me-2"></i>@item.Text
-                        </a>
-                    </li>
+                    @if (item.Permiso == null || TienePermiso(item.Permiso))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-white @(ViewContext.RouteData.Values["controller"]?.ToString()==item.Ctrl?"active":"")" asp-controller="@item.Ctrl" asp-action="Index">
+                                <i class="bi bi-@item.Icon me-2"></i>@item.Text
+                            </a>
+                        </li>
+                    }
                 }
             </ul>
             <hr />
@@ -94,11 +109,14 @@
                 <ul class="nav nav-pills flex-column mb-auto">
                     @foreach (var item in menuItems)
                     {
-                        <li class="nav-item">
-                            <a class="nav-link text-white @(ViewContext.RouteData.Values["controller"]?.ToString()==item.Ctrl?"active":"")" asp-controller="@item.Ctrl" asp-action="Index">
-                                <i class="bi bi-@item.Icon me-2"></i>@item.Text
-                            </a>
-                        </li>
+                        @if (item.Permiso == null || TienePermiso(item.Permiso))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-white @(ViewContext.RouteData.Values["controller"]?.ToString()==item.Ctrl?"active":"")" asp-controller="@item.Ctrl" asp-action="Index">
+                                    <i class="bi bi-@item.Icon me-2"></i>@item.Text
+                                </a>
+                            </li>
+                        }
                     }
                 </ul>
                 <hr class="border-secondary" />

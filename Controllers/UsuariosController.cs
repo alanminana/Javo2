@@ -1,5 +1,4 @@
-﻿// Controllers/UsuariosController.cs
-using Javo2.Controllers.Base;
+﻿using Javo2.Controllers.Base;
 using Javo2.IServices.Authentication;
 using Javo2.Models.Authentication;
 using Javo2.ViewModels.Authentication;
@@ -14,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Javo2.Controllers
 {
-    [Authorize(Policy = "Permission:usuarios.ver")]
+    [Authorize]
     public class UsuariosController : BaseController
     {
         private readonly IUsuarioService _usuarioService;
@@ -31,6 +30,7 @@ namespace Javo2.Controllers
         }
 
         // GET: Usuarios
+        [Authorize(Policy = "Permission:usuarios.ver")]
         public async Task<IActionResult> Index(UsuarioFilterViewModel filtro = null)
         {
             try
@@ -83,6 +83,7 @@ namespace Javo2.Controllers
         }
 
         // GET: Usuarios/Details/5
+        [Authorize(Policy = "Permission:usuarios.ver")]
         public async Task<IActionResult> Details(int id)
         {
             try
@@ -118,7 +119,9 @@ namespace Javo2.Controllers
                 return View("Error");
             }
         }
+
         [HttpGet]
+        [Authorize(Policy = "Permission:usuarios.crear")]
         public async Task<IActionResult> Create()
         {
             try
@@ -152,8 +155,10 @@ namespace Javo2.Controllers
                 return View("Error");
             }
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:usuarios.crear")]
         public async Task<IActionResult> Create(UsuarioFormViewModel model, List<int> RolesSeleccionados)
         {
             try
@@ -283,6 +288,7 @@ namespace Javo2.Controllers
                 return View("Form", model);
             }
         }
+
         // GET: Usuarios/Edit/5
         [Authorize(Policy = "Permission:usuarios.editar")]
         public async Task<IActionResult> Edit(int id)
