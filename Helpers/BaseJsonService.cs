@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace Javo2.Services.Base
 {
-    public abstract class BaseJsonService<T> where T : class
+    public abstract class PermissionTagHelper<T> where T : class
     {
         protected readonly ILogger _logger;
         protected List<T> _items = new();
         protected readonly object _lock = new();
         protected readonly string _jsonFilePath;
 
-        protected BaseJsonService(ILogger logger, string jsonFilePath)
+        protected PermissionTagHelper(ILogger logger, string jsonFilePath)
         {
             _logger = logger;
             _jsonFilePath = jsonFilePath;

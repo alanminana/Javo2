@@ -8,7 +8,7 @@
     "Email": "admin@sistema.com",
     "Activo": true,
     "FechaCreacion": "2025-04-28T21:48:25.8667085-03:00",
-    "UltimoAcceso": "2025-04-29T11:44:15.4656173-03:00",
+    "UltimoAcceso": "2025-04-29T13:10:24.6083377-03:00",
     "CreadoPor": "Sistema",
     "Roles": [
       {
@@ -27,13 +27,70 @@
     "Email": "test@gmail.com",
     "Activo": true,
     "FechaCreacion": "2025-04-29T12:12:41.2167704-03:00",
-    "UltimoAcceso": "2025-04-29T12:13:14.1496427-03:00",
+    "UltimoAcceso": "2025-04-29T13:10:18.0981203-03:00",
     "CreadoPor": "admin",
     "Roles": [
       {
         "UsuarioRolID": 0,
         "UsuarioID": 2,
         "RolID": 4
+      }
+    ]
+  },
+  {
+    "UsuarioID": 3,
+    "NombreUsuario": "test2",
+    "Contrase\u00F1a": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+    "Nombre": "etreq",
+    "Apellido": "tet",
+    "Email": "dsfsa@d.com",
+    "Activo": true,
+    "FechaCreacion": "2025-04-29T13:13:34.8450252-03:00",
+    "UltimoAcceso": "2025-04-29T13:14:45.2135113-03:00",
+    "CreadoPor": "admin",
+    "Roles": [
+      {
+        "UsuarioRolID": 0,
+        "UsuarioID": 3,
+        "RolID": 5
+      }
+    ]
+  },
+  {
+    "UsuarioID": 4,
+    "NombreUsuario": "test1",
+    "Contrase\u00F1a": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+    "Nombre": "etreq",
+    "Apellido": "sadsa",
+    "Email": "asdasda@asa.com",
+    "Activo": true,
+    "FechaCreacion": "2025-04-29T13:13:56.140629-03:00",
+    "UltimoAcceso": "2025-04-29T13:14:21.2622597-03:00",
+    "CreadoPor": "admin",
+    "Roles": [
+      {
+        "UsuarioRolID": 0,
+        "UsuarioID": 4,
+        "RolID": 6
+      }
+    ]
+  },
+  {
+    "UsuarioID": 5,
+    "NombreUsuario": "test3",
+    "Contrase\u00F1a": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+    "Nombre": "asd",
+    "Apellido": "sadsa",
+    "Email": "dswqewqfsa@d.com",
+    "Activo": true,
+    "FechaCreacion": "2025-04-29T13:14:12.4573287-03:00",
+    "UltimoAcceso": "2025-04-29T13:15:04.4811656-03:00",
+    "CreadoPor": "admin",
+    "Roles": [
+      {
+        "UsuarioRolID": 0,
+        "UsuarioID": 5,
+        "RolID": 7
       }
     ]
   }

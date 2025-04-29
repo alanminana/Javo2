@@ -8,21 +8,18 @@ using System;
 
 namespace Javo2.Extensions
 {
-    public static class AuthenticationExtensions
+    public static class AuthenticationPolicyExtensions
     {
-        /// <summary>
-        /// Registra servicios de autenticación, cookie auth y políticas de permisos.
-        /// </summary>
         public static IServiceCollection AddAuthenticationServices(this IServiceCollection services)
         {
-            // 1) Servicios de dominio
+            // Registrar servicios
             services.AddScoped<IUsuarioService, UsuarioService>();
             services.AddScoped<IRolService, RolService>();
             services.AddScoped<IPermisoService, PermisoService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IResetPasswordService, ResetPasswordService>();
 
-            // 2) Cookie Authentication
+            // Configurar autenticación con cookies
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
@@ -31,46 +28,44 @@ namespace Javo2.Extensions
                     options.AccessDeniedPath = "/Auth/AccessDenied";
                     options.ExpireTimeSpan = TimeSpan.FromHours(3);
                     options.SlidingExpiration = true;
+                    // Asegurarse de que las cookies se envíen solo por HTTPS en producción
                     options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.SameAsRequest;
                 });
 
-            // 3) Políticas de autorización
+            // Configurar políticas de autorización
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("PermisoPolitica", policy =>
-                    policy.RequireAuthenticatedUser());
+                // Excepciones para rutas que no requieren autenticación
+                options.AddPolicy("AllowAnonymous", policy => policy.RequireAssertion(_ => true));
 
+                // Política base para todos los permisos
+                options.AddPolicy("PermisoPolitica", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                });
+
+                // Crear políticas para cada permiso específico
                 CreatePermissionPolicies(options, new[]
                 {
-                    "usuarios.ver","usuarios.crear","usuarios.editar","usuarios.eliminar",
-                    "roles.ver","roles.crear","roles.editar","roles.eliminar",
-                    "permisos.ver","permisos.crear","permisos.editar","permisos.eliminar",
-                    "ventas.ver","ventas.crear","ventas.editar","ventas.eliminar",
-                    "ventas.autorizar","ventas.rechazar",
-                    "productos.ver","productos.crear","productos.editar","productos.eliminar",
+                    "usuarios.ver", "usuarios.crear", "usuarios.editar", "usuarios.eliminar",
+                    "roles.ver", "roles.crear", "roles.editar", "roles.eliminar",
+                    "permisos.ver", "permisos.crear", "permisos.editar", "permisos.eliminar",
+                    "ventas.ver", "ventas.crear", "ventas.editar", "ventas.eliminar",
+                    "ventas.autorizar", "ventas.rechazar",
+                    "productos.ver", "productos.crear", "productos.editar", "productos.eliminar",
                     "productos.ajustarprecios",
-                    "clientes.ver","clientes.crear","clientes.editar","clientes.eliminar",
-                    "reportes.ver","reportes.exportar",
-                    "configuracion.ver","configuracion.editar"
+                    "clientes.ver", "clientes.crear", "clientes.editar", "clientes.eliminar",
+                    "reportes.ver", "reportes.exportar",
+                    "configuracion.ver", "configuracion.editar"
                 });
             });
 
             return services;
         }
 
-        /// <summary>
-        /// Inserta la autenticación y autorización en el pipeline.
-        /// </summary>
-        public static IApplicationBuilder UseAuthenticationConfig(this IApplicationBuilder app)
+        private static void CreatePermissionPolicies(AuthorizationOptions options, string[] permissionCodes)
         {
-            app.UseAuthentication();
-            app.UseAuthorization();
-            return app;
-        }
-
-        private static void CreatePermissionPolicies(AuthorizationOptions options, string[] codes)
-        {
-            foreach (var code in codes)
+            foreach (var code in permissionCodes)
             {
                 options.AddPolicy($"Permission:{code}", policy =>
                     policy.RequireClaim("Permission", code));

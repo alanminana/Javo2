@@ -324,9 +324,68 @@
     "EsSistema": false,
     "Permisos": [
       {
-        "RolPermisoID": 43,
+        "RolPermisoID": 44,
         "RolID": 4,
-        "PermisoID": 1,
+        "PermisoID": 24,
+        "Rol": null,
+        "Permiso": null
+      }
+    ]
+  },
+  {
+    "RolID": 5,
+    "Nombre": "asd1",
+    "Descripcion": "asdsa",
+    "EsSistema": false,
+    "Permisos": [
+      {
+        "RolPermisoID": 45,
+        "RolID": 5,
+        "PermisoID": 25,
+        "Rol": null,
+        "Permiso": null
+      }
+    ]
+  },
+  {
+    "RolID": 6,
+    "Nombre": "test2",
+    "Descripcion": "test2",
+    "EsSistema": false,
+    "Permisos": [
+      {
+        "RolPermisoID": 46,
+        "RolID": 6,
+        "PermisoID": 24,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 47,
+        "RolID": 6,
+        "PermisoID": 26,
+        "Rol": null,
+        "Permiso": null
+      }
+    ]
+  },
+  {
+    "RolID": 7,
+    "Nombre": "test3",
+    "Descripcion": "123",
+    "EsSistema": false,
+    "Permisos": [
+      {
+        "RolPermisoID": 48,
+        "RolID": 7,
+        "PermisoID": 24,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 49,
+        "RolID": 7,
+        "PermisoID": 27,
         "Rol": null,
         "Permiso": null
       }

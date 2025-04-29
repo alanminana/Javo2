@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "n8wuTcJmJsGNT+0euHh3xBGx5mh9JU4EE+V4meEt2E8=",
+  "Hash": "SvWhQ9XEjgIhqBjS+k1q7qtMOCWcu72vsefuflf641M=",
   "Source": "Javo2",
   "BasePath": "_content/Javo2",
   "Mode": "Default",
@@ -31,8 +31,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "ScopedCss",
       "AssetTraitValue": "ApplicationBundle",
-      "Fingerprint": "ivoz0733rv",
-      "Integrity": "rtRSwKKQwZAFbGg1js53lhDv0s/Lq2/Zf25lMUy4yKM=",
+      "Fingerprint": "0bh7h34gt0",
+      "Integrity": "pM/pEQHJQovLzexYgIU3R2W4unPFzYsne4L6+gxMayc=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "D:\\github\\Javo2\\obj\\Debug\\net8.0\\scopedcss\\bundle\\Javo2.styles.css"
@@ -52,8 +52,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "ScopedCss",
       "AssetTraitValue": "ProjectBundle",
-      "Fingerprint": "ivoz0733rv",
-      "Integrity": "rtRSwKKQwZAFbGg1js53lhDv0s/Lq2/Zf25lMUy4yKM=",
+      "Fingerprint": "0bh7h34gt0",
+      "Integrity": "pM/pEQHJQovLzexYgIU3R2W4unPFzYsne4L6+gxMayc=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "D:\\github\\Javo2\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\Javo2.bundle.scp.css"
@@ -164,6 +164,27 @@
       "OriginalItemSpec": "wwwroot\\js\\debug-helper.js"
     },
     {
+      "Identity": "D:\\github\\Javo2\\wwwroot\\js\\permission-validator.js",
+      "SourceId": "Javo2",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\github\\Javo2\\wwwroot\\",
+      "BasePath": "_content/Javo2",
+      "RelativePath": "js/permission-validator#[.{fingerprint}]?.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "g0g9ejfyvk",
+      "Integrity": "UCNNMNX6Z8cW/J4TazCvLDhn3EYTnnlL2P8x9MWW1Yc=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\permission-validator.js"
+    },
+    {
       "Identity": "D:\\github\\Javo2\\wwwroot\\js\\site.js",
       "SourceId": "Javo2",
       "SourceType": "Discovered",
@@ -178,8 +199,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "fr7q2aak1r",
-      "Integrity": "y/Ngd8W21UpuCUhEqGbUKDEqFnNfTjAfb24GhJJGUyM=",
+      "Fingerprint": "s86s4b3zuo",
+      "Integrity": "ZHFSmx3othC9mLx0sLhoplmZAKd/PI+kZ2x2ji5c+Hw=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\site.js"
@@ -1733,6 +1754,96 @@
       ]
     },
     {
+      "Route": "Javo2.0bh7h34gt0.bundle.scp.css",
+      "AssetFile": "D:\\github\\Javo2\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\Javo2.bundle.scp.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "10150"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"pM/pEQHJQovLzexYgIU3R2W4unPFzYsne4L6+gxMayc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 29 Apr 2025 22:48:56 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "0bh7h34gt0"
+        },
+        {
+          "Name": "label",
+          "Value": "Javo2.bundle.scp.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-pM/pEQHJQovLzexYgIU3R2W4unPFzYsne4L6+gxMayc="
+        }
+      ]
+    },
+    {
+      "Route": "Javo2.0bh7h34gt0.styles.css",
+      "AssetFile": "D:\\github\\Javo2\\obj\\Debug\\net8.0\\scopedcss\\bundle\\Javo2.styles.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "10150"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"pM/pEQHJQovLzexYgIU3R2W4unPFzYsne4L6+gxMayc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 29 Apr 2025 22:48:56 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "0bh7h34gt0"
+        },
+        {
+          "Name": "label",
+          "Value": "Javo2.styles.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-pM/pEQHJQovLzexYgIU3R2W4unPFzYsne4L6+gxMayc="
+        }
+      ]
+    },
+    {
       "Route": "Javo2.bundle.scp.css",
       "AssetFile": "D:\\github\\Javo2\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\Javo2.bundle.scp.css",
       "Selectors": [],
@@ -1743,7 +1854,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "9020"
+          "Value": "10150"
         },
         {
           "Name": "Content-Type",
@@ -1751,11 +1862,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"rtRSwKKQwZAFbGg1js53lhDv0s/Lq2/Zf25lMUy4yKM=\""
+          "Value": "\"pM/pEQHJQovLzexYgIU3R2W4unPFzYsne4L6+gxMayc=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 29 Apr 2025 00:48:04 GMT"
+          "Value": "Tue, 29 Apr 2025 22:48:56 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1765,97 +1876,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-rtRSwKKQwZAFbGg1js53lhDv0s/Lq2/Zf25lMUy4yKM="
-        }
-      ]
-    },
-    {
-      "Route": "Javo2.ivoz0733rv.bundle.scp.css",
-      "AssetFile": "D:\\github\\Javo2\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\Javo2.bundle.scp.css",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "9020"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"rtRSwKKQwZAFbGg1js53lhDv0s/Lq2/Zf25lMUy4yKM=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Tue, 29 Apr 2025 00:48:04 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "ivoz0733rv"
-        },
-        {
-          "Name": "label",
-          "Value": "Javo2.bundle.scp.css"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-rtRSwKKQwZAFbGg1js53lhDv0s/Lq2/Zf25lMUy4yKM="
-        }
-      ]
-    },
-    {
-      "Route": "Javo2.ivoz0733rv.styles.css",
-      "AssetFile": "D:\\github\\Javo2\\obj\\Debug\\net8.0\\scopedcss\\bundle\\Javo2.styles.css",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "9020"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"rtRSwKKQwZAFbGg1js53lhDv0s/Lq2/Zf25lMUy4yKM=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Tue, 29 Apr 2025 00:48:04 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "ivoz0733rv"
-        },
-        {
-          "Name": "label",
-          "Value": "Javo2.styles.css"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-rtRSwKKQwZAFbGg1js53lhDv0s/Lq2/Zf25lMUy4yKM="
+          "Value": "sha256-pM/pEQHJQovLzexYgIU3R2W4unPFzYsne4L6+gxMayc="
         }
       ]
     },
@@ -1870,7 +1891,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "9020"
+          "Value": "10150"
         },
         {
           "Name": "Content-Type",
@@ -1878,11 +1899,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"rtRSwKKQwZAFbGg1js53lhDv0s/Lq2/Zf25lMUy4yKM=\""
+          "Value": "\"pM/pEQHJQovLzexYgIU3R2W4unPFzYsne4L6+gxMayc=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 29 Apr 2025 00:48:04 GMT"
+          "Value": "Tue, 29 Apr 2025 22:48:56 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1892,7 +1913,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-rtRSwKKQwZAFbGg1js53lhDv0s/Lq2/Zf25lMUy4yKM="
+          "Value": "sha256-pM/pEQHJQovLzexYgIU3R2W4unPFzYsne4L6+gxMayc="
         }
       ]
     },
@@ -1979,8 +2000,8 @@
       ]
     },
     {
-      "Route": "js/site.fr7q2aak1r.js",
-      "AssetFile": "D:\\github\\Javo2\\wwwroot\\js\\site.js",
+      "Route": "js/permission-validator.g0g9ejfyvk.js",
+      "AssetFile": "D:\\github\\Javo2\\wwwroot\\js\\permission-validator.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -1989,7 +2010,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "227"
+          "Value": "4870"
         },
         {
           "Name": "Content-Type",
@@ -1997,11 +2018,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"y/Ngd8W21UpuCUhEqGbUKDEqFnNfTjAfb24GhJJGUyM=\""
+          "Value": "\"UCNNMNX6Z8cW/J4TazCvLDhn3EYTnnlL2P8x9MWW1Yc=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 22 Apr 2025 18:10:07 GMT"
+          "Value": "Tue, 29 Apr 2025 22:42:28 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -2011,15 +2032,52 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "fr7q2aak1r"
+          "Value": "g0g9ejfyvk"
         },
         {
           "Name": "label",
-          "Value": "js/site.js"
+          "Value": "js/permission-validator.js"
         },
         {
           "Name": "integrity",
-          "Value": "sha256-y/Ngd8W21UpuCUhEqGbUKDEqFnNfTjAfb24GhJJGUyM="
+          "Value": "sha256-UCNNMNX6Z8cW/J4TazCvLDhn3EYTnnlL2P8x9MWW1Yc="
+        }
+      ]
+    },
+    {
+      "Route": "js/permission-validator.js",
+      "AssetFile": "D:\\github\\Javo2\\wwwroot\\js\\permission-validator.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "4870"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"UCNNMNX6Z8cW/J4TazCvLDhn3EYTnnlL2P8x9MWW1Yc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 29 Apr 2025 22:42:28 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-UCNNMNX6Z8cW/J4TazCvLDhn3EYTnnlL2P8x9MWW1Yc="
         }
       ]
     },
@@ -2034,7 +2092,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "227"
+          "Value": "1223"
         },
         {
           "Name": "Content-Type",
@@ -2042,11 +2100,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"y/Ngd8W21UpuCUhEqGbUKDEqFnNfTjAfb24GhJJGUyM=\""
+          "Value": "\"ZHFSmx3othC9mLx0sLhoplmZAKd/PI+kZ2x2ji5c+Hw=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 22 Apr 2025 18:10:07 GMT"
+          "Value": "Tue, 29 Apr 2025 22:37:20 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -2056,7 +2114,52 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-y/Ngd8W21UpuCUhEqGbUKDEqFnNfTjAfb24GhJJGUyM="
+          "Value": "sha256-ZHFSmx3othC9mLx0sLhoplmZAKd/PI+kZ2x2ji5c+Hw="
+        }
+      ]
+    },
+    {
+      "Route": "js/site.s86s4b3zuo.js",
+      "AssetFile": "D:\\github\\Javo2\\wwwroot\\js\\site.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1223"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"ZHFSmx3othC9mLx0sLhoplmZAKd/PI+kZ2x2ji5c+Hw=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 29 Apr 2025 22:37:20 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "s86s4b3zuo"
+        },
+        {
+          "Name": "label",
+          "Value": "js/site.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-ZHFSmx3othC9mLx0sLhoplmZAKd/PI+kZ2x2ji5c+Hw="
         }
       ]
     },

@@ -28,21 +28,19 @@ namespace Javo2.Controllers
             _usuarioService = usuarioService;
             _rolService = rolService;
         }
-
         [HttpGet]
+        [AllowAnonymous]   // <— permite acceso público aquí
         public IActionResult Login(string returnUrl = null)
         {
-            // Si ya está autenticado, redirigir a home
             if (User.Identity.IsAuthenticated)
-            {
                 return RedirectToAction("Index", "Home");
-            }
 
             ViewBag.ReturnUrl = returnUrl;
             return View(new LoginViewModel());
         }
 
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
@@ -147,7 +145,7 @@ namespace Javo2.Controllers
             }
         }
 
-      
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
@@ -157,11 +155,12 @@ namespace Javo2.Controllers
             return RedirectToAction("Login", "Auth");
         }
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult AccessDenied()
         {
             return View();
         }
-  
+
         [HttpGet]
         [Authorize]
         public IActionResult CambiarContraseña()

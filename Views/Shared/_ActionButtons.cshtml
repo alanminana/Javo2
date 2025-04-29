@@ -1,0 +1,30 @@
+﻿@* Views/Shared/_ActionButtons.cshtml *@
+@model (int id, string controller)
+@{
+    string editPermission = $"{Model.controller.ToLower()}.editar";
+    string viewPermission = $"{Model.controller.ToLower()}.ver";
+    string deletePermission = $"{Model.controller.ToLower()}.eliminar";
+}
+
+<div class="btn-group" role="group">
+    @if (User.HasPermission(editPermission))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.id" class="btn btn-sm btn-outline-primary" title="Editar">
+            <i class="bi bi-pencil-square"></i>
+        </a>
+    }
+
+    @if (User.HasPermission(viewPermission))
+    {
+        <a asp-action="Details" asp-route-id="@Model.id" class="btn btn-sm btn-outline-info" title="Detalles">
+            <i class="bi bi-eye"></i>
+        </a>
+    }
+
+    @if (User.HasPermission(deletePermission))
+    {
+        <a asp-action="Delete" asp-route-id="@Model.id" class="btn btn-sm btn-outline-danger" title="Eliminar">
+            <i class="bi bi-trash"></i>
+        </a>
+    }
+</div>

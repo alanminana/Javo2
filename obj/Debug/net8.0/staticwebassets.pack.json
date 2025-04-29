@@ -2,7 +2,7 @@
   "Files": [
     {
       "Id": "D:\\github\\Javo2\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\Javo2.bundle.scp.css",
-      "PackagePath": "staticwebassets\\Javo2.ivoz0733rv.bundle.scp.css"
+      "PackagePath": "staticwebassets\\Javo2.0bh7h34gt0.bundle.scp.css"
     },
     {
       "Id": "D:\\github\\Javo2\\wwwroot\\css\\layout.css",
@@ -23,6 +23,10 @@
     {
       "Id": "D:\\github\\Javo2\\wwwroot\\js\\debug-helper.js",
       "PackagePath": "staticwebassets\\js\\debug-helper.js"
+    },
+    {
+      "Id": "D:\\github\\Javo2\\wwwroot\\js\\permission-validator.js",
+      "PackagePath": "staticwebassets\\js\\permission-validator.js"
     },
     {
       "Id": "D:\\github\\Javo2\\wwwroot\\js\\site.js",

@@ -1,4 +1,6 @@
 ﻿@{
+    var permisosClaims = User.Claims.Where(c => c.Type == "Permission").Select(c => c.Value).ToArray();
+    var permisosJson = JsonSerializer.Serialize(permisosClaims);
     var menuItems = new[] {
         new { Ctrl = "Home", Icon = "house-fill", Text = "Inicio", Permiso = (string)null },
         new { Ctrl = "Clientes", Icon = "people-fill", Text = "Clientes", Permiso = "clientes.ver" },
@@ -13,7 +15,8 @@
         new { Ctrl = "SecurityDashboard", Icon = "shield-lock", Text = "Seguridad", Permiso = "usuarios.ver" }
     };
 }
-
+@using System.Text.Json
+@using System.Linq
 @using System.Security.Claims
 
 @functions {
@@ -42,7 +45,7 @@
 
     @RenderSection("Styles", required: false)
 </head>
-<body class="bg-dark text-white d-flex flex-column min-vh-100">
+<body class="bg-dark text-white d-flex flex-column min-vh-100" data-permissions='@permisosJson'>
 
     <!-- Mobile Navbar -->
     <nav class="navbar navbar-dark bg-dark d-md-none">
@@ -164,6 +167,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" crossorigin="anonymous"></script>
+    <script src="~/js/permission-validator.js" asp-append-version="true"></script>
+
     @RenderSection("Scripts", required: false)
 </body>
 </html>

@@ -114,3 +114,4 @@ D:\github\Javo2\bin\Debug\net8.0\Data\permisos.json
 D:\github\Javo2\bin\Debug\net8.0\Data\roles.json
 D:\github\Javo2\bin\Debug\net8.0\Data\usuarios.json
 D:\github\Javo2\bin\Debug\net8.0\Data\passwordResetTokens.json
+D:\github\Javo2\obj\Debug\net8.0\scopedcss\Views\Shared\_ActionButtons.cshtml.rz.scp.css

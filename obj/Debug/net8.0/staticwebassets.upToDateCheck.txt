@@ -3,6 +3,7 @@ wwwroot\css\login.css
 wwwroot\css\site.css
 wwwroot\favicon.ico
 wwwroot\js\debug-helper.js
+wwwroot\js\permission-validator.js
 wwwroot\js\site.js
 wwwroot\js\ventas.js
 wwwroot\lib\bootstrap\dist\css\bootstrap.css
