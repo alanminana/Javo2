@@ -36,6 +36,7 @@ namespace Javo2.Controllers
 
         // GET: Configuracion
         [Authorize(Policy = "Permission:configuracion.ver")]
+        // ConfiguracionController.cs - Asegúrate de que el método Index devuelva el modelo correcto
         public async Task<IActionResult> Index(string modulo = null)
         {
             try
@@ -44,7 +45,7 @@ namespace Javo2.Controllers
                     await _configuracionService.GetAllAsync() :
                     await _configuracionService.GetByModuloAsync(modulo);
 
-                var viewModel = new ConfiguracionIndexViewModel
+                var viewModel = new ConfiguracionIndexViewModel // Este debe ser el modelo correcto para esta vista
                 {
                     Configuraciones = configuraciones.ToList(),
                     ModuloSeleccionado = modulo
@@ -58,7 +59,7 @@ namespace Javo2.Controllers
 
                 viewModel.Modulos = modulos;
 
-                return View(viewModel);
+                return View(viewModel); // Asegúrate de que View/Configuracion/Index.cshtml espera este modelo
             }
             catch (Exception ex)
             {

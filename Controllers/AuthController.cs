@@ -147,19 +147,21 @@ namespace Javo2.Controllers
             }
         }
 
-        [HttpGet]
+      
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login");
+            // Forzar la redirección para evitar problemas de caché
+            return RedirectToAction("Login", "Auth");
         }
-
         [HttpGet]
         public IActionResult AccessDenied()
         {
             return View();
         }
-
+  
         [HttpGet]
         [Authorize]
         public IActionResult CambiarContraseña()

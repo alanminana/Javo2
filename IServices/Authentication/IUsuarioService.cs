@@ -1,6 +1,4 @@
-﻿// 8. IServices/Authentication/IUsuarioService.cs
-// Interfaz más completa para el servicio de usuarios
-using Javo2.Models.Authentication;
+﻿using Javo2.Models.Authentication;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -23,5 +21,13 @@ namespace Javo2.IServices.Authentication
         Task<bool> TienePermisoAsync(int usuarioID, string codigoPermiso);
         Task<bool> ToggleEstadoAsync(int id);
         Task<IEnumerable<Usuario>> BuscarUsuariosAsync(string termino);
+        Task<IEnumerable<Usuario>> GetUsuariosByRolIDAsync(int rolID);
+        Task<bool> ResetearContrasenaAsync(int usuarioID, string nuevaContraseña);
+        Task<bool> IsUsernameUniqueAsync(string nombreUsuario);
+        Task<bool> IsEmailUniqueAsync(string email);
+        Task<IEnumerable<Usuario>> GetUsuariosActivosAsync();
+        Task<IEnumerable<Usuario>> GetUsuariosRecentesAsync(int count);
+        Task<IEnumerable<Usuario>> GetUltimosAccesosAsync(int count);
+        Task<bool> ValidarContraseñaSeguraAsync(string contraseña);
     }
 }

@@ -118,26 +118,32 @@ namespace Javo2.Controllers
                 return View("Error");
             }
         }
-
-        // GET: Usuarios/Create
-        [Authorize(Policy = "Permission:usuarios.crear")]
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             try
             {
+                _logger.LogInformation("Preparando formulario de creación de usuario");
+
+                // Cargar roles desde el servicio
                 var roles = await _rolService.GetAllRolesAsync();
+                _logger.LogInformation("Roles cargados: {Count}", roles.Count());
+
                 var rolesItems = roles.Select(r => new SelectListItem
                 {
                     Value = r.RolID.ToString(),
                     Text = r.Nombre
                 }).ToList();
 
+                // Crear modelo con usuario nuevo y roles cargados
                 var model = new UsuarioFormViewModel
                 {
                     Usuario = new Usuario { Activo = true },
                     RolesDisponibles = rolesItems,
                     RolesSeleccionados = new List<int>(),
-                    EsEdicion = false
+                    EsEdicion = false,
+                    Contraseña = string.Empty, // Inicializar para que no sea null
+                    ConfirmarContraseña = string.Empty // Inicializar para que no sea null
                 };
 
                 return View("Form", model);
@@ -149,75 +155,16 @@ namespace Javo2.Controllers
             }
         }
 
-        // POST: Usuarios/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = "Permission:usuarios.crear")]
         public async Task<IActionResult> Create(UsuarioFormViewModel model, List<int> RolesSeleccionados)
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    var roles = await _rolService.GetAllRolesAsync();
-                    var rolesItems = roles.Select(r => new SelectListItem
-                    {
-                        Value = r.RolID.ToString(),
-                        Text = r.Nombre
-                    }).ToList();
+                _logger.LogInformation("Iniciando creación de usuario: {NombreUsuario}", model.Usuario?.NombreUsuario);
+                _logger.LogDebug("Roles seleccionados: {Roles}", string.Join(", ", RolesSeleccionados ?? new List<int>()));
 
-                    model.RolesDisponibles = rolesItems;
-                    model.RolesSeleccionados = RolesSeleccionados ?? new List<int>();
-                    model.EsEdicion = false;
-
-                    return View("Form", model);
-                }
-
-                if (string.IsNullOrEmpty(model.Contraseña))
-                {
-                    ModelState.AddModelError(nameof(model.Contraseña), "La contraseña es obligatoria");
-
-                    var roles = await _rolService.GetAllRolesAsync();
-                    var rolesItems = roles.Select(r => new SelectListItem
-                    {
-                        Value = r.RolID.ToString(),
-                        Text = r.Nombre
-                    }).ToList();
-
-                    model.RolesDisponibles = rolesItems;
-                    model.RolesSeleccionados = RolesSeleccionados ?? new List<int>();
-                    model.EsEdicion = false;
-
-                    return View("Form", model);
-                }
-
-                // Establecer creado por
-                model.Usuario.CreadoPor = User.Identity?.Name ?? "Sistema";
-
-                // Crear usuario
-                var result = await _usuarioService.CreateUsuarioAsync(model.Usuario, model.Contraseña);
-                if (!result)
-                {
-                    throw new Exception("No se pudo crear el usuario");
-                }
-
-                // Asignar roles
-                if (RolesSeleccionados != null && RolesSeleccionados.Any())
-                {
-                    foreach (var rolId in RolesSeleccionados)
-                    {
-                        await _usuarioService.AsignarRolAsync(model.Usuario.UsuarioID, rolId);
-                    }
-                }
-
-                TempData["Success"] = "Usuario creado correctamente";
-                return RedirectToAction(nameof(Index));
-            }
-            catch (InvalidOperationException ex)
-            {
-                _logger.LogError(ex, "Error de validación al crear usuario");
-                ModelState.AddModelError(string.Empty, ex.Message);
-
+                // Siempre cargar los roles para tenerlos disponibles en caso de error
                 var roles = await _rolService.GetAllRolesAsync();
                 var rolesItems = roles.Select(r => new SelectListItem
                 {
@@ -227,15 +174,75 @@ namespace Javo2.Controllers
 
                 model.RolesDisponibles = rolesItems;
                 model.RolesSeleccionados = RolesSeleccionados ?? new List<int>();
-                model.EsEdicion = false;
 
-                return View("Form", model);
+                // Validar manualmente algunos campos
+                bool modelValid = true;
+
+                // Validar contraseña
+                if (string.IsNullOrEmpty(model.Contraseña))
+                {
+                    ModelState.AddModelError(nameof(model.Contraseña), "La contraseña es obligatoria");
+                    _logger.LogWarning("ERROR DE VALIDACIÓN: Propiedad: {Prop}, Error: {Error}",
+                        nameof(model.Contraseña), "La contraseña es obligatoria");
+                    modelValid = false;
+                }
+
+                // Si hay errores en el modelo
+                if (!ModelState.IsValid || !modelValid)
+                {
+                    _logger.LogWarning("VALIDACIÓN FALLIDA: Errores en el ModelState");
+
+                    // Loguear todos los errores para diagnóstico
+                    foreach (var state in ModelState)
+                    {
+                        foreach (var error in state.Value.Errors)
+                        {
+                            _logger.LogWarning("ERROR DE VALIDACIÓN: Propiedad: {Prop}, Error: {Error}",
+                                state.Key, error.ErrorMessage);
+                        }
+                    }
+
+                    _logger.LogInformation("RETORNANDO: Vista Form con modelo invalidado");
+                    return View("Form", model);
+                }
+
+                // Establecer creado por
+                model.Usuario.CreadoPor = User.Identity?.Name ?? "Sistema";
+
+                // Crear usuario
+                _logger.LogInformation("Creando usuario en la base de datos");
+                var result = await _usuarioService.CreateUsuarioAsync(model.Usuario, model.Contraseña);
+                if (!result)
+                {
+                    throw new Exception("No se pudo crear el usuario");
+                }
+
+                _logger.LogInformation("Usuario creado con ID: {UsuarioID}", model.Usuario.UsuarioID);
+
+                // Asignar roles
+                if (RolesSeleccionados != null && RolesSeleccionados.Any())
+                {
+                    _logger.LogInformation("Asignando {Count} roles al usuario", RolesSeleccionados.Count);
+                    foreach (var rolId in RolesSeleccionados)
+                    {
+                        _logger.LogInformation("Asignando rol ID: {RolID}", rolId);
+                        await _usuarioService.AsignarRolAsync(model.Usuario.UsuarioID, rolId);
+                    }
+                }
+                else
+                {
+                    _logger.LogWarning("No se seleccionaron roles para el usuario");
+                }
+
+                TempData["Success"] = "Usuario creado correctamente";
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear usuario");
+                _logger.LogError(ex, "Error al crear usuario: {Message}", ex.Message);
                 ModelState.AddModelError(string.Empty, "Error al crear usuario: " + ex.Message);
 
+                // Recargar roles
                 var roles = await _rolService.GetAllRolesAsync();
                 var rolesItems = roles.Select(r => new SelectListItem
                 {
@@ -250,7 +257,6 @@ namespace Javo2.Controllers
                 return View("Form", model);
             }
         }
-
         // GET: Usuarios/Edit/5
         [Authorize(Policy = "Permission:usuarios.editar")]
         public async Task<IActionResult> Edit(int id)

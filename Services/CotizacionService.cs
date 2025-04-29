@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Javo2.Models.Authentication;
 
 namespace Javo2.Services
 {
@@ -24,29 +25,46 @@ namespace Javo2.Services
             CargarDesdeJson();
         }
 
+        // En cada método correspondiente de CargarDesdeJson
         private void CargarDesdeJson()
         {
-            lock (_lock)
+            try
             {
-                try
+                // Asegurarse de que el directorio exista
+                var directory = Path.GetDirectoryName(_jsonFilePath);
+                if (!Directory.Exists(directory))
                 {
-                    var data = JsonFileHelper.LoadFromJsonFile<List<Venta>>(_jsonFilePath);
+                    Directory.CreateDirectory(directory);
+                }
+
+                // Asegurarse de que el archivo exista
+                if (!File.Exists(_jsonFilePath))
+                {
+                    File.WriteAllText(_jsonFilePath, "[]");
+                }
+
+                // CORRECCIÓN: Cargar las cotizaciones, no los usuarios
+                var data = JsonFileHelper.LoadFromJsonFileAsync<List<Venta>>(_jsonFilePath).GetAwaiter().GetResult();
+
+                lock (_lock)
+                {
                     _cotizaciones = data ?? new List<Venta>();
                     if (_cotizaciones.Any())
                     {
                         _nextCotizacionID = _cotizaciones.Max(c => c.VentaID) + 1;
                     }
-                    _logger.LogInformation("CotizacionService: {Count} cotizaciones cargadas desde {File}", _cotizaciones.Count, _jsonFilePath);
                 }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error al cargar cotizaciones desde JSON");
-                    _cotizaciones = new List<Venta>();
-                    _nextCotizacionID = 1;
-                }
+
+                _logger.LogInformation("CotizacionService: {Count} cotizaciones cargadas desde {File}",
+                    _cotizaciones.Count, _jsonFilePath);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cargar desde JSON: {Path}", _jsonFilePath);
+                // Reset a una lista vacía de COTIZACIONES (no usuarios)
+                _cotizaciones = new List<Venta>();
             }
         }
-
         private void GuardarEnJson()
         {
             lock (_lock)

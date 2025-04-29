@@ -1,1 +1,32 @@
-[]
+[
+  {
+    "ContainingType": "Javo2.Controllers.DiagnosticController",
+    "Method": "CheckAuthServices",
+    "RelativePath": "api/Diagnostic/auth",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Javo2.Controllers.DiagnosticController",
+    "Method": "CheckFiles",
+    "RelativePath": "api/Diagnostic/files",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Javo2.Controllers.DiagnosticController",
+    "Method": "CheckCurrentUser",
+    "RelativePath": "api/Diagnostic/user",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  }
+]

@@ -15,6 +15,7 @@ namespace Javo2.ViewModels.Authentication
     {
         public Usuario Usuario { get; set; }
 
+        [Required(ErrorMessage = "La contraseña es obligatoria")]
         [StringLength(100, ErrorMessage = "La {0} debe tener al menos {2} caracteres de longitud.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Contraseña")]
@@ -25,8 +26,11 @@ namespace Javo2.ViewModels.Authentication
         [Compare("Contraseña", ErrorMessage = "La contraseña y la confirmación no coinciden.")]
         public string ConfirmarContraseña { get; set; }
 
-        public IEnumerable<SelectListItem> RolesDisponibles { get; set; }
-        public List<int> RolesSeleccionados { get; set; }
+        // Este campo no debe tener Required, se llenará desde el controlador
+        public IEnumerable<SelectListItem> RolesDisponibles { get; set; } = new List<SelectListItem>();
+
+        public List<int> RolesSeleccionados { get; set; } = new List<int>();
+
         public bool EsEdicion { get; set; }
     }
 

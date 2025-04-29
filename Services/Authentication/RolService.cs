@@ -185,15 +185,21 @@ namespace Javo2.Services.Authentication
             }
         }
 
+        // RolService.cs - Método CreateRolAsync
         public async Task<int> CreateRolAsync(Rol rol)
         {
             if (string.IsNullOrWhiteSpace(rol.Nombre))
                 throw new ArgumentException("El nombre del rol no puede estar vacío");
 
+            // Verificar si ya existe un rol con el mismo nombre
             var rolExistente = await GetRolByNombreAsync(rol.Nombre);
             if (rolExistente != null)
-                throw new InvalidOperationException("Ya existe un rol con este nombre");
+            {
+                _logger.LogWarning("Intento de crear rol con nombre duplicado: {Nombre}", rol.Nombre);
+                throw new InvalidOperationException($"Ya existe un rol con el nombre '{rol.Nombre}'");
+            }
 
+            // Continuar solo si el rol no existe
             lock (_lock)
             {
                 rol.RolID = _nextRolID++;
@@ -204,7 +210,7 @@ namespace Javo2.Services.Authentication
                 GuardarEnJson();
             }
 
-            _logger.LogInformation("Rol creado: {Nombre}", rol.Nombre);
+            _logger.LogInformation("Rol creado: {Nombre} con ID {RolID}", rol.Nombre, rol.RolID);
             return rol.RolID;
         }
 
@@ -278,29 +284,53 @@ namespace Javo2.Services.Authentication
 
         public async Task<bool> AsignarPermisoAsync(int rolID, int permisoID)
         {
-            lock (_lock)
+            _logger.LogInformation("INICIO: AsignarPermisoAsync para Rol {RolID}, Permiso {PermisoID}", rolID, permisoID);
+
+            try
             {
-                var rol = _roles.FirstOrDefault(r => r.RolID == rolID);
-                if (rol == null)
-                    return false;
-
-                // Verificar si el permiso ya está asignado
-                if (rol.Permisos.Any(p => p.PermisoID == permisoID))
-                    return true; // Ya está asignado
-
-                // Asignar el permiso
-                rol.Permisos.Add(new RolPermiso
+                lock (_lock)
                 {
-                    RolPermisoID = _nextRolPermisoID++,
-                    RolID = rolID,
-                    PermisoID = permisoID
-                });
+                    _logger.LogInformation("BUSCANDO: Rol con ID {RolID}", rolID);
+                    var rol = _roles.FirstOrDefault(r => r.RolID == rolID);
+                    if (rol == null)
+                    {
+                        _logger.LogError("ERROR: Rol con ID {RolID} no encontrado", rolID);
+                        return false;
+                    }
 
+                    _logger.LogInformation("ROL ENCONTRADO: {Nombre}", rol.Nombre);
+
+                    // Verificar si el permiso ya está asignado
+                    if (rol.Permisos.Any(p => p.PermisoID == permisoID))
+                    {
+                        _logger.LogInformation("AVISO: Permiso {PermisoID} ya asignado a rol {RolID}", permisoID, rolID);
+                        return true; // Ya está asignado
+                    }
+
+                    // Asignar el permiso
+                    _logger.LogInformation("ASIGNANDO: Permiso {PermisoID} a rol {RolID}", permisoID, rolID);
+                    rol.Permisos.Add(new RolPermiso
+                    {
+                        RolPermisoID = _nextRolPermisoID++,
+                        RolID = rolID,
+                        PermisoID = permisoID
+                    });
+
+                    _logger.LogInformation("PERMISOS TOTALES: Rol {RolID} ahora tiene {Count} permisos",
+                        rolID, rol.Permisos.Count);
+                }
+
+                _logger.LogInformation("GUARDANDO: Cambios en JSON");
                 GuardarEnJson();
-            }
 
-            _logger.LogInformation("Permiso {PermisoID} asignado al rol {RolID}", permisoID, rolID);
-            return true;
+                _logger.LogInformation("ÉXITO: Permiso {PermisoID} asignado a rol {RolID}", permisoID, rolID);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "ERROR CRÍTICO: Al asignar permiso {PermisoID} a rol {RolID}", permisoID, rolID);
+                throw; // Re-lanzar para manejo superior
+            }
         }
 
         public async Task<bool> QuitarPermisoAsync(int rolID, int permisoID)
