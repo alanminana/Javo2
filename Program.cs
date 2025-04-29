@@ -3,6 +3,9 @@ using Javo2.IServices;
 using Javo2.Services.Common;
 using Javo2.Middleware;
 using Javo2.IServices.Common;
+using Javo2.Extensions;
+using Javo2.IServices.Authentication;
+using Javo2.Services.Authentication;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,6 +54,9 @@ builder.Services.AddScoped<IDropdownService, DropdownService>();
 // Configuración de AutoMapper
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
+// Agregar servicios de autenticación personalizados
+builder.Services.AddAuthenticationServicesCustom();
+
 var app = builder.Build();
 
 // Validación de la configuración de AutoMapper
@@ -69,6 +75,9 @@ catch (AutoMapper.AutoMapperConfigurationException ex)
     }
 }
 
+// Middleware de seguridad
+app.UseMiddleware<SecurityHeadersMiddleware>();
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -83,7 +92,9 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-app.UseAuthorization();
+
+// Configurar autenticación y autorización
+app.UseAuthenticationConfigCustom();
 
 app.MapControllerRoute(
     name: "default",
