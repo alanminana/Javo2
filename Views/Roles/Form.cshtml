@@ -55,6 +55,14 @@
                                 </h2>
                                 <div id="grupo-@grupo.Key.Replace(" ", "-")" class="accordion-collapse collapse" data-bs-parent="#permisosAccordion">
                                     <div class="accordion-body">
+                                        <div class="d-flex gap-2 mb-3">
+                                            <button type="button" class="btn btn-sm btn-outline-primary btn-seleccionar-todos">
+                                                Seleccionar todos
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary btn-deseleccionar-todos">
+                                                Deseleccionar todos
+                                            </button>
+                                        </div>
                                         <div class="row">
                                             @foreach (var permiso in grupo.Value)
                                             {
@@ -65,7 +73,7 @@
                                                                id="permiso-@permiso.PermisoID"
                                                                name="PermisosSeleccionados"
                                                                value="@permiso.PermisoID"
-                                                               checked="@Model.PermisosSeleccionados.Contains(permiso.PermisoID)" />
+                                                        @(Model.PermisosSeleccionados.Contains(permiso.PermisoID) ? "checked" : "") />
                                                         <label class="form-check-label" for="permiso-@permiso.PermisoID">
                                                             @permiso.Nombre
                                                             <small class="d-block text-muted">@permiso.Codigo</small>
@@ -103,40 +111,39 @@
             // Abrir el primer grupo de permisos
             document.querySelector('.accordion-button').click();
 
-            // Añadir botones de selección rápida para cada grupo
-            document.querySelectorAll('.accordion-header').forEach(header => {
-                const grupoId = header.querySelector('.accordion-button').getAttribute('data-bs-target');
-                const contenido = document.querySelector(grupoId);
-
-                // Crear botones
-                const btnContainer = document.createElement('div');
-                btnContainer.className = 'd-flex gap-2 mb-3';
-
-                const btnSeleccionarTodos = document.createElement('button');
-                btnSeleccionarTodos.type = 'button';
-                btnSeleccionarTodos.className = 'btn btn-sm btn-outline-primary';
-                btnSeleccionarTodos.textContent = 'Seleccionar todos';
-                btnSeleccionarTodos.addEventListener('click', () => {
-                    contenido.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+            // Botones para seleccionar/deseleccionar todos
+            document.querySelectorAll('.btn-seleccionar-todos').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const container = btn.closest('.accordion-body');
+                    container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
                         cb.checked = true;
                     });
                 });
+            });
 
-                const btnDeseleccionarTodos = document.createElement('button');
-                btnDeseleccionarTodos.type = 'button';
-                btnDeseleccionarTodos.className = 'btn btn-sm btn-outline-secondary';
-                btnDeseleccionarTodos.textContent = 'Deseleccionar todos';
-                btnDeseleccionarTodos.addEventListener('click', () => {
-                    contenido.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+            document.querySelectorAll('.btn-deseleccionar-todos').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const container = btn.closest('.accordion-body');
+                    container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
                         cb.checked = false;
                     });
                 });
+            });
 
-                btnContainer.appendChild(btnSeleccionarTodos);
-                btnContainer.appendChild(btnDeseleccionarTodos);
-                 
-                // Insertar al principio del contenido
-                contenido.querySelector('.accordion-body').prepend(btnContainer);
+            // Validación del formulario antes de enviar
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(e) {
+                console.log('Formulario enviado');
+
+                // Verificar si hay permisos seleccionados
+                const permisosSeleccionados = Array.from(document.querySelectorAll('input[name="PermisosSeleccionados"]:checked'))
+                    .map(cb => cb.value);
+                console.log('Permisos seleccionados:', permisosSeleccionados);
+
+                // No bloqueamos el envío del formulario si no hay permisos seleccionados,
+                // ya que puede ser un comportamiento válido
             });
         });
     </script>

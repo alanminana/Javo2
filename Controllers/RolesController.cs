@@ -1,11 +1,9 @@
-﻿// Controllers/Authentication/RolesController.cs
-using Javo2.Controllers.Base;
+﻿using Javo2.Controllers.Base;
 using Javo2.IServices.Authentication;
 using Javo2.Models.Authentication;
 using Javo2.ViewModels.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -92,6 +90,9 @@ namespace Javo2.Controllers.Authentication
         {
             try
             {
+                // Agregar log para depuración
+                _logger.LogInformation("Iniciando creación de rol - GET");
+
                 var allPermisos = await _permisoService.GetAllPermisosAsync();
                 var permisosActivos = allPermisos.Where(p => p.Activo).ToList();
 
@@ -125,8 +126,27 @@ namespace Javo2.Controllers.Authentication
         {
             try
             {
-                if (!ModelState.IsValid)
+                // Agregar logs para depuración
+                _logger.LogInformation("Iniciando creación de rol - POST");
+                _logger.LogInformation("Nombre del rol: {Nombre}", model.Rol?.Nombre);
+                _logger.LogInformation("Permisos seleccionados: {Count}", PermisosSeleccionados?.Count ?? 0);
+
+                if (PermisosSeleccionados != null && PermisosSeleccionados.Any())
                 {
+                    _logger.LogInformation("Permisos seleccionados IDs: {IDs}", string.Join(", ", PermisosSeleccionados));
+                }
+                else
+                {
+                    _logger.LogWarning("No se seleccionaron permisos o la lista es nula");
+                }
+
+                // Ignorar la validación del ModelState para las propiedades del ViewModel
+                // y validar manualmente lo que necesitamos
+                if (string.IsNullOrWhiteSpace(model.Rol?.Nombre))
+                {
+                    ModelState.AddModelError("Rol.Nombre", "El nombre del rol es obligatorio");
+                    _logger.LogWarning("Error de validación: El nombre del rol es obligatorio");
+
                     var allPermisos = await _permisoService.GetAllPermisosAsync();
                     var permisosActivos = allPermisos.Where(p => p.Activo).ToList();
                     var gruposPermisos = permisosActivos
@@ -135,10 +155,10 @@ namespace Javo2.Controllers.Authentication
 
                     model.GruposPermisos = gruposPermisos;
                     model.PermisosSeleccionados = PermisosSeleccionados ?? new List<int>();
-                    model.EsEdicion = false;
-
                     return View("Form", model);
                 }
+
+                _logger.LogInformation("Creando rol en la base de datos");
 
                 // Crear rol
                 var rol = new Rol
@@ -146,17 +166,26 @@ namespace Javo2.Controllers.Authentication
                     Nombre = model.Rol.Nombre,
                     Descripcion = model.Rol.Descripcion,
                     EsSistema = false // Los roles creados manualmente nunca son del sistema
+                    // No necesitamos inicializar Permisos ya que la propiedad
+                    // está diseñada para nunca devolver null
                 };
 
                 var rolID = await _rolService.CreateRolAsync(rol);
+                _logger.LogInformation("Rol creado con ID: {RolID}", rolID);
 
                 // Asignar permisos
                 if (PermisosSeleccionados != null && PermisosSeleccionados.Any())
                 {
+                    _logger.LogInformation("Asignando {Count} permisos al rol", PermisosSeleccionados.Count);
                     foreach (var permisoID in PermisosSeleccionados)
                     {
+                        _logger.LogInformation("Asignando permiso ID: {PermisoID} al rol {RolID}", permisoID, rolID);
                         await _rolService.AsignarPermisoAsync(rolID, permisoID);
                     }
+                }
+                else
+                {
+                    _logger.LogWarning("No se seleccionaron permisos para el rol");
                 }
 
                 TempData["Success"] = "Rol creado correctamente";
@@ -164,7 +193,7 @@ namespace Javo2.Controllers.Authentication
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear rol");
+                _logger.LogError(ex, "Error al crear rol: {Message}", ex.Message);
                 ModelState.AddModelError(string.Empty, "Error al crear rol: " + ex.Message);
 
                 var allPermisos = await _permisoService.GetAllPermisosAsync();
@@ -175,7 +204,6 @@ namespace Javo2.Controllers.Authentication
 
                 model.GruposPermisos = gruposPermisos;
                 model.PermisosSeleccionados = PermisosSeleccionados ?? new List<int>();
-                model.EsEdicion = false;
 
                 return View("Form", model);
             }
@@ -235,6 +263,29 @@ namespace Javo2.Controllers.Authentication
 
             try
             {
+                // Agregar logs para depuración
+                _logger.LogInformation("Iniciando edición de rol - POST, ID: {RolID}", id);
+                _logger.LogInformation("Permisos seleccionados: {Count}", PermisosSeleccionados?.Count ?? 0);
+
+                // Ignorar la validación del ModelState para las propiedades del ViewModel
+                // y validar manualmente lo que necesitamos
+                if (string.IsNullOrWhiteSpace(model.Rol?.Nombre))
+                {
+                    ModelState.AddModelError("Rol.Nombre", "El nombre del rol es obligatorio");
+                    _logger.LogWarning("Error de validación: El nombre del rol es obligatorio");
+
+                    var allPermisos = await _permisoService.GetAllPermisosAsync();
+                    var permisosActivos = allPermisos.Where(p => p.Activo).ToList();
+                    var gruposPermisos = permisosActivos
+                        .GroupBy(p => p.Grupo ?? "General")
+                        .ToDictionary(g => g.Key, g => g.ToList());
+
+                    model.GruposPermisos = gruposPermisos;
+                    model.PermisosSeleccionados = PermisosSeleccionados ?? new List<int>();
+                    model.EsEdicion = true;
+                    return View("Form", model);
+                }
+
                 var originalRol = await _rolService.GetRolByIDAsync(id);
                 if (originalRol == null)
                 {
@@ -267,12 +318,14 @@ namespace Javo2.Controllers.Authentication
                 // 3. Eliminar permisos
                 foreach (var permisoID in permisosEliminar)
                 {
+                    _logger.LogInformation("Quitando permiso {PermisoID} del rol {RolID}", permisoID, id);
                     await _rolService.QuitarPermisoAsync(id, permisoID);
                 }
 
                 // 4. Agregar permisos
                 foreach (var permisoID in permisosAgregar)
                 {
+                    _logger.LogInformation("Agregando permiso {PermisoID} al rol {RolID}", permisoID, id);
                     await _rolService.AsignarPermisoAsync(id, permisoID);
                 }
 
@@ -281,7 +334,7 @@ namespace Javo2.Controllers.Authentication
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar rol");
+                _logger.LogError(ex, "Error al actualizar rol: {Message}", ex.Message);
                 ModelState.AddModelError(string.Empty, "Error al actualizar rol: " + ex.Message);
 
                 var allPermisos = await _permisoService.GetAllPermisosAsync();
@@ -372,7 +425,7 @@ namespace Javo2.Controllers.Authentication
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar rol");
+                _logger.LogError(ex, "Error al eliminar rol: {Message}", ex.Message);
                 TempData["Error"] = "Error al eliminar rol: " + ex.Message;
                 return RedirectToAction(nameof(Index));
             }

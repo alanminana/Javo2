@@ -44,7 +44,8 @@ namespace Javo2.Services.Authentication
                     {
                         Nombre = "Administrador",
                         Descripcion = "Rol con acceso completo al sistema",
-                        EsSistema = true
+                        EsSistema = true,
+                        Permisos = new List<RolPermiso>() // Inicializar la colección
                     };
 
                     var adminId = await CreateRolAsync(rolAdmin);
@@ -65,7 +66,8 @@ namespace Javo2.Services.Authentication
                     {
                         Nombre = "Gerente",
                         Descripcion = "Rol con acceso a funciones gerenciales",
-                        EsSistema = true
+                        EsSistema = true,
+                        Permisos = new List<RolPermiso>() // Inicializar la colección
                     };
 
                     var gerenteId = await CreateRolAsync(rolGerente);
@@ -94,7 +96,8 @@ namespace Javo2.Services.Authentication
                     {
                         Nombre = "Vendedor",
                         Descripcion = "Rol con acceso a funciones de ventas",
-                        EsSistema = true
+                        EsSistema = true,
+                        Permisos = new List<RolPermiso>() // Inicializar la colección
                     };
 
                     var vendedorId = await CreateRolAsync(rolVendedor);
@@ -152,8 +155,13 @@ namespace Javo2.Services.Authentication
         {
             try
             {
-                JsonFileHelper.SaveToJsonFile(_jsonFilePath, _roles);
-                _logger.LogInformation("RolService: {Count} roles guardados", _roles.Count);
+                List<Rol> rolesToSave;
+                lock (_lock)
+                {
+                    rolesToSave = _roles.ToList(); // Crear una copia para evitar problemas de concurrencia
+                }
+                JsonFileHelper.SaveToJsonFile(_jsonFilePath, rolesToSave);
+                _logger.LogInformation("RolService: {Count} roles guardados", rolesToSave.Count);
             }
             catch (Exception ex)
             {
@@ -185,9 +193,11 @@ namespace Javo2.Services.Authentication
             }
         }
 
-        // RolService.cs - Método CreateRolAsync
+        // Método mejorado de CreateRolAsync
         public async Task<int> CreateRolAsync(Rol rol)
         {
+            _logger.LogInformation("Iniciando creación de rol: {Nombre}", rol.Nombre);
+
             if (string.IsNullOrWhiteSpace(rol.Nombre))
                 throw new ArgumentException("El nombre del rol no puede estar vacío");
 
@@ -203,14 +213,19 @@ namespace Javo2.Services.Authentication
             lock (_lock)
             {
                 rol.RolID = _nextRolID++;
+
+                // Asegurarse de que la colección de permisos esté inicializada
                 if (rol.Permisos == null)
                     rol.Permisos = new List<RolPermiso>();
 
                 _roles.Add(rol);
-                GuardarEnJson();
+                _logger.LogInformation("Rol añadido a la colección en memoria: {Nombre}, ID: {RolID}", rol.Nombre, rol.RolID);
             }
 
-            _logger.LogInformation("Rol creado: {Nombre} con ID {RolID}", rol.Nombre, rol.RolID);
+            // Guardar en el archivo JSON
+            GuardarEnJson();
+
+            _logger.LogInformation("Rol creado y guardado: {Nombre} con ID {RolID}", rol.Nombre, rol.RolID);
             return rol.RolID;
         }
 
@@ -282,16 +297,26 @@ namespace Javo2.Services.Authentication
             return permisos;
         }
 
+        // Método mejorado de AsignarPermisoAsync
         public async Task<bool> AsignarPermisoAsync(int rolID, int permisoID)
         {
             _logger.LogInformation("INICIO: AsignarPermisoAsync para Rol {RolID}, Permiso {PermisoID}", rolID, permisoID);
 
             try
             {
+                // Verificar si el permiso existe
+                var permiso = await _permisoService.GetPermisoByIDAsync(permisoID);
+                if (permiso == null)
+                {
+                    _logger.LogError("ERROR: Permiso con ID {PermisoID} no encontrado", permisoID);
+                    return false;
+                }
+
+                Rol rol;
                 lock (_lock)
                 {
                     _logger.LogInformation("BUSCANDO: Rol con ID {RolID}", rolID);
-                    var rol = _roles.FirstOrDefault(r => r.RolID == rolID);
+                    rol = _roles.FirstOrDefault(r => r.RolID == rolID);
                     if (rol == null)
                     {
                         _logger.LogError("ERROR: Rol con ID {RolID} no encontrado", rolID);
@@ -299,6 +324,13 @@ namespace Javo2.Services.Authentication
                     }
 
                     _logger.LogInformation("ROL ENCONTRADO: {Nombre}", rol.Nombre);
+
+                    // Inicializar la colección de permisos si es nula
+                    if (rol.Permisos == null)
+                    {
+                        _logger.LogInformation("Inicializando colección de permisos para rol {RolID}", rolID);
+                        rol.Permisos = new List<RolPermiso>();
+                    }
 
                     // Verificar si el permiso ya está asignado
                     if (rol.Permisos.Any(p => p.PermisoID == permisoID))
@@ -320,6 +352,7 @@ namespace Javo2.Services.Authentication
                         rolID, rol.Permisos.Count);
                 }
 
+                // Guardar los cambios en el archivo JSON
                 _logger.LogInformation("GUARDANDO: Cambios en JSON");
                 GuardarEnJson();
 

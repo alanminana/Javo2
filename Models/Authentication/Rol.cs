@@ -7,16 +7,20 @@ namespace Javo2.Models.Authentication
     {
         public int RolID { get; set; }
 
-        [Required(ErrorMessage = "El nombre es obligatorio")]
-        [Display(Name = "Nombre")]
+        [Required(ErrorMessage = "El nombre del rol es obligatorio")]
+        [StringLength(100, ErrorMessage = "El nombre no puede tener más de 100 caracteres")]
         public string Nombre { get; set; }
 
-        [Display(Name = "Descripción")]
+        [StringLength(500, ErrorMessage = "La descripción no puede tener más de 500 caracteres")]
         public string Descripcion { get; set; }
 
-        [Display(Name = "Es sistema")]
         public bool EsSistema { get; set; }
 
-        public List<RolPermiso> Permisos { get; set; } = new List<RolPermiso>();
+        private List<RolPermiso> _permisos;
+        public List<RolPermiso> Permisos
+        {
+            get { return _permisos ?? (_permisos = new List<RolPermiso>()); }
+            set { _permisos = value; }
+        }
     }
 }
