@@ -6,6 +6,12 @@ namespace Javo2.Helpers
 {
     public static class JsonFileHelper
     {
+        private static readonly JsonSerializerOptions _options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+            WriteIndented = true
+        };
+
         public static async Task<T> LoadFromJsonFileAsync<T>(string filePath) where T : new()
         {
             try
@@ -15,12 +21,7 @@ namespace Javo2.Helpers
                     return new T();
                 }
                 var json = await File.ReadAllTextAsync(filePath);
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true,
-                    WriteIndented = true
-                };
-                var data = JsonSerializer.Deserialize<T>(json, options);
+                var data = JsonSerializer.Deserialize<T>(json, _options);
                 return data ?? new T();
             }
             catch
@@ -33,20 +34,24 @@ namespace Javo2.Helpers
         {
             try
             {
-                var options = new JsonSerializerOptions
+                var json = JsonSerializer.Serialize(data, _options);
+
+                // Asegurar que el directorio exista
+                var directory = Path.GetDirectoryName(filePath);
+                if (!Directory.Exists(directory) && !string.IsNullOrEmpty(directory))
                 {
-                    WriteIndented = true
-                };
-                var json = JsonSerializer.Serialize(data, options);
+                    Directory.CreateDirectory(directory);
+                }
+
                 await File.WriteAllTextAsync(filePath, json);
             }
             catch
             {
-                // Manejo de errores opcional (logging, etc.)
+                // Manejo opcional de errores
             }
         }
 
-        // Métodos síncronos existentes...
+        // Versiones síncronas
         public static T LoadFromJsonFile<T>(string filePath) where T : new()
         {
             try
@@ -56,12 +61,7 @@ namespace Javo2.Helpers
                     return new T();
                 }
                 var json = File.ReadAllText(filePath);
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true,
-                    WriteIndented = true
-                };
-                var data = JsonSerializer.Deserialize<T>(json, options);
+                var data = JsonSerializer.Deserialize<T>(json, _options);
                 return data ?? new T();
             }
             catch
@@ -74,16 +74,20 @@ namespace Javo2.Helpers
         {
             try
             {
-                var options = new JsonSerializerOptions
+                var json = JsonSerializer.Serialize(data, _options);
+
+                // Asegurar que el directorio exista
+                var directory = Path.GetDirectoryName(filePath);
+                if (!Directory.Exists(directory) && !string.IsNullOrEmpty(directory))
                 {
-                    WriteIndented = true
-                };
-                var json = JsonSerializer.Serialize(data, options);
+                    Directory.CreateDirectory(directory);
+                }
+
                 File.WriteAllText(filePath, json);
             }
             catch
             {
-                // Manejo de errores opcional
+                // Manejo opcional de errores
             }
         }
     }

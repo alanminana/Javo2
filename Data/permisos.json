@@ -1,0 +1,281 @@
+[
+  {
+    "PermisoID": 1,
+    "Nombre": "Ver usuarios",
+    "Codigo": "usuarios.ver",
+    "Descripcion": "Permiso para ver usuarios",
+    "Grupo": "Usuarios",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 2,
+    "Nombre": "Crear usuarios",
+    "Codigo": "usuarios.crear",
+    "Descripcion": "Permiso para crear usuarios",
+    "Grupo": "Usuarios",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 3,
+    "Nombre": "Editar usuarios",
+    "Codigo": "usuarios.editar",
+    "Descripcion": "Permiso para editar usuarios",
+    "Grupo": "Usuarios",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 4,
+    "Nombre": "Eliminar usuarios",
+    "Codigo": "usuarios.eliminar",
+    "Descripcion": "Permiso para eliminar usuarios",
+    "Grupo": "Usuarios",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 5,
+    "Nombre": "Ver roles",
+    "Codigo": "roles.ver",
+    "Descripcion": "Permiso para ver roles",
+    "Grupo": "Roles",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 6,
+    "Nombre": "Crear roles",
+    "Codigo": "roles.crear",
+    "Descripcion": "Permiso para crear roles",
+    "Grupo": "Roles",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 7,
+    "Nombre": "Editar roles",
+    "Codigo": "roles.editar",
+    "Descripcion": "Permiso para editar roles",
+    "Grupo": "Roles",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 8,
+    "Nombre": "Eliminar roles",
+    "Codigo": "roles.eliminar",
+    "Descripcion": "Permiso para eliminar roles",
+    "Grupo": "Roles",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 9,
+    "Nombre": "Ver permisos",
+    "Codigo": "permisos.ver",
+    "Descripcion": "Permiso para ver permisos",
+    "Grupo": "Permisos",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 10,
+    "Nombre": "Crear permisos",
+    "Codigo": "permisos.crear",
+    "Descripcion": "Permiso para crear permisos",
+    "Grupo": "Permisos",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 11,
+    "Nombre": "Editar permisos",
+    "Codigo": "permisos.editar",
+    "Descripcion": "Permiso para editar permisos",
+    "Grupo": "Permisos",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 12,
+    "Nombre": "Eliminar permisos",
+    "Codigo": "permisos.eliminar",
+    "Descripcion": "Permiso para eliminar permisos",
+    "Grupo": "Permisos",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 13,
+    "Nombre": "Ver ventas",
+    "Codigo": "ventas.ver",
+    "Descripcion": "Permiso para ver ventas",
+    "Grupo": "Ventas",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 14,
+    "Nombre": "Crear ventas",
+    "Codigo": "ventas.crear",
+    "Descripcion": "Permiso para crear ventas",
+    "Grupo": "Ventas",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 15,
+    "Nombre": "Editar ventas",
+    "Codigo": "ventas.editar",
+    "Descripcion": "Permiso para editar ventas",
+    "Grupo": "Ventas",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 16,
+    "Nombre": "Eliminar ventas",
+    "Codigo": "ventas.eliminar",
+    "Descripcion": "Permiso para eliminar ventas",
+    "Grupo": "Ventas",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 17,
+    "Nombre": "Autorizar ventas",
+    "Codigo": "ventas.autorizar",
+    "Descripcion": "Permiso para autorizar ventas",
+    "Grupo": "Ventas",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 18,
+    "Nombre": "Rechazar ventas",
+    "Codigo": "ventas.rechazar",
+    "Descripcion": "Permiso para rechazar ventas",
+    "Grupo": "Ventas",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 19,
+    "Nombre": "Ver productos",
+    "Codigo": "productos.ver",
+    "Descripcion": "Permiso para ver productos",
+    "Grupo": "Productos",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 20,
+    "Nombre": "Crear productos",
+    "Codigo": "productos.crear",
+    "Descripcion": "Permiso para crear productos",
+    "Grupo": "Productos",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 21,
+    "Nombre": "Editar productos",
+    "Codigo": "productos.editar",
+    "Descripcion": "Permiso para editar productos",
+    "Grupo": "Productos",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 22,
+    "Nombre": "Eliminar productos",
+    "Codigo": "productos.eliminar",
+    "Descripcion": "Permiso para eliminar productos",
+    "Grupo": "Productos",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 23,
+    "Nombre": "Ajustar precios",
+    "Codigo": "productos.ajustarprecios",
+    "Descripcion": "Permiso para ajustar precios",
+    "Grupo": "Productos",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 24,
+    "Nombre": "Ver clientes",
+    "Codigo": "clientes.ver",
+    "Descripcion": "Permiso para ver clientes",
+    "Grupo": "Clientes",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 25,
+    "Nombre": "Crear clientes",
+    "Codigo": "clientes.crear",
+    "Descripcion": "Permiso para crear clientes",
+    "Grupo": "Clientes",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 26,
+    "Nombre": "Editar clientes",
+    "Codigo": "clientes.editar",
+    "Descripcion": "Permiso para editar clientes",
+    "Grupo": "Clientes",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 27,
+    "Nombre": "Eliminar clientes",
+    "Codigo": "clientes.eliminar",
+    "Descripcion": "Permiso para eliminar clientes",
+    "Grupo": "Clientes",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 28,
+    "Nombre": "Ver reportes",
+    "Codigo": "reportes.ver",
+    "Descripcion": "Permiso para ver reportes",
+    "Grupo": "Reportes",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 29,
+    "Nombre": "Exportar reportes",
+    "Codigo": "reportes.exportar",
+    "Descripcion": "Permiso para exportar reportes",
+    "Grupo": "Reportes",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 30,
+    "Nombre": "Ver configuraci\u00F3n",
+    "Codigo": "configuracion.ver",
+    "Descripcion": "Permiso para ver configuraci\u00F3n",
+    "Grupo": "Configuraci\u00F3n",
+    "EsSistema": true,
+    "Activo": true
+  },
+  {
+    "PermisoID": 31,
+    "Nombre": "Editar configuraci\u00F3n",
+    "Codigo": "configuracion.editar",
+    "Descripcion": "Permiso para editar configuraci\u00F3n",
+    "Grupo": "Configuraci\u00F3n",
+    "EsSistema": true,
+    "Activo": true
+  }
+]

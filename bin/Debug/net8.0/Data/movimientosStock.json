@@ -1,0 +1,26 @@
+[
+  {
+    "MovimientoStockID": 1,
+    "ProductoID": 5,
+    "Fecha": "2025-04-24T00:39:38.0910901Z",
+    "TipoMovimiento": "Entrada",
+    "Cantidad": 40,
+    "Motivo": "Stock inicial al crear producto"
+  },
+  {
+    "MovimientoStockID": 2,
+    "ProductoID": 6,
+    "Fecha": "2025-04-24T01:36:17.3325131Z",
+    "TipoMovimiento": "Entrada",
+    "Cantidad": 22,
+    "Motivo": "Stock inicial"
+  },
+  {
+    "MovimientoStockID": 3,
+    "ProductoID": 7,
+    "Fecha": "2025-04-24T14:33:05.2296082Z",
+    "TipoMovimiento": "Entrada",
+    "Cantidad": 21,
+    "Motivo": "Stock inicial"
+  }
+]

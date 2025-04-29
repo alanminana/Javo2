@@ -1,0 +1,21 @@
+[
+  {
+    "UsuarioID": 1,
+    "NombreUsuario": "admin",
+    "Contrase\u00F1a": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+    "Nombre": "Administrador",
+    "Apellido": "Sistema",
+    "Email": "admin@sistema.com",
+    "Activo": true,
+    "FechaCreacion": "2025-04-28T21:48:25.8667085-03:00",
+    "UltimoAcceso": null,
+    "CreadoPor": "Sistema",
+    "Roles": [
+      {
+        "UsuarioRolID": 0,
+        "UsuarioID": 1,
+        "RolID": 1
+      }
+    ]
+  }
+]

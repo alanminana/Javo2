@@ -1,0 +1,236 @@
+[
+  {
+    "RolID": 1,
+    "Nombre": "Administrador",
+    "Descripcion": "Rol con acceso completo al sistema",
+    "EsSistema": true,
+    "Permisos": [
+      {
+        "RolPermisoID": 1,
+        "RolID": 1,
+        "PermisoID": 1
+      },
+      {
+        "RolPermisoID": 2,
+        "RolID": 1,
+        "PermisoID": 2
+      },
+      {
+        "RolPermisoID": 3,
+        "RolID": 1,
+        "PermisoID": 3
+      },
+      {
+        "RolPermisoID": 4,
+        "RolID": 1,
+        "PermisoID": 4
+      },
+      {
+        "RolPermisoID": 5,
+        "RolID": 1,
+        "PermisoID": 5
+      },
+      {
+        "RolPermisoID": 6,
+        "RolID": 1,
+        "PermisoID": 6
+      },
+      {
+        "RolPermisoID": 7,
+        "RolID": 1,
+        "PermisoID": 7
+      },
+      {
+        "RolPermisoID": 8,
+        "RolID": 1,
+        "PermisoID": 8
+      },
+      {
+        "RolPermisoID": 9,
+        "RolID": 1,
+        "PermisoID": 9
+      },
+      {
+        "RolPermisoID": 10,
+        "RolID": 1,
+        "PermisoID": 10
+      },
+      {
+        "RolPermisoID": 11,
+        "RolID": 1,
+        "PermisoID": 11
+      },
+      {
+        "RolPermisoID": 12,
+        "RolID": 1,
+        "PermisoID": 12
+      },
+      {
+        "RolPermisoID": 13,
+        "RolID": 1,
+        "PermisoID": 13
+      },
+      {
+        "RolPermisoID": 14,
+        "RolID": 1,
+        "PermisoID": 14
+      },
+      {
+        "RolPermisoID": 15,
+        "RolID": 1,
+        "PermisoID": 15
+      },
+      {
+        "RolPermisoID": 16,
+        "RolID": 1,
+        "PermisoID": 16
+      },
+      {
+        "RolPermisoID": 17,
+        "RolID": 1,
+        "PermisoID": 17
+      },
+      {
+        "RolPermisoID": 18,
+        "RolID": 1,
+        "PermisoID": 18
+      },
+      {
+        "RolPermisoID": 19,
+        "RolID": 1,
+        "PermisoID": 19
+      },
+      {
+        "RolPermisoID": 20,
+        "RolID": 1,
+        "PermisoID": 20
+      },
+      {
+        "RolPermisoID": 21,
+        "RolID": 1,
+        "PermisoID": 21
+      },
+      {
+        "RolPermisoID": 22,
+        "RolID": 1,
+        "PermisoID": 22
+      },
+      {
+        "RolPermisoID": 23,
+        "RolID": 1,
+        "PermisoID": 23
+      },
+      {
+        "RolPermisoID": 24,
+        "RolID": 1,
+        "PermisoID": 24
+      },
+      {
+        "RolPermisoID": 25,
+        "RolID": 1,
+        "PermisoID": 25
+      },
+      {
+        "RolPermisoID": 26,
+        "RolID": 1,
+        "PermisoID": 26
+      },
+      {
+        "RolPermisoID": 27,
+        "RolID": 1,
+        "PermisoID": 27
+      },
+      {
+        "RolPermisoID": 28,
+        "RolID": 1,
+        "PermisoID": 28
+      },
+      {
+        "RolPermisoID": 29,
+        "RolID": 1,
+        "PermisoID": 29
+      },
+      {
+        "RolPermisoID": 30,
+        "RolID": 1,
+        "PermisoID": 30
+      },
+      {
+        "RolPermisoID": 31,
+        "RolID": 1,
+        "PermisoID": 31
+      }
+    ]
+  },
+  {
+    "RolID": 2,
+    "Nombre": "Gerente",
+    "Descripcion": "Rol con acceso a funciones gerenciales",
+    "EsSistema": true,
+    "Permisos": [
+      {
+        "RolPermisoID": 32,
+        "RolID": 2,
+        "PermisoID": 13
+      },
+      {
+        "RolPermisoID": 33,
+        "RolID": 2,
+        "PermisoID": 17
+      },
+      {
+        "RolPermisoID": 34,
+        "RolID": 2,
+        "PermisoID": 19
+      },
+      {
+        "RolPermisoID": 35,
+        "RolID": 2,
+        "PermisoID": 24
+      },
+      {
+        "RolPermisoID": 36,
+        "RolID": 2,
+        "PermisoID": 28
+      },
+      {
+        "RolPermisoID": 37,
+        "RolID": 2,
+        "PermisoID": 29
+      }
+    ]
+  },
+  {
+    "RolID": 3,
+    "Nombre": "Vendedor",
+    "Descripcion": "Rol con acceso a funciones de ventas",
+    "EsSistema": true,
+    "Permisos": [
+      {
+        "RolPermisoID": 38,
+        "RolID": 3,
+        "PermisoID": 13
+      },
+      {
+        "RolPermisoID": 39,
+        "RolID": 3,
+        "PermisoID": 14
+      },
+      {
+        "RolPermisoID": 40,
+        "RolID": 3,
+        "PermisoID": 19
+      },
+      {
+        "RolPermisoID": 41,
+        "RolID": 3,
+        "PermisoID": 24
+      },
+      {
+        "RolPermisoID": 42,
+        "RolID": 3,
+        "PermisoID": 25
+      }
+    ]
+  }
+]

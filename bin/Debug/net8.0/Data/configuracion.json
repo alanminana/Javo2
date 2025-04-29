@@ -1,0 +1,34 @@
+[
+  {
+    "ConfiguracionID": 1,
+    "Modulo": "Productos",
+    "Clave": "PorcentajeGananciaPLista",
+    "Valor": "1",
+    "Descripcion": "",
+    "TipoDato": "decimal"
+  },
+  {
+    "ConfiguracionID": 2,
+    "Modulo": "Productos",
+    "Clave": "PorcentajeGananciaPContado",
+    "Valor": "50",
+    "Descripcion": "Porcentaje de ganancia para calcular el Precio de Contado a partir del Precio de Costo",
+    "TipoDato": "decimal"
+  },
+  {
+    "ConfiguracionID": 3,
+    "Modulo": "Clientes",
+    "Clave": "LimiteCreditoDefault",
+    "Valor": "10000",
+    "Descripcion": "L\u00EDmite de cr\u00E9dito por defecto para nuevos clientes",
+    "TipoDato": "decimal"
+  },
+  {
+    "ConfiguracionID": 4,
+    "Modulo": "Ventas",
+    "Clave": "DiasVencimientoFactura",
+    "Valor": "30",
+    "Descripcion": "D\u00EDas para vencimiento de facturas",
+    "TipoDato": "int"
+  }
+]

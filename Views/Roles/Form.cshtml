@@ -13,7 +13,7 @@
         <div class="card-body">
             <form asp-action="@(isEdit ? "Edit" : "Create")" method="post">
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
-                
+
                 @if (isEdit)
                 {
                     <input type="hidden" asp-for="Rol.RolID" />
@@ -23,8 +23,11 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label asp-for="Rol.Nombre" class="form-label">Nombre</label>
-                        <input asp-for="Rol.Nombre" class="form-control bg-dark text-light" 
-                               @(isEdit && Model.Rol.EsSistema ? "readonly" : "") />
+                        @{
+                            var isNombreReadOnly = isEdit && Model.Rol.EsSistema;
+                        }
+                        <input asp-for="Rol.Nombre" class="form-control bg-dark text-light"
+                               readonly="@isNombreReadOnly" />
                         <span asp-validation-for="Rol.Nombre" class="text-danger"></span>
                         @if (isEdit && Model.Rol.EsSistema)
                         {
@@ -45,7 +48,7 @@
                         {
                             <div class="accordion-item bg-dark text-light border-secondary">
                                 <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed bg-secondary text-light" type="button" 
+                                    <button class="accordion-button collapsed bg-secondary text-light" type="button"
                                             data-bs-toggle="collapse" data-bs-target="#grupo-@grupo.Key.Replace(" ", "-")">
                                         @grupo.Key (@grupo.Value.Count permisos)
                                     </button>
@@ -57,12 +60,12 @@
                                             {
                                                 <div class="col-md-6 mb-2">
                                                     <div class="form-check">
-                                                        <input type="checkbox" 
-                                                               class="form-check-input" 
-                                                               id="permiso-@permiso.PermisoID" 
-                                                               name="PermisosSeleccionados" 
-                                                               value="@permiso.PermisoID" 
-                                                               @(Model.PermisosSeleccionados.Contains(permiso.PermisoID) ? "checked" : "") />
+                                                        <input type="checkbox"
+                                                               class="form-check-input"
+                                                               id="permiso-@permiso.PermisoID"
+                                                               name="PermisosSeleccionados"
+                                                               value="@permiso.PermisoID"
+                                                               checked="@Model.PermisosSeleccionados.Contains(permiso.PermisoID)" />
                                                         <label class="form-check-label" for="permiso-@permiso.PermisoID">
                                                             @permiso.Nombre
                                                             <small class="d-block text-muted">@permiso.Codigo</small>
@@ -92,21 +95,23 @@
 </section>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Abrir el primer grupo de permisos
             document.querySelector('.accordion-button').click();
-            
+
             // Añadir botones de selección rápida para cada grupo
             document.querySelectorAll('.accordion-header').forEach(header => {
                 const grupoId = header.querySelector('.accordion-button').getAttribute('data-bs-target');
                 const contenido = document.querySelector(grupoId);
-                
+
                 // Crear botones
                 const btnContainer = document.createElement('div');
                 btnContainer.className = 'd-flex gap-2 mb-3';
-                
+
                 const btnSeleccionarTodos = document.createElement('button');
                 btnSeleccionarTodos.type = 'button';
                 btnSeleccionarTodos.className = 'btn btn-sm btn-outline-primary';
@@ -116,7 +121,7 @@
                         cb.checked = true;
                     });
                 });
-                
+
                 const btnDeseleccionarTodos = document.createElement('button');
                 btnDeseleccionarTodos.type = 'button';
                 btnDeseleccionarTodos.className = 'btn btn-sm btn-outline-secondary';
@@ -126,10 +131,10 @@
                         cb.checked = false;
                     });
                 });
-                
+
                 btnContainer.appendChild(btnSeleccionarTodos);
                 btnContainer.appendChild(btnDeseleccionarTodos);
-                
+                 
                 // Insertar al principio del contenido
                 contenido.querySelector('.accordion-body').prepend(btnContainer);
             });

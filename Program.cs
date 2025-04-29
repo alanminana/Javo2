@@ -4,8 +4,6 @@ using Javo2.Services.Common;
 using Javo2.Middleware;
 using Javo2.IServices.Common;
 using Javo2.Extensions;
-using Javo2.IServices.Authentication;
-using Javo2.Services.Authentication;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,7 +25,6 @@ builder.Logging.AddDebug();
 builder.Services.AddControllersWithViews();
 
 // Registro de servicios de la aplicación
-// Usar Scoped para servicios que dependen de otros Scoped
 builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<IProveedorService, ProveedorService>();
 builder.Services.AddScoped<ICatalogoService, CatalogoService>();
@@ -39,27 +36,26 @@ builder.Services.AddScoped<IAuditoriaService, AuditoriaService>();
 builder.Services.AddScoped<IVentaService, VentaService>();
 builder.Services.AddScoped<ICotizacionService, CotizacionService>();
 builder.Services.AddScoped<IConfiguracionService, ConfiguracionService>();
-
-// Devoluciones debe ser Scoped para poder inyectar IVentaService, IProductoService, etc.
 builder.Services.AddScoped<IDevolucionGarantiaService, DevolucionGarantiaService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Servicio de búsqueda de cliente
 builder.Services.AddScoped<IClienteSearchService>(sp =>
     sp.GetRequiredService<IClienteService>() as IClienteSearchService
     ?? throw new InvalidOperationException("ClienteService must implement IClienteSearchService"));
 
-// Otros servicios Scoped
+// Otros servicios
 builder.Services.AddScoped<IDropdownService, DropdownService>();
+
+// Configuración de autenticación
+builder.Services.AddAuthenticationServices();
 
 // Configuración de AutoMapper
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
-// Agregar servicios de autenticación personalizados
-builder.Services.AddAuthenticationServicesCustom();
-
 var app = builder.Build();
 
-// Validación de la configuración de AutoMapper
+// Validación de AutoMapper
 try
 {
     var mapper = app.Services.GetRequiredService<IMapper>();
@@ -75,9 +71,6 @@ catch (AutoMapper.AutoMapperConfigurationException ex)
     }
 }
 
-// Middleware de seguridad
-app.UseMiddleware<SecurityHeadersMiddleware>();
-
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -88,13 +81,16 @@ else
     app.UseDeveloperExceptionPage();
 }
 
+// Middlewares personalizados
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<SecurityHeadersMiddleware>();
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-// Configurar autenticación y autorización
-app.UseAuthenticationConfigCustom();
+// Autenticación y autorización
+app.UseAuthenticationConfig();
 
 app.MapControllerRoute(
     name: "default",
