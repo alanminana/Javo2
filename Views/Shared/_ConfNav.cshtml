@@ -14,4 +14,40 @@
 
 <div class="dropdown">
     <a class="nav-link dropdown-toggle @(isConfigActive ? "active" : "")" href="#" role="button"
-sec
+       data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-gear-fill me-2"></i>Configuración
+    </a>
+    <ul class="dropdown-menu bg-dark text-light">
+        @if (tienePermisoConfiguracion)
+        {
+            <li>
+                <a class="dropdown-item text-light @(currentController == "Configuracion" && currentAction == "Index" ? "active" : "")"
+                   asp-controller="Configuracion" asp-action="Index">
+                    <i class="bi bi-sliders me-2"></i>Configuración General
+                </a>
+            </li>
+        }
+        @if (tienePermisoSeguridad)
+        {
+            <li>
+                <a class="dropdown-item text-light @(isSecurityActive ? "active" : "")"
+                   asp-controller="Configuracion" asp-action="Seguridad">
+                    <i class="bi bi-shield-lock me-2"></i>Seguridad
+                </a>
+            </li>
+        }
+        <li><hr class="dropdown-divider"></li>
+        <li>
+            <a class="dropdown-item text-light"
+               asp-controller="Perfil" asp-action="Index">
+                <i class="bi bi-person-circle me-2"></i>Mi Perfil
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item text-light"
+               asp-controller="Auth" asp-action="CambiarContraseña">
+                <i class="bi bi-key me-2"></i>Cambiar Contraseña
+            </a>
+        </li>
+    </ul>
+</div>

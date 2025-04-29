@@ -1,238 +1,82 @@
-﻿@model Javo2.ViewModels.Configuracion.ConfiguracionIndexViewModel
+﻿@model Javo2.ViewModels.Authentication.ConfiguracionInicialViewModel
 @{
-    ViewBag.Title = "Configuración del Sistema";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Configuración Inicial";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
 }
 
-<section class="container-fluid py-3">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h2 mb-0">@ViewBag.Title</h1>
+<div class="login-container">
+    <div class="text-center mb-4">
+        <img src="~/img/logo.png" alt="Javo2 Logo" class="app-logo" onerror="this.src='/img/placeholder-logo.png'; this.onerror=null;">
+        <h1 class="h3 mb-3 fw-normal text-light">Configuración Inicial del Sistema</h1>
     </div>
 
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="bi bi-check-circle me-2"></i> @TempData["Success"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    <div class="card login-card">
+        <div class="card-header py-3">
+            <h2 class="card-title h5 mb-0 text-center">Crear Usuario Administrador</h2>
         </div>
-    }
-
-    <div class="card shadow-sm bg-dark text-light">
         <div class="card-body">
-            <!-- Pestañas de Módulos -->
-            <ul class="nav nav-tabs mb-4" id="configuracionTabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link @(string.IsNullOrEmpty(Model.ModuloSeleccionado) ? "active" : "")"
-                            id="todos-tab"
-                            data-bs-toggle="tab"
-                            data-bs-target="#todos"
-                            type="button"
-                            role="tab"
-                            aria-controls="todos"
-                            aria-selected="@(string.IsNullOrEmpty(Model.ModuloSeleccionado) ? "true" : "false")">
-                        Todos
-                    </button>
-                </li>
-                @foreach (var modulo in Model.Modulos)
-                {
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link @(modulo == Model.ModuloSeleccionado ? "active" : "")"
-                                id="@modulo-tab"
-                                data-bs-toggle="tab"
-                                data-bs-target="#@modulo"
-                                type="button"
-                                role="tab"
-                                aria-controls="@modulo"
-                                aria-selected="@(modulo == Model.ModuloSeleccionado ? "true" : "false")">
-                            <i class="bi @GetModuloIcon(modulo) me-1"></i> @modulo
-                        </button>
-                    </li>
-                }
-            </ul>
+            <div class="alert alert-info">
+                <h5><i class="bi bi-info-circle me-2"></i>Bienvenido a Javo2</h5>
+                <p class="mb-0">Para comenzar a usar el sistema, cree un usuario administrador que tendrá acceso completo a todas las funcionalidades.</p>
+            </div>
 
-            <!-- Contenido de las Pestañas -->
-            <div class="tab-content" id="configuracionTabContent">
-                <div class="tab-pane fade @(string.IsNullOrEmpty(Model.ModuloSeleccionado) ? "show active" : "")"
-                     id="todos"
-                     role="tabpanel"
-                     aria-labelledby="todos-tab">
+            <form asp-action="Index" method="post" class="mt-4">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-                    <div class="row row-cols-1 row-cols-md-2 g-4">
-                        @foreach (var modulo in Model.Modulos)
-                        {
-                            <div class="col">
-                                <div class="card bg-secondary h-100">
-                                    <div class="card-header">
-                                        <h5 class="mb-0">
-                                            <i class="bi @GetModuloIcon(modulo) me-2"></i>
-                                            @modulo
-                                        </h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="list-group list-group-flush bg-transparent">
-                                            @foreach (var config in Model.Configuraciones.Where(c => c.Modulo == modulo))
-                                            {
-                                                <div class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center">
-                                                    <div>
-                                                        <span class="fw-bold">@GetNombreAmigable(config.Clave)</span>
-                                                        <br />
-                                                        <small class="text-muted">@config.Descripcion</small>
-                                                    </div>
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="me-3">
-                                                            @if (config.TipoDato == "decimal" || config.TipoDato == "int")
-                                                            {
-                                                                if (config.Clave.Contains("Porcentaje"))
-                                                                {
-                                                                    <span class="badge bg-primary">@config.Valor%</span>
-                                                                }
-                                                                else
-                                                                {
-                                                                    <span class="badge bg-info">@config.Valor</span>
-                                                                }
-                                                            }
-                                                            else if (config.TipoDato == "bool")
-                                                            {
-                                                                <span class="badge @(bool.Parse(config.Valor) ? "bg-success" : "bg-danger")">
-                                                                    @(bool.Parse(config.Valor) ? "Activado" : "Desactivado")
-                                                                </span>
-                                                            }
-                                                            else
-                                                            {
-                                                                @config.Valor
-                                                            }
-                                                        </span>
-                                                        <a asp-action="Edit" asp-route-id="@config.ConfiguracionID" class="btn btn-sm btn-primary">
-                                                            <i class="bi bi-pencil-square"></i>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        }
+                <div class="mb-3">
+                    <label asp-for="NombreEmpresa" class="form-label">Nombre de la Empresa</label>
+                    <input asp-for="NombreEmpresa" class="form-control" />
+                    <span asp-validation-for="NombreEmpresa" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="NombreUsuario" class="form-label">Nombre de Usuario</label>
+                    <input asp-for="NombreUsuario" class="form-control" />
+                    <span asp-validation-for="NombreUsuario" class="text-danger"></span>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <label asp-for="Nombre" class="form-label">Nombre</label>
+                        <input asp-for="Nombre" class="form-control" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="Apellido" class="form-label">Apellido</label>
+                        <input asp-for="Apellido" class="form-control" />
+                        <span asp-validation-for="Apellido" class="text-danger"></span>
                     </div>
                 </div>
 
-                @foreach (var modulo in Model.Modulos)
-                {
-                    <div class="tab-pane fade @(modulo == Model.ModuloSeleccionado ? "show active" : "")"
-                         id="@modulo"
-                         role="tabpanel"
-                         aria-labelledby="@modulo-tab">
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
 
-                        <div class="card bg-secondary">
-                            <div class="card-header">
-                                <h5 class="mb-0">
-                                    <i class="bi @GetModuloIcon(modulo) me-2"></i>
-                                    Configuraciones de @modulo
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="row row-cols-1 row-cols-md-2 g-4">
-                                    @foreach (var config in Model.Configuraciones.Where(c => c.Modulo == modulo))
-                                    {
-                                        <div class="col">
-                                            <div class="card bg-dark h-100">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">@GetNombreAmigable(config.Clave)</h5>
-                                                    <p class="card-text">@config.Descripcion</p>
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <div>
-                                                            <span class="fs-4">
-                                                                @if (config.TipoDato == "decimal" || config.TipoDato == "int")
-                                                                {
-                                                                    if (config.Clave.Contains("Porcentaje"))
-                                                                    {
-                                                                        <span class="text-primary fw-bold">@config.Valor%</span>
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        <span class="fw-bold">@config.Valor</span>
-                                                                    }
-                                                                }
-                                                                else if (config.TipoDato == "bool")
-                                                                {
-                                                                    <span class="badge @(bool.Parse(config.Valor) ? "bg-success" : "bg-danger")">
-                                                                        @(bool.Parse(config.Valor) ? "Activado" : "Desactivado")
-                                                                    </span>
-                                                                }
-                                                                else
-                                                                {
-                                                                    @config.Valor
-                                                                }
-                                                            </span>
-                                                        </div>
-                                                        <a asp-action="Edit" asp-route-id="@config.ConfiguracionID" class="btn btn-primary">
-                                                            <i class="bi bi-pencil-square me-1"></i> Editar
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                        </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <label asp-for="Contraseña" class="form-label">Contraseña</label>
+                        <input asp-for="Contraseña" class="form-control" type="password" />
+                        <span asp-validation-for="Contraseña" class="text-danger"></span>
                     </div>
-                }
-            </div>
+                    <div class="col">
+                        <label asp-for="ConfirmarContraseña" class="form-label">Confirmar Contraseña</label>
+                        <input asp-for="ConfirmarContraseña" class="form-control" type="password" />
+                        <span asp-validation-for="ConfirmarContraseña" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 mt-3">
+                    <i class="bi bi-check-circle me-2"></i>Completar Configuración
+                </button>
+            </form>
         </div>
     </div>
-</section>
+</div>
 
 @section Scripts {
-    <script>
-        // Activar pestaña según URL
-        $(function() {
-            // Conservar la pestaña seleccionada al recargar
-            let url = new URL(window.location.href);
-            let modulo = url.searchParams.get('modulo');
-
-            if (modulo) {
-                $(`#${modulo}-tab`).tab('show');
-            } else {
-                $('#todos-tab').tab('show');
-            }
-
-            // Actualizar URL al cambiar de pestaña
-            $('.nav-link').on('click', function() {
-                let selModulo = $(this).attr('id').replace('-tab', '');
-                if (selModulo === 'todos') {
-                    url.searchParams.delete('modulo');
-                } else {
-                    url.searchParams.set('modulo', selModulo);
-                }
-                history.replaceState(null, '', url);
-            });
-        });
-    </script>
-}
-
-@functions {
-    public string GetNombreAmigable(string clave)
-    {
-        return clave switch
-        {
-            "PorcentajeGananciaPLista" => "% Ganancia Precio Lista",
-            "PorcentajeGananciaPContado" => "% Ganancia Precio Contado",
-            "LimiteCreditoDefault" => "Límite de Crédito Predeterminado",
-            "DiasVencimientoFactura" => "Días Vencimiento Facturas",
-            _ => clave.Replace("Porcentaje", "% ").Replace("Default", "Predeterminado")
-        };
-    }
-
-    public string GetModuloIcon(string modulo)
-    {
-        return modulo switch
-        {
-            "Productos" => "bi-box-seam",
-            "Clientes" => "bi-people-fill",
-            "Ventas" => "bi-cart-fill",
-            "Sistema" => "bi-gear-fill",
-            _ => "bi-sliders"
-        };
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }

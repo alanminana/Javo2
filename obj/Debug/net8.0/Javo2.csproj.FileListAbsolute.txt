@@ -110,3 +110,6 @@ D:\github\Javo2\obj\Debug\net8.0\refint\Javo2.dll
 D:\github\Javo2\obj\Debug\net8.0\Javo2.pdb
 D:\github\Javo2\obj\Debug\net8.0\Javo2.genruntimeconfig.cache
 D:\github\Javo2\obj\Debug\net8.0\ref\Javo2.dll
+D:\github\Javo2\bin\Debug\net8.0\Data\permisos.json
+D:\github\Javo2\bin\Debug\net8.0\Data\roles.json
+D:\github\Javo2\bin\Debug\net8.0\Data\usuarios.json

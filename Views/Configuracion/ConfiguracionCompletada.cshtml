@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "Configuración Completada";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<div class="login-container">
+    <div class="text-center mb-4">
+        <img src="~/img/logo.png" alt="Javo2 Logo" class="app-logo" onerror="this.src='/img/placeholder-logo.png'; this.onerror=null;">
+        <h1 class="h3 mb-3 fw-normal text-light">Configuración Inicial Completada</h1>
+    </div>
+
+    <div class="card login-card">
+        <div class="card-header py-3 bg-success text-white">
+            <h2 class="card-title h5 mb-0 text-center">
+                <i class="bi bi-check-circle me-2"></i>Configuración Exitosa
+            </h2>
+        </div>
+        <div class="card-body text-center">
+            <div class="my-4">
+                <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+            </div>
+
+            <h4 class="mb-3">¡Felicidades!</h4>
+            <p>La configuración inicial del sistema ha sido completada exitosamente.</p>
+            <p>Ahora puede iniciar sesión con el usuario administrador que ha creado.</p>
+
+            <div class="d-grid gap-2 mt-4">
+                <a asp-controller="Auth" asp-action="Login" class="btn btn-primary">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Ir al Inicio de Sesión
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
