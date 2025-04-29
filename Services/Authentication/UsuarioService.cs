@@ -116,47 +116,60 @@ namespace Javo2.Services.Authentication
 
         public async Task<bool> CreateUsuarioAsync(Usuario usuario, string contraseña)
         {
-            if (string.IsNullOrWhiteSpace(contraseña))
+            try
             {
-                throw new ArgumentException("La contraseña no puede estar vacía");
-            }
+                if (string.IsNullOrWhiteSpace(contraseña))
+                {
+                    _logger.LogError("Error al crear usuario: La contraseña no puede estar vacía");
+                    throw new ArgumentException("La contraseña no puede estar vacía");
+                }
 
-            // Verificar si el usuario ya existe
-            var usuarioExistente = await GetUsuarioByNombreUsuarioAsync(usuario.NombreUsuario);
-            if (usuarioExistente != null)
+                // Verificar si el usuario ya existe
+                var usuarioExistente = await GetUsuarioByNombreUsuarioAsync(usuario.NombreUsuario);
+                if (usuarioExistente != null)
+                {
+                    _logger.LogError("Error al crear usuario: El nombre de usuario ya existe");
+                    throw new InvalidOperationException("El nombre de usuario ya existe");
+                }
+
+                // Verificar si el email ya existe
+                var emailExistente = await GetUsuarioByEmailAsync(usuario.Email);
+                if (emailExistente != null)
+                {
+                    _logger.LogError("Error al crear usuario: El email ya está en uso");
+                    throw new InvalidOperationException("El email ya está en uso");
+                }
+
+                _logger.LogInformation("Creando usuario en base de datos: {NombreUsuario}", usuario.NombreUsuario);
+
+                lock (_lock)
+                {
+                    usuario.UsuarioID = _nextUsuarioID++;
+                    usuario.Contraseña = HashContraseña(contraseña);
+                    usuario.FechaCreacion = DateTime.Now;
+
+                    // Asegurar que todos los campos requeridos tengan valor
+                    usuario.NombreUsuario = usuario.NombreUsuario ?? throw new ArgumentException("El nombre de usuario es obligatorio");
+                    usuario.Nombre = usuario.Nombre ?? string.Empty;
+                    usuario.Apellido = usuario.Apellido ?? string.Empty;
+                    usuario.Email = usuario.Email ?? throw new ArgumentException("El email es obligatorio");
+
+                    // Inicializar colecciones si son nulas
+                    usuario.Roles = usuario.Roles ?? new List<UsuarioRol>();
+
+                    _usuarios.Add(usuario);
+                }
+
+                GuardarEnJson();
+
+                _logger.LogInformation("Usuario creado exitosamente: {NombreUsuario} (ID: {UsuarioID})", usuario.NombreUsuario, usuario.UsuarioID);
+                return true;
+            }
+            catch (Exception ex)
             {
-                throw new InvalidOperationException("El nombre de usuario ya existe");
+                _logger.LogError(ex, "Error crítico al crear usuario: {NombreUsuario}", usuario?.NombreUsuario);
+                throw; // Re-lanzar la excepción para que se pueda manejar en el controlador
             }
-
-            // Verificar si el email ya existe
-            var emailExistente = await GetUsuarioByEmailAsync(usuario.Email);
-            if (emailExistente != null)
-            {
-                throw new InvalidOperationException("El email ya está en uso");
-            }
-
-            lock (_lock)
-            {
-                usuario.UsuarioID = _nextUsuarioID++;
-                usuario.Contraseña = HashContraseña(contraseña);
-                usuario.FechaCreacion = DateTime.Now;
-
-                // Asegurar que todos los campos requeridos tengan valor
-                usuario.NombreUsuario = usuario.NombreUsuario ?? throw new ArgumentException("El nombre de usuario es obligatorio");
-                usuario.Nombre = usuario.Nombre ?? string.Empty;
-                usuario.Apellido = usuario.Apellido ?? string.Empty;
-                usuario.Email = usuario.Email ?? throw new ArgumentException("El email es obligatorio");
-
-                // Inicializar colecciones si son nulas
-                usuario.Roles = usuario.Roles ?? new List<UsuarioRol>();
-
-                _usuarios.Add(usuario);
-            }
-
-            GuardarEnJson();
-
-            _logger.LogInformation("Usuario creado: {NombreUsuario} (ID: {UsuarioID})", usuario.NombreUsuario, usuario.UsuarioID);
-            return true;
         }
 
         public async Task<bool> UpdateUsuarioAsync(Usuario usuario, string contraseñaNueva = null)

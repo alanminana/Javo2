@@ -141,9 +141,7 @@ namespace Javo2.Controllers
                     Usuario = new Usuario { Activo = true },
                     RolesDisponibles = rolesItems,
                     RolesSeleccionados = new List<int>(),
-                    EsEdicion = false,
-                    Contraseña = string.Empty, // Inicializar para que no sea null
-                    ConfirmarContraseña = string.Empty // Inicializar para que no sea null
+                    EsEdicion = false
                 };
 
                 return View("Form", model);
@@ -154,7 +152,6 @@ namespace Javo2.Controllers
                 return View("Error");
             }
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(UsuarioFormViewModel model, List<int> RolesSeleccionados)
@@ -164,7 +161,7 @@ namespace Javo2.Controllers
                 _logger.LogInformation("Iniciando creación de usuario: {NombreUsuario}", model.Usuario?.NombreUsuario);
                 _logger.LogDebug("Roles seleccionados: {Roles}", string.Join(", ", RolesSeleccionados ?? new List<int>()));
 
-                // Siempre cargar los roles para tenerlos disponibles en caso de error
+                // Cargar roles para la vista en caso de error
                 var roles = await _rolService.GetAllRolesAsync();
                 var rolesItems = roles.Select(r => new SelectListItem
                 {
@@ -175,42 +172,75 @@ namespace Javo2.Controllers
                 model.RolesDisponibles = rolesItems;
                 model.RolesSeleccionados = RolesSeleccionados ?? new List<int>();
 
-                // Validar manualmente algunos campos
-                bool modelValid = true;
+                // Validaciones manuales para identificar exactamente qué está fallando
+                bool isValid = true;
+
+                // Validar Usuario
+                if (model.Usuario == null)
+                {
+                    _logger.LogError("Error: El objeto Usuario es nulo");
+                    ModelState.AddModelError("Usuario", "La información del usuario es obligatoria");
+                    isValid = false;
+                }
+                else
+                {
+                    // Validar campos del usuario
+                    if (string.IsNullOrEmpty(model.Usuario.NombreUsuario))
+                    {
+                        _logger.LogError("Error: El nombre de usuario es obligatorio");
+                        ModelState.AddModelError("Usuario.NombreUsuario", "El nombre de usuario es obligatorio");
+                        isValid = false;
+                    }
+
+                    if (string.IsNullOrEmpty(model.Usuario.Email))
+                    {
+                        _logger.LogError("Error: El email es obligatorio");
+                        ModelState.AddModelError("Usuario.Email", "El email es obligatorio");
+                        isValid = false;
+                    }
+                }
 
                 // Validar contraseña
                 if (string.IsNullOrEmpty(model.Contraseña))
                 {
-                    ModelState.AddModelError(nameof(model.Contraseña), "La contraseña es obligatoria");
-                    _logger.LogWarning("ERROR DE VALIDACIÓN: Propiedad: {Prop}, Error: {Error}",
-                        nameof(model.Contraseña), "La contraseña es obligatoria");
-                    modelValid = false;
+                    _logger.LogError("Error: La contraseña es obligatoria");
+                    ModelState.AddModelError("Contraseña", "La contraseña es obligatoria");
+                    isValid = false;
+                }
+                else if (model.Contraseña.Length < 6)
+                {
+                    _logger.LogError("Error: La contraseña debe tener al menos 6 caracteres");
+                    ModelState.AddModelError("Contraseña", "La contraseña debe tener al menos 6 caracteres");
+                    isValid = false;
                 }
 
-                // Si hay errores en el modelo
-                if (!ModelState.IsValid || !modelValid)
+                // Validar confirmación de contraseña
+                if (string.IsNullOrEmpty(model.ConfirmarContraseña))
                 {
-                    _logger.LogWarning("VALIDACIÓN FALLIDA: Errores en el ModelState");
+                    _logger.LogError("Error: La confirmación de contraseña es obligatoria");
+                    ModelState.AddModelError("ConfirmarContraseña", "La confirmación de contraseña es obligatoria");
+                    isValid = false;
+                }
+                else if (model.Contraseña != model.ConfirmarContraseña)
+                {
+                    _logger.LogError("Error: Las contraseñas no coinciden");
+                    ModelState.AddModelError("ConfirmarContraseña", "Las contraseñas no coinciden");
+                    isValid = false;
+                }
 
-                    // Loguear todos los errores para diagnóstico
-                    foreach (var state in ModelState)
-                    {
-                        foreach (var error in state.Value.Errors)
-                        {
-                            _logger.LogWarning("ERROR DE VALIDACIÓN: Propiedad: {Prop}, Error: {Error}",
-                                state.Key, error.ErrorMessage);
-                        }
-                    }
-
-                    _logger.LogInformation("RETORNANDO: Vista Form con modelo invalidado");
+                if (!isValid)
+                {
+                    _logger.LogWarning("Validación manual falló");
                     return View("Form", model);
                 }
+
+                // Si llegamos aquí, todo está validado correctamente
 
                 // Establecer creado por
                 model.Usuario.CreadoPor = User.Identity?.Name ?? "Sistema";
 
                 // Crear usuario
-                _logger.LogInformation("Creando usuario en la base de datos");
+                _logger.LogInformation("Validación exitosa, creando usuario");
                 var result = await _usuarioService.CreateUsuarioAsync(model.Usuario, model.Contraseña);
                 if (!result)
                 {
@@ -228,10 +258,6 @@ namespace Javo2.Controllers
                         _logger.LogInformation("Asignando rol ID: {RolID}", rolId);
                         await _usuarioService.AsignarRolAsync(model.Usuario.UsuarioID, rolId);
                     }
-                }
-                else
-                {
-                    _logger.LogWarning("No se seleccionaron roles para el usuario");
                 }
 
                 TempData["Success"] = "Usuario creado correctamente";

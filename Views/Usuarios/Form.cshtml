@@ -61,6 +61,7 @@
                 }
                 else
                 {
+                    <!-- Edición - campos de contraseña opcionales -->
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label asp-for="Contraseña" class="form-label">Nueva Contraseña (opcional)</label>
@@ -123,7 +124,6 @@
         </div>
     </div>
 </section>
-
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

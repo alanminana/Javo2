@@ -1,5 +1,4 @@
-﻿// ViewModels/Authentication/AuthViewModels.cs
-// Archivo principal para todos los ViewModels relacionados con autenticación
+﻿// Archivo principal para todos los ViewModels relacionados con autenticación
 using Javo2.Models.Authentication;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -13,6 +12,7 @@ namespace Javo2.ViewModels.Authentication
     // ViewModel para el formulario de usuario (crear/editar)
     public class UsuarioFormViewModel
     {
+        [Required(ErrorMessage = "El usuario es obligatorio")]
         public Usuario Usuario { get; set; }
 
         [Required(ErrorMessage = "La contraseña es obligatoria")]
@@ -26,21 +26,24 @@ namespace Javo2.ViewModels.Authentication
         [Compare("Contraseña", ErrorMessage = "La contraseña y la confirmación no coinciden.")]
         public string ConfirmarContraseña { get; set; }
 
-        // Este campo no debe tener Required, se llenará desde el controlador
         public IEnumerable<SelectListItem> RolesDisponibles { get; set; } = new List<SelectListItem>();
 
         public List<int> RolesSeleccionados { get; set; } = new List<int>();
 
         public bool EsEdicion { get; set; }
-    }
 
-    // ViewModel para los detalles del usuario
+        public UsuarioFormViewModel()
+        {
+            // Inicializar Usuario para evitar NullReferenceException
+            Usuario = new Usuario();
+            RolesSeleccionados = new List<int>();
+        }
+    }
     public class UsuarioDetailsViewModel
     {
         public Usuario Usuario { get; set; }
-        public List<Rol> Roles { get; set; }
+        public List<Rol> Roles { get; set; } = new List<Rol>();
     }
-
     // ViewModel para el filtro de usuarios
     public class UsuarioFilterViewModel
     {

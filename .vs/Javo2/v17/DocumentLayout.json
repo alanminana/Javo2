@@ -3,6 +3,22 @@
   "WorkspaceRootPath": "D:\\github\\Javo2\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\controllers\\usuarioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:controllers\\usuarioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\viewmodels\\authentication\\authviewmodels.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:viewmodels\\authentication\\authviewmodels.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\usuarios\\form.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\usuarios\\form.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\services\\authentication\\usuarioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:services\\authentication\\usuarioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\controllers\\rolescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:controllers\\rolescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -25,22 +41,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\roles\\form.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\roles\\form.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\usuarios\\form.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\usuarios\\form.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\services\\authentication\\usuarioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:services\\authentication\\usuarioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\controllers\\usuarioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:controllers\\usuarioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\viewmodels\\authentication\\authviewmodels.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:viewmodels\\authentication\\authviewmodels.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\iservices\\authentication\\iusuarioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -174,80 +174,29 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "RolPermiso.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Models\\Authentication\\RolPermiso.cs",
-              "RelativeDocumentMoniker": "Models\\Authentication\\RolPermiso.cs",
-              "ToolTip": "D:\\github\\Javo2\\Models\\Authentication\\RolPermiso.cs",
-              "RelativeToolTip": "Models\\Authentication\\RolPermiso.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAcAAAARAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-29T14:52:37.458Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Rol.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Models\\Authentication\\Rol.cs",
-              "RelativeDocumentMoniker": "Models\\Authentication\\Rol.cs",
-              "ToolTip": "D:\\github\\Javo2\\Models\\Authentication\\Rol.cs",
-              "RelativeToolTip": "Models\\Authentication\\Rol.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-29T14:48:15.201Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "RolFormViewModel.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\ViewModels\\Configuracion\\RolFormViewModel.cs",
-              "RelativeDocumentMoniker": "ViewModels\\Configuracion\\RolFormViewModel.cs",
-              "ToolTip": "D:\\github\\Javo2\\ViewModels\\Configuracion\\RolFormViewModel.cs",
-              "RelativeToolTip": "ViewModels\\Configuracion\\RolFormViewModel.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-29T14:47:17.206Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Form.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Roles\\Form.cshtml",
-              "RelativeDocumentMoniker": "Views\\Roles\\Form.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Roles\\Form.cshtml",
-              "RelativeToolTip": "Views\\Roles\\Form.cshtml",
-              "ViewState": "AgIAAHQAAAAAAAAAAAAgwJUAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-29T14:42:53.999Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "RolesController.cs",
               "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\RolesController.cs",
               "RelativeDocumentMoniker": "Controllers\\RolesController.cs",
               "ToolTip": "D:\\github\\Javo2\\Controllers\\RolesController.cs",
               "RelativeToolTip": "Controllers\\RolesController.cs",
-              "ViewState": "AgIAAJABAAAAAAAAAAAgwLEBAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAJABAAAAAAAAAAAgwJgBAABAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-29T14:41:53.697Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 1,
               "Title": "AuthViewModels.cs",
               "DocumentMoniker": "D:\\github\\Javo2\\ViewModels\\Authentication\\AuthViewModels.cs",
               "RelativeDocumentMoniker": "ViewModels\\Authentication\\AuthViewModels.cs",
               "ToolTip": "D:\\github\\Javo2\\ViewModels\\Authentication\\AuthViewModels.cs",
               "RelativeToolTip": "ViewModels\\Authentication\\AuthViewModels.cs",
-              "ViewState": "AgIAAMIAAAAAAAAAAIA7wM8AAAAjAAAAAAAAAA==",
+              "ViewState": "AgIAAB4AAAAAAAAAAAA7wC0AAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-29T05:30:11.756Z"
+              "WhenOpened": "2025-04-29T05:30:11.756Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -275,7 +224,94 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 0,
+              "Title": "UsuariosController.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\UsuariosController.cs",
+              "RelativeDocumentMoniker": "Controllers\\UsuariosController.cs",
+              "ToolTip": "D:\\github\\Javo2\\Controllers\\UsuariosController.cs",
+              "RelativeToolTip": "Controllers\\UsuariosController.cs",
+              "ViewState": "AgIAAF4AAAAAAAAAAAASwGoAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-29T04:46:44.287Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Form.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Usuarios\\Form.cshtml",
+              "RelativeDocumentMoniker": "Views\\Usuarios\\Form.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Usuarios\\Form.cshtml",
+              "RelativeToolTip": "Views\\Usuarios\\Form.cshtml",
+              "ViewState": "AgIAAGoAAAAAAAAAAAAQwHoAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-29T05:07:41.826Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "UsuarioService.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Services\\Authentication\\UsuarioService.cs",
+              "RelativeDocumentMoniker": "Services\\Authentication\\UsuarioService.cs",
+              "ToolTip": "D:\\github\\Javo2\\Services\\Authentication\\UsuarioService.cs",
+              "RelativeToolTip": "Services\\Authentication\\UsuarioService.cs",
+              "ViewState": "AgIAAIoAAAAAAAAAAAAQwJkAAABIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-29T05:12:56.222Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Form.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Roles\\Form.cshtml",
+              "RelativeDocumentMoniker": "Views\\Roles\\Form.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Roles\\Form.cshtml",
+              "RelativeToolTip": "Views\\Roles\\Form.cshtml",
+              "ViewState": "AgIAAHQAAAAAAAAAAAAgwJUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-29T14:42:53.999Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "RolFormViewModel.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\ViewModels\\Configuracion\\RolFormViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModels\\Configuracion\\RolFormViewModel.cs",
+              "ToolTip": "D:\\github\\Javo2\\ViewModels\\Configuracion\\RolFormViewModel.cs",
+              "RelativeToolTip": "ViewModels\\Configuracion\\RolFormViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-29T14:47:17.206Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Rol.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Models\\Authentication\\Rol.cs",
+              "RelativeDocumentMoniker": "Models\\Authentication\\Rol.cs",
+              "ToolTip": "D:\\github\\Javo2\\Models\\Authentication\\Rol.cs",
+              "RelativeToolTip": "Models\\Authentication\\Rol.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-29T14:48:15.201Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "RolPermiso.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Models\\Authentication\\RolPermiso.cs",
+              "RelativeDocumentMoniker": "Models\\Authentication\\RolPermiso.cs",
+              "ToolTip": "D:\\github\\Javo2\\Models\\Authentication\\RolPermiso.cs",
+              "RelativeToolTip": "Models\\Authentication\\RolPermiso.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAcAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-29T14:52:37.458Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
               "Title": "RolService.cs",
               "DocumentMoniker": "D:\\github\\Javo2\\Services\\Authentication\\RolService.cs",
               "RelativeDocumentMoniker": "Services\\Authentication\\RolService.cs",
@@ -283,45 +319,7 @@
               "RelativeToolTip": "Services\\Authentication\\RolService.cs",
               "ViewState": "AgIAAD4BAAAAAAAAAAAQwE8BAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-29T05:14:45.446Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "UsuarioService.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Services\\Authentication\\UsuarioService.cs",
-              "RelativeDocumentMoniker": "Services\\Authentication\\UsuarioService.cs",
-              "ToolTip": "D:\\github\\Javo2\\Services\\Authentication\\UsuarioService.cs",
-              "RelativeToolTip": "Services\\Authentication\\UsuarioService.cs",
-              "ViewState": "AgIAAFQAAAAAAAAAAIAywGQAAABWAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-29T05:12:56.222Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Form.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Usuarios\\Form.cshtml",
-              "RelativeDocumentMoniker": "Views\\Usuarios\\Form.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Usuarios\\Form.cshtml",
-              "RelativeToolTip": "Views\\Usuarios\\Form.cshtml",
-              "ViewState": "AgIAAJQAAAAAAAAAAAAmwLAAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-29T05:07:41.826Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "UsuariosController.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\UsuariosController.cs",
-              "RelativeDocumentMoniker": "Controllers\\UsuariosController.cs",
-              "ToolTip": "D:\\github\\Javo2\\Controllers\\UsuariosController.cs",
-              "RelativeToolTip": "Controllers\\UsuariosController.cs",
-              "ViewState": "AgIAAJMAAAAAAAAAAAAMwKMAAAB1AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-29T04:46:44.287Z"
+              "WhenOpened": "2025-04-29T05:14:45.446Z"
             },
             {
               "$type": "Document",
