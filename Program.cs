@@ -4,6 +4,8 @@ using Javo2.Services.Common;
 using Javo2.Middleware;
 using Javo2.IServices.Common;
 using Javo2.Extensions;
+using Javo2.IServices.Authentication;
+using Javo2.Services.Authentication;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +26,19 @@ builder.Logging.AddDebug();
 // Agregar servicios al contenedor.
 builder.Services.AddControllersWithViews();
 
+// Configurar servicios de autenticación
+builder.Services.AddAuthenticationServices();
+
+// Registro de servicios de autenticación
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IRolService, RolService>();
+builder.Services.AddScoped<IPermisoService, PermisoService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IResetPasswordService, ResetPasswordService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+
 // Registro de servicios de la aplicación
+// Usar Scoped para servicios que dependen de otros Scoped
 builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<IProveedorService, ProveedorService>();
 builder.Services.AddScoped<ICatalogoService, CatalogoService>();
@@ -36,26 +50,24 @@ builder.Services.AddScoped<IAuditoriaService, AuditoriaService>();
 builder.Services.AddScoped<IVentaService, VentaService>();
 builder.Services.AddScoped<ICotizacionService, CotizacionService>();
 builder.Services.AddScoped<IConfiguracionService, ConfiguracionService>();
+
+// Devoluciones debe ser Scoped para poder inyectar IVentaService, IProductoService, etc.
 builder.Services.AddScoped<IDevolucionGarantiaService, DevolucionGarantiaService>();
-builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Servicio de búsqueda de cliente
 builder.Services.AddScoped<IClienteSearchService>(sp =>
     sp.GetRequiredService<IClienteService>() as IClienteSearchService
     ?? throw new InvalidOperationException("ClienteService must implement IClienteSearchService"));
 
-// Otros servicios
+// Otros servicios Scoped
 builder.Services.AddScoped<IDropdownService, DropdownService>();
-
-// Configuración de autenticación
-builder.Services.AddAuthenticationServices();
 
 // Configuración de AutoMapper
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
 var app = builder.Build();
 
-// Validación de AutoMapper
+// Validación de la configuración de AutoMapper
 try
 {
     var mapper = app.Services.GetRequiredService<IMapper>();
@@ -81,16 +93,20 @@ else
     app.UseDeveloperExceptionPage();
 }
 
-// Middlewares personalizados
-app.UseMiddleware<ExceptionHandlingMiddleware>();
-app.UseMiddleware<SecurityHeadersMiddleware>();
+// Agregar middleware de manejo de excepciones personalizado
+app.UseCustomExceptionHandling();
 
+// Configurar middleware de seguridad
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-// Autenticación y autorización
-app.UseAuthenticationConfig();
+// Configurar middleware de autenticación y autorización
+app.UseAuthentication();
+app.UseAuthorization();
+
+// Agregar middleware personalizado de autenticación después de la autorización
+app.UseCustomAuthentication();
 
 app.MapControllerRoute(
     name: "default",

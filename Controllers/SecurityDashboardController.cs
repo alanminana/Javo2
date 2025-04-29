@@ -29,7 +29,6 @@ namespace Javo2.Controllers
             _permisoService = permisoService;
         }
 
-        [Authorize(Policy = "Permission:configuracion.ver")]
         public async Task<IActionResult> Index()
         {
             try
@@ -75,6 +74,55 @@ namespace Javo2.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al cargar el dashboard de seguridad");
+                return View("Error");
+            }
+        }
+
+        [Authorize(Policy = "Permission:usuarios.ver")]
+        public async Task<IActionResult> Usuarios()
+        {
+            try
+            {
+                var usuarios = await _usuarioService.GetAllUsuariosAsync();
+                return View(usuarios);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cargar la lista de usuarios");
+                return View("Error");
+            }
+        }
+
+        [Authorize(Policy = "Permission:roles.ver")]
+        public async Task<IActionResult> Roles()
+        {
+            try
+            {
+                var roles = await _rolService.GetAllRolesAsync();
+                return View(roles);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cargar la lista de roles");
+                return View("Error");
+            }
+        }
+
+        [Authorize(Policy = "Permission:permisos.ver")]
+        public async Task<IActionResult> Permisos()
+        {
+            try
+            {
+                var permisos = await _permisoService.GetAllPermisosAsync();
+                var permisosAgrupados = permisos.GroupBy(p => p.Grupo ?? "General")
+                    .OrderBy(g => g.Key)
+                    .ToDictionary(g => g.Key, g => g.OrderBy(p => p.Nombre).ToList());
+
+                return View(permisosAgrupados);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cargar la lista de permisos");
                 return View("Error");
             }
         }

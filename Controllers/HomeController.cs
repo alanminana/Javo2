@@ -1,9 +1,11 @@
 using Javo2.Controllers.Base;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace Javo2.Controllers
 {
+    [Authorize]
     public class HomeController : BaseController
     {
         public HomeController(ILogger<HomeController> logger)
@@ -23,6 +25,7 @@ namespace Javo2.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

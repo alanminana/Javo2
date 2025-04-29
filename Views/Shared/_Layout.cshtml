@@ -1,4 +1,19 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var menuItems = new[] {
+        new { Ctrl = "Home", Icon = "house-fill", Text = "Inicio" },
+        new { Ctrl = "Clientes", Icon = "people-fill", Text = "Clientes" },
+        new { Ctrl = "Ventas", Icon = "cart-fill", Text = "Ventas" },
+        new { Ctrl = "Productos", Icon = "box-seam", Text = "Productos" },
+        new { Ctrl = "Catalogo", Icon = "bookmark-fill", Text = "Catálogo" },
+        new { Ctrl = "Proveedores", Icon = "truck-flatbed", Text = "Proveedores" },
+        new { Ctrl = "Promociones", Icon = "tag-fill", Text = "Promociones" },
+        new { Ctrl = "DevolucionGarantia", Icon = "journal-check", Text = "Devoluciones/Garantías" },
+        new { Ctrl = "Reportes", Icon = "bar-chart-fill", Text = "Reportes" },
+        new { Ctrl = "Configuracion", Icon = "gear-fill", Text = "Configuración" },
+        new { Ctrl = "SecurityDashboard", Icon = "shield-lock", Text = "Seguridad" }
+    };
+}
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
@@ -16,19 +31,6 @@
     @RenderSection("Styles", required: false)
 </head>
 <body class="bg-dark text-white d-flex flex-column min-vh-100">
-    @{
-        var menuItems = new[] {
-    new { Ctrl = "Clientes", Icon = "people-fill", Text = "Clientes" },
-    new { Ctrl = "Ventas", Icon = "cart-fill", Text = "Ventas" },
-    new { Ctrl = "Productos", Icon = "box-seam", Text = "Productos" },
-    new { Ctrl = "Catalogo", Icon = "bookmark-fill", Text = "Catálogo" },
-    new { Ctrl = "Proveedores", Icon = "truck-flatbed", Text = "Proveedores" },
-    new { Ctrl = "Promociones", Icon = "tag-fill", Text = "Promociones" },
-    new { Ctrl = "DevolucionGarantia", Icon = "journal-check", Text = "Devoluciones/Garantías" },
-    new { Ctrl = "Reportes", Icon = "bar-chart-fill", Text = "Reportes" },
-    new { Ctrl = "Configuracion", Icon = "gear-fill", Text = "Configuración" },
-    };
-    }
 
     <!-- Mobile Navbar -->
     <nav class="navbar navbar-dark bg-dark d-md-none">
@@ -38,10 +40,11 @@
             </button>
             <a class="navbar-brand ms-2" asp-controller="Home" asp-action="Index">The BuryCode.</a>
 
-            <!-- User Info para móvil -->
-            <div class="ms-auto">
-                @await Html.PartialAsync("_UserInfo")
-            </div>
+            <!-- User Info en mobile -->
+            @if (User.Identity.IsAuthenticated)
+            {
+                <partial name="_UserInfo" />
+            }
         </div>
     </nav>
 
@@ -63,9 +66,20 @@
                 }
             </ul>
             <hr />
-            <a class="d-flex align-items-center text-white text-decoration-none mt-auto" asp-controller="Auth" asp-action="Logout">
-                <i class="bi bi-box-arrow-right me-2"></i><strong>Salir</strong>
-            </a>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <form asp-controller="Auth" asp-action="Logout" method="post" class="d-flex">
+                    <button type="submit" class="btn btn-outline-light w-100 text-start">
+                        <i class="bi bi-box-arrow-right me-2"></i><strong>Cerrar Sesión</strong>
+                    </button>
+                </form>
+            }
+            else
+            {
+                <a class="btn btn-primary w-100" asp-controller="Auth" asp-action="Login">
+                    <i class="bi bi-box-arrow-in-right me-2"></i><strong>Iniciar Sesión</strong>
+                </a>
+            }
         </div>
     </div>
 
@@ -89,10 +103,28 @@
                 </ul>
                 <hr class="border-secondary" />
 
-                <!-- Información del usuario -->
-                <div class="mb-3">
-                    @await Html.PartialAsync("_UserInfo")
-                </div>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-secondary text-light d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+                            <span class="text-light">@User.Identity.Name</span>
+                        </div>
+                        <form asp-controller="Auth" asp-action="Logout" method="post">
+                            <button type="submit" class="btn btn-sm btn-outline-light" title="Cerrar sesión">
+                                <i class="bi bi-box-arrow-right"></i>
+                            </button>
+                        </form>
+                    </div>
+                }
+                else
+                {
+                    <a class="btn btn-primary w-100" asp-controller="Auth" asp-action="Login">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
+                    </a>
+                }
             </aside>
 
             <!-- Main Content -->

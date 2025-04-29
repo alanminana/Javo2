@@ -6,36 +6,22 @@
 
 <div class="login-container">
     <div class="text-center mb-4">
-        <img src="~/img/logo.png" alt="Javo2 Logo" class="app-logo" onerror="this.src='/img/placeholder-logo.png'; this.onerror=null;">
         <h1 class="h3 mb-3 fw-normal text-light">Javo2 Sistema de Gestión</h1>
     </div>
 
-    <div class="card login-card">
+    <div class="card login-card bg-dark text-light">
         <div class="card-header py-3">
             <h2 class="card-title h5 mb-0 text-center">Iniciar Sesión</h2>
         </div>
         <div class="card-body">
             <form asp-action="Login" method="post" class="login-form">
-                @if (!ViewData.ModelState.IsValid)
-                {
-                    <div class="alert alert-danger" role="alert">
-                        <ul class="mb-0 ps-3">
-                            @foreach (var modelState in ViewContext.ModelState.Values)
-                            {
-                                foreach (var error in modelState.Errors)
-                                {
-                                    <li>@error.ErrorMessage</li>
-                                }
-                            }
-                        </ul>
-                    </div>
-                }
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
                 <div class="mb-3">
                     <label asp-for="NombreUsuario" class="form-label">Usuario</label>
                     <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-person"></i></span>
-                        <input asp-for="NombreUsuario" class="form-control" autocomplete="username" autofocus />
+                        <span class="input-group-text bg-secondary border-secondary text-light"><i class="bi bi-person"></i></span>
+                        <input asp-for="NombreUsuario" class="form-control bg-secondary border-secondary text-light" autocomplete="username" autofocus placeholder="Ingrese su nombre de usuario" />
                     </div>
                     <span asp-validation-for="NombreUsuario" class="text-danger"></span>
                 </div>
@@ -43,8 +29,8 @@
                 <div class="mb-3">
                     <label asp-for="Contraseña" class="form-label">Contraseña</label>
                     <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                        <input asp-for="Contraseña" class="form-control" autocomplete="current-password" />
+                        <span class="input-group-text bg-secondary border-secondary text-light"><i class="bi bi-lock"></i></span>
+                        <input asp-for="Contraseña" class="form-control bg-secondary border-secondary text-light" autocomplete="current-password" placeholder="Ingrese su contraseña" />
                     </div>
                     <span asp-validation-for="Contraseña" class="text-danger"></span>
                 </div>
@@ -54,9 +40,22 @@
                     <label asp-for="RecordarMe" class="form-check-label">Recordar credenciales</label>
                 </div>
 
-                <button type="submit" class="btn btn-primary login-btn">
-                    <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar sesión
-                </button>
+                <div class="alert alert-info d-flex align-items-center small" role="alert">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    <div>
+                        Usuario por defecto: <strong>admin</strong><br>
+                        Contraseña: <strong>admin</strong>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary login-btn">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar sesión
+                    </button>
+                    <a asp-controller="ResetPassword" asp-action="OlvideContraseña" class="btn btn-outline-secondary">
+                        <i class="bi bi-question-circle me-1"></i>Olvidé mi contraseña
+                    </a>
+                </div>
 
                 @if (!string.IsNullOrEmpty(ViewBag.ReturnUrl))
                 {
@@ -72,6 +71,24 @@
         </div>
     </div>
 </div>
+
+<style>
+    .login-container {
+        max-width: 450px;
+        width: 100%;
+        padding: 15px;
+    }
+
+    .login-card {
+        border-radius: 8px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+
+    .app-logo {
+        max-height: 80px;
+        margin-bottom: 20px;
+    }
+</style>
 
 @section Scripts {
     @{

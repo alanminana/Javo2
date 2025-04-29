@@ -1,6 +1,4 @@
-﻿// 3. IServices/Authentication/IAuthService.cs
-// Interfaz para servicios de autenticación
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Javo2.IServices.Authentication
 {
