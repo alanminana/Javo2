@@ -7,11 +7,11 @@ using Javo2.Helpers;
 
 namespace Javo2.Filters
 {
-    public class PermissionActionFilter : IActionFilter
+    public class PermissionSeeder : IActionFilter
     {
-        private readonly ILogger<PermissionActionFilter> _logger;
+        private readonly ILogger<PermissionSeeder> _logger;
 
-        public PermissionActionFilter(ILogger<PermissionActionFilter> logger)
+        public PermissionSeeder(ILogger<PermissionSeeder> logger)
         {
             _logger = logger;
         }

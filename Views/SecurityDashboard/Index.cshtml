@@ -11,6 +11,22 @@
         </h1>
     </div>
 
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    }
+
     <div class="row mb-4">
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-primary shadow h-100 py-2 bg-dark text-light">
@@ -167,6 +183,7 @@
         </div>
     </div>
 
+    <!-- Gestión de Seguridad y botón de Verificar Permisos -->
     <div class="row">
         <div class="col-xl-12 col-lg-12">
             <div class="card shadow mb-4 bg-dark text-light">
@@ -178,33 +195,17 @@
                         <div class="col-lg-4 mb-4">
                             <div class="card bg-secondary text-white shadow">
                                 <div class="card-body">
-                                    <h5 class="card-title"><i class="bi bi-people-fill me-2"></i>Usuarios</h5>
-                                    <p class="card-text">Administre los usuarios del sistema, cree nuevas cuentas y gestione roles.</p>
-                                    <a asp-controller="Usuarios" asp-action="Index" class="btn btn-light btn-sm">
-                                        <i class="bi bi-arrow-right me-1"></i>Ir a Usuarios
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-4">
-                            <div class="card bg-secondary text-white shadow">
-                                <div class="card-body">
-                                    <h5 class="card-title"><i class="bi bi-person-badge-fill me-2"></i>Roles</h5>
-                                    <p class="card-text">Configure los roles del sistema y sus permisos asociados.</p>
-                                    <a asp-controller="Roles" asp-action="Index" class="btn btn-light btn-sm">
-                                        <i class="bi bi-arrow-right me-1"></i>Ir a Roles
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-4">
-                            <div class="card bg-secondary text-white shadow">
-                                <div class="card-body">
-                                    <h5 class="card-title"><i class="bi bi-key-fill me-2"></i>Permisos</h5>
-                                    <p class="card-text">Gestione los permisos del sistema y defina el acceso a funcionalidades.</p>
-                                    <a asp-controller="Permisos" asp-action="Index" class="btn btn-light btn-sm">
-                                        <i class="bi bi-arrow-right me-1"></i>Ir a Permisos
-                                    </a>
+                                    <h5 class="card-title"><i class="bi bi-tools me-2"></i>Herramientas de Seguridad</h5>
+                                    <p class="card-text">Accede a herramientas avanzadas para administrar la seguridad del sistema.</p>
+                                    <div class="d-flex">
+                                        <a asp-controller="SecurityTools" asp-action="Index" class="btn btn-light btn-sm me-2">
+                                            <i class="bi bi-arrow-right me-1"></i>Acceder
+                                        </a>
+                                        <!-- Botón para verificar permisos -->
+                                        <a href="@Url.Action("VerificarPermisos", "Diagnostic")" class="btn btn-info btn-sm" target="_blank">
+                                            <i class="bi bi-info-circle me-1"></i>Verificar Permisos
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

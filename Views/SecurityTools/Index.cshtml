@@ -1,0 +1,87 @@
+﻿@{
+    ViewData["Title"] = "Herramientas de Seguridad";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="container-fluid py-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">@ViewData["Title"]</h1>
+        <a asp-controller="SecurityDashboard" asp-action="Index" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Volver al Dashboard
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    }
+
+    @if (TempData["Info"] != null)
+    {
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <i class="bi bi-info-circle me-2"></i> @TempData["Info"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card bg-dark text-light h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-key-fill me-2"></i>Gestión de Permisos</h5>
+                </div>
+                <div class="card-body">
+                    <p>Recarga todos los permisos del sistema y asegura que el rol Administrador tenga acceso completo.</p>
+                    <p class="text-warning">Utiliza esta herramienta cuando:</p>
+                    <ul>
+                        <li>Encuentres problemas de acceso con usuarios administradores
+                        <li>Se hayan añadido nuevas funcionalidades al sistema</li>
+                        <li>Aparecen errores de "Acceso Denegado" inesperados</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <a asp-action="RecargarPermisos" class="btn btn-primary" onclick="return confirm('¿Estás seguro de que deseas recargar todos los permisos del sistema?');">
+                        <i class="bi bi-arrow-repeat me-1"></i> Recargar Permisos
+                    </a>
+                    <!-- Botón para verificar permisos -->
+                    <a href="@Url.Action("VerificarPermisos", "Diagnostic")" class="btn btn-info" target="_blank">
+                        <i class="bi bi-info-circle me-1"></i> Verificar Permisos
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card bg-dark text-light h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-shield-lock me-2"></i>Sesiones Activas</h5>
+                </div>
+                <div class="card-body">
+                    <p>Administra las sesiones activas de los usuarios en el sistema.</p>
+                    <p class="text-info">Esta herramienta permite:</p>
+                    <ul>
+                        <li>Ver qué usuarios están actualmente conectados</li>
+                        <li>Cerrar sesiones por razones de seguridad</li>
+                        <li>Forzar la recarga de permisos para todos los usuarios</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <a asp-action="CerrarSesiones" class="btn btn-warning" onclick="return confirm('¿Estás seguro de que deseas cerrar todas las sesiones activas?');">
+                        <i class="bi bi-x-circle me-1"></i> Cerrar todas las sesiones
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

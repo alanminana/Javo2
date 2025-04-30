@@ -16,6 +16,8 @@ using Javo2.Services.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Javo2.Data.Seeders;
+using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 Console.WriteLine($"CONTENT ROOT = {Directory.GetCurrentDirectory()}");
@@ -185,6 +187,15 @@ if (app.Environment.IsDevelopment())
 
             app.Logger.LogInformation("Datos de prueba creados exitosamente");
         }
+
+        // Ejecutar el seeder de permisos
+        var permissionSeeder = new PermissionSeeder(
+            permisoService,
+            rolService,
+            services.GetRequiredService<ILogger<PermissionSeeder>>());
+
+        await permissionSeeder.SeedAsync();
+        app.Logger.LogInformation("Permisos sembrados correctamente");
     }
     catch (Exception ex)
     {
