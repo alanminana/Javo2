@@ -1,0 +1,76 @@
+﻿@model Javo2.ViewModels.Authentication.ConfiguracionInicialViewModel
+@{
+    ViewData["Title"] = "Configuración Inicial";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<div class="login-container">
+    <div class="text-center mb-4">
+        <img src="~/img/logo.png" alt="Javo2 Logo" class="app-logo" onerror="this.src='/img/placeholder-logo.png'; this.onerror=null;">
+        <h1 class="h3 mb-3 fw-normal text-light">Configuración Inicial del Sistema</h1>
+    </div>
+
+    <div class="card login-card">
+        <div class="card-header py-3">
+            <h2 class="card-title h5 mb-0 text-center">Crear Usuario Administrador</h2>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-info">
+                <h5><i class="bi bi-info-circle me-2"></i>Bienvenido a Javo2</h5>
+                <p class="mb-0">Para comenzar a usar el sistema, cree un usuario administrador que tendrá acceso completo a todas las funcionalidades.</p>
+            </div>
+
+            <form asp-action="Index" method="post" class="mt-4">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <div class="mb-3">
+                    <label asp-for="NombreEmpresa" class="form-label">Nombre de la Empresa</label>
+                    <input asp-for="NombreEmpresa" class="form-control" />
+                    <span asp-validation-for="NombreEmpresa" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="NombreUsuario" class="form-label">Nombre de Usuario</label>
+                    <input asp-for="NombreUsuario" class="form-control" />
+                    <span asp-validation-for="NombreUsuario" class="text-danger"></span>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <label asp-for="Nombre" class="form-label">Nombre</label>
+                        <input asp-for="Nombre" class="form-control" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="Apellido" class="form-label">Apellido</label>
+                        <input asp-for="Apellido" class="form-control" />
+                        <span asp-validation-for="Apellido" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <label asp-for="Contraseña" class="form-label">Contraseña</label>
+                        <input asp-for="Contraseña" class="form-control" type="password" />
+                        <span asp-validation-for="Contraseña" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="ConfirmarContraseña" class="form-label">Confirmar Contraseña</label>
+                        <input asp-for="ConfirmarContraseña" class="form-control" type="password" />
+                        <span asp-validation-for="ConfirmarContraseña" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 mt-3">
+                    <i class="bi bi-check-circle me-2"></i>Completar Configuración
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -34,120 +34,100 @@ namespace Javo2.Controllers
             _permisoService = permisoService;
         }
 
-        // GET: Configuracion
-        [HttpGet]
-        [Authorize(Policy = "Permission:configuracion.ver")]
-        public async Task<IActionResult> Index(string modulo = null)
-        {
-            try
-            {
-                var configuraciones = string.IsNullOrEmpty(modulo) ?
-                    await _configuracionService.GetAllAsync() :
-                    await _configuracionService.GetByModuloAsync(modulo);
 
-                var viewModel = new ConfiguracionIndexViewModel
+        
+
+            public ConfiguracionController(
+                IConfiguracionService configuracionService,
+                ILogger<ConfiguracionController> logger) : base(logger)
+            {
+                _configuracionService = configuracionService;
+            }
+
+            public async Task<IActionResult> Index(string modulo = null)
+            {
+                try
                 {
-                    Configuraciones = configuraciones.ToList(),
-                    ModuloSeleccionado = modulo
-                };
+                    // Obtener todos los módulos primero
+                    var todasConfiguraciones = await _configuracionService.GetAllAsync();
+                    var modulos = todasConfiguraciones
+                        .Select(c => c.Modulo)
+                        .Distinct()
+                        .OrderBy(m => m)
+                        .ToList();
 
-                var modulos = (await _configuracionService.GetAllAsync())
-                    .Select(c => c.Modulo)
-                    .Distinct()
-                    .ToList();
-
-                viewModel.Modulos = modulos;
-
-                return View(viewModel);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al cargar configuraciones");
-                return View("Error");
-            }
-        }
-
-        // GET: Configuracion/Edit/5
-        [HttpGet]
-        [Authorize(Policy = "Permission:configuracion.editar")]
-        public async Task<IActionResult> Edit(int id)
-        {
-            try
-            {
-                var configuracion = (await _configuracionService.GetAllAsync())
-                    .FirstOrDefault(c => c.ConfiguracionID == id);
-
-                if (configuracion == null)
-                    return NotFound();
-
-                return View(configuracion);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al cargar configuración para editar");
-                return View("Error");
-            }
-        }
-
-        // POST: Configuracion/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Policy = "Permission:configuracion.editar")]
-        public async Task<IActionResult> Edit(int id, ConfiguracionSistema configuracion)
-        {
-            if (id != configuracion.ConfiguracionID)
-                return NotFound();
-
-            if (!ModelState.IsValid)
-                return View(configuracion);
-
-            try
-            {
-                await _configuracionService.SaveAsync(configuracion);
-                TempData["Success"] = "Configuración actualizada correctamente.";
-                return RedirectToAction(nameof(Index), new { modulo = configuracion.Modulo });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al actualizar configuración");
-                ModelState.AddModelError("", "Ocurrió un error al guardar la configuración.");
-                return View(configuracion);
-            }
-        }
-
-        // GET: Configuracion/Seguridad
-        [HttpGet]
-        [Authorize(Policy = "Permission:configuracion.seguridad")]
-        public async Task<IActionResult> Seguridad()
-        {
-            try
-            {
-                var usuarios = await _usuarioService.GetAllUsuariosAsync();
-                ViewBag.UsuariosActivos = usuarios.Count(u => u.Activo);
-
-                var roles = await _rolService.GetAllRolesAsync();
-                ViewBag.RolesCount = roles.Count();
-
-                var permisos = await _permisoService.GetAllPermisosAsync();
-                ViewBag.PermisosCount = permisos.Count();
-
-                if (User.Identity.IsAuthenticated)
-                {
-                    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-                    if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+                    // Si no se especificó un módulo pero hay módulos disponibles, seleccionar el primero
+                    if (string.IsNullOrEmpty(modulo) && modulos.Any())
                     {
-                        var usuario = await _usuarioService.GetUsuarioByIDAsync(userId);
-                        ViewBag.UltimoAcceso = usuario?.UltimoAcceso;
+                        modulo = modulos.First();
                     }
-                }
 
-                return View();
+                    // Obtener configuraciones para el módulo seleccionado
+                    var configuraciones = todasConfiguraciones
+                        .Where(c => c.Modulo == modulo)
+                        .OrderBy(c => c.Clave)
+                        .ToList();
+
+                    var viewModel = new ConfiguracionIndexViewModel
+                    {
+                        Configuraciones = configuraciones,
+                        ModuloSeleccionado = modulo,
+                        Modulos = modulos
+                    };
+
+                    return View(viewModel);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error al cargar configuraciones");
+                    return View("Error");
+                }
             }
-            catch (Exception ex)
+
+            [HttpGet]
+            [Authorize(Policy = "Permission:configuracion.editar")]
+            public async Task<IActionResult> Edit(int id)
             {
-                _logger.LogError(ex, "Error al cargar la página de seguridad");
-                return View("Error");
+                try
+                {
+                    var configuraciones = await _configuracionService.GetAllAsync();
+                    var configuracion = configuraciones.FirstOrDefault(c => c.ConfiguracionID == id);
+
+                    if (configuracion == null)
+                        return NotFound();
+
+                    return View(configuracion);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error al cargar configuración para editar");
+                    return View("Error");
+                }
+            }
+
+            [HttpPost]
+            [ValidateAntiForgeryToken]
+            [Authorize(Policy = "Permission:configuracion.editar")]
+            public async Task<IActionResult> Edit(ConfiguracionSistema configuracion)
+            {
+                if (!ModelState.IsValid)
+                    return View(configuracion);
+
+                try
+                {
+                    await _configuracionService.SaveAsync(configuracion);
+                    TempData["Success"] = "Configuración actualizada correctamente.";
+                    return RedirectToAction(nameof(Index), new { modulo = configuracion.Modulo });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error al actualizar configuración");
+                    ModelState.AddModelError("", "Ocurrió un error al guardar la configuración.");
+                    return View(configuracion);
+                }
             }
         }
     }
-}
+
+        
+    

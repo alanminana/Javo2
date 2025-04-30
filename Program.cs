@@ -13,11 +13,11 @@ using Javo2.Middleware;
 using Javo2.Services;
 using Javo2.Services.Authentication;
 using Javo2.Services.Common;
+using Javo2.TagHelpers;
+using Javo2.Filters;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Javo2.Data.Seeders;
-using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 Console.WriteLine($"CONTENT ROOT = {Directory.GetCurrentDirectory()}");
@@ -32,6 +32,13 @@ builder.Logging.AddDebug();
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 
+// Primero registrar servicios básicos
+builder.Services.AddScoped<IEmailService, EmailService>();
+
+// Configurar autenticación y servicios relacionados
+builder.Services.AddAuthenticationServices();  // Registra servicios de autenticación
+builder.Services.AddAuthenticationPolicies();  // Registra políticas de permisos
+
 // Servicios de la aplicación
 builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<IProveedorService, ProveedorService>();
@@ -44,7 +51,6 @@ builder.Services.AddScoped<IAuditoriaService, AuditoriaService>();
 builder.Services.AddScoped<IVentaService, VentaService>();
 builder.Services.AddScoped<ICotizacionService, CotizacionService>();
 builder.Services.AddScoped<IConfiguracionService, ConfiguracionService>();
-builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IDevolucionGarantiaService, DevolucionGarantiaService>();
 
 // Servicio de búsqueda de cliente
@@ -54,38 +60,53 @@ builder.Services.AddScoped<IClienteSearchService>(sp =>
 
 builder.Services.AddScoped<IDropdownService, DropdownService>();
 
-// Configuración centralizada de autenticación y permisos
-builder.Services.AddAuthentication(options =>
+// Registrar TagHelpers y Filters
+builder.Services.AddScoped<PermissionTagHelper>();
+builder.Services.AddScoped<PermissionSeeder>();
+builder.Services.AddMvc(options =>
 {
-    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-})
-.AddCookie(options =>
-{
-    options.LoginPath = "/Auth/Login";
-    options.LogoutPath = "/Auth/Logout";
-    options.AccessDeniedPath = "/Auth/AccessDenied";
-    options.ExpireTimeSpan = TimeSpan.FromHours(3);
-    options.SlidingExpiration = true;
+    options.Filters.Add<PermissionSeeder>();
 });
-// AutoMapper
-builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
+// AutoMapper - Forma mejorada
+builder.Services.AddAutoMapper(cfg => {
+    cfg.AddProfile<AutoMapperProfile>();
+});
 var app = builder.Build();
 
-// Validación de configuración AutoMapper
+// Validación de configuración AutoMapper mejorada
 try
 {
-    var mapper = app.Services.GetRequiredService<IMapper>();
-    mapper.ConfigurationProvider.AssertConfigurationIsValid();
+    var mapper = app.Services.GetService<IMapper>();
+
+    if (mapper != null)
+    {
+        try
+        {
+            mapper.ConfigurationProvider.AssertConfigurationIsValid();
+        }
+        catch (AutoMapperConfigurationException ex)
+        {
+            Console.WriteLine("⚠️ Advertencia: Configuración incompleta de AutoMapper");
+            Console.WriteLine(ex.Message);
+
+            if (ex.Errors != null)
+            {
+                foreach (var failure in ex.Errors)
+                {
+                    Console.WriteLine($"- {failure}");
+                }
+            }
+        }
+    }
+    else
+    {
+        Console.WriteLine("⚠️ Advertencia: No se pudo obtener una instancia de IMapper");
+    }
 }
-catch (AutoMapperConfigurationException ex)
+catch (Exception ex)
 {
-    Console.WriteLine("Errores de configuración de AutoMapper:");
-    Console.WriteLine(ex.Message);
-    foreach (var failure in ex.Errors)
-        Console.WriteLine($"- {failure}");
+    Console.WriteLine($"⚠️ Error al validar AutoMapper: {ex.Message}");
 }
 
 // Middleware estándar
@@ -99,23 +120,6 @@ else
     app.UseDeveloperExceptionPage();
 }
 
-// Encabezados de seguridad
-app.Use(async (context, next) =>
-{
-    context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
-    context.Response.Headers.Add("X-Frame-Options", "DENY");
-    context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
-    context.Response.Headers.Add("Referrer-Policy", "strict-origin-when-cross-origin");
-    context.Response.Headers.Add("Content-Security-Policy",
-        "default-src 'self'; " +
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://code.jquery.com; " +
-        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " +
-        "img-src 'self' data:; " +
-        "font-src 'self' https://cdn.jsdelivr.net; " +
-        "connect-src 'self' ws: wss: http: https:;");
-    await next();
-});
-
 // Middleware personalizado
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
@@ -124,83 +128,11 @@ app.UseStaticFiles();
 app.UseRouting();
 
 // Usar la configuración de autenticación
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseAuthenticationConfig();
 
 // Rutas
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
-// Inicialización en desarrollo
-if (app.Environment.IsDevelopment())
-{
-    var dataDir = Path.Combine(Directory.GetCurrentDirectory(), "Data");
-    if (!Directory.Exists(dataDir))
-        Directory.CreateDirectory(dataDir);
-
-    string[] jsonFiles = {
-        "usuarios.json", "roles.json", "permisos.json",
-        "configuracion.json", "passwordResetTokens.json"
-    };
-
-    foreach (var file in jsonFiles)
-    {
-        var filePath = Path.Combine(dataDir, file);
-        if (!File.Exists(filePath))
-        {
-            File.WriteAllText(filePath, "[]");
-            Console.WriteLine($"Archivo creado: {filePath}");
-        }
-    }
-
-    using var scope = app.Services.CreateScope();
-    var services = scope.ServiceProvider;
-    try
-    {
-        var usuarioService = services.GetRequiredService<IUsuarioService>();
-        var rolService = services.GetRequiredService<IRolService>();
-        var permisoService = services.GetRequiredService<IPermisoService>();
-
-        var usuarios = await usuarioService.GetAllUsuariosAsync();
-        if (!usuarios.Any())
-        {
-            var adminRol = new Javo2.Models.Authentication.Rol
-            {
-                Nombre = "Administrador",
-                Descripcion = "Acceso completo al sistema",
-                EsSistema = true
-            };
-            var rolId = await rolService.CreateRolAsync(adminRol);
-
-            var admin = new Javo2.Models.Authentication.Usuario
-            {
-                NombreUsuario = "admin",
-                Nombre = "Administrador",
-                Apellido = "Sistema",
-                Email = "admin@sistema.com",
-                Activo = true,
-                CreadoPor = "Sistema"
-            };
-            await usuarioService.CreateUsuarioAsync(admin, "Admin123!");
-            await usuarioService.AsignarRolAsync(admin.UsuarioID, rolId);
-
-            app.Logger.LogInformation("Datos de prueba creados exitosamente");
-        }
-
-        // Ejecutar el seeder de permisos
-        var permissionSeeder = new PermissionSeeder(
-            permisoService,
-            rolService,
-            services.GetRequiredService<ILogger<PermissionSeeder>>());
-
-        await permissionSeeder.SeedAsync();
-        app.Logger.LogInformation("Permisos sembrados correctamente");
-    }
-    catch (Exception ex)
-    {
-        app.Logger.LogError(ex, "Error al crear datos de prueba: {Message}", ex.Message);
-    }
-}
 
 app.Run();

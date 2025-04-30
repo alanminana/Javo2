@@ -10,28 +10,8 @@ namespace Javo2.Extensions
 {
     public static class AuthenticationPolicyExtensions
     {
-        public static IServiceCollection AddAuthenticationServices(this IServiceCollection services)
+        public static IServiceCollection AddAuthenticationPolicies(this IServiceCollection services)
         {
-            // Registrar servicios
-            services.AddScoped<IUsuarioService, UsuarioService>();
-            services.AddScoped<IRolService, RolService>();
-            services.AddScoped<IPermisoService, PermisoService>();
-            services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<IResetPasswordService, ResetPasswordService>();
-
-            // Configurar autenticación con cookies
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options =>
-                {
-                    options.LoginPath = "/Auth/Login";
-                    options.LogoutPath = "/Auth/Logout";
-                    options.AccessDeniedPath = "/Auth/AccessDenied";
-                    options.ExpireTimeSpan = TimeSpan.FromHours(3);
-                    options.SlidingExpiration = true;
-                    // Asegurarse de que las cookies se envíen solo por HTTPS en producción
-                    options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.SameAsRequest;
-                });
-
             // Configurar políticas de autorización
             services.AddAuthorization(options =>
             {
