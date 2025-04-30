@@ -4,6 +4,7 @@ using Javo2.Controllers.Base;
 using Javo2.IServices;
 using Javo2.Models;
 using Javo2.ViewModels.Operaciones.Promociones;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,18 +13,25 @@ using System.Threading.Tasks;
 
 namespace Javo2.Controllers
 {
+    [Authorize]  // Fuerza que el usuario esté autenticado
     public class PromocionesController : BaseController
     {
         private readonly IPromocionesService _promocionesService;
         private readonly IMapper _mapper;
 
-        public PromocionesController(IPromocionesService promocionesService, IMapper mapper, ILogger<PromocionesController> logger)
+        public PromocionesController(
+            IPromocionesService promocionesService,
+            IMapper mapper,
+            ILogger<PromocionesController> logger)
             : base(logger)
         {
             _promocionesService = promocionesService;
             _mapper = mapper;
         }
 
+        // GET: Promociones
+        [HttpGet]
+        [Authorize(Policy = "Permission:promociones.ver")]
         public async Task<IActionResult> Index()
         {
             var promos = await _promocionesService.GetPromocionesAsync();
@@ -31,13 +39,18 @@ namespace Javo2.Controllers
             return View(model);
         }
 
+        // GET: Promociones/Create
+        [HttpGet]
+        [Authorize(Policy = "Permission:promociones.crear")]
         public IActionResult Create()
         {
             return View("Form", new PromocionViewModel());
         }
 
+        // POST: Promociones/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:promociones.crear")]
         public async Task<IActionResult> Create(PromocionViewModel model)
         {
             if (!ModelState.IsValid)
@@ -60,6 +73,9 @@ namespace Javo2.Controllers
             }
         }
 
+        // GET: Promociones/Edit/5
+        [HttpGet]
+        [Authorize(Policy = "Permission:promociones.editar")]
         public async Task<IActionResult> Edit(int id)
         {
             var promo = await _promocionesService.GetPromocionByIDAsync(id);
@@ -69,8 +85,10 @@ namespace Javo2.Controllers
             return View("Form", model);
         }
 
+        // POST: Promociones/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:promociones.editar")]
         public async Task<IActionResult> Edit(PromocionViewModel model)
         {
             if (!ModelState.IsValid)
@@ -93,6 +111,9 @@ namespace Javo2.Controllers
             }
         }
 
+        // GET: Promociones/Delete/5
+        [HttpGet]
+        [Authorize(Policy = "Permission:promociones.eliminar")]
         public async Task<IActionResult> Delete(int id)
         {
             var promo = await _promocionesService.GetPromocionByIDAsync(id);
@@ -102,8 +123,10 @@ namespace Javo2.Controllers
             return View(model);
         }
 
+        // POST: Promociones/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:promociones.eliminar")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             try

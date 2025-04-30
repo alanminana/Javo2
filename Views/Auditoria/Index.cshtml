@@ -3,6 +3,9 @@
 @{
     ViewBag.Title = "Auditoría - Historial de Cambios";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    // Determina si el usuario tiene permiso de rollback
+    bool canRollback = User.HasPermission("auditoria.rollback");
 }
 
 <h2 class="mb-4">@ViewBag.Title</h2>
@@ -26,16 +29,19 @@
             <th>Acción</th>
             <th>Llave</th>
             <th>Detalle</th>
-            <th>Rollback</th>
+            @* Sólo mostramos la columna de Rollback si el usuario puede revertir *@
+            @if (canRollback)
+            {
+                <th>Rollback</th>
+            }
         </tr>
     </thead>
     <tbody>
         @foreach (var reg in Model)
         {
-            var changesHtml = reg.Detalle; // Por defecto, se ve tal cual
+            var changesHtml = reg.Detalle;
             if (reg.Entidad == "Producto" && reg.Accion == "UpdatePrices")
             {
-                // Opcional: parsear a HTML más amigable
                 changesHtml = ParseDetalleToHtml(reg.Detalle);
             }
 
@@ -48,21 +54,29 @@
                 <td>
                     <pre class="text-white">@Html.Raw(changesHtml)</pre>
                 </td>
-                <td>
-                    @if (reg.EsRevertido)
-                    {
-                        <span class="badge bg-info text-dark">Revertido por @reg.RollbackUser (@reg.RollbackFecha.Value.ToShortDateString())</span>
-                    }
-                    else if (reg.Entidad == "Producto" && reg.Accion == "UpdatePrices")
-                    {
-                        <form asp-action="Rollback" method="post" class="d-inline">
-                            <input type="hidden" name="id" value="@reg.ID" />
-                            <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('¿Desea revertir este cambio?');">
-                                Revertir
-                            </button>
-                        </form>
-                    }
-                </td>
+                @* Sólo renderizamos la celda de Rollback si el usuario tiene permiso *@
+                @if (canRollback)
+                {
+                    <td>
+                        @if (reg.EsRevertido)
+                        {
+                            <span class="badge bg-info text-dark">
+                                Revertido por @reg.RollbackUser (@reg.RollbackFecha.Value.ToShortDateString())
+                            </span>
+                        }
+                        else if (reg.Entidad == "Producto" && reg.Accion == "UpdatePrices")
+                        {
+                            <form asp-action="Rollback" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@reg.ID" />
+                                <button type="submit"
+                                        class="btn btn-warning btn-sm"
+                                        onclick="return confirm('¿Desea revertir este cambio?');">
+                                    Revertir
+                                </button>
+                            </form>
+                        }
+                    </td>
+                }
             </tr>
         }
     </tbody>
@@ -71,7 +85,6 @@
 @functions {
     private string ParseDetalleToHtml(string detalle)
     {
-        // "101:PCosto=100->110;PContado=150->165;PLista=200->220|102:PCosto=50->55;PContado=60->66;..."
         var parts = detalle.Split('|', StringSplitOptions.RemoveEmptyEntries);
         var html = "<ul>";
         foreach (var p in parts)
@@ -83,7 +96,6 @@
             html += $"<li><strong>ProductoID {prodID}:</strong><ul>";
             foreach (var c in cambios)
             {
-                // "PCosto=100->110"
                 var eq = c.Split('=');
                 var campo = eq[0];
                 var vals = eq[1].Split("->");

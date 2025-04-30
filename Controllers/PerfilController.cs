@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Javo2.Controllers
 {
-    [Authorize]
+    [Authorize]  // Fuerza autenticación
     public class PerfilController : BaseController
     {
         private readonly IUsuarioService _usuarioService;
@@ -27,6 +27,9 @@ namespace Javo2.Controllers
             _rolService = rolService;
         }
 
+        // GET: Perfil/Index
+        [HttpGet]
+        [Authorize(Policy = "Permission:perfil.ver")]
         public async Task<IActionResult> Index()
         {
             try
@@ -93,22 +96,20 @@ namespace Javo2.Controllers
             }
         }
 
+        // GET: Perfil/Edit
         [HttpGet]
+        [Authorize(Policy = "Permission:perfil.editar")]
         public async Task<IActionResult> Edit()
         {
             try
             {
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
                 if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
-                {
                     return RedirectToAction("Login", "Auth");
-                }
 
                 var usuario = await _usuarioService.GetUsuarioByIDAsync(userId);
                 if (usuario == null)
-                {
                     return RedirectToAction("Login", "Auth");
-                }
 
                 var model = new EditarPerfilViewModel
                 {
@@ -128,8 +129,10 @@ namespace Javo2.Controllers
             }
         }
 
+        // POST: Perfil/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:perfil.editar")]
         public async Task<IActionResult> Edit(EditarPerfilViewModel model)
         {
             try
@@ -142,9 +145,7 @@ namespace Javo2.Controllers
                 }
 
                 if (!ModelState.IsValid)
-                {
                     return View(model);
-                }
 
                 var usuario = await _usuarioService.GetUsuarioByIDAsync(userId);
                 if (usuario == null)

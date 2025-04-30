@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Javo2.Controllers
 {
-    [Authorize]
+    [Authorize]  // Fuerza que el usuario esté autenticado
     public class ConfiguracionController : BaseController
     {
         private readonly IConfiguracionService _configuracionService;
@@ -35,8 +35,8 @@ namespace Javo2.Controllers
         }
 
         // GET: Configuracion
+        [HttpGet]
         [Authorize(Policy = "Permission:configuracion.ver")]
-        // ConfiguracionController.cs - Asegúrate de que el método Index devuelva el modelo correcto
         public async Task<IActionResult> Index(string modulo = null)
         {
             try
@@ -45,13 +45,12 @@ namespace Javo2.Controllers
                     await _configuracionService.GetAllAsync() :
                     await _configuracionService.GetByModuloAsync(modulo);
 
-                var viewModel = new ConfiguracionIndexViewModel // Este debe ser el modelo correcto para esta vista
+                var viewModel = new ConfiguracionIndexViewModel
                 {
                     Configuraciones = configuraciones.ToList(),
                     ModuloSeleccionado = modulo
                 };
 
-                // Obtener lista de módulos disponibles para el filtro
                 var modulos = (await _configuracionService.GetAllAsync())
                     .Select(c => c.Modulo)
                     .Distinct()
@@ -59,7 +58,7 @@ namespace Javo2.Controllers
 
                 viewModel.Modulos = modulos;
 
-                return View(viewModel); // Asegúrate de que View/Configuracion/Index.cshtml espera este modelo
+                return View(viewModel);
             }
             catch (Exception ex)
             {
@@ -69,6 +68,7 @@ namespace Javo2.Controllers
         }
 
         // GET: Configuracion/Edit/5
+        [HttpGet]
         [Authorize(Policy = "Permission:configuracion.editar")]
         public async Task<IActionResult> Edit(int id)
         {
@@ -78,9 +78,7 @@ namespace Javo2.Controllers
                     .FirstOrDefault(c => c.ConfiguracionID == id);
 
                 if (configuracion == null)
-                {
                     return NotFound();
-                }
 
                 return View(configuracion);
             }
@@ -98,14 +96,10 @@ namespace Javo2.Controllers
         public async Task<IActionResult> Edit(int id, ConfiguracionSistema configuracion)
         {
             if (id != configuracion.ConfiguracionID)
-            {
                 return NotFound();
-            }
 
             if (!ModelState.IsValid)
-            {
                 return View(configuracion);
-            }
 
             try
             {
@@ -122,12 +116,12 @@ namespace Javo2.Controllers
         }
 
         // GET: Configuracion/Seguridad
-        [Authorize]
+        [HttpGet]
+        [Authorize(Policy = "Permission:configuracion.seguridad")]
         public async Task<IActionResult> Seguridad()
         {
             try
             {
-                // Obtener estadísticas de seguridad
                 var usuarios = await _usuarioService.GetAllUsuariosAsync();
                 ViewBag.UsuariosActivos = usuarios.Count(u => u.Activo);
 
@@ -137,7 +131,6 @@ namespace Javo2.Controllers
                 var permisos = await _permisoService.GetAllPermisosAsync();
                 ViewBag.PermisosCount = permisos.Count();
 
-                // Obtener información del último acceso del usuario actual
                 if (User.Identity.IsAuthenticated)
                 {
                     var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);

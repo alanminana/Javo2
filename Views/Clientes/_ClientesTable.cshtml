@@ -1,47 +1,180 @@
-﻿<tbody>
-    @foreach (var cliente in Model)
+﻿@model IEnumerable<Javo2.ViewModels.Operaciones.Clientes.ClientesViewModel>
+@{
+    ViewBag.Title = "Clientes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="container-fluid py-3">
+    <!-- Encabezado secundario y resumen -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">@ViewBag.Title</h1>
+        @if (User.HasPermission("clientes.crear"))
+        {
+            <a asp-action="Create" class="btn btn-success btn-sm">
+                <i class="bi bi-plus-circle me-1" aria-hidden="true"></i>
+                <span>Agregar Cliente</span>
+            </a>
+        }
+    </div>
+
+    @if (TempData["Success"] != null)
     {
-        <tr>
-            <td scope="row">@cliente.ClienteID</td>
-            <td>@cliente.Nombre</td>
-            <td>@cliente.Apellido</td>
-            <td>@cliente.DNI</td>
-            <td>@cliente.Email</td>
-            <td>
-                <span class="badge @(cliente.Activo ? "bg-success" : "bg-danger")">
-                    @(cliente.Activo ? "Activo" : "Inactivo")
-                </span>
-            </td>
-            <td class="text-center">
-                <div class="btn-group" role="group" aria-label="Acciones para @cliente.Nombre @cliente.Apellido">
-                    <a asp-action="Edit"
-                       asp-route-id="@cliente.ClienteID"
-                       class="btn btn-sm btn-outline-primary"
-                       title="Editar cliente @cliente.Nombre @cliente.Apellido">
-                        <i class="bi bi-pencil-square" aria-hidden="true"></i>
-                        <span class="visually-hidden">Editar</span>
-                    </a>
-                    <a asp-action="Details"
-                       asp-route-id="@cliente.ClienteID"
-                       class="btn btn-sm btn-outline-info"
-                       title="Ver detalles de @cliente.Nombre @cliente.Apellido">
-                        <i class="bi bi-eye" aria-hidden="true"></i>
-                        <span class="visually-hidden">Detalles</span>
-                    </a>
-                    <form asp-action="Delete"
-                          asp-route-id="@cliente.ClienteID"
-                          method="post"
-                          onsubmit="return confirm('¿Estás seguro de eliminar a @cliente.Nombre @cliente.Apellido?');"
-                          class="d-inline">
-                        <button type="submit"
-                                class="btn btn-sm btn-outline-danger"
-                                title="Eliminar cliente @cliente.Nombre @cliente.Apellido">
-                            <i class="bi bi-trash" aria-hidden="true"></i>
-                            <span class="visually-hidden">Eliminar</span>
-                        </button>
-                    </form>
-                </div>
-            </td>
-        </tr>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>@TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
     }
-</tbody>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>@TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    }
+
+    <!-- Tarjetas de resumen -->
+    <div class="summary-cards mb-4" role="region" aria-label="Resumen de clientes">
+        <div class="summary-card" role="group" aria-labelledby="totalClientes">
+            <h5 id="totalClientes">Total de Clientes</h5>
+            <p class="display-6">@ViewBag.TotalCount</p>
+        </div>
+        <div class="summary-card" role="group" aria-labelledby="clientesActivos">
+            <h5 id="clientesActivos">Clientes Activos</h5>
+            <p class="display-6">@Model.Count(c => c.Activo)</p>
+        </div>
+        <div class="summary-card" role="group" aria-labelledby="clientesInactivos">
+            <h5 id="clientesInactivos">Clientes Inactivos</h5>
+            <p class="display-6">@Model.Count(c => !c.Activo)</p>
+        </div>
+    </div>
+
+    <!-- Búsqueda y Exportación -->
+    <div class="card mb-4 shadow-sm bg-dark text-light p-3">
+        <form method="get" asp-action="Index" class="row g-3 align-items-end">
+            <div class="col-md-6">
+                <label for="searchTerm" class="form-label text-light">Buscar Clientes</label>
+                <input type="text"
+                       id="searchTerm"
+                       name="searchTerm"
+                       class="form-control bg-secondary text-light"
+                       value="@ViewBag.SearchTerm"
+                       placeholder="Nombre, apellido, email o DNI..." />
+            </div>
+            <div class="col-md-2 d-grid">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-search me-1" aria-hidden="true"></i>
+                    <span>Buscar</span>
+                </button>
+            </div>
+            <div class="col-md-2 d-grid">
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-circle me-1" aria-hidden="true"></i>
+                    <span>Limpiar</span>
+                </a>
+            </div>
+            @if (User.HasPermission("reportes.exportar"))
+            {
+                <div class="col-md-2 d-grid">
+                    <a asp-controller="Reportes" asp-action="ExportToExcel"
+                       asp-route-entity="Clientes"
+                       asp-route-filtro="@ViewBag.SearchTerm"
+                       class="btn btn-outline-success">
+                        <i class="bi bi-file-earmark-excel me-1" aria-hidden="true"></i>
+                        <span>Exportar</span>
+                    </a>
+                </div>
+            }
+        </form>
+    </div>
+
+    <!-- Tabla de clientes -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle mb-0">
+                    <thead class="bg-secondary text-light">
+                        <tr>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Apellido</th>
+                            <th scope="col">DNI</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col" class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var cliente in Model)
+                        {
+                            <tr>
+                                <td>@cliente.Nombre</td>
+                                <td>@cliente.Apellido</td>
+                                <td>@cliente.DNI</td>
+                                <td>@cliente.Email</td>
+                                <td>
+                                    <span class="badge @(cliente.Activo ? "bg-success" : "bg-danger")">
+                                        @(cliente.Activo ? "Activo" : "Inactivo")
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group" aria-label="Acciones cliente">
+                                        @if (User.HasPermission("clientes.editar"))
+                                        {
+                                            <a asp-action="Edit" asp-route-id="@cliente.ClienteID" class="btn btn-sm btn-outline-primary" title="Editar">
+                                                <i class="bi bi-pencil-square" aria-hidden="true"></i>
+                                            </a>
+                                        }
+                                        @if (User.HasPermission("clientes.ver"))
+                                        {
+                                            <a asp-action="Details" asp-route-id="@cliente.ClienteID" class="btn btn-sm btn-outline-info" title="Ver detalles">
+                                                <i class="bi bi-eye" aria-hidden="true"></i>
+                                            </a>
+                                        }
+                                        @if (User.HasPermission("clientes.eliminar"))
+                                        {
+                                            <a asp-action="Delete" asp-route-id="@cliente.ClienteID" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                                <i class="bi bi-trash" aria-hidden="true"></i>
+                                            </a>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Paginación -->
+    <nav aria-label="Paginación clientes" class="mt-4">
+        <ul class="pagination justify-content-center">
+            @if (ViewBag.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new { searchTerm = ViewBag.SearchTerm, page = ViewBag.CurrentPage - 1 })">
+                        <span aria-hidden="true">&laquo;</span> Anterior
+                    </a>
+                </li>
+            }
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")" aria-current="@(i == ViewBag.CurrentPage ? "page" : null)">
+                    <a class="page-link" href="@Url.Action("Index", new { searchTerm = ViewBag.SearchTerm, page = i })">@i</a>
+                </li>
+            }
+            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new { searchTerm = ViewBag.SearchTerm, page = ViewBag.CurrentPage + 1 })">
+                        Siguiente <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+</section>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

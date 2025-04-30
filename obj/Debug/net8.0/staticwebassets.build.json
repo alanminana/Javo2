@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "SvWhQ9XEjgIhqBjS+k1q7qtMOCWcu72vsefuflf641M=",
+  "Hash": "EgF7UBhyv437zTG03fewNPaYcfxOPaE6MQgx4oNoDJk=",
   "Source": "Javo2",
   "BasePath": "_content/Javo2",
   "Mode": "Default",
@@ -178,8 +178,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "g0g9ejfyvk",
-      "Integrity": "UCNNMNX6Z8cW/J4TazCvLDhn3EYTnnlL2P8x9MWW1Yc=",
+      "Fingerprint": "ggwdp98iq4",
+      "Integrity": "kGINSyedm9lOwTmm8aWIpkE94eCGofhvZGAAdcicGN0=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\permission-validator.js"
@@ -2000,7 +2000,7 @@
       ]
     },
     {
-      "Route": "js/permission-validator.g0g9ejfyvk.js",
+      "Route": "js/permission-validator.ggwdp98iq4.js",
       "AssetFile": "D:\\github\\Javo2\\wwwroot\\js\\permission-validator.js",
       "Selectors": [],
       "ResponseHeaders": [
@@ -2010,7 +2010,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "4870"
+          "Value": "5110"
         },
         {
           "Name": "Content-Type",
@@ -2018,11 +2018,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"UCNNMNX6Z8cW/J4TazCvLDhn3EYTnnlL2P8x9MWW1Yc=\""
+          "Value": "\"kGINSyedm9lOwTmm8aWIpkE94eCGofhvZGAAdcicGN0=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 29 Apr 2025 22:42:28 GMT"
+          "Value": "Tue, 29 Apr 2025 23:07:28 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -2032,7 +2032,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "g0g9ejfyvk"
+          "Value": "ggwdp98iq4"
         },
         {
           "Name": "label",
@@ -2040,7 +2040,7 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-UCNNMNX6Z8cW/J4TazCvLDhn3EYTnnlL2P8x9MWW1Yc="
+          "Value": "sha256-kGINSyedm9lOwTmm8aWIpkE94eCGofhvZGAAdcicGN0="
         }
       ]
     },
@@ -2055,7 +2055,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "4870"
+          "Value": "5110"
         },
         {
           "Name": "Content-Type",
@@ -2063,11 +2063,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"UCNNMNX6Z8cW/J4TazCvLDhn3EYTnnlL2P8x9MWW1Yc=\""
+          "Value": "\"kGINSyedm9lOwTmm8aWIpkE94eCGofhvZGAAdcicGN0=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 29 Apr 2025 22:42:28 GMT"
+          "Value": "Tue, 29 Apr 2025 23:07:28 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -2077,7 +2077,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-UCNNMNX6Z8cW/J4TazCvLDhn3EYTnnlL2P8x9MWW1Yc="
+          "Value": "sha256-kGINSyedm9lOwTmm8aWIpkE94eCGofhvZGAAdcicGN0="
         }
       ]
     },

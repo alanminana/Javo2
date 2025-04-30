@@ -6,7 +6,11 @@
             <tr>
                 <th>Configuración</th>
                 <th>Valor</th>
-                <th>Acciones</th>
+                @* Mostrar columna de acciones solo si tiene permiso *@
+                @if (User.HasPermission("configuracion.editar"))
+                {
+                    <th>Acciones</th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -40,11 +44,15 @@
                             @config.Valor
                         }
                     </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@config.ConfiguracionID" class="btn btn-sm btn-primary">
-                            <i class="bi bi-pencil-square"></i> Editar
-                        </a>
-                    </td>
+                    @* Mostrar botón Editar solo si tiene permiso *@
+                    @if (User.HasPermission("configuracion.editar"))
+                    {
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@config.ConfiguracionID" class="btn btn-sm btn-primary">
+                                <i class="bi bi-pencil-square"></i> Editar
+                            </a>
+                        </td>
+                    }
                 </tr>
             }
         </tbody>

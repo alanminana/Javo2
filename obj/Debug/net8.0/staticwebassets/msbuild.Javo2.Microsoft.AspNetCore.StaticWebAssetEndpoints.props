@@ -72,17 +72,17 @@
       <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"tq17cozoyh"},{"Name":"integrity","Value":"sha256-a998BRGx20rxf4NgJxJSufqaHc2DMNqs20m3xhQMZE4="},{"Name":"label","Value":"_content/Javo2/js/debug-helper.js"}]]]></EndpointProperties>
       <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"987"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022a998BRGx20rxf4NgJxJSufqaHc2DMNqs20m3xhQMZE4=\u0022"},{"Name":"Last-Modified","Value":"Tue, 22 Apr 2025 18:49:57 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
-    <StaticWebAssetEndpoint Include="_content/Javo2/js/permission-validator.g0g9ejfyvk.js">
+    <StaticWebAssetEndpoint Include="_content/Javo2/js/permission-validator.ggwdp98iq4.js">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\js\permission-validator.js'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"g0g9ejfyvk"},{"Name":"integrity","Value":"sha256-UCNNMNX6Z8cW/J4TazCvLDhn3EYTnnlL2P8x9MWW1Yc="},{"Name":"label","Value":"_content/Javo2/js/permission-validator.js"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"4870"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022UCNNMNX6Z8cW/J4TazCvLDhn3EYTnnlL2P8x9MWW1Yc=\u0022"},{"Name":"Last-Modified","Value":"Tue, 29 Apr 2025 22:42:28 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"ggwdp98iq4"},{"Name":"integrity","Value":"sha256-kGINSyedm9lOwTmm8aWIpkE94eCGofhvZGAAdcicGN0="},{"Name":"label","Value":"_content/Javo2/js/permission-validator.js"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"5110"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022kGINSyedm9lOwTmm8aWIpkE94eCGofhvZGAAdcicGN0=\u0022"},{"Name":"Last-Modified","Value":"Tue, 29 Apr 2025 23:07:28 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/Javo2/js/permission-validator.js">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\js\permission-validator.js'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-UCNNMNX6Z8cW/J4TazCvLDhn3EYTnnlL2P8x9MWW1Yc="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"4870"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022UCNNMNX6Z8cW/J4TazCvLDhn3EYTnnlL2P8x9MWW1Yc=\u0022"},{"Name":"Last-Modified","Value":"Tue, 29 Apr 2025 22:42:28 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-kGINSyedm9lOwTmm8aWIpkE94eCGofhvZGAAdcicGN0="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"5110"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022kGINSyedm9lOwTmm8aWIpkE94eCGofhvZGAAdcicGN0=\u0022"},{"Name":"Last-Modified","Value":"Tue, 29 Apr 2025 23:07:28 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/Javo2/js/site.js">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\js\site.js'))</AssetFile>

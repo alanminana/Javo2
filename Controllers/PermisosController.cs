@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Javo2.Controllers.Authentication
 {
-    [Authorize(Policy = "PermisoPolitica")]
+    [Authorize]  // Fuerza que el usuario esté autenticado
     public class PermisosController : BaseController
     {
         private readonly IPermisoService _permisoService;
@@ -26,14 +26,15 @@ namespace Javo2.Controllers.Authentication
         }
 
         // GET: Permisos
+        [HttpGet]
         [Authorize(Policy = "Permission:permisos.ver")]
         public async Task<IActionResult> Index()
         {
             try
             {
                 var permisos = await _permisoService.GetAllPermisosAsync();
-                // Agrupar permisos por grupo
-                var permisosAgrupados = permisos.GroupBy(p => p.Grupo ?? "General")
+                var permisosAgrupados = permisos
+                    .GroupBy(p => p.Grupo ?? "General")
                     .OrderBy(g => g.Key)
                     .ToDictionary(g => g.Key, g => g.OrderBy(p => p.Nombre).ToList());
 
@@ -47,17 +48,14 @@ namespace Javo2.Controllers.Authentication
         }
 
         // GET: Permisos/Details/5
+        [HttpGet]
         [Authorize(Policy = "Permission:permisos.ver")]
         public async Task<IActionResult> Details(int id)
         {
             try
             {
                 var permiso = await _permisoService.GetPermisoByIDAsync(id);
-                if (permiso == null)
-                {
-                    return NotFound();
-                }
-
+                if (permiso == null) return NotFound();
                 return View(permiso);
             }
             catch (Exception ex)
@@ -68,15 +66,13 @@ namespace Javo2.Controllers.Authentication
         }
 
         // GET: Permisos/Create
+        [HttpGet]
         [Authorize(Policy = "Permission:permisos.crear")]
         public IActionResult Create()
         {
             try
             {
-                var permiso = new Permiso
-                {
-                    Activo = true
-                };
+                var permiso = new Permiso { Activo = true };
                 return View("Form", permiso);
             }
             catch (Exception ex)
@@ -95,11 +91,8 @@ namespace Javo2.Controllers.Authentication
             try
             {
                 if (!ModelState.IsValid)
-                {
                     return View("Form", permiso);
-                }
 
-                // Validar que el código sea único
                 var existente = await _permisoService.GetPermisoByCodigo(permiso.Codigo);
                 if (existente != null)
                 {
@@ -107,7 +100,6 @@ namespace Javo2.Controllers.Authentication
                     return View("Form", permiso);
                 }
 
-                // Crear permiso
                 var result = await _permisoService.CreatePermisoAsync(permiso);
                 if (!result)
                 {
@@ -127,24 +119,19 @@ namespace Javo2.Controllers.Authentication
         }
 
         // GET: Permisos/Edit/5
+        [HttpGet]
         [Authorize(Policy = "Permission:permisos.editar")]
         public async Task<IActionResult> Edit(int id)
         {
             try
             {
                 var permiso = await _permisoService.GetPermisoByIDAsync(id);
-                if (permiso == null)
-                {
-                    return NotFound();
-                }
-
-                // No permitir editar permisos del sistema
+                if (permiso == null) return NotFound();
                 if (permiso.EsSistema)
                 {
                     TempData["Error"] = "No se pueden editar permisos del sistema";
                     return RedirectToAction(nameof(Index));
                 }
-
                 return View("Form", permiso);
             }
             catch (Exception ex)
@@ -160,20 +147,12 @@ namespace Javo2.Controllers.Authentication
         [Authorize(Policy = "Permission:permisos.editar")]
         public async Task<IActionResult> Edit(int id, Permiso permiso)
         {
-            if (id != permiso.PermisoID)
-            {
-                return NotFound();
-            }
+            if (id != permiso.PermisoID) return NotFound();
 
             try
             {
-                // Verificar si es permiso del sistema
                 var original = await _permisoService.GetPermisoByIDAsync(id);
-                if (original == null)
-                {
-                    return NotFound();
-                }
-
+                if (original == null) return NotFound();
                 if (original.EsSistema)
                 {
                     TempData["Error"] = "No se pueden editar permisos del sistema";
@@ -181,11 +160,8 @@ namespace Javo2.Controllers.Authentication
                 }
 
                 if (!ModelState.IsValid)
-                {
                     return View("Form", permiso);
-                }
 
-                // Validar que el código sea único (a menos que sea el mismo)
                 var existente = await _permisoService.GetPermisoByCodigo(permiso.Codigo);
                 if (existente != null && existente.PermisoID != id)
                 {
@@ -193,10 +169,7 @@ namespace Javo2.Controllers.Authentication
                     return View("Form", permiso);
                 }
 
-                // Conservar si es de sistema
                 permiso.EsSistema = original.EsSistema;
-
-                // Actualizar permiso
                 var result = await _permisoService.UpdatePermisoAsync(permiso);
                 if (!result)
                 {
@@ -216,24 +189,19 @@ namespace Javo2.Controllers.Authentication
         }
 
         // GET: Permisos/Delete/5
+        [HttpGet]
         [Authorize(Policy = "Permission:permisos.eliminar")]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
                 var permiso = await _permisoService.GetPermisoByIDAsync(id);
-                if (permiso == null)
-                {
-                    return NotFound();
-                }
-
-                // No permitir eliminar permisos del sistema
+                if (permiso == null) return NotFound();
                 if (permiso.EsSistema)
                 {
                     TempData["Error"] = "No se pueden eliminar permisos del sistema";
                     return RedirectToAction(nameof(Index));
                 }
-
                 return View(permiso);
             }
             catch (Exception ex)
@@ -251,13 +219,8 @@ namespace Javo2.Controllers.Authentication
         {
             try
             {
-                // Verificar nuevamente que no sea un permiso del sistema
                 var permiso = await _permisoService.GetPermisoByIDAsync(id);
-                if (permiso == null)
-                {
-                    return NotFound();
-                }
-
+                if (permiso == null) return NotFound();
                 if (permiso.EsSistema)
                 {
                     TempData["Error"] = "No se pueden eliminar permisos del sistema";
@@ -291,25 +254,14 @@ namespace Javo2.Controllers.Authentication
             try
             {
                 var permiso = await _permisoService.GetPermisoByIDAsync(id);
-                if (permiso == null)
-                {
-                    return NotFound();
-                }
-
-                // No permitir cambiar estado de permisos del sistema
+                if (permiso == null) return NotFound();
                 if (permiso.EsSistema)
-                {
                     return Json(new { success = false, message = "No se puede cambiar el estado de permisos del sistema" });
-                }
 
-                // Cambiar estado
                 permiso.Activo = !permiso.Activo;
                 var result = await _permisoService.UpdatePermisoAsync(permiso);
-
                 if (!result)
-                {
                     return Json(new { success = false, message = "No se pudo actualizar el estado del permiso" });
-                }
 
                 return Json(new
                 {

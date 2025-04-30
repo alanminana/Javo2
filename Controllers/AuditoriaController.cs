@@ -2,6 +2,7 @@
 using Javo2.IServices;
 using Javo2.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using System;
@@ -9,6 +10,7 @@ using System.Linq;
 
 namespace Javo2.Controllers
 {
+    [Authorize]  // Fuerza que el usuario esté autenticado
     public class AuditoriaController : Controller
     {
         private readonly IAuditoriaService _auditoriaService;
@@ -28,6 +30,9 @@ namespace Javo2.Controllers
             _ventaService = ventaService;
         }
 
+        // GET: Auditoria/Index
+        [HttpGet]
+        [Authorize(Policy = "Permission:auditoria.ver")]
         public async Task<IActionResult> Index()
         {
             var registros = await _auditoriaService.GetAllRegistrosAsync();
@@ -35,7 +40,9 @@ namespace Javo2.Controllers
             return View(lista); // Views\Auditoria\Index.cshtml
         }
 
+        // POST: Auditoria/Rollback
         [HttpPost]
+        [Authorize(Policy = "Permission:auditoria.rollback")]
         public async Task<IActionResult> Rollback(int id)
         {
             _logger.LogInformation("Rollback invoked for auditoriaID={id}", id);

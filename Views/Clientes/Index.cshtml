@@ -8,8 +8,30 @@
     <!-- Encabezado secundario y resumen -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h2 mb-0">@ViewBag.Title</h1>
-        <!-- moved: Add button relocated to table header -->
+        @if (User.HasPermission("clientes.crear"))
+        {
+            <a asp-action="Create" class="btn btn-success btn-sm">
+                <i class="bi bi-plus-circle me-1" aria-hidden="true"></i>
+                <span>Agregar Cliente</span>
+            </a>
+        }
     </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>@TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>@TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    }
 
     <!-- Tarjetas de resumen -->
     <div class="summary-cards mb-4" role="region" aria-label="Resumen de clientes">
@@ -51,27 +73,24 @@
                     <span>Limpiar</span>
                 </a>
             </div>
-            <div class="col-md-2 d-grid">
-                <a asp-action="ExportToExcel"
-                   asp-route-filtroTipo="Nombre"
-                   class="btn btn-outline-success">
-                    <i class="bi bi-file-earmark-excel me-1" aria-hidden="true"></i>
-                    <span>Exportar</span>
-                </a>
-            </div>
+            @if (User.HasPermission("reportes.exportar"))
+            {
+                <div class="col-md-2 d-grid">
+                    <a asp-controller="Reportes" asp-action="ExportToExcel"
+                       asp-route-entity="Clientes"
+                       asp-route-filtro="@ViewBag.SearchTerm"
+                       class="btn btn-outline-success">
+                        <i class="bi bi-file-earmark-excel me-1" aria-hidden="true"></i>
+                        <span>Exportar</span>
+                    </a>
+                </div>
+            }
         </form>
     </div>
 
-    <!-- Tabla de clientes con botón Agregar en header -->
+    <!-- Tabla de clientes -->
     <div class="card shadow-sm">
         <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="card-title mb-0">Listado de Clientes</h5>
-                <a asp-action="Create" class="btn btn-success btn-sm">
-                    <i class="bi bi-plus-circle me-1" aria-hidden="true"></i>
-                    <span>Agregar Cliente</span>
-                </a>
-            </div>
             <div class="table-responsive">
                 <table class="table table-dark table-hover align-middle mb-0">
                     <thead class="bg-secondary text-light">
@@ -99,15 +118,24 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group" role="group" aria-label="Acciones cliente">
-                                        <a asp-action="Edit" asp-route-id="@cliente.ClienteID" class="btn btn-sm btn-outline-primary" title="Editar">
-                                            <i class="bi bi-pencil-square" aria-hidden="true"></i>
-                                        </a>
-                                        <a asp-action="Details" asp-route-id="@cliente.ClienteID" class="btn btn-sm btn-outline-info" title="Ver detalles">
-                                            <i class="bi bi-eye" aria-hidden="true"></i>
-                                        </a>
-                                        <a asp-action="Delete" asp-route-id="@cliente.ClienteID" class="btn btn-sm btn-outline-danger" title="Eliminar">
-                                            <i class="bi bi-trash" aria-hidden="true"></i>
-                                        </a>
+                                        @if (User.HasPermission("clientes.editar"))
+                                        {
+                                            <a asp-action="Edit" asp-route-id="@cliente.ClienteID" class="btn btn-sm btn-outline-primary" title="Editar">
+                                                <i class="bi bi-pencil-square" aria-hidden="true"></i>
+                                            </a>
+                                        }
+                                        @if (User.HasPermission("clientes.ver"))
+                                        {
+                                            <a asp-action="Details" asp-route-id="@cliente.ClienteID" class="btn btn-sm btn-outline-info" title="Ver detalles">
+                                                <i class="bi bi-eye" aria-hidden="true"></i>
+                                            </a>
+                                        }
+                                        @if (User.HasPermission("clientes.eliminar"))
+                                        {
+                                            <a asp-action="Delete" asp-route-id="@cliente.ClienteID" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                                <i class="bi bi-trash" aria-hidden="true"></i>
+                                            </a>
+                                        }
                                     </div>
                                 </td>
                             </tr>

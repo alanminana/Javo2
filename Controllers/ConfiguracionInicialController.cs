@@ -1,7 +1,9 @@
-﻿using Javo2.Controllers.Base;
+﻿// Controllers/ConfiguracionInicialController.cs
+using Javo2.Controllers.Base;
 using Javo2.IServices.Authentication;
 using Javo2.Models.Authentication;
 using Javo2.ViewModels.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace Javo2.Controllers
 {
+    [Authorize]  // Fuerza que el usuario esté autenticado
     public class ConfiguracionInicialController : BaseController
     {
         private readonly IUsuarioService _usuarioService;
@@ -29,7 +32,9 @@ namespace Javo2.Controllers
             _permisoService = permisoService;
         }
 
+        // GET: ConfiguracionInicial/Index
         [HttpGet]
+        [Authorize(Policy = "Permission:configuracionInicial.ver")]
         public async Task<IActionResult> Index()
         {
             // Verificar si ya existe algún usuario
@@ -43,8 +48,10 @@ namespace Javo2.Controllers
             return View(new ConfiguracionInicialViewModel());
         }
 
+        // POST: ConfiguracionInicial/Index
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:configuracionInicial.crear")]
         public async Task<IActionResult> Index(ConfiguracionInicialViewModel model)
         {
             if (!ModelState.IsValid)
@@ -76,7 +83,8 @@ namespace Javo2.Controllers
 
                 // 2. Asignar rol de administrador
                 var roles = await _rolService.GetAllRolesAsync();
-                var rolAdmin = roles.FirstOrDefault(r => r.Nombre.Equals("Administrador", StringComparison.OrdinalIgnoreCase));
+                var rolAdmin = roles.FirstOrDefault(r =>
+                    r.Nombre.Equals("Administrador", StringComparison.OrdinalIgnoreCase));
 
                 if (rolAdmin != null)
                 {
@@ -88,12 +96,15 @@ namespace Javo2.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error en la configuración inicial");
-                ModelState.AddModelError(string.Empty, "Ocurrió un error al crear el usuario administrador: " + ex.Message);
+                ModelState.AddModelError(string.Empty,
+                    "Ocurrió un error al crear el usuario administrador: " + ex.Message);
                 return View(model);
             }
         }
 
+        // GET: ConfiguracionInicial/ConfiguracionCompletada
         [HttpGet]
+        [Authorize(Policy = "Permission:configuracionInicial.ver")]
         public IActionResult ConfiguracionCompletada()
         {
             return View();

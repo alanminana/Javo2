@@ -120,8 +120,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>g0g9ejfyvk</Fingerprint>
-      <Integrity>UCNNMNX6Z8cW/J4TazCvLDhn3EYTnnlL2P8x9MWW1Yc=</Integrity>
+      <Fingerprint>ggwdp98iq4</Fingerprint>
+      <Integrity>kGINSyedm9lOwTmm8aWIpkE94eCGofhvZGAAdcicGN0=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\js\permission-validator.js'))</OriginalItemSpec>

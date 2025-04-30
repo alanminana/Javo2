@@ -3,11 +3,13 @@ using Javo2.IServices;
 using Javo2.IServices.Authentication;
 using Javo2.ViewModels.Operaciones.Productos;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
 namespace Javo2.Controllers
 {
+    [Authorize]  // Fuerza que el usuario esté autenticado
     public class AjustePreciosController : Controller
     {
         private readonly IAjustePrecioService _ajustePrecioService;
@@ -21,6 +23,7 @@ namespace Javo2.Controllers
 
         // GET: AjustePrecios/Index
         [HttpGet]
+        [Authorize(Policy = "Permission:ajustePrecios.ver")]
         public IActionResult Index()
         {
             return View(); // Se debe crear Views/AjustePrecios/Index.cshtml
@@ -28,6 +31,7 @@ namespace Javo2.Controllers
 
         // GET: AjustePrecios/Form
         [HttpGet]
+        [Authorize(Policy = "Permission:ajustePrecios.crear")]
         public IActionResult Form()
         {
             var model = new ConfiguracionIndexViewModel();
@@ -37,6 +41,7 @@ namespace Javo2.Controllers
         // POST: AjustePrecios/Form
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:ajustePrecios.crear")]
         public async Task<IActionResult> Form(ConfiguracionIndexViewModel model)
         {
             if (!ModelState.IsValid)

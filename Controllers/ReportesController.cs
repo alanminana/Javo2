@@ -1,5 +1,6 @@
 ﻿// File: Controllers/ReportesController.cs
 using Javo2.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ClosedXML.Excel;
@@ -10,6 +11,7 @@ using System;
 
 namespace Javo2.Controllers
 {
+    [Authorize]  // Fuerza que el usuario esté autenticado
     public class ReportesController : Controller
     {
         private readonly IVentaService _ventaService;
@@ -26,12 +28,17 @@ namespace Javo2.Controllers
             _logger = logger;
         }
 
+        // GET: Reportes/Index
+        [HttpGet]
+        [Authorize(Policy = "Permission:reportes.ver")]
         public IActionResult Index()
         {
             return View();
         }
 
-        // EJEMPLO 1: Ranking de Ventas
+        // GET: Reportes/RankingVentas
+        [HttpGet]
+        [Authorize(Policy = "Permission:reportes.rankingVentas")]
         public async Task<IActionResult> RankingVentas()
         {
             var ventas = await _ventaService.GetAllVentasAsync();
@@ -48,7 +55,9 @@ namespace Javo2.Controllers
             return View(ranking);
         }
 
-        // EJEMPLO 2: Exportar Ventas a Excel
+        // GET: Reportes/ExportVentasToExcel
+        [HttpGet]
+        [Authorize(Policy = "Permission:reportes.exportVentas")]
         public async Task<IActionResult> ExportVentasToExcel()
         {
             var ventas = await _ventaService.GetAllVentasAsync();
@@ -86,7 +95,9 @@ namespace Javo2.Controllers
             }
         }
 
-        // EJEMPLO 3: Reporte de Stock
+        // GET: Reportes/ReporteStock
+        [HttpGet]
+        [Authorize(Policy = "Permission:reportes.reporteStock")]
         public async Task<IActionResult> ReporteStock()
         {
             var productos = await _productoService.GetAllProductosAsync();

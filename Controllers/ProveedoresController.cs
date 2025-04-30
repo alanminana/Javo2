@@ -10,6 +10,7 @@ using Javo2.IServices;
 using Javo2.IServices.Common;
 using Javo2.Models;
 using Javo2.ViewModels.Operaciones.Proveedores;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -42,6 +43,7 @@ namespace Javo2.Controllers
             _stockService = stockService;
             _mapper = mapper;
         }
+        [Authorize(Policy = "Permission:proveedores.ver")]
 
         public async Task<IActionResult> Index()
         {
@@ -86,6 +88,7 @@ namespace Javo2.Controllers
                 return PartialView("_ProveedoresTable", new List<ProveedoresViewModel>());
             }
         }
+        [Authorize(Policy = "Permission:proveedores.crear")]
 
         public async Task<IActionResult> Create()
         {
@@ -104,6 +107,8 @@ namespace Javo2.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:proveedores.crear")]
+
         public async Task<IActionResult> Create(ProveedoresViewModel proveedorViewModel)
         {
             _logger.LogInformation("Create POST action called with Proveedor: {Proveedor}", proveedorViewModel.Nombre);
@@ -133,6 +138,7 @@ namespace Javo2.Controllers
                 return View("Form", proveedorViewModel);
             }
         }
+        [Authorize(Policy = "Permission:proveedores.editar")]
 
         public async Task<IActionResult> Edit(int id)
         {
@@ -160,6 +166,8 @@ namespace Javo2.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:proveedores.editar")]
+
         public async Task<IActionResult> Edit(ProveedoresViewModel proveedorViewModel)
         {
             _logger.LogInformation("Edit POST action called with ProveedorID: {ProveedorID}", proveedorViewModel.ProveedorID);
@@ -188,6 +196,7 @@ namespace Javo2.Controllers
                 return View("Form", proveedorViewModel);
             }
         }
+        [Authorize(Policy = "Permission:proveedores.ver")]
 
         public async Task<IActionResult> Details(int id)
         {
@@ -212,6 +221,7 @@ namespace Javo2.Controllers
                 return View("Error");
             }
         }
+        [Authorize(Policy = "Permission:proveedores.eliminar")]
 
         public async Task<IActionResult> Delete(int id)
         {
@@ -237,6 +247,8 @@ namespace Javo2.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:proveedores.eliminar")]
+
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             _logger.LogInformation("Delete POST action called with ID: {ID}", id);

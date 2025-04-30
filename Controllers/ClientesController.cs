@@ -9,28 +9,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
+using Javo2.Controllers.Base;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Javo2.Controllers
 {
-    public class ClientesController : Controller
+    [Authorize(Policy = "PermisoPolitica")]
+    public class ClientesController : BaseController
     {
         private readonly IClienteService _clienteService;
         private readonly IClienteSearchService _searchService;
         private readonly IMapper _mapper;
         private readonly ILogger<ClientesController> _logger;
 
+
         public ClientesController(
             IClienteService clienteService,
             IMapper mapper,
             ILogger<ClientesController> logger)
+            : base(logger)
         {
             _clienteService = clienteService;
             _searchService = clienteService as IClienteSearchService;
             _mapper = mapper;
-            _logger = logger;
         }
 
         [HttpGet]
+        [Authorize(Policy = "Permission:clientes.ver")]
+
         public async Task<IActionResult> Index(string searchTerm = null, int page = 1, int pageSize = 20)
         {
             try
@@ -54,6 +60,8 @@ namespace Javo2.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "Permission:clientes.crear")]
+
         public async Task<IActionResult> Create()
         {
             try
@@ -74,6 +82,8 @@ namespace Javo2.Controllers
         // Controllers/ClientesController.cs
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:clientes.crear")]
+
         public async Task<IActionResult> Create(ClientesViewModel model)
         {
             try
@@ -110,6 +120,8 @@ namespace Javo2.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "Permission:clientes.editar")]
+
         public async Task<IActionResult> Edit(int id)
         {
             try
@@ -133,6 +145,8 @@ namespace Javo2.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:clientes.editar")]
+
         public async Task<IActionResult> Edit(int id, ClientesViewModel model)
         {
             try
@@ -149,17 +163,23 @@ namespace Javo2.Controllers
 
                 var cliente = _mapper.Map<Cliente>(model);
                 await _clienteService.UpdateClienteAsync(cliente);
+                TempData["Success"] = "Cliente actualizado exitosamente";
 
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error en Edit POST");
-                return View("Error");
+                ModelState.AddModelError("", "Ocurrió un error al actualizar el cliente");
+                model.Provincias = await ObtenerProvincias();
+                model.Ciudades = await ObtenerCiudades(model.ProvinciaID);
+                return View("Form", model);
             }
         }
 
         [HttpGet]
+        [Authorize(Policy = "Permission:clientes.ver")]
+
         public async Task<IActionResult> Details(int id)
         {
             try
@@ -179,6 +199,8 @@ namespace Javo2.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "Permission:clientes.eliminar")]
+
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -199,17 +221,22 @@ namespace Javo2.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:clientes.eliminar")]
+
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             try
             {
                 await _clienteService.DeleteClienteAsync(id);
+                TempData["Success"] = "Cliente eliminado exitosamente";
+
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error en DeleteConfirmed");
-                return View("Error");
+                TempData["Error"] = "Ocurrió un error al eliminar el cliente";
+                return RedirectToAction(nameof(Index));
             }
         }
 

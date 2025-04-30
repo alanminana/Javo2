@@ -13,7 +13,7 @@ namespace Javo2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize]  // Fuerza que el usuario esté autenticado
     public class DiagnosticController : ControllerBase
     {
         private readonly ILogger<DiagnosticController> _logger;
@@ -34,16 +34,18 @@ namespace Javo2.Controllers
         }
 
         [HttpGet("files")]
+        [Authorize(Policy = "Permission:diagnostic.files")]
         public IActionResult CheckFiles()
         {
             var dataDir = Path.Combine(Directory.GetCurrentDirectory(), "Data");
             var files = new string[] { "usuarios.json", "roles.json", "permisos.json", "configuracion.json", "passwordResetTokens.json" };
 
-            var result = new Dictionary<string, object>();
-
-            result["directory_exists"] = Directory.Exists(dataDir);
-            result["root_path"] = Directory.GetCurrentDirectory();
-            result["data_path"] = dataDir;
+            var result = new Dictionary<string, object>
+            {
+                ["directory_exists"] = Directory.Exists(dataDir),
+                ["root_path"] = Directory.GetCurrentDirectory(),
+                ["data_path"] = dataDir
+            };
 
             var fileResults = new Dictionary<string, object>();
             foreach (var file in files)
@@ -71,6 +73,7 @@ namespace Javo2.Controllers
         }
 
         [HttpGet("auth")]
+        [Authorize(Policy = "Permission:diagnostic.auth")]
         public async Task<IActionResult> CheckAuthServices()
         {
             var result = new Dictionary<string, object>();
@@ -127,12 +130,14 @@ namespace Javo2.Controllers
         }
 
         [HttpGet("user")]
+        [Authorize(Policy = "Permission:diagnostic.user")]
         public IActionResult CheckCurrentUser()
         {
-            var result = new Dictionary<string, object>();
-
-            result["is_authenticated"] = User.Identity.IsAuthenticated;
-            result["identity_name"] = User.Identity.Name;
+            var result = new Dictionary<string, object>
+            {
+                ["is_authenticated"] = User.Identity.IsAuthenticated,
+                ["identity_name"] = User.Identity.Name
+            };
 
             var claims = User.Claims.Select(c => new { c.Type, c.Value }).ToList();
             result["claims"] = claims;
@@ -141,14 +146,12 @@ namespace Javo2.Controllers
                 .Where(c => c.Type == "Permission")
                 .Select(c => c.Value)
                 .ToList();
-
             result["permissions"] = permissions;
 
             var roles = User.Claims
                 .Where(c => c.Type == System.Security.Claims.ClaimTypes.Role)
                 .Select(c => c.Value)
                 .ToList();
-
             result["roles"] = roles;
 
             return Ok(result);

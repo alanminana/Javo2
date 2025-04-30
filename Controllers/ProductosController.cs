@@ -7,6 +7,7 @@ using Javo2.IServices.Common;
 using Javo2.Models;
 using Javo2.ViewModels.Operaciones.Productos;
 using Javo2.ViewModels.Operaciones.Stock;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
@@ -17,6 +18,8 @@ using System.Threading.Tasks;
 
 namespace Javo2.Controllers
 {
+    [Authorize(Policy = "PermisoPolitica")]
+
     public class ProductosController : BaseController
     {
         private readonly IProductoService _productoService;
@@ -45,6 +48,8 @@ namespace Javo2.Controllers
         }
 
         // GET: Productos
+        [Authorize(Policy = "Permission:productos.ver")]
+
         public async Task<IActionResult> Index()
         {
             try
@@ -62,6 +67,8 @@ namespace Javo2.Controllers
         }
 
         // GET: Productos/Details/5
+        [Authorize(Policy = "Permission:productos.ver")]
+
         public async Task<IActionResult> Details(int id)
         {
             try
@@ -81,6 +88,8 @@ namespace Javo2.Controllers
         }
         // GET: Productos/Create
         [HttpGet]
+        [Authorize(Policy = "Permission:productos.crear")]
+
         public async Task<IActionResult> Create()
         {
             try
@@ -108,6 +117,8 @@ namespace Javo2.Controllers
 
         // POST: Productos/Create
         [HttpPost]
+        [Authorize(Policy = "Permission:productos.crear")]
+
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductosViewModel model)
         {
@@ -198,6 +209,8 @@ namespace Javo2.Controllers
         // POST: Productos/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:productos.editar")]
+
         public async Task<IActionResult> Edit(ProductosViewModel model)
         {
             model.ModificadoPor = User.Identity?.Name ?? "Sistema";
@@ -277,6 +290,8 @@ namespace Javo2.Controllers
         }
 
         // GET: Productos/Delete/5
+        [Authorize(Policy = "Permission:productos.eliminar")]
+
         public async Task<IActionResult> Delete(int id)
         {
             var producto = await _productoService.GetProductoByIDAsync(id);
@@ -288,6 +303,8 @@ namespace Javo2.Controllers
         // POST: Productos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:productos.eliminar")]
+
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _productoService.DeleteProductoAsync(id);

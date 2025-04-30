@@ -11,9 +11,12 @@ using AutoMapper;
 using Javo2.Helpers;
 using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Javo2.Controllers
 {
+    [Authorize(Policy = "PermisoPolitica")]
+
     public class CatalogoController : BaseController
     {
         private readonly ICatalogoService _catalogoService;
@@ -33,6 +36,8 @@ namespace Javo2.Controllers
         }
 
         // GET: Catalogo
+        [Authorize(Policy = "Permission:catalogo.ver")]
+
         public async Task<IActionResult> Index()
         {
             try
@@ -50,6 +55,8 @@ namespace Javo2.Controllers
         }
 
         // GET: Catalogo/CreateRubro
+        [Authorize(Policy = "Permission:catalogo.crear")]
+
         public IActionResult CreateRubro()
         {
             return View(new RubroViewModel());
@@ -57,6 +64,7 @@ namespace Javo2.Controllers
 
         // POST: Catalogo/CreateRubro
         [HttpPost]
+        [Authorize(Policy = "Permission:catalogo.crear")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateRubro(RubroViewModel model)
         {
@@ -82,6 +90,8 @@ namespace Javo2.Controllers
         }
 
         // GET: Catalogo/EditRubro/5
+        [Authorize(Policy = "Permission:catalogo.editar")]
+
         public async Task<IActionResult> EditRubro(int id)
         {
             try
@@ -101,8 +111,11 @@ namespace Javo2.Controllers
         }
 
         // POST: Catalogo/EditRubro/5
+
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:catalogo.editar")]
+
         public async Task<IActionResult> EditRubro(RubroViewModel model)
         {
             if (!ModelState.IsValid)
@@ -127,6 +140,8 @@ namespace Javo2.Controllers
         }
 
         // GET: Catalogo/EditSubRubros/5
+        [Authorize(Policy = "Permission:catalogo.editar")]
+
         public async Task<IActionResult> EditSubRubros(int rubroId)
         {
             try
@@ -154,6 +169,8 @@ namespace Javo2.Controllers
         // POST: Catalogo/EditSubRubros
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:catalogo.editar")]
+
         public async Task<IActionResult> EditSubRubros(EditSubRubrosViewModel model)
         {
             if (!ModelState.IsValid)
@@ -177,6 +194,8 @@ namespace Javo2.Controllers
         }
 
         // GET: Catalogo/CreateMarca
+        [Authorize(Policy = "Permission:catalogo.crear")]
+
         public IActionResult CreateMarca()
         {
             return View(new MarcaViewModel());
@@ -185,6 +204,8 @@ namespace Javo2.Controllers
         // POST: Catalogo/CreateMarca
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:catalogo.crear")]
+
         public async Task<IActionResult> CreateMarca(MarcaViewModel model)
         {
             if (!ModelState.IsValid)
@@ -209,6 +230,8 @@ namespace Javo2.Controllers
         }
 
         // GET: Catalogo/EditMarca/5
+        [Authorize(Policy = "Permission:catalogo.editar")]
+
         public async Task<IActionResult> EditMarca(int id)
         {
             try
@@ -230,6 +253,8 @@ namespace Javo2.Controllers
         // POST: Catalogo/EditMarca/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:catalogo.editar")]
+
         public async Task<IActionResult> EditMarca(MarcaViewModel model)
         {
             if (!ModelState.IsValid)
@@ -254,6 +279,8 @@ namespace Javo2.Controllers
         }
 
         // GET: Catalogo/DeleteRubro/5
+        [Authorize(Policy = "Permission:catalogo.eliminar")]
+
         public async Task<IActionResult> DeleteRubro(int id)
         {
             try
@@ -275,6 +302,8 @@ namespace Javo2.Controllers
         // POST: Catalogo/DeleteRubro/5
         [HttpPost, ActionName("DeleteRubro")]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:catalogo.eliminar")]
+
         public async Task<IActionResult> DeleteRubroConfirmed(int id)
         {
             try
@@ -292,6 +321,8 @@ namespace Javo2.Controllers
         }
 
         // GET: Catalogo/DeleteMarca/5
+        [Authorize(Policy = "Permission:catalogo.eliminar")]
+
         public async Task<IActionResult> DeleteMarca(int id)
         {
             try
@@ -313,6 +344,8 @@ namespace Javo2.Controllers
         // POST: Catalogo/DeleteMarca/5
         [HttpPost, ActionName("DeleteMarca")]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:catalogo.eliminar")]
+
         public async Task<IActionResult> DeleteMarcaConfirmed(int id)
         {
             try

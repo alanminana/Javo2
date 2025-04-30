@@ -2,6 +2,9 @@
 @{
     ViewData["Title"] = "Mi Perfil";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    // Comprueba permisos del usuario
+    bool canEdit = User.HasPermission("perfil.editar");
 }
 
 <section class="container-fluid py-3">
@@ -9,9 +12,13 @@
         <h1 class="h2 mb-0">
             <i class="bi bi-person-circle me-2"></i>@ViewData["Title"]
         </h1>
-        <a asp-action="Edit" class="btn btn-primary btn-sm">
-            <i class="bi bi-pencil-square me-1"></i>Editar Perfil
-        </a>
+        @* Mostrar el botón Editar sólo si tiene permiso *@
+        @if (canEdit)
+        {
+            <a asp-action="Edit" class="btn btn-primary btn-sm">
+                <i class="bi bi-pencil-square me-1"></i>Editar Perfil
+            </a>
+        }
     </div>
 
     @if (TempData["Success"] != null)
@@ -43,14 +50,18 @@
 
                     <div class="text-start">
                         <p class="mb-1"><strong>Email:</strong> @Model.Email</p>
-                        <p class="mb-1"><strong>Fecha de registro:</strong> @Model.FechaCreacion.ToString("dd/MM/yyyy")</p>
+                        <p class="mb-1"><strong>Fecha de registro:</strong> @Model.FechaCreacion:dd/MM/yyyy</p>
                         <p class="mb-0"><strong>Último acceso:</strong> @(Model.UltimoAcceso.HasValue ? Model.UltimoAcceso.Value.ToString("dd/MM/yyyy HH:mm") : "Nunca")</p>
                     </div>
                 </div>
                 <div class="card-footer text-center">
-                    <a asp-controller="Auth" asp-action="CambiarContraseña" class="btn btn-outline-light btn-sm">
-                        <i class="bi bi-key-fill me-1"></i>Cambiar Contraseña
-                    </a>
+                    @* Mostrar Cambiar Contraseña sólo si puede editar *@
+                    @if (canEdit)
+                    {
+                        <a asp-controller="Auth" asp-action="CambiarContraseña" class="btn btn-outline-light btn-sm">
+                            <i class="bi bi-key-fill me-1"></i>Cambiar Contraseña
+                        </a>
+                    }
                 </div>
             </div>
         </div>
@@ -65,20 +76,28 @@
                     {
                         <div class="accordion" id="permisosAccordion">
                             @{
-                                var gruposPermisos = Model.Permisos.GroupBy(p => p.Grupo ?? "General").OrderBy(g => g.Key);
+                                var gruposPermisos = Model.Permisos
+                                .GroupBy(p => p.Grupo ?? "General")
+                                .OrderBy(g => g.Key);
                             }
 
                             @foreach (var grupo in gruposPermisos)
                             {
-                                var grupoId = grupo.Key.Replace(" ", "").ToLower();
+                                var grupoId = grupo.Key
+                                .Replace(" ", "")
+                                .ToLower();
                                 <div class="accordion-item bg-dark text-light border-secondary">
                                     <h2 class="accordion-header">
-                                        <button class="accordion-button collapsed bg-secondary text-light" type="button"
-                                                data-bs-toggle="collapse" data-bs-target="#@grupoId">
+                                        <button class="accordion-button collapsed bg-secondary text-light"
+                                                type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#@grupoId">
                                             @grupo.Key (@grupo.Count() permisos)
                                         </button>
                                     </h2>
-                                    <div id="@grupoId" class="accordion-collapse collapse" data-bs-parent="#permisosAccordion">
+                                    <div id="@grupoId"
+                                         class="accordion-collapse collapse"
+                                         data-bs-parent="#permisosAccordion">
                                         <div class="accordion-body">
                                             <ul class="list-group list-group-flush bg-transparent">
                                                 @foreach (var permiso in grupo.OrderBy(p => p.Nombre))

@@ -32,9 +32,12 @@
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-dark text-light d-flex justify-content-between align-items-center">
             <h2 class="h5 mb-0">Rubros y SubRubros</h2>
-            <a asp-action="CreateRubro" class="btn btn-success btn-sm">
-                <i class="bi bi-plus-circle me-1"></i><span>Agregar Rubro</span>
-            </a>
+            @if (User.HasPermission("catalogo.crear"))
+            {
+                <a asp-action="CreateRubro" class="btn btn-success btn-sm">
+                    <i class="bi bi-plus-circle me-1"></i><span>Agregar Rubro</span>
+                </a>
+            }
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
