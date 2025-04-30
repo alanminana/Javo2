@@ -1,29 +1,34 @@
-﻿@* Views/Shared/_ActionButtons.cshtml *@
-@model (int id, string controller)
+﻿@model (int id, string controller, string action, string title, string icon)
 @{
-    string editPermission = $"{Model.controller.ToLower()}.editar";
-    string viewPermission = $"{Model.controller.ToLower()}.ver";
-    string deletePermission = $"{Model.controller.ToLower()}.eliminar";
+    var controllerLower = Model.controller.ToLower();
+    bool canView = User.HasPermission($"{controllerLower}.ver");
+    bool canEdit = User.HasPermission($"{controllerLower}.editar");
+    bool canDelete = User.HasPermission($"{controllerLower}.eliminar");
+
+    // Determina si se debe usar acción personalizada en lugar de las estándar
+    string viewAction = string.IsNullOrEmpty(Model.action) ? "Details" : Model.action;
+    string viewIcon = string.IsNullOrEmpty(Model.icon) ? "eye" : Model.icon;
+    string viewTitle = string.IsNullOrEmpty(Model.title) ? "Ver detalles" : Model.title;
 }
 
 <div class="btn-group" role="group">
-    @if (User.HasPermission(editPermission))
+    @if (canEdit)
     {
-        <a asp-action="Edit" asp-route-id="@Model.id" class="btn btn-sm btn-outline-primary" title="Editar">
+        <a asp-controller="@Model.controller" asp-action="Edit" asp-route-id="@Model.id" class="btn btn-sm btn-outline-primary" title="Editar">
             <i class="bi bi-pencil-square"></i>
         </a>
     }
 
-    @if (User.HasPermission(viewPermission))
+    @if (canView)
     {
-        <a asp-action="Details" asp-route-id="@Model.id" class="btn btn-sm btn-outline-info" title="Detalles">
-            <i class="bi bi-eye"></i>
+        <a asp-controller="@Model.controller" asp-action="@viewAction" asp-route-id="@Model.id" class="btn btn-sm btn-outline-info" title="@viewTitle">
+            <i class="bi bi-@viewIcon"></i>
         </a>
     }
 
-    @if (User.HasPermission(deletePermission))
+    @if (canDelete)
     {
-        <a asp-action="Delete" asp-route-id="@Model.id" class="btn btn-sm btn-outline-danger" title="Eliminar">
+        <a asp-controller="@Model.controller" asp-action="Delete" asp-route-id="@Model.id" class="btn btn-sm btn-outline-danger" title="Eliminar">
             <i class="bi bi-trash"></i>
         </a>
     }

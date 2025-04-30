@@ -18,19 +18,8 @@
             </span>
         </td>
         <td class="text-center">
-            <div class="btn-group" role="group" aria-label="Acciones para @producto.Nombre">
-                @if (User.HasPermission("productos.editar"))
-                {
-                    <a asp-action="Edit" asp-route-id="@producto.ProductoID" class="btn btn-sm btn-outline-warning" title="Editar">
-                        <i class="bi bi-pencil-square"></i>
-                    </a>
-                }
-                @if (User.HasPermission("productos.ver"))
-                {
-                    <a asp-action="Details" asp-route-id="@producto.ProductoID" class="btn btn-sm btn-outline-info" title="Detalles">
-                        <i class="bi bi-eye"></i>
-                    </a>
-                }
+            <div class="btn-group" role="group">
+                @Html.ActionButtons(producto.ProductoID, "Productos")
                 @if (User.HasPermission("productos.editar"))
                 {
                     <a asp-action="AjusteStock" asp-route-id="@producto.ProductoID" class="btn btn-sm btn-outline-primary" title="Ajustar Stock">
@@ -39,15 +28,6 @@
                     <a asp-action="MovimientosStock" asp-route-id="@producto.ProductoID" class="btn btn-sm btn-outline-success" title="Ver Movimientos de Stock">
                         <i class="bi bi-list-ol"></i>
                     </a>
-                }
-                @if (User.HasPermission("productos.eliminar"))
-                {
-                    <form asp-action="Delete" asp-route-id="@producto.ProductoID" method="post" class="d-inline" onsubmit="return confirm('¿Eliminar @producto.Nombre?');">
-                        @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </form>
                 }
             </div>
         </td>

@@ -2,6 +2,8 @@
 @{
     ViewBag.Title = "Clientes";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+
 }
 
 <section class="container-fluid py-3">
@@ -117,26 +119,7 @@
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    <div class="btn-group" role="group" aria-label="Acciones cliente">
-                                        @if (User.HasPermission("clientes.editar"))
-                                        {
-                                            <a asp-action="Edit" asp-route-id="@cliente.ClienteID" class="btn btn-sm btn-outline-primary" title="Editar">
-                                                <i class="bi bi-pencil-square" aria-hidden="true"></i>
-                                            </a>
-                                        }
-                                        @if (User.HasPermission("clientes.ver"))
-                                        {
-                                            <a asp-action="Details" asp-route-id="@cliente.ClienteID" class="btn btn-sm btn-outline-info" title="Ver detalles">
-                                                <i class="bi bi-eye" aria-hidden="true"></i>
-                                            </a>
-                                        }
-                                        @if (User.HasPermission("clientes.eliminar"))
-                                        {
-                                            <a asp-action="Delete" asp-route-id="@cliente.ClienteID" class="btn btn-sm btn-outline-danger" title="Eliminar">
-                                                <i class="bi bi-trash" aria-hidden="true"></i>
-                                            </a>
-                                        }
-                                    </div>
+                                    @Html.ActionButtons(cliente.ClienteID, "Clientes")
                                 </td>
                             </tr>
                         }

@@ -13,8 +13,9 @@ using Javo2.Middleware;
 using Javo2.Services;
 using Javo2.Services.Authentication;
 using Javo2.Services.Common;
-using Javo2.Models.Authentication;
-using Microsoft.AspNetCore.Mvc.Authorization;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 Console.WriteLine($"CONTENT ROOT = {Directory.GetCurrentDirectory()}");
@@ -25,8 +26,11 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
-// Agregar 
+// Registrar servicios
+builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
 
+// Servicios de la aplicación
 builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<IProveedorService, ProveedorService>();
 builder.Services.AddScoped<ICatalogoService, CatalogoService>();
@@ -39,11 +43,6 @@ builder.Services.AddScoped<IVentaService, VentaService>();
 builder.Services.AddScoped<ICotizacionService, CotizacionService>();
 builder.Services.AddScoped<IConfiguracionService, ConfiguracionService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.AddScoped<IResetPasswordService, ResetPasswordService>();
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddPermissionPolicies();
-
-// Devoluciones
 builder.Services.AddScoped<IDevolucionGarantiaService, DevolucionGarantiaService>();
 
 // Servicio de búsqueda de cliente
@@ -53,6 +52,21 @@ builder.Services.AddScoped<IClienteSearchService>(sp =>
 
 builder.Services.AddScoped<IDropdownService, DropdownService>();
 
+// Configuración centralizada de autenticación y permisos
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+})
+.AddCookie(options =>
+{
+    options.LoginPath = "/Auth/Login";
+    options.LogoutPath = "/Auth/Logout";
+    options.AccessDeniedPath = "/Auth/AccessDenied";
+    options.ExpireTimeSpan = TimeSpan.FromHours(3);
+    options.SlidingExpiration = true;
+});
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
@@ -107,6 +121,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
+// Usar la configuración de autenticación
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -148,7 +163,7 @@ if (app.Environment.IsDevelopment())
         var usuarios = await usuarioService.GetAllUsuariosAsync();
         if (!usuarios.Any())
         {
-            var adminRol = new Rol
+            var adminRol = new Javo2.Models.Authentication.Rol
             {
                 Nombre = "Administrador",
                 Descripcion = "Acceso completo al sistema",
@@ -156,7 +171,7 @@ if (app.Environment.IsDevelopment())
             };
             var rolId = await rolService.CreateRolAsync(adminRol);
 
-            var admin = new Usuario
+            var admin = new Javo2.Models.Authentication.Usuario
             {
                 NombreUsuario = "admin",
                 Nombre = "Administrador",

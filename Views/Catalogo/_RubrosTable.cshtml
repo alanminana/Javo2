@@ -20,19 +20,11 @@
         </td>
         <td class="text-center">
             <div class="btn-group" role="group">
+                @Html.ActionButtons(rubro.ID, "Catalogo", "EditRubro", "Editar Rubro", "pencil-square")
                 @if (User.HasPermission("catalogo.editar"))
                 {
-                    <a asp-action="EditRubro" asp-route-id="@rubro.ID" class="btn btn-sm btn-outline-warning" title="Editar">
-                        <i class="bi bi-pencil-square"></i>
-                    </a>
                     <a asp-action="EditSubRubros" asp-route-rubroId="@rubro.ID" class="btn btn-sm btn-outline-info" title="Gestionar subrubros">
                         <i class="bi bi-list"></i>
-                    </a>
-                }
-                @if (User.HasPermission("catalogo.eliminar"))
-                {
-                    <a asp-action="DeleteRubro" asp-route-id="@rubro.ID" class="btn btn-sm btn-outline-danger" title="Eliminar">
-                        <i class="bi bi-trash"></i>
                     </a>
                 }
             </div>

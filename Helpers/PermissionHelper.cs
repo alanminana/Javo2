@@ -1,5 +1,4 @@
 ﻿// Helpers/PermissionHelper.cs
-using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
 namespace Javo2.Helpers
