@@ -54,63 +54,7 @@ namespace Javo2.Middleware
                 return;
             }
 
-            // Verificar permisos para acciones específicas
-            string path = context.Request.Path.Value.ToLower();
-            string controller = "";
-            string action = "";
-
-            // Extraer controller y action del path
-            var segments = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
-            if (segments.Length >= 1)
-            {
-                controller = segments[0].ToLower();
-            }
-            if (segments.Length >= 2)
-            {
-                action = segments[1].ToLower();
-            }
-
-            // Verificar permisos según el método y la acción
-            if (!string.IsNullOrEmpty(controller) && !string.IsNullOrEmpty(action))
-            {
-                string requiredPermission = null;
-
-                // Determinar el permiso necesario según la acción
-                if (action.StartsWith("edit") || action.StartsWith("update"))
-                {
-                    requiredPermission = $"{controller}.editar";
-                }
-                else if (action.StartsWith("delet") || action.StartsWith("remove"))
-                {
-                    requiredPermission = $"{controller}.eliminar";
-                }
-                else if (action.StartsWith("creat") || action.StartsWith("add") || action.StartsWith("new"))
-                {
-                    requiredPermission = $"{controller}.crear";
-                }
-                else if (action.StartsWith("detail") || action.StartsWith("view") || action.Equals("index"))
-                {
-                    requiredPermission = $"{controller}.ver";
-                }
-
-                // Verificar si el usuario tiene el permiso necesario
-                if (!string.IsNullOrEmpty(requiredPermission) &&
-                    !context.User.HasClaim(c => c.Type == "Permission" && c.Value == requiredPermission))
-                {
-                    // AJAX request
-                    if (context.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
-                    {
-                        context.Response.StatusCode = 403; // Forbidden
-                        return;
-                    }
-
-                    // Normal request
-                    context.Response.Redirect("/Auth/AccessDenied");
-                    return;
-                }
-            }
-
-            // Continuar con la solicitud
+            // Continuar con la solicitud si está autenticado
             await _next(context);
         }
     }

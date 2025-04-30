@@ -4,9 +4,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<section class="container-fluid py-3">
+<div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h2 mb-0">
+        <h1 class="h3 mb-0 text-primary">
             <i class="bi bi-shield-lock me-2"></i>@ViewData["Title"]
         </h1>
     </div>
@@ -19,81 +19,66 @@
         </div>
     }
 
-    @if (TempData["Error"] != null)
-    {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="bi bi-exclamation-triangle me-2"></i> @TempData["Error"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-        </div>
-    }
-
+    <!-- Dashboard Cards -->
     <div class="row mb-4">
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100 py-2 bg-dark text-light">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card border-left-primary h-100 py-2 shadow">
                 <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Total Usuarios
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold">@Model.TotalUsuarios</div>
+                    <div class="d-flex no-gutters align-items-center">
+                        <div class="me-3">
+                            <div class="text-xs text-primary fw-bold text-uppercase mb-1">Usuarios Totales</div>
+                            <div class="h4 mb-0 fw-bold text-gray-800">@Model.TotalUsuarios</div>
                         </div>
-                        <div class="col-auto">
-                            <i class="bi bi-people-fill fa-2x text-gray-300" style="font-size: 2rem;"></i>
+                        <div class="ms-auto">
+                            <i class="bi bi-people-fill text-muted" style="font-size: 2rem;"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2 bg-dark text-light">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card border-left-success h-100 py-2 shadow">
                 <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Usuarios Activos
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold">@Model.UsuariosActivos</div>
+                    <div class="d-flex no-gutters align-items-center">
+                        <div class="me-3">
+                            <div class="text-xs text-success fw-bold text-uppercase mb-1">Usuarios Activos</div>
+                            <div class="h4 mb-0 fw-bold text-gray-800">@Model.UsuariosActivos</div>
                         </div>
-                        <div class="col-auto">
-                            <i class="bi bi-person-check-fill fa-2x text-gray-300" style="font-size: 2rem;"></i>
+                        <div class="ms-auto">
+                            <i class="bi bi-person-check-fill text-muted" style="font-size: 2rem;"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-info shadow h-100 py-2 bg-dark text-light">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card border-left-info h-100 py-2 shadow">
                 <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                Roles
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold">@Model.TotalRoles</div>
+                    <div class="d-flex no-gutters align-items-center">
+                        <div class="me-3">
+                            <div class="text-xs text-info fw-bold text-uppercase mb-1">Roles</div>
+                            <div class="h4 mb-0 fw-bold text-gray-800">@Model.TotalRoles</div>
                         </div>
-                        <div class="col-auto">
-                            <i class="bi bi-person-badge-fill fa-2x text-gray-300" style="font-size: 2rem;"></i>
+                        <div class="ms-auto">
+                            <i class="bi bi-person-badge-fill text-muted" style="font-size: 2rem;"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning shadow h-100 py-2 bg-dark text-light">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card border-left-warning h-100 py-2 shadow">
                 <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Permisos
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold">@Model.TotalPermisos</div>
+                    <div class="d-flex no-gutters align-items-center">
+                        <div class="me-3">
+                            <div class="text-xs text-warning fw-bold text-uppercase mb-1">Permisos</div>
+                            <div class="h4 mb-0 fw-bold text-gray-800">@Model.TotalPermisos</div>
                         </div>
-                        <div class="col-auto">
-                            <i class="bi bi-key-fill fa-2x text-gray-300" style="font-size: 2rem;"></i>
+                        <div class="ms-auto">
+                            <i class="bi bi-key-fill text-muted" style="font-size: 2rem;"></i>
                         </div>
                     </div>
                 </div>
@@ -101,20 +86,92 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-xl-6 col-lg-6">
-            <div class="card shadow mb-4 bg-dark text-light">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold">Últimos Usuarios Registrados</h6>
-                </div>
+    <!-- Quick Access Cards -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card shadow h-100">
                 <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-people-fill me-2 text-primary"></i>Usuarios
+                    </h5>
+                    <p class="card-text">Gestión de usuarios del sistema.</p>
+                    <a asp-controller="Usuarios" asp-action="Index" class="btn btn-sm btn-primary">
+                        <i class="bi bi-arrow-right me-1"></i>Administrar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-person-badge-fill me-2 text-success"></i>Roles
+                    </h5>
+                    <p class="card-text">Gestión de roles y permisos.</p>
+                    <a asp-controller="Roles" asp-action="Index" class="btn btn-sm btn-success">
+                        <i class="bi bi-arrow-right me-1"></i>Administrar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-key-fill me-2 text-info"></i>Permisos
+                    </h5>
+                    <p class="card-text">Gestión de permisos del sistema.</p>
+                    <a asp-controller="Permisos" asp-action="Index" class="btn btn-sm btn-info">
+                        <i class="bi bi-arrow-right me-1"></i>Administrar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-gear-fill me-2 text-warning"></i>Configuración
+                    </h5>
+                    <p class="card-text">Configuración de seguridad.</p>
+                    <a asp-controller="Configuracion" asp-action="Seguridad" class="btn btn-sm btn-warning">
+                        <i class="bi bi-arrow-right me-1"></i>Administrar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activities Tabs -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#users-tab-pane" type="button" role="tab" aria-controls="users-tab-pane" aria-selected="true">
+                        <i class="bi bi-people-fill me-1"></i>Últimos Usuarios
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="login-tab" data-bs-toggle="tab" data-bs-target="#login-tab-pane" type="button" role="tab" aria-controls="login-tab-pane" aria-selected="false">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>Últimos Accesos
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="users-tab-pane" role="tabpanel" aria-labelledby="users-tab" tabindex="0">
                     <div class="table-responsive">
-                        <table class="table table-dark table-hover">
+                        <table class="table table-hover">
                             <thead>
                                 <tr>
                                     <th>Usuario</th>
                                     <th>Nombre</th>
                                     <th>Fecha Registro</th>
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -126,35 +183,33 @@
                                             <td>@usuario.NombreUsuario</td>
                                             <td>@usuario.NombreCompleto</td>
                                             <td>@usuario.FechaCreacion.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td>
+                                                <a asp-controller="Usuarios" asp-action="Details" asp-route-id="@usuario.UsuarioID" class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-eye me-1"></i>Ver
+                                                </a>
+                                            </td>
                                         </tr>
                                     }
                                 }
                                 else
                                 {
                                     <tr>
-                                        <td colspan="3" class="text-center">No hay usuarios registrados.</td>
+                                        <td colspan="4" class="text-center">No hay usuarios registrados recientemente.</td>
                                     </tr>
                                 }
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="col-xl-6 col-lg-6">
-            <div class="card shadow mb-4 bg-dark text-light">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold">Últimos Accesos al Sistema</h6>
-                </div>
-                <div class="card-body">
+                <div class="tab-pane fade" id="login-tab-pane" role="tabpanel" aria-labelledby="login-tab" tabindex="0">
                     <div class="table-responsive">
-                        <table class="table table-dark table-hover">
+                        <table class="table table-hover">
                             <thead>
                                 <tr>
                                     <th>Usuario</th>
                                     <th>Nombre</th>
                                     <th>Último Acceso</th>
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -166,13 +221,18 @@
                                             <td>@usuario.NombreUsuario</td>
                                             <td>@usuario.NombreCompleto</td>
                                             <td>@usuario.UltimoAcceso?.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td>
+                                                <a asp-controller="Usuarios" asp-action="Details" asp-route-id="@usuario.UsuarioID" class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-eye me-1"></i>Ver
+                                                </a>
+                                            </td>
                                         </tr>
                                     }
                                 }
                                 else
                                 {
                                     <tr>
-                                        <td colspan="3" class="text-center">No hay registros de acceso.</td>
+                                        <td colspan="4" class="text-center">No hay registros de acceso recientes.</td>
                                     </tr>
                                 }
                             </tbody>
@@ -182,36 +242,4 @@
             </div>
         </div>
     </div>
-
-    <!-- Gestión de Seguridad y botón de Verificar Permisos -->
-    <div class="row">
-        <div class="col-xl-12 col-lg-12">
-            <div class="card shadow mb-4 bg-dark text-light">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold">Gestión de Seguridad</h6>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-4 mb-4">
-                            <div class="card bg-secondary text-white shadow">
-                                <div class="card-body">
-                                    <h5 class="card-title"><i class="bi bi-tools me-2"></i>Herramientas de Seguridad</h5>
-                                    <p class="card-text">Accede a herramientas avanzadas para administrar la seguridad del sistema.</p>
-                                    <div class="d-flex">
-                                        <a asp-controller="SecurityTools" asp-action="Index" class="btn btn-light btn-sm me-2">
-                                            <i class="bi bi-arrow-right me-1"></i>Acceder
-                                        </a>
-                                        <!-- Botón para verificar permisos -->
-                                        <a href="@Url.Action("VerificarPermisos", "Diagnostic")" class="btn btn-info btn-sm" target="_blank">
-                                            <i class="bi bi-info-circle me-1"></i>Verificar Permisos
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+</div>

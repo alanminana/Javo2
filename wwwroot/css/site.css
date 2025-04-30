@@ -172,3 +172,61 @@ body, .text-dark, .text-black, .form-control, .form-select, .input-group-text {
 .badge {
     padding: 0.4em 0.6em;
     font-size: 0.75em;
+    /* Estilos para el login */
+    .login-container
+
+{
+    max-width: 450px;
+    margin: 0 auto;
+    padding-top: 40px;
+}
+
+.login-card {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.card-header-tabs .nav-link {
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+}
+
+    .card-header-tabs .nav-link.active {
+        border-bottom-color: transparent;
+        background-color: #fff;
+        border-top: 3px solid #4e73df;
+    }
+
+/* Estilos para el panel de seguridad */
+.security-card {
+    transition: all 0.3s ease;
+}
+
+    .security-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+
+.border-left-primary {
+    border-left: 0.25rem solid #4e73df !important;
+}
+
+.border-left-success {
+    border-left: 0.25rem solid #1cc88a !important;
+}
+
+.border-left-info {
+    border-left: 0.25rem solid #36b9cc !important;
+}
+
+.border-left-warning {
+    border-left: 0.25rem solid #f6c23e !important;
+}
+
+/* Espaciado para el dashboard */
+.card-header-tabs {
+    margin-right: 0;
+    margin-left: 0;
+    margin-bottom: -1px;
+}
