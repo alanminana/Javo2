@@ -2,16 +2,26 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Javo2.Helpers;
+using Javo2.IServices.Authentication;
+using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace Javo2.Controllers.Base
 {
     public class BaseController : Controller
     {
         protected readonly ILogger _logger;
+        protected readonly IPermissionManagerService _permissionManager;
 
         public BaseController(ILogger logger)
         {
             _logger = logger;
+        }
+
+        public BaseController(ILogger logger, IPermissionManagerService permissionManager)
+        {
+            _logger = logger;
+            _permissionManager = permissionManager;
         }
 
         protected void LogModelStateErrors()
@@ -25,9 +35,12 @@ namespace Javo2.Controllers.Base
             }
         }
 
-        protected bool UserHasPermission(string permissionCode)
+        protected async Task<bool> UserHasPermissionAsync(string permissionCode)
         {
-            return User.HasPermission(permissionCode);
+            if (_permissionManager == null)
+                return User.HasPermission(permissionCode);
+
+            return await _permissionManager.UserHasPermissionAsync(User, permissionCode);
         }
 
         protected IActionResult AccessDeniedResult()

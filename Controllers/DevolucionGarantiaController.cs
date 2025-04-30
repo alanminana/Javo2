@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Javo2.Controllers
 {
@@ -42,6 +43,8 @@ namespace Javo2.Controllers
         }
 
         // GET: DevolucionGarantia
+        [Authorize(Policy = "Permission:devolucionGarantia.ver")]
+
         public async Task<IActionResult> Index()
         {
             try
@@ -70,6 +73,8 @@ namespace Javo2.Controllers
         }
 
         // GET: DevolucionGarantia/Create
+        [Authorize(Policy = "Permission:devolucionGarantia.crear")]
+
         public IActionResult Create()
         {
             var model = new DevolucionGarantiaViewModel
@@ -138,6 +143,8 @@ namespace Javo2.Controllers
         // POST: DevolucionGarantia/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:devolucionGarantia.crear")]
+
         public async Task<IActionResult> Create(DevolucionGarantiaViewModel model)
         {
             model.TiposCaso = GetTiposCasoSelectList();
@@ -200,6 +207,8 @@ namespace Javo2.Controllers
 
 
         // GET: DevolucionGarantia/Details/5
+        [Authorize(Policy = "Permission:devolucionGarantia.ver")]
+
         public async Task<IActionResult> Details(int id)
         {
             try
@@ -260,6 +269,8 @@ namespace Javo2.Controllers
         }
 
         // GET: DevolucionGarantia/Edit/5
+        [Authorize(Policy = "Permission:devolucionGarantia.editar")]
+
         public async Task<IActionResult> Edit(int id)
         {
             try
@@ -391,6 +402,8 @@ namespace Javo2.Controllers
         // POST: DevolucionGarantia/Procesar/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:devolucionGarantia.procesar")]
+
         public async Task<IActionResult> Procesar(int id)
         {
             try
