@@ -52,6 +52,7 @@ namespace Javo2
                 .ForMember(dest => dest.TotalProductos, opt => opt.Ignore())
                 .ForMember(dest => dest.PromocionID, opt => opt.Ignore())
                 .ForMember(dest => dest.Promociones, opt => opt.Ignore())
+                .ForMember(dest => dest.EstadosEntregaProductos, opt => opt.Ignore())
                 .ForMember(dest => dest.ProductosPresupuesto, opt => opt.MapFrom(src => src.ProductosPresupuesto))
                 .ReverseMap()
                 .ForMember(dest => dest.ProductosPresupuesto, opt => opt.MapFrom(src => src.ProductosPresupuesto))
