@@ -24,7 +24,9 @@ Console.WriteLine($"CONTENT ROOT = {Directory.GetCurrentDirectory()}");
 Console.WriteLine($"WEB ROOT     = {builder.Environment.WebRootPath}");
 
 // Configuración de Logging
+// Configuración de Logging
 builder.Logging.ClearProviders();
+builder.Logging.AddConfiguration(builder.Configuration.GetSection("Logging")); // Agregar esta línea
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
@@ -127,13 +129,10 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-// Usar la configuración de autenticación
+// Primero autenticación y autorización
 app.UseAuthenticationConfig();
-
-// Rutas
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.UseMiddleware<AuthenticationMiddleware>();
-
 app.Run();

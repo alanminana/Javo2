@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Javo2.Controllers
 {
-    [Authorize]  // Fuerza que el usuario esté autenticado
+    [Authorize]
     public class ConfiguracionInicialController : BaseController
     {
         private readonly IUsuarioService _usuarioService;
@@ -32,26 +32,21 @@ namespace Javo2.Controllers
             _permisoService = permisoService;
         }
 
-        // GET: ConfiguracionInicial/Index
         [HttpGet]
-        [Authorize(Policy = "Permission:configuracionInicial.ver")]
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            // Verificar si ya existe algún usuario
             var usuarios = await _usuarioService.GetAllUsuariosAsync();
             if (usuarios.Any())
             {
-                // Si ya hay usuarios, redirigir al login
                 return RedirectToAction("Login", "Auth");
             }
-
             return View(new ConfiguracionInicialViewModel());
         }
 
-        // POST: ConfiguracionInicial/Index
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = "Permission:configuracionInicial.crear")]
         public async Task<IActionResult> Index(ConfiguracionInicialViewModel model)
         {
             if (!ModelState.IsValid)
@@ -61,14 +56,12 @@ namespace Javo2.Controllers
 
             try
             {
-                // Verificar que no existan usuarios
                 var usuarios = await _usuarioService.GetAllUsuariosAsync();
                 if (usuarios.Any())
                 {
                     return RedirectToAction("Login", "Auth");
                 }
 
-                // 1. Crear usuario administrador
                 var admin = new Usuario
                 {
                     NombreUsuario = model.NombreUsuario,
@@ -81,7 +74,6 @@ namespace Javo2.Controllers
 
                 await _usuarioService.CreateUsuarioAsync(admin, model.Contraseña);
 
-                // 2. Asignar rol de administrador
                 var roles = await _rolService.GetAllRolesAsync();
                 var rolAdmin = roles.FirstOrDefault(r =>
                     r.Nombre.Equals("Administrador", StringComparison.OrdinalIgnoreCase));
@@ -102,12 +94,10 @@ namespace Javo2.Controllers
             }
         }
 
-        // GET: ConfiguracionInicial/ConfiguracionCompletada
         [HttpGet]
-        [Authorize(Policy = "Permission:configuracionInicial.ver")]
+        [AllowAnonymous]
         public IActionResult ConfiguracionCompletada()
         {
             return View();
         }
-    }
-}
+    }    }

@@ -1,70 +1,72 @@
-﻿// Middleware/AuthenticationMiddleware.cs
-using Microsoft.AspNetCore.Http;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Security.Claims;
-using System;
+﻿using Javo2.IServices.Authentication;
 
-namespace Javo2.Middleware
+public class AuthenticationMiddleware
 {
-    public class AuthenticationMiddleware
+    private readonly RequestDelegate _next;
+    private readonly ILogger<AuthenticationMiddleware> _logger;
+    private readonly string[] _allowedPaths = new[] {
+        "/Auth/Login",
+        "/Auth/Logout",
+        "/Auth/AccessDenied",
+        "/ResetPassword/OlvideContraseña",
+        "/ResetPassword/ResetearContraseña",
+        "/ResetPassword/TokenInvalido",
+        "/ResetPassword/ResetExitoso",
+        "/ConfiguracionInicial",
+        "/ConfiguracionInicial/Index",
+        "/css/",
+        "/js/",
+        "/lib/",
+        "/img/"
+    };
+
+    public AuthenticationMiddleware(RequestDelegate next, ILogger<AuthenticationMiddleware> logger)
     {
-        private readonly RequestDelegate _next;
-        private readonly string[] _allowedPaths = new[] {
-            "/Auth/Login",
-            "/Auth/Logout",
-            "/Auth/AccessDenied",
-            "/ResetPassword/OlvideContraseña",
-            "/ResetPassword/ResetearContraseña",
-            "/ResetPassword/TokenInvalido",
-            "/ResetPassword/ResetExitoso",
-            "/ConfiguracionInicial",
-            "/css/",
-            "/js/",
-            "/lib/",
-            "/img/"
-        };
+        _next = next;
+        _logger = logger;
+    }
 
-        public AuthenticationMiddleware(RequestDelegate next)
+    public async Task InvokeAsync(HttpContext context)
+    {
+        try
         {
-            _next = next;
-        }
+            // Rutas raíz o vacías
+            if (string.IsNullOrEmpty(context.Request.Path.Value) || context.Request.Path.Value == "/")
+            {
+                var usuarioService = context.RequestServices.GetRequiredService<IUsuarioService>();
+                var usuarios = await usuarioService.GetAllUsuariosAsync();
 
-        public async Task InvokeAsync(HttpContext context)
-        {
-            // Permitir acceso a recursos públicos
-            if (_allowedPaths.Any(p => context.Request.Path.StartsWithSegments(p)))
+                if (!usuarios.Any())
+                {
+                    context.Response.Redirect("/ConfiguracionInicial");
+                    return;
+                }
+
+                // Si ya hay usuarios, pasar al siguiente middleware
+                await _next(context);
+                return;
+            }
+
+            // Rutas públicas
+            if (_allowedPaths.Any(p => context.Request.Path.StartsWithSegments(p, StringComparison.OrdinalIgnoreCase)))
             {
                 await _next(context);
                 return;
             }
 
-            // Verificar si el usuario está autenticado
-            if (!context.User.Identity.IsAuthenticated)
+            // Verificación de autenticación
+            if (context.User?.Identity?.IsAuthenticated != true)
             {
-                // Redirigir a la página de login
                 context.Response.Redirect("/Auth/Login");
                 return;
             }
 
-            // Para peticiones AJAX, verificar también la autenticación
-            if (context.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && !context.User.Identity.IsAuthenticated)
-            {
-                context.Response.StatusCode = 401; // Unauthorized
-                return;
-            }
-
-            // Continuar con la solicitud si está autenticado
             await _next(context);
         }
-    }
-
-    // Extensión para facilitar la configuración en Program.cs
-    public static class AuthenticationMiddlewareExtensions
-    {
-        public static IApplicationBuilder UseCustomAuthentication(this IApplicationBuilder builder)
+        catch (Exception ex)
         {
-            return builder.UseMiddleware<AuthenticationMiddleware>();
+            _logger.LogError(ex, $"Error en middleware de autenticación. Ruta: {context.Request.Path}");
+            context.Response.Redirect("/Auth/Login");
         }
     }
 }
