@@ -23,7 +23,8 @@ namespace Javo2.Extensions
                 {
                     policy.RequireAuthenticatedUser();
                 });
-
+                options.AddPolicy("Permission:securitydashboard.ver", policy =>
+            policy.RequireClaim("Permission", "securitydashboard.ver"));
                 // Crear políticas para cada permiso específico
                 CreatePermissionPolicies(options, new[]
                 {

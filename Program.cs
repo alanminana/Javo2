@@ -24,9 +24,8 @@ Console.WriteLine($"CONTENT ROOT = {Directory.GetCurrentDirectory()}");
 Console.WriteLine($"WEB ROOT     = {builder.Environment.WebRootPath}");
 
 // Configuración de Logging
-// Configuración de Logging
 builder.Logging.ClearProviders();
-builder.Logging.AddConfiguration(builder.Configuration.GetSection("Logging")); // Agregar esta línea
+builder.Logging.AddConfiguration(builder.Configuration.GetSection("Logging"));
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
@@ -54,6 +53,7 @@ builder.Services.AddScoped<IVentaService, VentaService>();
 builder.Services.AddScoped<ICotizacionService, CotizacionService>();
 builder.Services.AddScoped<IConfiguracionService, ConfiguracionService>();
 builder.Services.AddScoped<IDevolucionGarantiaService, DevolucionGarantiaService>();
+builder.Services.AddPermissionPolicies();
 
 // Servicio de búsqueda de cliente
 builder.Services.AddScoped<IClienteSearchService>(sp =>
@@ -128,34 +128,34 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}");
-});
 
-
-// Primero autenticación y autorización
+// Autenticación y autorización (antes de endpoints)
 app.UseAuthenticationConfig();
+
+// Definir rutas
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// Middleware de autenticación personalizado
 app.UseMiddleware<AuthenticationMiddleware>();
+
+// Sembrar permisos al inicio
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var permisoService = services.GetRequiredService<IPermisoService>();
     var rolService = services.GetRequiredService<IRolService>();
-    var logger = services.GetRequiredService<ILogger<Program>>();
+    var loggerSeeder = services.GetRequiredService<ILogger<Javo2.Data.Seeders.PermissionSeeder>>();
 
     try
     {
-        var logger = services.GetRequiredService<ILogger<Javo2.Data.Seeders.PermissionSeeder>>();
-        var seeder = new Javo2.Data.Seeders.PermissionSeeder(permisoService, rolService, logger); await seeder.SeedAsync();
+        var seeder = new Javo2.Data.Seeders.PermissionSeeder(permisoService, rolService, loggerSeeder);
+        await seeder.SeedAsync();
     }
     catch (Exception ex)
     {
+        var logger = services.GetRequiredService<ILogger<Program>>();
         logger.LogError(ex, "Error al sembrar permisos");
     }
 }

@@ -1,17 +1,14 @@
-﻿// Archivo: Models/Cliente.cs
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Javo2.Models
 {
-    public class Cliente
+    public class Garante
     {
         [Key]
-        public int ClienteID { get; set; }
+        public int GaranteID { get; set; }
 
-        // Datos Personales
         [Required(ErrorMessage = "El nombre es obligatorio.")]
         [MaxLength(50, ErrorMessage = "El nombre no puede superar los 50 caracteres.")]
         public string Nombre { get; set; } = string.Empty;
@@ -33,8 +30,6 @@ namespace Javo2.Models
         [Required(ErrorMessage = "El celular es obligatorio.")]
         public string Celular { get; set; } = string.Empty;
 
-        public string TelefonoTrabajo { get; set; } = string.Empty;
-
         // Datos Domiciliarios
         [Required(ErrorMessage = "La calle es obligatoria.")]
         public string Calle { get; set; } = string.Empty;
@@ -51,9 +46,6 @@ namespace Javo2.Models
         [Required(ErrorMessage = "El código postal es obligatorio.")]
         public string CodigoPostal { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "La descripción del domicilio es obligatoria.")]
-        public string DescripcionDomicilio { get; set; } = string.Empty;
-
         // Relaciones
         [Required(ErrorMessage = "La provincia es obligatoria.")]
         public int ProvinciaID { get; set; }
@@ -63,42 +55,26 @@ namespace Javo2.Models
         public int CiudadID { get; set; }
         public Ciudad? Ciudad { get; set; }
 
-        // Datos de crédito
-        [Display(Name = "Límite de Crédito Inicial")]
-        [Range(0, double.MaxValue, ErrorMessage = "El límite de crédito debe ser mayor o igual a cero.")]
-        public decimal LimiteCreditoInicial { get; set; } = 0m;
+        // Relación con Cliente
+        public int ClienteID { get; set; }
+        public Cliente? Cliente { get; set; }
 
-        [Display(Name = "Apto para Crédito")]
-        public bool AptoCredito { get; set; } = false;
+        // Información laboral
+        [Required(ErrorMessage = "El lugar de trabajo es obligatorio.")]
+        public string LugarTrabajo { get; set; } = string.Empty;
 
-        [Display(Name = "Requiere Garante")]
-        public bool RequiereGarante { get; set; } = false;
+        [Required(ErrorMessage = "Los ingresos mensuales son obligatorios.")]
+        [Range(1, double.MaxValue, ErrorMessage = "Los ingresos deben ser mayores a 0.")]
+        public decimal IngresosMensuales { get; set; }
 
-        // Referencia al garante
-        public int? GaranteID { get; set; }
-        public Garante? Garante { get; set; }
-
-        // Otros campos
-        public decimal SaldoInicial { get; set; }
-        public decimal SaldoDisponible { get; set; }
-        public decimal Saldo { get; set; }
-        public string ModificadoPor { get; set; } = string.Empty;
-        public decimal DeudaTotal { get; set; } = 0;
-        public bool Activo { get; set; } = true;
-
-        // Auditoría
+        // Información adicional
+        public string RelacionCliente { get; set; } = string.Empty;
         public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
-        public DateTime? FechaModificacion { get; set; }
 
-        // Colecciones
-        public ICollection<Venta>? Ventas { get; set; }
-        public ICollection<Compra>? Compras { get; set; }
-
-        // Calculado
         [NotMapped]
         public string NombreCompleto => $"{Nombre} {Apellido}";
 
         [NotMapped]
-        public string Domicilio => $"{Calle} {NumeroCalle}, Piso: {NumeroPiso}, Dpto: {Dpto}";
+        public string Domicilio => $"{Calle} {NumeroCalle}, {Localidad}";
     }
 }

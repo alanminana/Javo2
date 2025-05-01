@@ -9,7 +9,7 @@ namespace Javo2.Extensions
     {
         public static IServiceCollection AddPermissionPolicies(this IServiceCollection services)
         {
-            // Define la estructura de permisos
+            // Define la estructura de permisos estándar
             var actionPermissions = new Dictionary<string, string[]>
             {
                 {"ver", new[] {"Index", "Details", "Get", "List"}},
@@ -53,6 +53,10 @@ namespace Javo2.Extensions
 
                 options.AddPolicy("Permission:ventas.rechazar", policy =>
                     policy.RequireClaim("Permission", "ventas.rechazar"));
+
+                // Añadir política específica para entrega de productos
+                options.AddPolicy("Permission:ventas.entregaProductos", policy =>
+                    policy.RequireClaim("Permission", "ventas.entregaProductos"));
 
                 options.AddPolicy("Permission:productos.ajustarprecios", policy =>
                     policy.RequireClaim("Permission", "productos.ajustarprecios"));

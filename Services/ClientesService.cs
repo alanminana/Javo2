@@ -15,6 +15,7 @@ namespace Javo2.Services
     {
         private readonly ILogger<ClienteService> _logger;
         private readonly IAuditoriaService? _auditoriaService;
+        private readonly IGaranteService? _garanteService;
         private static List<Cliente> _clientes = new();
         private static ReaderWriterLockSlim _lock = new();
         private static int _nextID = 1;
@@ -36,10 +37,14 @@ namespace Javo2.Services
             new Ciudad { CiudadID = 4, Nombre = "Rosario", ProvinciaID = 3 }
         };
 
-        public ClienteService(ILogger<ClienteService> logger, IAuditoriaService? auditoriaService = null)
+        public ClienteService(
+            ILogger<ClienteService> logger,
+            IAuditoriaService? auditoriaService = null,
+            IGaranteService? garanteService = null)
         {
             _logger = logger;
             _auditoriaService = auditoriaService;
+            _garanteService = garanteService;
             InitializeAsync().GetAwaiter().GetResult();
         }
 
@@ -82,56 +87,174 @@ namespace Javo2.Services
             {
                 cliente.ClienteID = _nextID++;
                 cliente.FechaCreacion = DateTime.UtcNow;
+
+                // Si el cliente es apto para crédito, asegurarse de tener un límite de crédito
+                if (cliente.AptoCredito && cliente.LimiteCreditoInicial <= 0)
+                {
+                    cliente.LimiteCreditoInicial = 10000; // Valor por defecto
+                }
+
+                // Inicializar saldos
+                cliente.SaldoInicial = 0;
+                cliente.Saldo = 0;
+                cliente.SaldoDisponible = cliente.AptoCredito ? cliente.LimiteCreditoInicial : 0;
+
                 _clientes.Add(cliente);
             }
             finally
             {
                 _lock.ExitWriteLock();
             }
-            
+
             await GuardarEnJsonAsync();
-            _logger.LogInformation("Cliente creado: ID={ID}, Nombre={Nombre}", cliente.ClienteID, cliente.Nombre);
+
+            if (_auditoriaService != null)
+            {
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = cliente.ModificadoPor,
+                    Entidad = "Cliente",
+                    Accion = "Create",
+                    LlavePrimaria = cliente.ClienteID.ToString(),
+                    Detalle = $"Cliente creado: {cliente.Nombre} {cliente.Apellido}, DNI: {cliente.DNI}"
+                });
+            }
+
+            _logger.LogInformation("Cliente creado: ID={ID}, Nombre={Nombre}", cliente.ClienteID, $"{cliente.Nombre} {cliente.Apellido}");
         }
 
         public async Task UpdateClienteAsync(Cliente cliente)
         {
+            Cliente? existing;
             _lock.EnterWriteLock();
             try
             {
-                var existing = _clientes.FirstOrDefault(c => c.ClienteID == cliente.ClienteID);
+                existing = _clientes.FirstOrDefault(c => c.ClienteID == cliente.ClienteID);
                 if (existing != null)
                 {
-                    var index = _clientes.IndexOf(existing);
-                    cliente.FechaModificacion = DateTime.UtcNow;
-                    _clientes[index] = cliente;
+                    // Guardar valores anteriores para auditoría
+                    bool anteriorAptoCredito = existing.AptoCredito;
+                    decimal anteriorLimiteCredito = existing.LimiteCreditoInicial;
+
+                    // Actualizar campos básicos
+                    existing.Nombre = cliente.Nombre;
+                    existing.Apellido = cliente.Apellido;
+                    existing.DNI = cliente.DNI;
+                    existing.Email = cliente.Email;
+                    existing.Telefono = cliente.Telefono;
+                    existing.Celular = cliente.Celular;
+                    existing.TelefonoTrabajo = cliente.TelefonoTrabajo;
+                    existing.Calle = cliente.Calle;
+                    existing.NumeroCalle = cliente.NumeroCalle;
+                    existing.NumeroPiso = cliente.NumeroPiso;
+                    existing.Dpto = cliente.Dpto;
+                    existing.Localidad = cliente.Localidad;
+                    existing.CodigoPostal = cliente.CodigoPostal;
+                    existing.DescripcionDomicilio = cliente.DescripcionDomicilio;
+                    existing.ProvinciaID = cliente.ProvinciaID;
+                    existing.CiudadID = cliente.CiudadID;
+                    existing.ModificadoPor = cliente.ModificadoPor;
+                    existing.Activo = cliente.Activo;
+                    existing.FechaModificacion = DateTime.UtcNow;
+
+                    // Actualizar campos de crédito
+                    existing.AptoCredito = cliente.AptoCredito;
+                    existing.RequiereGarante = cliente.RequiereGarante;
+                    existing.GaranteID = cliente.GaranteID;
+
+                    // Lógica para cuando cambia el estado de crédito o el límite
+                    if (cliente.AptoCredito)
+                    {
+                        // Si cambió el límite o es nuevo apto de crédito
+                        if (!anteriorAptoCredito || cliente.LimiteCreditoInicial != anteriorLimiteCredito)
+                        {
+                            existing.LimiteCreditoInicial = cliente.LimiteCreditoInicial;
+
+                            // Recalcular saldo disponible
+                            existing.SaldoDisponible = existing.LimiteCreditoInicial - existing.DeudaTotal;
+                        }
+                    }
+                    else
+                    {
+                        // Si ya no es apto para crédito
+                        if (anteriorAptoCredito)
+                        {
+                            // Mantener el límite pero establecer saldo disponible a 0
+                            existing.SaldoDisponible = 0;
+                        }
+                    }
+                }
+                else
+                {
+                    throw new KeyNotFoundException($"Cliente con ID {cliente.ClienteID} no encontrado");
                 }
             }
             finally
             {
                 _lock.ExitWriteLock();
             }
-            
+
             await GuardarEnJsonAsync();
+
+            if (_auditoriaService != null)
+            {
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = cliente.ModificadoPor,
+                    Entidad = "Cliente",
+                    Accion = "Update",
+                    LlavePrimaria = cliente.ClienteID.ToString(),
+                    Detalle = $"Cliente actualizado: {cliente.Nombre} {cliente.Apellido}, DNI: {cliente.DNI}"
+                });
+            }
+
             _logger.LogInformation("Cliente actualizado: ID={ID}", cliente.ClienteID);
         }
 
         public async Task DeleteClienteAsync(int id)
         {
+            Cliente? cliente;
             _lock.EnterWriteLock();
             try
             {
-                var existing = _clientes.FirstOrDefault(c => c.ClienteID == id);
-                if (existing != null)
+                cliente = _clientes.FirstOrDefault(c => c.ClienteID == id);
+                if (cliente != null)
                 {
-                    _clientes.Remove(existing);
+                    // Verificar si tiene deuda antes de eliminar
+                    if (cliente.DeudaTotal > 0)
+                    {
+                        throw new InvalidOperationException($"No se puede eliminar el cliente ID {id} porque tiene una deuda pendiente de {cliente.DeudaTotal:C}");
+                    }
+
+                    _clientes.Remove(cliente);
+                }
+                else
+                {
+                    throw new KeyNotFoundException($"Cliente con ID {id} no encontrado");
                 }
             }
             finally
             {
                 _lock.ExitWriteLock();
             }
-            
+
             await GuardarEnJsonAsync();
+
+            if (_auditoriaService != null)
+            {
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = "Sistema",
+                    Entidad = "Cliente",
+                    Accion = "Delete",
+                    LlavePrimaria = id.ToString(),
+                    Detalle = $"Cliente eliminado: {cliente.Nombre} {cliente.Apellido}, DNI: {cliente.DNI}"
+                });
+            }
+
             _logger.LogInformation("Cliente eliminado: ID={ID}", id);
         }
 
@@ -150,7 +273,7 @@ namespace Javo2.Services
                 if (!string.IsNullOrWhiteSpace(searchTerm))
                 {
                     searchTerm = searchTerm.ToLower();
-                    query = query.Where(c => 
+                    query = query.Where(c =>
                         c.Nombre.ToLower().Contains(searchTerm) ||
                         c.Apellido.ToLower().Contains(searchTerm) ||
                         c.DNI.ToString().Contains(searchTerm) ||
@@ -164,18 +287,18 @@ namespace Javo2.Services
                 switch (orderBy?.ToLower())
                 {
                     case "nombre":
-                        query = ascending.GetValueOrDefault() ? 
-                            query.OrderBy(c => c.Nombre) : 
+                        query = ascending.GetValueOrDefault() ?
+                            query.OrderBy(c => c.Nombre) :
                             query.OrderByDescending(c => c.Nombre);
                         break;
                     case "apellido":
-                        query = ascending.GetValueOrDefault() ? 
-                            query.OrderBy(c => c.Apellido) : 
+                        query = ascending.GetValueOrDefault() ?
+                            query.OrderBy(c => c.Apellido) :
                             query.OrderByDescending(c => c.Apellido);
                         break;
                     case "dni":
-                        query = ascending.GetValueOrDefault() ? 
-                            query.OrderBy(c => c.DNI) : 
+                        query = ascending.GetValueOrDefault() ?
+                            query.OrderBy(c => c.DNI) :
                             query.OrderByDescending(c => c.DNI);
                         break;
                     default:
@@ -227,13 +350,109 @@ namespace Javo2.Services
                     cliente.Compras ??= new List<Compra>();
                     cliente.Compras.Add(compra);
                 }
+                else
+                {
+                    throw new KeyNotFoundException($"Cliente con ID {clienteID} no encontrado");
+                }
             }
             finally
             {
                 _lock.ExitWriteLock();
             }
-            
+
             await GuardarEnJsonAsync();
+        }
+
+        public async Task<bool> AsignarGaranteAsync(int clienteID, int garanteID)
+        {
+            _lock.EnterWriteLock();
+            try
+            {
+                var cliente = _clientes.FirstOrDefault(c => c.ClienteID == clienteID);
+                if (cliente == null)
+                {
+                    return false;
+                }
+
+                // Verificar si el garante existe
+                if (_garanteService != null)
+                {
+                    var garante = await _garanteService.GetGaranteByIdAsync(garanteID);
+                    if (garante == null)
+                    {
+                        return false;
+                    }
+                }
+
+                cliente.GaranteID = garanteID;
+                cliente.FechaModificacion = DateTime.UtcNow;
+            }
+            finally
+            {
+                _lock.ExitWriteLock();
+            }
+
+            await GuardarEnJsonAsync();
+
+            if (_auditoriaService != null)
+            {
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = "Sistema",
+                    Entidad = "Cliente",
+                    Accion = "AsignarGarante",
+                    LlavePrimaria = clienteID.ToString(),
+                    Detalle = $"Garante (ID: {garanteID}) asignado al cliente ID: {clienteID}"
+                });
+            }
+
+            _logger.LogInformation("Garante (ID: {GaranteID}) asignado al cliente ID: {ClienteID}", garanteID, clienteID);
+            return true;
+        }
+
+        public async Task<bool> AjustarLimiteCreditoAsync(int clienteID, decimal nuevoLimite, string usuario)
+        {
+            _lock.EnterWriteLock();
+            try
+            {
+                var cliente = _clientes.FirstOrDefault(c => c.ClienteID == clienteID);
+                if (cliente == null)
+                {
+                    return false;
+                }
+
+                // Guardar límite anterior para auditoría
+                decimal limiteAnterior = cliente.LimiteCreditoInicial;
+
+                // Actualizar límite y saldo disponible
+                cliente.LimiteCreditoInicial = nuevoLimite;
+                cliente.SaldoDisponible = nuevoLimite - cliente.DeudaTotal;
+                cliente.FechaModificacion = DateTime.UtcNow;
+                cliente.ModificadoPor = usuario;
+            }
+            finally
+            {
+                _lock.ExitWriteLock();
+            }
+
+            await GuardarEnJsonAsync();
+
+            if (_auditoriaService != null)
+            {
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = usuario,
+                    Entidad = "Cliente",
+                    Accion = "AjusteCredito",
+                    LlavePrimaria = clienteID.ToString(),
+                    Detalle = $"Límite de crédito ajustado de {limiteAnterior:C} a {nuevoLimite:C}"
+                });
+            }
+
+            _logger.LogInformation("Límite de crédito del cliente ID {ClienteID} ajustado a {NuevoLimite}", clienteID, nuevoLimite);
+            return true;
         }
 
         private async Task CargarDesdeJsonAsync()
@@ -287,7 +506,7 @@ namespace Javo2.Services
                 // Backup automático
                 if (File.Exists(_jsonFilePath))
                 {
-                    var backupPath = Path.Combine(_backupDirectory, 
+                    var backupPath = Path.Combine(_backupDirectory,
                         $"clientes_backup_{DateTime.Now:yyyyMMddHHmmss}.json");
                     File.Copy(_jsonFilePath, backupPath, true);
 
@@ -295,7 +514,7 @@ namespace Javo2.Services
                     var backupFiles = Directory.GetFiles(_backupDirectory, "clientes_backup_*.json")
                         .OrderByDescending(f => File.GetCreationTime(f))
                         .Skip(10);
-                    
+
                     foreach (var file in backupFiles)
                     {
                         try { File.Delete(file); } catch { }

@@ -286,5 +286,221 @@
     "Grupo": "Seguridad",
     "EsSistema": false,
     "Activo": true
+  },
+  {
+    "PermisoID": 33,
+    "Nombre": "Ver perfil",
+    "Codigo": "perfil.ver",
+    "Descripcion": "Permite ver el perfil de usuario",
+    "Grupo": "Perfil",
+    "EsSistema": false,
+    "Activo": true
+  },
+  {
+    "PermisoID": 34,
+    "Nombre": "Editar perfil",
+    "Codigo": "perfil.editar",
+    "Descripcion": "Permite modificar el perfil de usuario",
+    "Grupo": "Perfil",
+    "EsSistema": false,
+    "Activo": true
+  },
+  {
+    "PermisoID": 35,
+    "Nombre": "Ver cat\u00E1logo",
+    "Codigo": "catalogo.ver",
+    "Descripcion": "Permite ver el cat\u00E1logo",
+    "Grupo": "Cat\u00E1logo",
+    "EsSistema": false,
+    "Activo": true
+  },
+  {
+    "PermisoID": 36,
+    "Nombre": "Crear en cat\u00E1logo",
+    "Codigo": "catalogo.crear",
+    "Descripcion": "Permite crear elementos en el cat\u00E1logo",
+    "Grupo": "Cat\u00E1logo",
+    "EsSistema": false,
+    "Activo": true
+  },
+  {
+    "PermisoID": 37,
+    "Nombre": "Editar cat\u00E1logo",
+    "Codigo": "catalogo.editar",
+    "Descripcion": "Permite modificar elementos del cat\u00E1logo",
+    "Grupo": "Cat\u00E1logo",
+    "EsSistema": false,
+    "Activo": true
+  },
+  {
+    "PermisoID": 38,
+    "Nombre": "Eliminar del cat\u00E1logo",
+    "Codigo": "catalogo.eliminar",
+    "Descripcion": "Permite eliminar elementos del cat\u00E1logo",
+    "Grupo": "Cat\u00E1logo",
+    "EsSistema": false,
+    "Activo": true
+  },
+  {
+    "PermisoID": 39,
+    "Nombre": "Ver proveedores",
+    "Codigo": "proveedores.ver",
+    "Descripcion": "Permite ver la lista de proveedores",
+    "Grupo": "Proveedores",
+    "EsSistema": false,
+    "Activo": true
+  },
+  {
+    "PermisoID": 40,
+    "Nombre": "Crear proveedores",
+    "Codigo": "proveedores.crear",
+    "Descripcion": "Permite crear nuevos proveedores",
+    "Grupo": "Proveedores",
+    "EsSistema": false,
+    "Activo": true
+  },
+  {
+    "PermisoID": 41,
+    "Nombre": "Editar proveedores",
+    "Codigo": "proveedores.editar",
+    "Descripcion": "Permite modificar proveedores existentes",
+    "Grupo": "Proveedores",
+    "EsSistema": false,
+    "Activo": true
+  },
+  {
+    "PermisoID": 42,
+    "Nombre": "Eliminar proveedores",
+    "Codigo": "proveedores.eliminar",
+    "Descripcion": "Permite eliminar proveedores",
+    "Grupo": "Proveedores",
+    "EsSistema": false,
+    "Activo": true
+  },
+  {
+    "PermisoID": 43,
+    "Nombre": "Ver promociones",
+    "Codigo": "promociones.ver",
+    "Descripcion": "Permite ver la lista de promociones",
+    "Grupo": "Promociones",
+    "EsSistema": false,
+    "Activo": true
+  },
+  {
+    "PermisoID": 44,
+    "Nombre": "Crear promociones",
+    "Codigo": "promociones.crear",
+    "Descripcion": "Permite crear nuevas promociones",
+    "Grupo": "Promociones",
+    "EsSistema": false,
+    "Activo": true
+  },
+  {
+    "PermisoID": 45,
+    "Nombre": "Editar promociones",
+    "Codigo": "promociones.editar",
+    "Descripcion": "Permite modificar promociones existentes",
+    "Grupo": "Promociones",
+    "EsSistema": false,
+    "Activo": true
+  },
+  {
+    "PermisoID": 46,
+    "Nombre": "Eliminar promociones",
+    "Codigo": "promociones.eliminar",
+    "Descripcion": "Permite eliminar promociones",
+    "Grupo": "Promociones",
+    "EsSistema": false,
+    "Activo": true
+  },
+  {
+    "PermisoID": 47,
+    "Nombre": "Ver devoluci\u00F3n/garant\u00EDa",
+    "Codigo": "devoluciongarantia.ver",
+    "Descripcion": "Permite ver devoluciones y garant\u00EDas",
+    "Grupo": "DevolucionGarantia",
+    "EsSistema": false,
+    "Activo": true
+  },
+  {
+    "PermisoID": 48,
+    "Nombre": "Crear devoluci\u00F3n/garant\u00EDa",
+    "Codigo": "devoluciongarantia.crear",
+    "Descripcion": "Permite crear devoluciones y garant\u00EDas",
+    "Grupo": "DevolucionGarantia",
+    "EsSistema": false,
+    "Activo": true
+  },
+  {
+    "PermisoID": 49,
+    "Nombre": "Editar devoluci\u00F3n/garant\u00EDa",
+    "Codigo": "devoluciongarantia.editar",
+    "Descripcion": "Permite modificar devoluciones y garant\u00EDas",
+    "Grupo": "DevolucionGarantia",
+    "EsSistema": false,
+    "Activo": true
+  },
+  {
+    "PermisoID": 50,
+    "Nombre": "Eliminar devoluci\u00F3n/garant\u00EDa",
+    "Codigo": "devoluciongarantia.eliminar",
+    "Descripcion": "Permite eliminar devoluciones y garant\u00EDas",
+    "Grupo": "DevolucionGarantia",
+    "EsSistema": false,
+    "Activo": true
+  },
+  {
+    "PermisoID": 51,
+    "Nombre": "Crear elementos en Dashboard",
+    "Codigo": "securitydashboard.crear",
+    "Descripcion": "Permite crear elementos en el panel de seguridad",
+    "Grupo": "Seguridad",
+    "EsSistema": false,
+    "Activo": true
+  },
+  {
+    "PermisoID": 52,
+    "Nombre": "Editar elementos en Dashboard",
+    "Codigo": "securitydashboard.editar",
+    "Descripcion": "Permite editar elementos en el panel de seguridad",
+    "Grupo": "Seguridad",
+    "EsSistema": false,
+    "Activo": true
+  },
+  {
+    "PermisoID": 53,
+    "Nombre": "Eliminar elementos en Dashboard",
+    "Codigo": "securitydashboard.eliminar",
+    "Descripcion": "Permite eliminar elementos en el panel de seguridad",
+    "Grupo": "Seguridad",
+    "EsSistema": false,
+    "Activo": true
+  },
+  {
+    "PermisoID": 54,
+    "Nombre": "Ver auditor\u00EDa",
+    "Codigo": "auditoria.ver",
+    "Descripcion": "Permite ver registros de auditor\u00EDa",
+    "Grupo": "Auditor\u00EDa",
+    "EsSistema": false,
+    "Activo": true
+  },
+  {
+    "PermisoID": 55,
+    "Nombre": "Revertir cambios",
+    "Codigo": "auditoria.rollback",
+    "Descripcion": "Permite revertir cambios desde la auditor\u00EDa",
+    "Grupo": "Auditor\u00EDa",
+    "EsSistema": false,
+    "Activo": true
+  },
+  {
+    "PermisoID": 56,
+    "Nombre": "Entregar productos",
+    "Codigo": "ventas.entregaProductos",
+    "Descripcion": "Permite gestionar la entrega de productos",
+    "Grupo": "Ventas",
+    "EsSistema": false,
+    "Activo": true
   }
 ]

@@ -19,6 +19,7 @@ namespace Javo2.Controllers
     public class VentasController : BaseController
     {
         private readonly IVentaService _ventaService;
+        private readonly ICotizacionService _cotizacionService;
         private readonly IMapper _mapper;
         private readonly IClienteService _clienteService;
         private readonly IProductoService _productoService;
@@ -26,6 +27,7 @@ namespace Javo2.Controllers
 
         public VentasController(
             IVentaService ventaService,
+            ICotizacionService cotizacionService,
             IMapper mapper,
             ILogger<VentasController> logger,
             IClienteService clienteService,
@@ -34,6 +36,7 @@ namespace Javo2.Controllers
         ) : base(logger)
         {
             _ventaService = ventaService;
+            _cotizacionService = cotizacionService;
             _mapper = mapper;
             _clienteService = clienteService;
             _productoService = productoService;
@@ -50,6 +53,13 @@ namespace Javo2.Controllers
                 _logger.LogInformation("Index GET => Filtro: {@Filter}", filter);
                 var ventas = await _ventaService.GetVentasAsync(filter);
                 var model = _mapper.Map<IEnumerable<VentaListViewModel>>(ventas);
+
+                // Guardar filtros en ViewBag para la vista
+                ViewBag.FechaInicio = filter.FechaInicio;
+                ViewBag.FechaFin = filter.FechaFin;
+                ViewBag.NombreCliente = filter.NombreCliente;
+                ViewBag.NumeroFactura = filter.NumeroFactura;
+
                 return View(model);
             }
             catch (Exception ex)
@@ -86,6 +96,68 @@ namespace Javo2.Controllers
             }
         }
 
+        // GET: Ventas/CreateFromCotizacion
+        [HttpGet]
+        [Authorize(Policy = "Permission:ventas.crear")]
+        public async Task<IActionResult> CreateFromCotizacion()
+        {
+            try
+            {
+                // Obtener ID de cotización de TempData
+                if (!TempData.ContainsKey("CotizacionID") || !(TempData["CotizacionID"] is int cotizacionID))
+                {
+                    return RedirectToAction(nameof(Create));
+                }
+
+                // Obtener cotización
+                var cotizacion = await _cotizacionService.GetCotizacionByIDAsync(cotizacionID);
+                if (cotizacion == null)
+                {
+                    return RedirectToAction(nameof(Create));
+                }
+
+                // Crear venta a partir de cotización
+                var viewModel = new VentaFormViewModel
+                {
+                    FechaVenta = DateTime.Today,
+                    NumeroFactura = await _ventaService.GenerarNumeroFacturaAsync(),
+                    Usuario = User.Identity?.Name ?? "Desconocido",
+                    Vendedor = User.Identity?.Name ?? "Desconocido",
+
+                    // Datos del cliente de la cotización
+                    NombreCliente = cotizacion.NombreCliente,
+                    DniCliente = cotizacion.DniCliente,
+                    TelefonoCliente = cotizacion.TelefonoCliente,
+                    DomicilioCliente = cotizacion.DomicilioCliente,
+                    LocalidadCliente = cotizacion.LocalidadCliente,
+                    CelularCliente = cotizacion.CelularCliente,
+
+                    // Productos de la cotización
+                    ProductosPresupuesto = _mapper.Map<List<DetalleVentaViewModel>>(cotizacion.ProductosPresupuesto),
+
+                    // Estado inicial
+                    Estado = EstadoVenta.Borrador.ToString(),
+
+                    // Observaciones relacionadas con la cotización
+                    Observaciones = cotizacion.Observaciones,
+                    Condiciones = $"Generado desde cotización #{cotizacion.VentaID} - {cotizacion.NumeroFactura}"
+                };
+
+                // Cargar combos y otros datos necesarios
+                await CargarCombosAsync(viewModel);
+
+                // Establecer algunos valores por defecto
+                viewModel.FormaPagoID = 1; // Contado por defecto
+
+                return View("Form", viewModel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al crear venta desde cotización");
+                return View("Error");
+            }
+        }
+
         // POST: Ventas/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -95,23 +167,46 @@ namespace Javo2.Controllers
             try
             {
                 _logger.LogInformation("Create POST => Finalizar={Finalizar}, Model={@Model}", Finalizar, model);
-                // … lógica de validación …
+                // Validaciones
                 if (!ModelState.IsValid)
                 {
                     LogModelStateErrors();
                     await CargarCombosAsync(model);
                     return View("Form", model);
                 }
+
+                // Validar forma de pago
+                if (!ValidarFormaPago(model))
+                {
+                    await CargarCombosAsync(model);
+                    return View("Form", model);
+                }
+
+                // Validar que haya productos
+                if (model.ProductosPresupuesto == null || !model.ProductosPresupuesto.Any())
+                {
+                    ModelState.AddModelError("", "Debe agregar al menos un producto a la venta");
+                    await CargarCombosAsync(model);
+                    return View("Form", model);
+                }
+
+                // Convertir a Venta y asignar campos adicionales
                 var venta = _mapper.Map<Venta>(model);
                 venta.Usuario = User.Identity?.Name ?? "Desconocido";
                 venta.Vendedor = User.Identity?.Name ?? "Desconocido";
                 venta.FechaVenta = DateTime.Today;
                 venta.TotalProductos = venta.ProductosPresupuesto.Sum(p => p.Cantidad);
                 venta.PrecioTotal = venta.ProductosPresupuesto.Sum(p => p.PrecioTotal);
+
+                // Determinar estado según el parámetro Finalizar
                 venta.Estado = !string.IsNullOrEmpty(Finalizar) && Finalizar.Equals("true", StringComparison.OrdinalIgnoreCase)
                     ? EstadoVenta.PendienteDeAutorizacion
                     : EstadoVenta.Borrador;
+
+                // Crear la venta en el servicio
                 await _ventaService.CreateVentaAsync(venta);
+
+                // Registrar en auditoría
                 await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
                 {
                     FechaHora = DateTime.Now,
@@ -121,13 +216,24 @@ namespace Javo2.Controllers
                     LlavePrimaria = venta.VentaID.ToString(),
                     Detalle = $"Cliente={venta.NombreCliente}, Total={venta.PrecioTotal}, Estado={venta.Estado}"
                 });
+
+                // Mostrar mensaje de éxito
                 TempData["Success"] = "Venta creada exitosamente.";
-                return RedirectToAction(nameof(Index));
+
+                // Determinar redirección según el estado
+                if (venta.Estado == EstadoVenta.PendienteDeAutorizacion)
+                {
+                    return RedirectToAction(nameof(Autorizaciones));
+                }
+                else
+                {
+                    return RedirectToAction(nameof(Index));
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al crear la venta");
-                ModelState.AddModelError(string.Empty, "Ocurrió un error al crear la venta.");
+                ModelState.AddModelError(string.Empty, ex.Message);
                 await CargarCombosAsync(model);
                 return View("Form", model);
             }
@@ -143,6 +249,14 @@ namespace Javo2.Controllers
                 _logger.LogInformation("Edit GET => VentaID={ID}", id);
                 var venta = await _ventaService.GetVentaByIDAsync(id);
                 if (venta == null) return NotFound();
+
+                // Verificar si la venta está en un estado que permite edición
+                if (venta.Estado != EstadoVenta.Borrador)
+                {
+                    TempData["Error"] = "Solo se pueden editar ventas en estado Borrador.";
+                    return RedirectToAction(nameof(Details), new { id });
+                }
+
                 var model = _mapper.Map<VentaFormViewModel>(venta);
                 await CargarCombosAsync(model);
                 return View("Form", model);
@@ -163,17 +277,49 @@ namespace Javo2.Controllers
             try
             {
                 _logger.LogInformation("Edit POST => VentaID={ID}", model.VentaID);
-                // … lógica de validación …
+
+                // Validaciones
                 if (!ModelState.IsValid)
                 {
                     LogModelStateErrors();
                     await CargarCombosAsync(model);
                     return View("Form", model);
                 }
+
+                // Validar que haya productos
+                if (model.ProductosPresupuesto == null || !model.ProductosPresupuesto.Any())
+                {
+                    ModelState.AddModelError("", "Debe agregar al menos un producto a la venta");
+                    await CargarCombosAsync(model);
+                    return View("Form", model);
+                }
+
+                // Obtener venta original para verificar estado
+                var ventaOriginal = await _ventaService.GetVentaByIDAsync(model.VentaID);
+                if (ventaOriginal == null) return NotFound();
+
+                // Verificar que la venta esté en estado Borrador
+                if (ventaOriginal.Estado != EstadoVenta.Borrador)
+                {
+                    TempData["Error"] = "Solo se pueden editar ventas en estado Borrador.";
+                    return RedirectToAction(nameof(Details), new { id = model.VentaID });
+                }
+
+                // Convertir viewmodel a venta
                 var venta = _mapper.Map<Venta>(model);
                 venta.TotalProductos = venta.ProductosPresupuesto.Sum(p => p.Cantidad);
                 venta.PrecioTotal = venta.ProductosPresupuesto.Sum(p => p.PrecioTotal);
+
+                // Conservar algunos valores originales
+                venta.FechaVenta = ventaOriginal.FechaVenta;
+                venta.NumeroFactura = ventaOriginal.NumeroFactura;
+                venta.Usuario = ventaOriginal.Usuario;
+                venta.Estado = ventaOriginal.Estado;
+
+                // Actualizar la venta
                 await _ventaService.UpdateVentaAsync(venta);
+
+                // Registrar en auditoría
                 await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
                 {
                     FechaHora = DateTime.Now,
@@ -183,6 +329,7 @@ namespace Javo2.Controllers
                     LlavePrimaria = venta.VentaID.ToString(),
                     Detalle = $"Cliente={venta.NombreCliente}, Total={venta.PrecioTotal}, Estado={venta.Estado}"
                 });
+
                 TempData["Success"] = "Venta actualizada exitosamente.";
                 return RedirectToAction(nameof(Index));
             }
@@ -225,6 +372,14 @@ namespace Javo2.Controllers
                 _logger.LogInformation("Delete GET => VentaID={ID}", id);
                 var venta = await _ventaService.GetVentaByIDAsync(id);
                 if (venta == null) return NotFound();
+
+                // Verificar que la venta esté en un estado que permite eliminación
+                if (venta.Estado != EstadoVenta.Borrador && venta.Estado != EstadoVenta.Rechazada)
+                {
+                    TempData["Error"] = "Solo se pueden eliminar ventas en estado Borrador o Rechazada.";
+                    return RedirectToAction(nameof(Details), new { id });
+                }
+
                 var model = _mapper.Map<VentaListViewModel>(venta);
                 return View(model);
             }
@@ -244,9 +399,20 @@ namespace Javo2.Controllers
             try
             {
                 _logger.LogInformation("DeleteConfirmed POST => VentaID={ID}", id);
+
+                // Verificar que la venta esté en un estado que permite eliminación
                 var venta = await _ventaService.GetVentaByIDAsync(id);
                 if (venta == null) return NotFound();
+
+                if (venta.Estado != EstadoVenta.Borrador && venta.Estado != EstadoVenta.Rechazada)
+                {
+                    TempData["Error"] = "Solo se pueden eliminar ventas en estado Borrador o Rechazada.";
+                    return RedirectToAction(nameof(Details), new { id });
+                }
+
                 await _ventaService.DeleteVentaAsync(id);
+
+                // Registrar en auditoría
                 await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
                 {
                     FechaHora = DateTime.Now,
@@ -256,6 +422,7 @@ namespace Javo2.Controllers
                     LlavePrimaria = id.ToString(),
                     Detalle = $"Eliminada venta: Cliente={venta.NombreCliente}, Total={venta.PrecioTotal}"
                 });
+
                 TempData["Success"] = "Venta eliminada exitosamente.";
                 return RedirectToAction(nameof(Index));
             }
@@ -299,6 +466,8 @@ namespace Javo2.Controllers
                     return Json(new { success = false, message = "Venta no disponible para autorizar." });
 
                 await _ventaService.AutorizarVentaAsync(id, User.Identity?.Name ?? "Desconocido");
+
+                // Registrar en auditoría
                 await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
                 {
                     FechaHora = DateTime.Now,
@@ -308,6 +477,7 @@ namespace Javo2.Controllers
                     LlavePrimaria = id.ToString(),
                     Detalle = $"Venta autorizada: Cliente={venta.NombreCliente}, Total={venta.PrecioTotal}"
                 });
+
                 return Json(new { success = true, message = "Venta autorizada correctamente." });
             }
             catch (Exception ex)
@@ -331,6 +501,8 @@ namespace Javo2.Controllers
                     return Json(new { success = false, message = "Venta no disponible para rechazar." });
 
                 await _ventaService.RechazarVentaAsync(id, User.Identity?.Name ?? "Desconocido");
+
+                // Registrar en auditoría
                 await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
                 {
                     FechaHora = DateTime.Now,
@@ -340,6 +512,7 @@ namespace Javo2.Controllers
                     LlavePrimaria = id.ToString(),
                     Detalle = $"Venta rechazada: Cliente={venta.NombreCliente}, Total={venta.PrecioTotal}"
                 });
+
                 return Json(new { success = true, message = "Venta rechazada correctamente." });
             }
             catch (Exception ex)
@@ -358,7 +531,23 @@ namespace Javo2.Controllers
             try
             {
                 _logger.LogInformation("MarcarEntregada POST => VentaID={ID}", id);
+                var venta = await _ventaService.GetVentaByIDAsync(id);
+                if (venta == null || venta.Estado != EstadoVenta.PendienteDeEntrega)
+                    return Json(new { success = false, message = "Venta no disponible para entrega." });
+
                 await _ventaService.MarcarVentaComoEntregadaAsync(id, User.Identity?.Name ?? "Desconocido");
+
+                // Registrar en auditoría
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = User.Identity?.Name ?? "Desconocido",
+                    Entidad = "Venta",
+                    Accion = "MarcarEntregada",
+                    LlavePrimaria = id.ToString(),
+                    Detalle = $"Venta marcada como entregada: Cliente={venta.NombreCliente}, Total={venta.PrecioTotal}"
+                });
+
                 return Json(new { success = true, message = "Venta marcada como entregada correctamente." });
             }
             catch (Exception ex)
@@ -377,6 +566,18 @@ namespace Javo2.Controllers
             {
                 var venta = await _ventaService.GetVentaByIDAsync(id);
                 if (venta == null) return NotFound();
+
+                // Registrar en auditoría
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = User.Identity?.Name ?? "Desconocido",
+                    Entidad = "Venta",
+                    Accion = "Reimprimir",
+                    LlavePrimaria = id.ToString(),
+                    Detalle = $"Reimpresión de venta: {venta.NumeroFactura}"
+                });
+
                 return View(venta);
             }
             catch (Exception ex)
@@ -416,6 +617,10 @@ namespace Javo2.Controllers
                 var cliente = await _clienteService.GetClienteByDNIAsync(dni);
                 if (cliente == null)
                     return Json(new { success = false, message = "Cliente no encontrado con ese DNI." });
+
+                // Determinar si el cliente puede usar crédito
+                decimal saldoDisponible = cliente.AptoCredito ? cliente.SaldoDisponible : 0;
+
                 return Json(new
                 {
                     success = true,
@@ -428,7 +633,8 @@ namespace Javo2.Controllers
                         celular = cliente.Celular,
                         limiteCredito = cliente.LimiteCreditoInicial,
                         saldo = cliente.Saldo,
-                        saldoDisponible = cliente.SaldoDisponible
+                        saldoDisponible = saldoDisponible,
+                        aptoCredito = cliente.AptoCredito
                     }
                 });
             }
@@ -449,6 +655,11 @@ namespace Javo2.Controllers
                 var producto = await _productoService.GetProductoByCodigoAsync(codigoProducto);
                 if (producto == null)
                     return Json(new { success = false, message = "Producto no encontrado." });
+
+                // Obtener stock disponible
+                var stockItem = producto.StockItem;
+                bool hayStock = stockItem != null && stockItem.CantidadDisponible > 0;
+
                 return Json(new
                 {
                     success = true,
@@ -462,7 +673,9 @@ namespace Javo2.Controllers
                         cantidad = 1,
                         precioUnitario = producto.PContado,
                         precioLista = producto.PLista,
-                        precioTotal = producto.PContado
+                        precioTotal = producto.PContado,
+                        stockDisponible = stockItem?.CantidadDisponible ?? 0,
+                        hayStock = hayStock
                     }
                 });
             }
@@ -472,14 +685,53 @@ namespace Javo2.Controllers
                 return Json(new { success = false, message = "Error al buscar el producto." });
             }
         }
+
+        // GET: Ventas/GetFormasPagoOptions
+        [HttpGet]
+        public async Task<IActionResult> GetFormasPagoOptions()
+        {
+            try
+            {
+                var formasPago = await _ventaService.GetFormasPagoAsync();
+                var result = formasPago.Select(fp => new { value = fp.FormaPagoID, text = fp.Nombre });
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener formas de pago");
+                return Json(new object[0]);
+            }
+        }
+
+        // GET: Ventas/GetBancosOptions
+        [HttpGet]
+        public async Task<IActionResult> GetBancosOptions()
+        {
+            try
+            {
+                var bancos = await _ventaService.GetBancosAsync();
+                var result = bancos.Select(b => new { value = b.BancoID, text = b.Nombre });
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener bancos");
+                return Json(new object[0]);
+            }
+        }
+
+        #endregion
+
+        #region Métodos Auxiliares
+
         private async Task CargarCombosAsync(VentaFormViewModel model)
         {
-            model.FormasPago = await ObtenerFormasPago();
-            model.Bancos = await ObtenerBancos();
-            model.TipoTarjetaOptions = await ObtenerTipoTarjetaOptions();
-            model.CuotasOptions = await ObtenerCuotasOptions();
-            model.EntidadesElectronicas = await ObtenerEntidadesElectronicas();
-            model.PlanesFinanciamiento = await ObtenerPlanesFinanciamiento();
+            model.FormasPago = _ventaService.GetFormasPagoSelectList();
+            model.Bancos = _ventaService.GetBancosSelectList();
+            model.TipoTarjetaOptions = _ventaService.GetTipoTarjetaSelectList();
+            model.CuotasOptions = _ventaService.GetCuotasSelectList();
+            model.EntidadesElectronicas = _ventaService.GetEntidadesElectronicasSelectList();
+            model.PlanesFinanciamiento = _ventaService.GetPlanesFinanciamientoSelectList();
         }
 
         private bool ValidarFormaPago(VentaFormViewModel model)
@@ -520,79 +772,16 @@ namespace Javo2.Controllers
                             "Debe seleccionar un plan de financiamiento para crédito personal.");
                         isValid = false;
                     }
+                    if (!model.Cuotas.HasValue || model.Cuotas.Value <= 0)
+                    {
+                        ModelState.AddModelError(nameof(model.Cuotas),
+                            "Debe especificar el número de cuotas para crédito personal.");
+                        isValid = false;
+                    }
                     break;
             }
 
             return isValid;
-        }
-
-        private async Task<IEnumerable<SelectListItem>> ObtenerFormasPago()
-        {
-            var formasPago = await _ventaService.GetFormasPagoAsync();
-            return formasPago.Select(fp => new SelectListItem
-            {
-                Value = fp.FormaPagoID.ToString(),
-                Text = fp.Nombre
-            });
-        }
-
-        private async Task<IEnumerable<SelectListItem>> ObtenerBancos()
-        {
-            var bancos = await _ventaService.GetBancosAsync();
-            return bancos.Select(b => new SelectListItem
-            {
-                Value = b.BancoID.ToString(),
-                Text = b.Nombre
-            });
-        }
-
-        private Task<IEnumerable<SelectListItem>> ObtenerTipoTarjetaOptions()
-        {
-            var tipos = new List<SelectListItem>
-            {
-                new SelectListItem { Value = "Visa", Text = "Visa" },
-                new SelectListItem { Value = "MasterCard", Text = "MasterCard" },
-                new SelectListItem { Value = "Amex", Text = "Amex" },
-                new SelectListItem { Value = "Naranja", Text = "Naranja" },
-                new SelectListItem { Value = "Cabal", Text = "Cabal" }
-            };
-            return Task.FromResult<IEnumerable<SelectListItem>>(tipos);
-        }
-
-        private Task<IEnumerable<SelectListItem>> ObtenerCuotasOptions()
-        {
-            var cuotas = new List<SelectListItem>();
-            for (int i = 1; i <= 24; i++)
-            {
-                cuotas.Add(new SelectListItem { Value = i.ToString(), Text = $"{i} Cuota{(i > 1 ? "s" : "")}" });
-            }
-            return Task.FromResult<IEnumerable<SelectListItem>>(cuotas);
-        }
-
-        private Task<IEnumerable<SelectListItem>> ObtenerEntidadesElectronicas()
-        {
-            var entidades = new List<SelectListItem>
-            {
-                new SelectListItem { Value = "MercadoPago", Text = "MercadoPago" },
-                new SelectListItem { Value = "Modo", Text = "Modo" },
-                new SelectListItem { Value = "BIMO", Text = "BIMO" },
-                new SelectListItem { Value = "Cuenta DNI", Text = "Cuenta DNI" },
-                new SelectListItem { Value = "QR", Text = "QR" }
-            };
-            return Task.FromResult<IEnumerable<SelectListItem>>(entidades);
-        }
-
-        private Task<IEnumerable<SelectListItem>> ObtenerPlanesFinanciamiento()
-        {
-            var planes = new List<SelectListItem>
-            {
-                new SelectListItem { Value = "Plan 6 cuotas", Text = "Plan 6 cuotas" },
-                new SelectListItem { Value = "Plan 12 cuotas", Text = "Plan 12 cuotas" },
-                new SelectListItem { Value = "Plan 18 cuotas", Text = "Plan 18 cuotas" },
-                new SelectListItem { Value = "Plan 24 cuotas", Text = "Plan 24 cuotas" },
-                new SelectListItem { Value = "Plan 36 cuotas", Text = "Plan 36 cuotas" }
-            };
-            return Task.FromResult<IEnumerable<SelectListItem>>(planes);
         }
 
         #endregion

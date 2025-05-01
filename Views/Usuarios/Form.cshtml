@@ -129,18 +129,37 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script>
-        // Para debug de formulario
         $(function() {
             const form = $('form');
+            const submitBtn = $('button[type="submit"]');
+
+            // Debug del botón de submit
+            submitBtn.on('click', function(e) {
+                console.log('Botón submit clickeado');
+                // Asegurar que el formulario se envíe
+                setTimeout(function() {
+                    // Si después de 100ms todavía estamos aquí, el formulario no se envió
+                    console.log('El formulario no se ha enviado - forzando envío');
+                    form.submit();
+                }, 100);
+            });
 
             // Interceptar validación
             $.validator.setDefaults({
-                debug: true,
+                debug: false, // Cambiar a false para permitir envío
                 success: "valid"
             });
 
             form.on('submit', function(e) {
                 console.log('Enviando formulario...');
+
+                // Si es modo edición, desactivar validación de contraseña si está vacía
+                if ($('input[type="hidden"][name="EsEdicion"][value="True"]').length > 0) {
+                    if ($('#Contraseña').val() === '') {
+                        $('#Contraseña').rules('remove', 'required');
+                        $('#ConfirmarContraseña').rules('remove', 'required');
+                    }
+                }
 
                 // Ver si el form es válido según jQuery validation
                 const isValid = form.valid();
@@ -155,7 +174,6 @@
                     Contraseña: $('#Contraseña').val(),
                     ConfirmarContraseña: $('#ConfirmarContraseña').val()
                 };
-
                 console.log('Valores de campos:', campos);
 
                 // Loguear roles seleccionados
@@ -171,8 +189,26 @@
                     form.validate().showErrors();
                     const errors = form.validate().errorList;
                     console.table(errors);
+                    return false; // Detener envío en caso de errores
                 }
+
+                // Permitir el envío si todo está correcto
+                return true;
             });
+
+            // Si es edición, quitar requerimiento de contraseña
+            if ($('input[type="hidden"][name="EsEdicion"][value="True"]').length > 0) {
+                console.log('Modo edición detectado - modificando validación');
+
+                // Quitar required de contraseña si es modo edición
+                if ($.validator && $.validator.unobtrusive) {
+                    $('#Contraseña').removeAttr('data-val-required');
+                    $('#ConfirmarContraseña').removeAttr('data-val-required');
+                    $.validator.unobtrusive.parse(form);
+                }
+            }
         });
     </script>
+
+
 }

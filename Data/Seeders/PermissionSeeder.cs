@@ -57,6 +57,7 @@ namespace Javo2.Data.Seeders
                     ("ventas.eliminar", "Eliminar ventas", "Ventas", "Permite eliminar ventas"),
                     ("ventas.autorizar", "Autorizar ventas", "Ventas", "Permite autorizar ventas"),
                     ("ventas.rechazar", "Rechazar ventas", "Ventas", "Permite rechazar ventas"),
+                    ("ventas.entregaProductos", "Entregar productos", "Ventas", "Permite gestionar la entrega de productos"),
                     
                     // Permisos de productos
                     ("productos.ver", "Ver productos", "Productos", "Permite ver la lista de productos"),

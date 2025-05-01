@@ -221,6 +221,174 @@
         "PermisoID": 31,
         "Rol": null,
         "Permiso": null
+      },
+      {
+        "RolPermisoID": 50,
+        "RolID": 1,
+        "PermisoID": 32,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 51,
+        "RolID": 1,
+        "PermisoID": 33,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 52,
+        "RolID": 1,
+        "PermisoID": 34,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 53,
+        "RolID": 1,
+        "PermisoID": 35,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 54,
+        "RolID": 1,
+        "PermisoID": 36,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 55,
+        "RolID": 1,
+        "PermisoID": 37,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 56,
+        "RolID": 1,
+        "PermisoID": 38,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 57,
+        "RolID": 1,
+        "PermisoID": 39,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 58,
+        "RolID": 1,
+        "PermisoID": 40,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 59,
+        "RolID": 1,
+        "PermisoID": 41,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 60,
+        "RolID": 1,
+        "PermisoID": 42,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 61,
+        "RolID": 1,
+        "PermisoID": 43,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 62,
+        "RolID": 1,
+        "PermisoID": 44,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 63,
+        "RolID": 1,
+        "PermisoID": 45,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 64,
+        "RolID": 1,
+        "PermisoID": 46,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 65,
+        "RolID": 1,
+        "PermisoID": 47,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 66,
+        "RolID": 1,
+        "PermisoID": 48,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 67,
+        "RolID": 1,
+        "PermisoID": 49,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 68,
+        "RolID": 1,
+        "PermisoID": 50,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 69,
+        "RolID": 1,
+        "PermisoID": 51,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 70,
+        "RolID": 1,
+        "PermisoID": 52,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 71,
+        "RolID": 1,
+        "PermisoID": 53,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 72,
+        "RolID": 1,
+        "PermisoID": 54,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 73,
+        "RolID": 1,
+        "PermisoID": 55,
+        "Rol": null,
+        "Permiso": null
       }
     ]
   },
@@ -386,6 +554,28 @@
         "RolPermisoID": 49,
         "RolID": 7,
         "PermisoID": 27,
+        "Rol": null,
+        "Permiso": null
+      }
+    ]
+  },
+  {
+    "RolID": 8,
+    "Nombre": "aprobador",
+    "Descripcion": "123",
+    "EsSistema": false,
+    "Permisos": [
+      {
+        "RolPermisoID": 74,
+        "RolID": 8,
+        "PermisoID": 13,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 76,
+        "RolID": 8,
+        "PermisoID": 14,
         "Rol": null,
         "Permiso": null
       }
