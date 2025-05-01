@@ -128,6 +128,13 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+});
+
 
 // Primero autenticación y autorización
 app.UseAuthenticationConfig();
@@ -135,4 +142,22 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.UseMiddleware<AuthenticationMiddleware>();
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var permisoService = services.GetRequiredService<IPermisoService>();
+    var rolService = services.GetRequiredService<IRolService>();
+    var logger = services.GetRequiredService<ILogger<Program>>();
+
+    try
+    {
+        var logger = services.GetRequiredService<ILogger<Javo2.Data.Seeders.PermissionSeeder>>();
+        var seeder = new Javo2.Data.Seeders.PermissionSeeder(permisoService, rolService, logger); await seeder.SeedAsync();
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Error al sembrar permisos");
+    }
+}
+
 app.Run();

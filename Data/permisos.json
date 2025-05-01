@@ -277,5 +277,14 @@
     "Grupo": "Configuraci\u00F3n",
     "EsSistema": true,
     "Activo": true
+  },
+  {
+    "PermisoID": 32,
+    "Nombre": "Ver panel de seguridad",
+    "Codigo": "securitydashboard.ver",
+    "Descripcion": "Permite acceder al panel de seguridad",
+    "Grupo": "Seguridad",
+    "EsSistema": false,
+    "Activo": true
   }
 ]

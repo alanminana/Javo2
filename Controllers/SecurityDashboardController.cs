@@ -1,4 +1,6 @@
-﻿using Javo2.Controllers.Base;
+﻿// Controllers/SecurityDashboardController.cs
+using Javo2.Controllers.Base;
+using Javo2.Helpers;
 using Javo2.IServices.Authentication;
 using Javo2.ViewModels.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -29,6 +31,8 @@ namespace Javo2.Controllers
             _permisoService = permisoService;
         }
 
+        // GET: SecurityDashboard/Index
+        [Authorize(Policy = "Permission:securitydashboard.ver")]
         public async Task<IActionResult> Index()
         {
             try
@@ -78,6 +82,7 @@ namespace Javo2.Controllers
             }
         }
 
+        // GET: SecurityDashboard/Usuarios
         [Authorize(Policy = "Permission:usuarios.ver")]
         public async Task<IActionResult> Usuarios()
         {
@@ -93,6 +98,7 @@ namespace Javo2.Controllers
             }
         }
 
+        // GET: SecurityDashboard/Roles
         [Authorize(Policy = "Permission:roles.ver")]
         public async Task<IActionResult> Roles()
         {
@@ -108,6 +114,7 @@ namespace Javo2.Controllers
             }
         }
 
+        // GET: SecurityDashboard/Permisos
         [Authorize(Policy = "Permission:permisos.ver")]
         public async Task<IActionResult> Permisos()
         {
