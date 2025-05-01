@@ -20,6 +20,7 @@ namespace Javo2.Controllers
     {
         private readonly IClienteService _clienteService;
         private readonly IClienteSearchService _searchService;
+        private readonly IGaranteService _garanteService; // Añade este campo
         private readonly IMapper _mapper;
         private readonly ILogger<ClientesController> _logger;
 

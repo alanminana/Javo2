@@ -413,6 +413,8 @@ namespace Javo2.Services
 
         public async Task<bool> AjustarLimiteCreditoAsync(int clienteID, decimal nuevoLimite, string usuario)
         {
+            decimal limiteAnterior;
+
             _lock.EnterWriteLock();
             try
             {
@@ -423,7 +425,7 @@ namespace Javo2.Services
                 }
 
                 // Guardar límite anterior para auditoría
-                decimal limiteAnterior = cliente.LimiteCreditoInicial;
+                limiteAnterior = cliente.LimiteCreditoInicial;
 
                 // Actualizar límite y saldo disponible
                 cliente.LimiteCreditoInicial = nuevoLimite;
@@ -454,7 +456,6 @@ namespace Javo2.Services
             _logger.LogInformation("Límite de crédito del cliente ID {ClienteID} ajustado a {NuevoLimite}", clienteID, nuevoLimite);
             return true;
         }
-
         private async Task CargarDesdeJsonAsync()
         {
             try
