@@ -1,79 +1,170 @@
-﻿// Cambiar:
-ventanaImpresion.document.write(`
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Cotización @Model.NumeroFactura</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
+﻿@model Javo2.Models.Venta
+@{
+    ViewData["Title"] = "Imprimir Cotización";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-        @@media print {
-            .no-print {
-                display: none;
-            }
-
-            a {
-                text-decoration: none;
-                color: #000;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        ${contenido}
+<div class="container-fluid py-3" id="printArea">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">Cotización: @Model.NumeroFactura</h1>
+        <div class="no-print">
+            <button type="button" class="btn btn-primary" onclick="imprimirCotizacion()">
+                <i class="bi bi-printer me-1"></i>Imprimir
+            </button>
+            <a asp-action="Detalles" asp-route-id="@Model.VentaID" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>Volver
+            </a>
+        </div>
     </div>
-    <script>
-        window.onload = function() {
-            window.print();
-            setTimeout(function() { window.close(); }, 500);
-        }
-    </script>
-</body>
-</html>
-`);
 
-// Por (escapamos el script interno):
-ventanaImpresion.document.write(`
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Cotización @Model.NumeroFactura</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
+    <div class="card">
+        <div class="card-body">
+            <!-- Encabezado del documento -->
+            <div class="row mb-4">
+                <div class="col-6">
+                    <h2>COTIZACIÓN</h2>
+                    <p class="mb-0"><strong>Número:</strong> @Model.NumeroFactura</p>
+                    <p class="mb-0"><strong>Fecha:</strong> @Model.FechaVenta.ToString("dd/MM/yyyy HH:mm")</p>
+                    <p class="mb-0"><strong>Vendedor:</strong> @Model.Vendedor</p>
+                </div>
+                <div class="col-6 text-end">
+                    <h3>The BuryCode</h3>
+                    <p class="mb-0">Empresa S.A.</p>
+                    <p class="mb-0">CUIT: 30-12345678-9</p>
+                    <p class="mb-0">Dirección: Calle Principal 123, Buenos Aires</p>
+                    <p class="mb-0">Tel: (011) 4567-8900</p>
+                </div>
+            </div>
 
-        @@media print {
-            .no-print {
-                display: none;
-            }
+            <hr>
 
-            a {
-                text-decoration: none;
-                color: #000;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        ${contenido}
+            <!-- Datos del cliente -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h4>Cliente</h4>
+                </div>
+                <div class="col-6">
+                    <p class="mb-0"><strong>Cliente:</strong> @Model.NombreCliente</p>
+                    <p class="mb-0"><strong>Domicilio:</strong> @Model.DomicilioCliente</p>
+                    <p class="mb-0"><strong>Localidad:</strong> @Model.LocalidadCliente</p>
+                </div>
+                <div class="col-6">
+                    <p class="mb-0"><strong>Teléfono:</strong> @Model.TelefonoCliente</p>
+                    <p class="mb-0"><strong>Celular:</strong> @Model.CelularCliente</p>
+                </div>
+            </div>
+
+            <!-- Detalle de productos -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h4>Detalle de Productos</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Producto</th>
+                                    <th>Marca</th>
+                                    <th class="text-center">Cantidad</th>
+                                    <th class="text-end">Precio Unit.</th>
+                                    <th class="text-end">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var detalle in Model.ProductosPresupuesto)
+                                {
+                                    <tr>
+                                        <td>@(string.IsNullOrEmpty(detalle.CodigoAlfa) ? detalle.CodigoBarra : detalle.CodigoAlfa)</td>
+                                        <td>@detalle.NombreProducto</td>
+                                        <td>@detalle.Marca</td>
+                                        <td class="text-center">@detalle.Cantidad</td>
+                                        <td class="text-end">@detalle.PrecioUnitario.ToString("C")</td>
+                                        <td class="text-end">@(detalle.Cantidad * detalle.PrecioUnitario).ToString("C")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3"></td>
+                                    <td class="text-center"><strong>@Model.TotalProductos</strong></td>
+                                    <td class="text-end"><strong>Total:</strong></td>
+                                    <td class="text-end"><strong>@Model.PrecioTotal.ToString("C")</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Observaciones y condiciones -->
+            <div class="row mb-4">
+                <div class="col-6">
+                    <h4>Observaciones</h4>
+                    <p>@(string.IsNullOrEmpty(Model.Observaciones) ? "Sin observaciones" : Model.Observaciones)</p>
+                </div>
+                <div class="col-6">
+                    <h4>Condiciones</h4>
+                    <p>@(string.IsNullOrEmpty(Model.Condiciones) ? "Sin condiciones especiales" : Model.Condiciones)</p>
+                </div>
+            </div>
+
+            <!-- Pie de página -->
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="small">Esta cotización tiene una validez de 15 días a partir de la fecha de emisión.</p>
+                    <p class="small">Los precios pueden estar sujetos a cambios sin previo aviso.</p>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+
+@section Scripts {
     <script>
-                    window.onload = function() {
-                        window.print();
-                        setTimeout(function() { window.close(); }, 500);
+                function imprimirCotizacion() {
+                    const contenido = document.getElementById('printArea').innerHTML;
+                    const ventanaImpresion = window.open('', '_blank', 'height=600,width=800');
+
+                    ventanaImpresion.document.write(`
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+            <meta charset="UTF-8">
+            <title>Cotización @Model.NumeroFactura</title>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    padding: 20px;
+                }
+
+                @@media print {
+                    .no-print {
+                        display: none;
                     }
-                <\/script>
-            </body>
-            </html>
-        `);
+
+                    a {
+                        text-decoration: none;
+                        color: #000;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                ${contenido}
+            </div>
+            <script>
+                            window.onload = function() {
+                                window.print();
+                                setTimeout(function() { window.close(); }, 500);
+                            }
+                        <\/script>
+                    </body>
+                    </html>
+                `);
+
+                    ventanaImpresion.document.close();
+                }
+    </script>
+}

@@ -20,8 +20,8 @@ build_property._RazorSourceGeneratorDebug =
 build_property.EffectiveAnalysisLevelStyle = 8.0
 build_property.EnableCodeStyleSeverity = 
 
-[D:/github/Javo2/Views/Auditoria - Copia/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXVkaXRvcmlhIC0gQ29waWFcSW5kZXguY3NodG1s
+[D:/github/Javo2/Views/Auditoria/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXVkaXRvcmlhXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/github/Javo2/Views/Auth/AccessDenied.cshtml]
@@ -150,6 +150,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/github/Javo2/Views/Configuracion/_ConfiguracionTable.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29uZmlndXJhY2lvblxfQ29uZmlndXJhY2lvblRhYmxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/Cotizacion/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ290aXphY2lvblxEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/Cotizacion/Detalles.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ290aXphY2lvblxEZXRhbGxlcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/github/Javo2/Views/Cotizacion/Index.cshtml]

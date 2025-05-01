@@ -322,5 +322,17 @@
     "EsRevertido": false,
     "RollbackUser": "",
     "RollbackFecha": null
+  },
+  {
+    "ID": 28,
+    "FechaHora": "2025-05-01T11:00:53.3475216-03:00",
+    "Usuario": "admin",
+    "Entidad": "Producto",
+    "Accion": "UpdatePrices",
+    "LlavePrimaria": "1",
+    "Detalle": "Aumento 22%",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
   }
 ]

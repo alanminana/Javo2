@@ -158,7 +158,6 @@ namespace Javo2.Controllers
             }
         }
 
-        // POST: Ventas/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Permission:ventas.crear")]
@@ -167,80 +166,29 @@ namespace Javo2.Controllers
             try
             {
                 _logger.LogInformation("Create POST => Finalizar={Finalizar}, Model={@Model}", Finalizar, model);
+
+                // Validar forma de pago primero para limpiar campos no necesarios
+                ValidarFormaPago(model);
+
                 // Validaciones
                 if (!ModelState.IsValid)
                 {
-                    LogModelStateErrors();
+                    // Registrar errores para depuración
+                    foreach (var state in ModelState)
+                    {
+                        foreach (var error in state.Value.Errors)
+                        {
+                            _logger.LogError("ModelState Error en {Field}: {Error}", state.Key, error.ErrorMessage);
+                        }
+                    }
+
                     await CargarCombosAsync(model);
                     return View("Form", model);
                 }
 
-                // Validar forma de pago
-                if (!ValidarFormaPago(model))
-                {
-                    await CargarCombosAsync(model);
-                    return View("Form", model);
-                }
-
-                // Validar que haya productos
-                if (model.ProductosPresupuesto == null || !model.ProductosPresupuesto.Any())
-                {
-                    ModelState.AddModelError("", "Debe agregar al menos un producto a la venta");
-                    await CargarCombosAsync(model);
-                    return View("Form", model);
-                }
-
-                // Convertir a Venta y asignar campos adicionales
-                var venta = _mapper.Map<Venta>(model);
-                venta.Usuario = User.Identity?.Name ?? "Desconocido";
-                venta.Vendedor = User.Identity?.Name ?? "Desconocido";
-                venta.FechaVenta = DateTime.Today;
-                venta.TotalProductos = venta.ProductosPresupuesto.Sum(p => p.Cantidad);
-                venta.PrecioTotal = venta.ProductosPresupuesto.Sum(p => p.PrecioTotal);
-
-                // Determinar estado según el parámetro Finalizar
-                venta.Estado = !string.IsNullOrEmpty(Finalizar) && Finalizar.Equals("true", StringComparison.OrdinalIgnoreCase)
-                    ? EstadoVenta.PendienteDeAutorizacion
-                    : EstadoVenta.Borrador;
-
-                // Crear la venta en el servicio
-                await _ventaService.CreateVentaAsync(venta);
-
-                // Registrar en auditoría
-                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
-                {
-                    FechaHora = DateTime.Now,
-                    Usuario = User.Identity?.Name ?? "Desconocido",
-                    Entidad = "Venta",
-                    Accion = "Create",
-                    LlavePrimaria = venta.VentaID.ToString(),
-                    Detalle = $"Cliente={venta.NombreCliente}, Total={venta.PrecioTotal}, Estado={venta.Estado}"
-                });
-
-                // Mostrar mensaje de éxito
-                TempData["Success"] = "Venta creada exitosamente.";
-
-                // Determinar redirección según el estado
-                if (venta.Estado == EstadoVenta.PendienteDeAutorizacion)
-                {
-                    return RedirectToAction(nameof(Autorizaciones));
-                }
-                else
-                {
-                    return RedirectToAction(nameof(Index));
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al crear la venta");
-                ModelState.AddModelError(string.Empty, ex.Message);
-                await CargarCombosAsync(model);
-                return View("Form", model);
-            }
-        }
-
-        // GET: Ventas/Edit/5
-        [HttpGet]
+                
+                // GET: Ventas/Edit/5
+                [HttpGet]
         [Authorize(Policy = "Permission:ventas.editar")]
         public async Task<IActionResult> Edit(int id)
         {
@@ -754,6 +702,9 @@ namespace Javo2.Controllers
                             "Debe especificar el número de cuotas.");
                         isValid = false;
                     }
+                    // Limpiar validaciones de otros métodos de pago
+                    ModelState.Remove(nameof(model.EntidadElectronica));
+                    ModelState.Remove(nameof(model.PlanFinanciamiento));
                     break;
 
                 case 5: // Pago Virtual
@@ -763,6 +714,10 @@ namespace Javo2.Controllers
                             "Debe seleccionar una entidad electrónica para pagos virtuales.");
                         isValid = false;
                     }
+                    // Limpiar validaciones de otros métodos de pago
+                    ModelState.Remove(nameof(model.TipoTarjeta));
+                    ModelState.Remove(nameof(model.Cuotas));
+                    ModelState.Remove(nameof(model.PlanFinanciamiento));
                     break;
 
                 case 6: // Crédito Personal
@@ -778,6 +733,17 @@ namespace Javo2.Controllers
                             "Debe especificar el número de cuotas para crédito personal.");
                         isValid = false;
                     }
+                    // Limpiar validaciones de otros métodos de pago
+                    ModelState.Remove(nameof(model.TipoTarjeta));
+                    ModelState.Remove(nameof(model.EntidadElectronica));
+                    break;
+
+                default: // Para otros métodos de pago (Contado, Débito, Transferencia)
+                         // Limpiar todas las validaciones específicas
+                    ModelState.Remove(nameof(model.TipoTarjeta));
+                    ModelState.Remove(nameof(model.Cuotas));
+                    ModelState.Remove(nameof(model.EntidadElectronica));
+                    ModelState.Remove(nameof(model.PlanFinanciamiento));
                     break;
             }
 

@@ -5,9 +5,9 @@
     "CodigoBarra": "392733305",
     "Nombre": "Producto Inicial",
     "Descripcion": "Descripci\u00F3n del producto inicial",
-    "PCosto": 100,
-    "PContado": 150,
-    "PLista": 56.485907296200,
+    "PCosto": 122.00,
+    "PContado": 183.00,
+    "PLista": 124.44,
     "RubroID": 1,
     "Rubro": {
       "ID": 1,
@@ -53,7 +53,7 @@
     },
     "PorcentajeIva": 21,
     "FechaMod": "2025-04-22T16:44:18.0592582-03:00",
-    "FechaModPrecio": "2025-04-22T16:44:18.0595377-03:00",
+    "FechaModPrecio": "2025-05-01T11:00:53.3271201-03:00",
     "Entregable": false,
     "NoListar": false,
     "Proveedor": {

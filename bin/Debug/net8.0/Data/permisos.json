@@ -493,5 +493,14 @@
     "Grupo": "Auditor\u00EDa",
     "EsSistema": false,
     "Activo": true
+  },
+  {
+    "PermisoID": 56,
+    "Nombre": "Entregar productos",
+    "Codigo": "ventas.entregaProductos",
+    "Descripcion": "Permite gestionar la entrega de productos",
+    "Grupo": "Ventas",
+    "EsSistema": false,
+    "Activo": true
   }
 ]

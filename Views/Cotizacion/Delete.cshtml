@@ -1,0 +1,68 @@
+﻿@model Javo2.ViewModels.Operaciones.Ventas.VentaListViewModel
+@{
+    ViewData["Title"] = "Eliminar Cotización";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="container-fluid py-3">
+    <div class="card shadow-sm bg-dark text-light">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h1 class="h3 mb-0 text-danger">@ViewData["Title"]</h1>
+            <a asp-action="Index" class="btn btn-outline-light btn-sm">
+                <i class="bi bi-arrow-left me-1"></i>Volver
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-danger mb-4">
+                <h4 class="alert-heading">
+                    <i class="bi bi-exclamation-triangle me-2"></i>¿Está seguro que desea eliminar esta cotización?
+                </h4>
+                <p>Esta acción no se puede deshacer. Una vez eliminada, la cotización no podrá ser recuperada.</p>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card bg-secondary text-light">
+                        <div class="card-header">
+                            <h5 class="mb-0">Información de la Cotización</h5>
+                        </div>
+                        <div class="card-body">
+                            <dl class="row mb-0">
+                                <dt class="col-sm-4">Número:</dt>
+                                <dd class="col-sm-8">@Model.NumeroFactura</dd>
+
+                                <dt class="col-sm-4">Fecha:</dt>
+                                <dd class="col-sm-8">@Model.FechaVenta.ToString("dd/MM/yyyy")</dd>
+
+                                <dt class="col-sm-4">Cliente:</dt>
+                                <dd class="col-sm-8">@Model.NombreCliente</dd>
+
+                                <dt class="col-sm-4">Total:</dt>
+                                <dd class="col-sm-8">@Model.PrecioTotal.ToString("C")</dd>
+
+                                <dt class="col-sm-4">Productos:</dt>
+                                <dd class="col-sm-8">@Model.TotalProductos</dd>
+
+                                <dt class="col-sm-4">Creada por:</dt>
+                                <dd class="col-sm-8">@Model.Usuario</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form asp-action="Delete" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@Model.VentaID" />
+                <div class="d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-outline-light">
+                        <i class="bi bi-arrow-left me-1"></i>Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash me-1"></i>Confirmar Eliminación
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

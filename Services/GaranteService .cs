@@ -1,34 +1,27 @@
-﻿// Services/GaranteService.cs
-
-using Javo2.Helpers;
+﻿// Archivo: Services/GaranteService.cs
 using Javo2.IServices;
 using Javo2.Models;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
+using Javo2.Helpers;
 
 namespace Javo2.Services
 {
     public class GaranteService : IGaranteService
     {
         private readonly ILogger<GaranteService> _logger;
-        private static List<Garante> _garantes = new List<Garante>();
-        private static int _nextId = 1;
-        private static readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
+        private static List<Garante> _garantes = new();
+        private static int _nextID = 1;
+        private static readonly object _lock = new();
         private readonly string _jsonFilePath = "Data/garantes.json";
 
         public GaranteService(ILogger<GaranteService> logger)
         {
             _logger = logger;
-            InitializeAsync().GetAwaiter().GetResult();
-        }
-
-        private async Task InitializeAsync()
-        {
-            await CargarDesdeJsonAsync();
+            CargarDesdeJsonAsync().GetAwaiter().GetResult();
         }
 
         private async Task CargarDesdeJsonAsync()
@@ -36,44 +29,37 @@ namespace Javo2.Services
             try
             {
                 var data = await JsonFileHelper.LoadFromJsonFileAsync<List<Garante>>(_jsonFilePath);
-                _lock.EnterWriteLock();
-                try
+                lock (_lock)
                 {
                     _garantes = data ?? new List<Garante>();
+
                     if (_garantes.Any())
                     {
-                        _nextId = _garantes.Max(g => g.GaranteID) + 1;
+                        _nextID = _garantes.Max(g => g.GaranteID) + 1;
                     }
                 }
-                finally
-                {
-                    _lock.ExitWriteLock();
-                }
+                _logger.LogInformation("Garantes cargados: {Count}", _garantes.Count);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al cargar garantes desde JSON");
                 _garantes = new List<Garante>();
-                _nextId = 1;
+                _nextID = 1;
             }
         }
 
         private async Task GuardarEnJsonAsync()
         {
             List<Garante> snapshot;
-            _lock.EnterReadLock();
-            try
+            lock (_lock)
             {
                 snapshot = _garantes.ToList();
-            }
-            finally
-            {
-                _lock.ExitReadLock();
             }
 
             try
             {
                 await JsonFileHelper.SaveToJsonFileAsync(_jsonFilePath, snapshot);
+                _logger.LogInformation("Garantes guardados: {Count}", snapshot.Count);
             }
             catch (Exception ex)
             {
@@ -82,60 +68,47 @@ namespace Javo2.Services
             }
         }
 
-        public Task<IEnumerable<Garante>> GetAllGarantesAsync()
+        public async Task<Garante?> GetGaranteByIdAsync(int id)
         {
-            _lock.EnterReadLock();
-            try
+            lock (_lock)
             {
-                return Task.FromResult(_garantes.AsEnumerable());
-            }
-            finally
-            {
-                _lock.ExitReadLock();
+                return _garantes.FirstOrDefault(g => g.GaranteID == id);
             }
         }
 
-        public Task<Garante?> GetGaranteByIdAsync(int id)
+        public async Task<Garante?> GetGaranteByDniAsync(int dni)
         {
-            _lock.EnterReadLock();
-            try
+            lock (_lock)
             {
-                return Task.FromResult(_garantes.FirstOrDefault(g => g.GaranteID == id));
-            }
-            finally
-            {
-                _lock.ExitReadLock();
+                return _garantes.FirstOrDefault(g => g.DNI == dni);
             }
         }
 
         public async Task<Garante> CreateGaranteAsync(Garante garante)
         {
-            _lock.EnterWriteLock();
-            try
+            lock (_lock)
             {
-                garante.GaranteID = _nextId++;
+                garante.GaranteID = _nextID++;
                 garante.FechaCreacion = DateTime.UtcNow;
                 _garantes.Add(garante);
             }
-            finally
-            {
-                _lock.ExitWriteLock();
-            }
 
             await GuardarEnJsonAsync();
-            _logger.LogInformation("Garante creado: ID={ID}, Nombre={Nombre}", garante.GaranteID, $"{garante.Nombre} {garante.Apellido}");
+
+            _logger.LogInformation("Garante creado: ID={ID}, Nombre={Nombre} {Apellido}",
+                garante.GaranteID, garante.Nombre, garante.Apellido);
+
             return garante;
         }
 
-        public async Task UpdateGaranteAsync(Garante garante)
+        public async Task<bool> UpdateGaranteAsync(Garante garante)
         {
-            _lock.EnterWriteLock();
-            try
+            lock (_lock)
             {
                 var existing = _garantes.FirstOrDefault(g => g.GaranteID == garante.GaranteID);
                 if (existing == null)
                 {
-                    throw new KeyNotFoundException($"Garante con ID {garante.GaranteID} no encontrado.");
+                    return false;
                 }
 
                 // Actualizar propiedades
@@ -157,48 +130,39 @@ namespace Javo2.Services
                 existing.IngresosMensuales = garante.IngresosMensuales;
                 existing.RelacionCliente = garante.RelacionCliente;
             }
-            finally
-            {
-                _lock.ExitWriteLock();
-            }
 
             await GuardarEnJsonAsync();
+
             _logger.LogInformation("Garante actualizado: ID={ID}", garante.GaranteID);
+
+            return true;
         }
 
-        public async Task DeleteGaranteAsync(int id)
+        public async Task<bool> DeleteGaranteAsync(int id)
         {
-            _lock.EnterWriteLock();
-            try
+            lock (_lock)
             {
                 var garante = _garantes.FirstOrDefault(g => g.GaranteID == id);
                 if (garante == null)
                 {
-                    throw new KeyNotFoundException($"Garante con ID {id} no encontrado.");
+                    return false;
                 }
 
                 _garantes.Remove(garante);
             }
-            finally
-            {
-                _lock.ExitWriteLock();
-            }
 
             await GuardarEnJsonAsync();
+
             _logger.LogInformation("Garante eliminado: ID={ID}", id);
+
+            return true;
         }
 
-        public Task<IEnumerable<Garante>> GetGarantesByClienteIdAsync(int clienteId)
+        public async Task<IEnumerable<Garante>> GetAllGarantesAsync()
         {
-            _lock.EnterReadLock();
-            try
+            lock (_lock)
             {
-                var garantes = _garantes.Where(g => g.ClienteID == clienteId);
-                return Task.FromResult(garantes);
-            }
-            finally
-            {
-                _lock.ExitReadLock();
+                return _garantes.ToList();
             }
         }
     }
