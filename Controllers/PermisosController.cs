@@ -12,17 +12,77 @@ using System.Threading.Tasks;
 
 namespace Javo2.Controllers.Authentication
 {
-    [Authorize]  // Fuerza que el usuario esté autenticado
-    public class PermisosController : BaseController
+    [AllowAnonymous] // Esto permite acceder sin verificar permisos
+    public class PermisoEmergenciaController : BaseController
     {
         private readonly IPermisoService _permisoService;
+        private readonly IRolService _rolService;
 
-        public PermisosController(
+        public PermisoEmergenciaController(
             IPermisoService permisoService,
-            ILogger<PermisosController> logger)
-            : base(logger)
+            IRolService rolService,
+            ILogger<PermisoEmergenciaController> logger) : base(logger)
         {
             _permisoService = permisoService;
+            _rolService = rolService;
+        }
+
+        // GET: /PermisoEmergencia/FixAdmin
+        public async Task<IActionResult> FixAdmin()
+        {
+            try
+            {
+                // 1. Verificar si existe el permiso securitydashboard.ver
+                var permisoSecurityDashboard = await _permisoService.GetPermisoByCodigo("securitydashboard.ver");
+
+                // Si no existe, crear el permiso
+                if (permisoSecurityDashboard == null)
+                {
+                    var nuevoPermiso = new Permiso
+                    {
+                        Codigo = "securitydashboard.ver",
+                        Nombre = "Ver Dashboard de Seguridad",
+                        Grupo = "Seguridad",
+                        Descripcion = "Permite ver el panel de control de seguridad",
+                        Activo = true,
+                        EsSistema = true
+                    };
+
+                    await _permisoService.CreatePermisoAsync(nuevoPermiso);
+                    permisoSecurityDashboard = await _permisoService.GetPermisoByCodigo("securitydashboard.ver");
+
+                    if (permisoSecurityDashboard == null)
+                    {
+                        return Content("Error: No se pudo crear el permiso securitydashboard.ver");
+                    }
+                }
+
+                // 2. Encontrar el rol Administrador
+                var roles = await _rolService.GetAllRolesAsync();
+                var rolAdmin = roles.FirstOrDefault(r => r.Nombre.Equals("Administrador", StringComparison.OrdinalIgnoreCase));
+
+                if (rolAdmin == null)
+                {
+                    return Content("Error: No se encontró el rol Administrador");
+                }
+
+                // 3. Verificar si el rol ya tiene el permiso
+                var permisosAdmin = rolAdmin.Permisos?.Select(p => p.PermisoID).ToList() ?? new List<int>();
+
+                if (!permisosAdmin.Contains(permisoSecurityDashboard.PermisoID))
+                {
+                    // 4. Asignar el permiso al rol Administrador
+                    await _rolService.AsignarPermisoAsync(rolAdmin.RolID, permisoSecurityDashboard.PermisoID);
+                }
+
+                return Content("¡Permisos corregidos! El administrador ahora tiene acceso al Dashboard de Seguridad. " +
+                               "Ahora puedes iniciar sesión con el usuario admin y acceder a /SecurityDashboard/Index");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al corregir permisos de admin");
+                return Content("Error: " + ex.Message);
+            }
         }
 
         // GET: Permisos
