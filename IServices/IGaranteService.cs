@@ -1,4 +1,5 @@
-﻿using Javo2.Models;
+﻿// IServices/IGaranteService.cs
+using Javo2.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -8,7 +9,6 @@ namespace Javo2.IServices
     {
         Task<IEnumerable<Garante>> GetAllGarantesAsync();
         Task<Garante> GetGaranteByIdAsync(int id);
-        Task<Garante> GetGaranteByDniAsync(int dni);
         Task<Garante> CreateGaranteAsync(Garante garante);
         Task UpdateGaranteAsync(Garante garante);
         Task DeleteGaranteAsync(int id);

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System;
 using Javo2.Controllers.Base;
 using Microsoft.AspNetCore.Authorization;
+using Javo2.Services;
 
 namespace Javo2.Controllers
 {
@@ -24,16 +25,98 @@ namespace Javo2.Controllers
 
 
         public ClientesController(
-            IClienteService clienteService,
-            IMapper mapper,
-            ILogger<ClientesController> logger)
-            : base(logger)
+     IClienteService clienteService,
+     IMapper mapper,
+     IGaranteService garanteService, // Inyectamos el servicio
+     ILogger<ClientesController> logger)
+     : base(logger)
         {
             _clienteService = clienteService;
             _searchService = clienteService as IClienteSearchService;
+            _garanteService = garanteService; // Asignamos el servicio
             _mapper = mapper;
+            _logger = logger;
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:clientes.editar")]
+        public async Task<IActionResult> AjustarCredito(int id, decimal nuevoLimite)
+        {
+            try
+            {
+                await _clienteService.AjustarLimiteCreditoAsync(id, nuevoLimite, User.Identity?.Name ?? "Sistema");
+                TempData["Success"] = $"Límite de crédito ajustado a {nuevoLimite:C}";
+                return RedirectToAction(nameof(Details), new { id });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al ajustar límite de crédito para cliente ID: {ID}", id);
+                TempData["Error"] = "Error al ajustar límite de crédito: " + ex.Message;
+                return RedirectToAction(nameof(Details), new { id });
+            }
+        }
+
+        // GET: Clientes/AsignarGarante/5
+        [HttpGet]
+        [Authorize(Policy = "Permission:clientes.editar")]
+        public async Task<IActionResult> AsignarGarante(int id)
+        {
+            try
+            {
+                var cliente = await _clienteService.GetClienteByIDAsync(id);
+                if (cliente == null) return NotFound();
+
+                var viewModel = new GaranteViewModel
+                {
+                    ClienteID = id,
+                    NombreCliente = $"{cliente.Nombre} {cliente.Apellido}",
+                    Provincias = await ObtenerProvincias(),
+                    Ciudades = new List<SelectListItem>()
+                };
+
+                return View(viewModel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cargar formulario de garante");
+                return View("Error");
+            }
+        }
+
+        // POST: Clientes/AsignarGarante
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:clientes.editar")]
+        public async Task<IActionResult> AsignarGarante(GaranteViewModel model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    model.Provincias = await ObtenerProvincias();
+                    model.Ciudades = await ObtenerCiudades(model.ProvinciaID);
+                    return View(model);
+                }
+
+                var garante = _mapper.Map<Garante>(model);
+                var createdGarante = await _garanteService.CreateGaranteAsync(garante);
+
+                // Asignar garante al cliente
+                await _clienteService.AsignarGaranteAsync(model.ClienteID, createdGarante.GaranteID);
+
+                TempData["Success"] = "Garante asignado correctamente";
+                return RedirectToAction(nameof(Details), new { id = model.ClienteID });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al asignar garante");
+                ModelState.AddModelError("", "Error al asignar garante: " + ex.Message);
+                model.Provincias = await ObtenerProvincias();
+                model.Ciudades = await ObtenerCiudades(model.ProvinciaID);
+                return View(model);
+            }
+        }
         [HttpGet]
         [Authorize(Policy = "Permission:clientes.ver")]
 

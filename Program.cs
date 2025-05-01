@@ -54,6 +54,13 @@ builder.Services.AddScoped<ICotizacionService, CotizacionService>();
 builder.Services.AddScoped<IConfiguracionService, ConfiguracionService>();
 builder.Services.AddScoped<IDevolucionGarantiaService, DevolucionGarantiaService>();
 builder.Services.AddPermissionPolicies();
+// Agregar en Program.cs (en la sección de registro de servicios)
+
+// Servicio de garantes
+builder.Services.AddScoped<IGaranteService, GaranteService>();
+
+// Asegurarse de que el servicio de cotizaciones esté registrado
+builder.Services.AddScoped<ICotizacionService, CotizacionService>();
 
 // Servicio de búsqueda de cliente
 builder.Services.AddScoped<IClienteSearchService>(sp =>
