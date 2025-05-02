@@ -1,7 +1,8 @@
-﻿// 2. wwwroot/css/login.css
-// Estilos específicos para la página de login
+﻿/* login.css optimizado para tema oscuro */
 html, body {
     height: 100%;
+    background-color: #222;
+    color: #f0f0f0;
 }
 
 .login-container {
@@ -49,3 +50,28 @@ html, body {
     max-width: 120px;
     margin-bottom: 15px;
 }
+
+.form-floating > label {
+    color: #aaa;
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+    color: #aaa;
+    background-color: transparent;
+}
+
+.form-floating > .form-control:focus,
+.form-floating > .form-control:not(:placeholder-shown) {
+    background-color: rgba(33, 37, 41, 0.8);
+}
+
+.form-check-input {
+    background-color: #333;
+    border-color: #555;
+}
+
+    .form-check-input:checked {
+        background-color: #375a7f;
+        border-color: #375a7f;
+    }

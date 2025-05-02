@@ -1,4 +1,4 @@
-﻿/* site.css - Mejorado para tema oscuro con mejor contraste */
+﻿/* site.css - Tema oscuro optimizado con mejor contraste */
 
 :root {
     --dark-bg: #222;
@@ -10,6 +10,8 @@
     --danger-color: #e74c3c;
     --warning-color: #f39c12;
     --info-color: #3498db;
+    --dark-card: #2a2a2a;
+    --border-color: #444;
 }
 
 body {
@@ -20,8 +22,22 @@ body {
     padding: 0;
 }
 
-/* Asegurar que todos los textos son claros */
-body, .text-dark, .text-black, .form-control, .form-select, .input-group-text {
+/* Corregir problema de textos oscuros en elementos específicos */
+body, .table, .form-control, .form-select, .input-group-text,
+.card, .card-title, .card-body, h1, h2, h3, h4, h5, h6,
+.modal-content, .modal-body, .dropdown-menu, .dropdown-item,
+.alert .text-dark {
+    color: var(--light-text) !important;
+}
+
+/* Fondos oscuros para modales y elementos interactivos */
+.modal-content, .dropdown-menu {
+    background-color: var(--dark-card);
+    border-color: var(--border-color);
+}
+
+.dropdown-item:hover {
+    background-color: var(--secondary-color);
     color: var(--light-text) !important;
 }
 
@@ -61,8 +77,8 @@ body, .text-dark, .text-black, .form-control, .form-select, .input-group-text {
 
 /* CARDS */
 .card {
-    background-color: #2a2a2a;
-    border: 1px solid #444;
+    background-color: var(--dark-card);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s, box-shadow 0.2s;
@@ -75,11 +91,11 @@ body, .text-dark, .text-black, .form-control, .form-select, .input-group-text {
 
 .card-header {
     background-color: rgba(0, 0, 0, 0.2);
-    border-bottom: 1px solid #444;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .card-title {
-    color: #f0f0f0;
+    color: var(--light-text);
     font-weight: 600;
 }
 
@@ -123,13 +139,13 @@ body, .text-dark, .text-black, .form-control, .form-select, .input-group-text {
 .form-control, .form-select, .input-group-text {
     background-color: #333;
     border: 1px solid #555;
-    color: #fff !important;
+    color: var(--light-text) !important;
 }
 
     .form-control:focus, .form-select:focus {
         background-color: #383838;
         border-color: var(--primary-color);
-        color: #fff;
+        color: var(--light-text);
         box-shadow: 0 0 0 0.25rem rgba(55, 90, 127, 0.25);
     }
 
@@ -143,8 +159,12 @@ body, .text-dark, .text-black, .form-control, .form-select, .input-group-text {
 }
 
 /* TABLAS */
+.table {
+    color: var(--light-text);
+}
+
 .table-dark {
-    background-color: #2a2a2a;
+    background-color: var(--dark-card);
     color: var(--light-text);
     border-radius: 8px;
     overflow: hidden;
@@ -167,26 +187,59 @@ body, .text-dark, .text-black, .form-control, .form-select, .input-group-text {
     .table-dark td {
         vertical-align: middle;
     }
-/* --- Ajuste de utilidades Bootstrap para tema oscuro --- */
-.text-gray-900,
-.text-dark,
-.text-body {
-    color: var(--light-text) !important; /* blanco */
+
+/* Corregir colores de texto en tablas normales */
+.table:not(.table-dark) {
+    color: var(--light-text);
 }
 
-.text-muted,
-.text-body-secondary {
-    color: #adb5bd !important; /* gris claro */
-}
+    .table:not(.table-dark) thead th {
+        color: var(--light-text);
+        border-color: var(--border-color);
+    }
+
+    .table:not(.table-dark) tbody td {
+        color: var(--light-text);
+        border-color: var(--border-color);
+    }
 
 /* BADGES */
 .badge {
     padding: 0.4em 0.6em;
     font-size: 0.75em;
-    /* Estilos para el login */
-    .login-container
+}
 
-{
+/* ALERTS */
+.alert {
+    border-radius: 8px;
+}
+
+.alert-danger {
+    background-color: rgba(231, 76, 60, 0.2);
+    border-color: rgba(231, 76, 60, 0.3);
+    color: #e74c3c;
+}
+
+.alert-success {
+    background-color: rgba(0, 188, 140, 0.2);
+    border-color: rgba(0, 188, 140, 0.3);
+    color: #00bc8c;
+}
+
+.alert-warning {
+    background-color: rgba(243, 156, 18, 0.2);
+    border-color: rgba(243, 156, 18, 0.3);
+    color: #f39c12;
+}
+
+.alert-info {
+    background-color: rgba(52, 152, 219, 0.2);
+    border-color: rgba(52, 152, 219, 0.3);
+    color: #3498db;
+}
+
+/* LOGIN */
+.login-container {
     max-width: 450px;
     margin: 0 auto;
     padding-top: 40px;
@@ -196,20 +249,22 @@ body, .text-dark, .text-black, .form-control, .form-select, .input-group-text {
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    background-color: var(--dark-card);
 }
 
 .card-header-tabs .nav-link {
     padding: 0.75rem 1rem;
     font-weight: 500;
+    color: var(--light-text);
 }
 
     .card-header-tabs .nav-link.active {
+        background-color: var(--primary-color);
+        color: white;
         border-bottom-color: transparent;
-        background-color: #fff;
-        border-top: 3px solid #4e73df;
     }
 
-/* Estilos para el panel de seguridad */
+/* PANEL DE SEGURIDAD */
 .security-card {
     transition: all 0.3s ease;
 }
@@ -234,176 +289,288 @@ body, .text-dark, .text-black, .form-control, .form-select, .input-group-text {
 .border-left-warning {
     border-left: 0.25rem solid #f6c23e !important;
 }
-/* Etiquetas y textos del formulario en blanco */
-label,
-.form-floating > label,
-.form-check-label {
-    color: #fff !important;
+
+/* BOTONES */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 
-.form-floating > .form-control ~ label {
-    color: #6c757d;
-}
-/* --- Tema oscuro: etiquetas dentro de form‑floating --- */
-.form-floating > label,
-.form-floating > .form-control ~ label,
-.form-floating > .form-control:focus ~ label,
-.form-floating > .form-select ~ label {
-    color: #fff !important; /* blanco */
-}
-/* === Tema oscuro: forzar textos claros en todos los controles === */
-
-/* Etiquetas de formularios (form-floating, form-check, etc.) */
-.form-floating > label,
-.form-floating > .form-control ~ label,
-.form-floating > .form-select ~ label,
-.form-check-label,
-label {
-    color: #fff !important; /* blanco */
+.btn-success {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
 }
 
-/* Utilidades de Bootstrap que traen grises oscuros */
-.text-body, /* Bootstrap <5.3 */
-.text-body-secondary, /* Bootstrap 5.3+ */
-.text-gray-900,
-.text-dark,
-.text-muted {
-    color: #f8f9fa !important; /* blanco o gris claro */
+.btn-danger {
+    background-color: var(--danger-color);
+    border-color: var(--danger-color);
 }
 
-/* Mensajes de validación (si no los quieres rojos) */
-.field-validation-error,
-.input-validation-error {
-    color: #ff6b6b; /* o pon #fff si también los quieres blancos */
+.btn-warning {
+    background-color: var(--warning-color);
+    border-color: var(--warning-color);
 }
 
-
-/* Espaciado para el dashboard */
-.card-header-tabs {
-    margin-right: 0;
-    margin-left: 0;
-    margin-bottom: -1px;
-}
-/* Estilos específicos para mejorar el SecurityDashboard */
-
-/* Mejorar el contraste para los textos en cards del dashboard */
-.card-body .text-gray-800,
-.card .text-dark,
-.card .text-gray-800,
-.card .fw-bold,
-.card .card-title,
-.card .h5,
-.card p,
-.card small,
-.card-body .text-xs,
-.card-body .h4 {
-    color: #f8f9fa !important; /* Texto claro para mejor contraste */
+.btn-info {
+    background-color: var(--info-color);
+    border-color: var(--info-color);
 }
 
-/* Asegurar que los íconos sean visibles */
-.card .text-muted {
-    color: #adb5bd !important; /* Gris más claro para íconos */
+.btn-secondary {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
 }
 
-/* Mejorar tarjetas del dashboard */
-.card.border-left-primary,
-.card.border-left-success,
-.card.border-left-info,
-.card.border-left-warning {
-    background-color: #2c3034; /* Fondo ligeramente más claro */
+.btn-outline-light {
+    color: var(--light-text);
+    border-color: #555;
 }
 
-/* Mejorar contraste en las tablas del dashboard */
-.table-hover tbody tr {
-    color: #f8f9fa; /* Texto claro en filas de tablas */
-}
-
-    .table-hover tbody tr:hover {
-        background-color: rgba(255, 255, 255, 0.075); /* Hover sutil */
-    }
-
-/* Mejorar los tabs */
-.nav-tabs .nav-link {
-    color: #f8f9fa;
-}
-
-    .nav-tabs .nav-link.active {
-        background-color: #375a7f;
+    .btn-outline-light:hover {
+        background-color: #555;
         color: white;
-        border-color: #375a7f;
     }
-/* security-dashboard.css - Mejora específica para el panel de seguridad */
 
-/* Corregir problemas de contraste en las tarjetas de dashboard */
-.card .text-gray-800,
-.card .h4,
-.card .fw-bold {
-    color: #f8f9fa !important; /* Color claro para números y textos importantes */
+/* NAVEGACIÓN */
+.nav-tabs {
+    border-bottom-color: var(--border-color);
 }
 
-/* Mejorar contraste en las tablas */
-.table-hover {
-    color: #f8f9fa !important;
-    background-color: #2a2a2a !important;
-}
-
-    .table-hover thead th {
-        background-color: #375a7f !important;
-        color: white !important;
-        border-bottom: none !important;
+    .nav-tabs .nav-link {
+        color: var(--light-text);
     }
 
-    .table-hover tbody tr {
-        color: #f8f9fa !important;
-    }
-
-        .table-hover tbody tr:hover {
-            background-color: #3a3f44 !important;
-            color: white !important;
+        .nav-tabs .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--border-color);
         }
 
-/* Mejorar estilos de cards */
-.card {
-    background-color: #2a2a2a !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+/* MODAL */
+.modal-header, .modal-footer {
+    border-color: var(--border-color);
 }
 
-.card-body {
-    background-color: #2a2a2a !important;
-    color: #f8f9fa !important;
-}
-
-    .card-body .card-title,
-    .card-body .card-text,
-    .card-body p {
-        color: #f8f9fa !important;
+    .modal-header .btn-close {
+        color: var(--light-text);
     }
 
-/* Mejorar estilo de tarjetas con bordes coloreados */
-.border-left-primary,
-.border-left-success,
-.border-left-info,
-.border-left-warning {
-    border-left: 0.25rem solid;
-    background-color: #2a2a2a !important;
-}
-
-/* Asegurar visibilidad del texto en tabs */
-.nav-tabs .nav-link {
-    color: #f8f9fa !important;
-}
-
-    .nav-tabs .nav-link.active {
-        background-color: #375a7f !important;
-        color: white !important;
-        border-color: #375a7f !important;
+/* IMPRESIÓN */
+@media print {
+    body {
+        background-color: white;
+        color: black;
     }
-/* Asegurar que las badges sean legibles */
-.badge {
+
+    .card {
+        background-color: white;
+        color: black;
+        border: 1px solid #ddd;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+}
+
+/* Correcciones para textos en elementos específicos */
+.text-muted {
+    color: #adb5bd !important;
+}
+
+.text-dark, .text-black {
+    color: var(--light-text) !important;
+}
+
+/* PAGINACIÓN */
+.pagination .page-link {
+    background-color: var(--dark-card);
+    border-color: var(--border-color);
+    color: var(--light-text);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
     color: white;
 }
 
-    .badge.bg-secondary,
-    .badge.bg-warning {
-        color: #212529;
+.pagination .page-item.disabled .page-link {
+    background-color: var(--dark-card);
+    border-color: var(--border-color);
+    color: #555;
+}
+/* Estilos unificados para tablas de seguridad */
+#usuarios-tab-pane .table,
+#login-tab-pane .table,
+.security-dashboard .table,
+#permisosAccordion .table {
+    background-color: #2a2a2a;
+    color: #f0f0f0;
+}
+
+    #usuarios-tab-pane .table thead th,
+    #login-tab-pane .table thead th,
+    .security-dashboard .table thead th,
+    #permisosAccordion .table thead th {
+        background-color: #375a7f;
+        color: white;
+        border-bottom: 2px solid #555;
+    }
+
+    #usuarios-tab-pane .table tbody tr,
+    #login-tab-pane .table tbody tr,
+    .security-dashboard .table tbody tr,
+    #permisosAccordion .table tbody tr {
+        background-color: #2a2a2a;
+    }
+
+        #usuarios-tab-pane .table tbody tr:hover,
+        #login-tab-pane .table tbody tr:hover,
+        .security-dashboard .table tbody tr:hover,
+        #permisosAccordion .table tbody tr:hover {
+            background-color: #383838;
+        }
+
+/* Estilos específicos para tablas en tarjetas */
+.card .table {
+    background-color: #2a2a2a;
+}
+
+/* Asegurar consistencia con tabla-ventas */
+.table-dark {
+    background-color: #2a2a2a !important;
+    color: #f0f0f0 !important;
+}
+
+/* Estilos unificados para tablas de seguridad */
+#usuarios-tab-pane .table,
+#login-tab-pane .table,
+.security-dashboard .table,
+#permisosAccordion .table {
+    background-color: #2a2a2a;
+    color: #f0f0f0;
+}
+
+    #usuarios-tab-pane .table thead th,
+    #login-tab-pane .table thead th,
+    .security-dashboard .table thead th,
+    #permisosAccordion .table thead th {
+        background-color: #375a7f;
+        color: white;
+        border-bottom: 2px solid #555;
+    }
+
+    #usuarios-tab-pane .table tbody tr,
+    #login-tab-pane .table tbody tr,
+    .security-dashboard .table tbody tr,
+    #permisosAccordion .table tbody tr {
+        background-color: #2a2a2a;
+    }
+
+        #usuarios-tab-pane .table tbody tr:hover,
+        #login-tab-pane .table tbody tr:hover,
+        .security-dashboard .table tbody tr:hover,
+        #permisosAccordion .table tbody tr:hover {
+            background-color: #383838;
+        }
+
+/* Estilos específicos para tablas en tarjetas */
+.card .table {
+    background-color: #2a2a2a;
+}
+
+/* Asegurar consistencia con tabla-ventas */
+.table-dark {
+    background-color: #2a2a2a !important;
+    color: #f0f0f0 !important;
+}
+
+/* Estilos unificados para todas las tablas */
+.table,
+.table-dark,
+.table-hover,
+#usuarios-tab-pane .table,
+#login-tab-pane .table,
+#myTabContent .table {
+    color: #f0f0f0;
+    background-color: #2a2a2a !important;
+    border-color: #444;
+}
+
+    /* Encabezados consistentes */
+    .table thead th,
+    .table-dark thead th,
+    #usuarios-tab-pane .table thead th,
+    #login-tab-pane .table thead th,
+    #myTabContent .table thead th {
+        background-color: #375a7f !important;
+        color: white !important;
+        border-bottom: 2px solid #555;
+        font-weight: 600;
+        padding: 12px 8px;
+    }
+
+    /* Filas con hover consistente */
+    .table tbody tr:hover,
+    .table-dark tbody tr:hover,
+    #usuarios-tab-pane .table tbody tr:hover,
+    #login-tab-pane .table tbody tr:hover,
+    #myTabContent .table tbody tr:hover {
+        background-color: #383838 !important;
+    }
+
+    /* Quitar bordes de tabla blancos */
+    .table td, .table th,
+    .table-dark td, .table-dark th {
+        border-color: #444 !important;
+    }
+
+    /* Forzar fondo oscuro en tabla normal */
+    .table:not(.table-dark) {
+        background-color: #2a2a2a !important;
+    }
+/* Estilos unificados para todas las tablas */
+.table,
+.table-dark,
+.table-hover,
+#usuarios-tab-pane .table,
+#login-tab-pane .table,
+#myTabContent .table {
+    color: #f0f0f0;
+    background-color: #2a2a2a !important;
+    border-color: #444;
+}
+
+    /* Encabezados consistentes */
+    .table thead th,
+    .table-dark thead th,
+    #usuarios-tab-pane .table thead th,
+    #login-tab-pane .table thead th,
+    #myTabContent .table thead th {
+        background-color: #375a7f !important;
+        color: white !important;
+        border-bottom: 2px solid #555;
+        font-weight: 600;
+        padding: 12px 8px;
+    }
+
+    /* Filas con hover consistente */
+    .table tbody tr:hover,
+    .table-dark tbody tr:hover,
+    #usuarios-tab-pane .table tbody tr:hover,
+    #login-tab-pane .table tbody tr:hover,
+    #myTabContent .table tbody tr:hover {
+        background-color: #383838 !important;
+    }
+
+    /* Quitar bordes de tabla blancos */
+    .table td, .table th,
+    .table-dark td, .table-dark th {
+        border-color: #444 !important;
+    }
+
+    /* Forzar fondo oscuro en tabla normal */
+    .table:not(.table-dark) {
+        background-color: #2a2a2a !important;
     }

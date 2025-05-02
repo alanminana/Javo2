@@ -832,5 +832,54 @@
     "DeudaTotal": 0,
     "Estado": 0,
     "StockItem": null
+  },
+  {
+    "ProductoID": 9,
+    "CodigoAlfa": "P009",
+    "CodigoBarra": "559285995",
+    "Nombre": "heladera  doble puerta ",
+    "Descripcion": "heladera doble puerta ",
+    "PCosto": 500,
+    "PContado": 750.0,
+    "PLista": 510.00,
+    "RubroID": 2,
+    "Rubro": {
+      "ID": 0,
+      "Nombre": "",
+      "SubRubros": []
+    },
+    "SubRubroID": 4,
+    "SubRubro": {
+      "ID": 0,
+      "Nombre": "",
+      "RubroID": 0,
+      "Rubro": {
+        "ID": 0,
+        "Nombre": "",
+        "SubRubros": []
+      }
+    },
+    "MarcaID": 3,
+    "Marca": null,
+    "PorcentajeIva": 21.00,
+    "FechaMod": "2025-05-02T03:00:54.3936982-03:00",
+    "FechaModPrecio": "2025-05-02T03:00:54.3937003-03:00",
+    "Entregable": false,
+    "NoListar": false,
+    "Proveedor": {
+      "ProveedorID": 0,
+      "Nombre": "",
+      "Direccion": "",
+      "Telefono": "",
+      "Email": "",
+      "CondicionesPago": "",
+      "ProductosAsignados": []
+    },
+    "Usuario": "",
+    "ModificadoPor": "admin",
+    "EstadoComentario": "",
+    "DeudaTotal": 0,
+    "Estado": 0,
+    "StockItem": null
   }
 ]

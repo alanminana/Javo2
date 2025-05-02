@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "xhSMCyRzY7uplHmhoreF8HTPzT639cGjY2nmBLjMk0Y=",
+  "Hash": "utKxXU/5wOc2X9iZ3sEH6joMJ1DE8TBSSi67groc5kY=",
   "Source": "Javo2",
   "BasePath": "_content/Javo2",
   "Mode": "Default",
@@ -94,8 +94,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "w5ua1zydlf",
-      "Integrity": "NCRwRkuqsldxnUOTtVDKe5JQdD6gJELw1jZ1JyipSOk=",
+      "Fingerprint": "5qhoblng1r",
+      "Integrity": "vT6WQ/agjBsUuWZrjzShIyzzYHZPs2Jojrb6J/ffLMk=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\login.css"
@@ -115,8 +115,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "hchrmbk3mb",
-      "Integrity": "b405JYMbrvD+2yRq/8a6d0k1yqsXGEsPDsvlmiXnMCk=",
+      "Fingerprint": "9madlxdyj7",
+      "Integrity": "/9/VdqP0tfWNI6HsTRpqAV7U8YLOqm6o/X+f3vrzicY=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\site.css"
@@ -1508,6 +1508,51 @@
       ]
     },
     {
+      "Route": "css/login.5qhoblng1r.css",
+      "AssetFile": "D:\\github\\Javo2\\wwwroot\\css\\login.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1647"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"vT6WQ/agjBsUuWZrjzShIyzzYHZPs2Jojrb6J/ffLMk=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 02 May 2025 04:48:22 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "5qhoblng1r"
+        },
+        {
+          "Name": "label",
+          "Value": "css/login.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-vT6WQ/agjBsUuWZrjzShIyzzYHZPs2Jojrb6J/ffLMk="
+        }
+      ]
+    },
+    {
       "Route": "css/login.css",
       "AssetFile": "D:\\github\\Javo2\\wwwroot\\css\\login.css",
       "Selectors": [],
@@ -1518,7 +1563,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "1098"
+          "Value": "1647"
         },
         {
           "Name": "Content-Type",
@@ -1526,11 +1571,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"NCRwRkuqsldxnUOTtVDKe5JQdD6gJELw1jZ1JyipSOk=\""
+          "Value": "\"vT6WQ/agjBsUuWZrjzShIyzzYHZPs2Jojrb6J/ffLMk=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 27 Apr 2025 06:37:25 GMT"
+          "Value": "Fri, 02 May 2025 04:48:22 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1540,13 +1585,13 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-NCRwRkuqsldxnUOTtVDKe5JQdD6gJELw1jZ1JyipSOk="
+          "Value": "sha256-vT6WQ/agjBsUuWZrjzShIyzzYHZPs2Jojrb6J/ffLMk="
         }
       ]
     },
     {
-      "Route": "css/login.w5ua1zydlf.css",
-      "AssetFile": "D:\\github\\Javo2\\wwwroot\\css\\login.css",
+      "Route": "css/site.9madlxdyj7.css",
+      "AssetFile": "D:\\github\\Javo2\\wwwroot\\css\\site.css",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -1555,7 +1600,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "1098"
+          "Value": "13052"
         },
         {
           "Name": "Content-Type",
@@ -1563,11 +1608,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"NCRwRkuqsldxnUOTtVDKe5JQdD6gJELw1jZ1JyipSOk=\""
+          "Value": "\"/9/VdqP0tfWNI6HsTRpqAV7U8YLOqm6o/X+f3vrzicY=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 27 Apr 2025 06:37:25 GMT"
+          "Value": "Fri, 02 May 2025 04:53:16 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1577,15 +1622,15 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "w5ua1zydlf"
+          "Value": "9madlxdyj7"
         },
         {
           "Name": "label",
-          "Value": "css/login.css"
+          "Value": "css/site.css"
         },
         {
           "Name": "integrity",
-          "Value": "sha256-NCRwRkuqsldxnUOTtVDKe5JQdD6gJELw1jZ1JyipSOk="
+          "Value": "sha256-/9/VdqP0tfWNI6HsTRpqAV7U8YLOqm6o/X+f3vrzicY="
         }
       ]
     },
@@ -1600,7 +1645,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "5172"
+          "Value": "13052"
         },
         {
           "Name": "Content-Type",
@@ -1608,11 +1653,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"b405JYMbrvD+2yRq/8a6d0k1yqsXGEsPDsvlmiXnMCk=\""
+          "Value": "\"/9/VdqP0tfWNI6HsTRpqAV7U8YLOqm6o/X+f3vrzicY=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 02 May 2025 04:06:39 GMT"
+          "Value": "Fri, 02 May 2025 04:53:16 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1622,52 +1667,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-b405JYMbrvD+2yRq/8a6d0k1yqsXGEsPDsvlmiXnMCk="
-        }
-      ]
-    },
-    {
-      "Route": "css/site.hchrmbk3mb.css",
-      "AssetFile": "D:\\github\\Javo2\\wwwroot\\css\\site.css",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "5172"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"b405JYMbrvD+2yRq/8a6d0k1yqsXGEsPDsvlmiXnMCk=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Fri, 02 May 2025 04:06:39 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "hchrmbk3mb"
-        },
-        {
-          "Name": "label",
-          "Value": "css/site.css"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-b405JYMbrvD+2yRq/8a6d0k1yqsXGEsPDsvlmiXnMCk="
+          "Value": "sha256-/9/VdqP0tfWNI6HsTRpqAV7U8YLOqm6o/X+f3vrzicY="
         }
       ]
     },
