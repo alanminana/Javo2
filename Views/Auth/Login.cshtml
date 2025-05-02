@@ -7,59 +7,88 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-lg-5">
-            <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card shadow-lg border-0 my-5">
                 <div class="card-body p-0">
                     <div class="p-5">
+
+                        <!-- logo + encabezado -->
                         <div class="text-center mb-4">
-                            <img src="~/img/logo.png" alt="Logo" class="img-fluid mb-3" style="max-width: 150px;" onerror="this.style.display='none'">
-                            <h1 class="h4 text-gray-900 mb-2">Bienvenido</h1>
-                            <p class="text-muted">Ingrese sus credenciales para acceder</p>
+                            <img src="~/img/logo.png"
+                                 class="img-fluid mb-3"
+                                 style="max-width:150px"
+                                 alt="Logo"
+                                 onerror="this.remove();" />
+
+                            <h1 class="h4 text-light mb-2">Bienvenido</h1>
+                            <p class="text-body-secondary">Ingrese sus credenciales para acceder</p>
                         </div>
 
-                        <form asp-action="Login" method="post" class="user">
-                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                        <!-- formulario -->
+                        <form asp-action="Login"
+                              asp-route-returnUrl="@ViewBag.ReturnUrl"
+                              method="post"
+                              class="user"
+                              autocomplete="off">
 
+                            <div asp-validation-summary="ModelOnly"
+                                 class="alert alert-danger d-none"></div>
+
+                            <!-- usuario -->
                             <div class="form-floating mb-3">
-                                <input asp-for="NombreUsuario" class="form-control" id="floatingInput" placeholder="Nombre de usuario" />
-                                <label for="floatingInput">Usuario</label>
+                                <input asp-for="NombreUsuario"
+                                       class="form-control"
+                                       autocomplete="username"
+                                       placeholder="Nombre de usuario" />
+                                <label asp-for="NombreUsuario">Usuario</label>
                                 <span asp-validation-for="NombreUsuario" class="text-danger"></span>
                             </div>
 
+                            <!-- contraseña -->
                             <div class="form-floating mb-3">
-                                <input asp-for="Contraseña" class="form-control" id="floatingPassword" placeholder="Contraseña" />
-                                <label for="floatingPassword">Contraseña</label>
+                                <input asp-for="Contraseña"
+                                       class="form-control"
+                                       type="password"
+                                       autocomplete="current-password"
+                                       placeholder="Contraseña" />
+                                <label asp-for="Contraseña">Contraseña</label>
                                 <span asp-validation-for="Contraseña" class="text-danger"></span>
                             </div>
 
+                            <!-- recordar -->
                             <div class="form-check mb-3">
-                                <input asp-for="RecordarMe" class="form-check-input" type="checkbox" />
-                                <label class="form-check-label" asp-for="RecordarMe">Recordar sesión</label>
+                                <input asp-for="RecordarMe" class="form-check-input" />
+                                <label asp-for="RecordarMe"
+                                       class="form-check-label"
+                                       style="color:#fff">Recordar sesión</label>
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100 py-2 mb-3">
-                                <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar sesión
+
+                            <!-- submit -->
+                            <button type="submit"
+                                    class="btn btn-primary w-100 py-2 mb-3">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>
+                                Iniciar sesión
                             </button>
 
                             <hr>
 
+                            <!-- link contraseña -->
                             <div class="text-center">
-                                <a asp-controller="ResetPassword" asp-action="OlvideContraseña" class="text-decoration-none">¿Olvidaste tu contraseña?</a>
+                                <a asp-controller="ResetPassword"
+                                   asp-action="OlvideContraseña"
+                                   class="text-decoration-none">
+                                    ¿Olvidaste tu contraseña?
+                                </a>
                             </div>
-
-                            @if (!string.IsNullOrEmpty(ViewBag.ReturnUrl))
-                            {
-                                <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
-                            }
                         </form>
-                    </div>
-                </div>
-            </div>
+
+                    </div><!-- /.p-5 -->
+                </div><!-- /.card-body -->
+            </div><!-- /.card -->
         </div>
     </div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }

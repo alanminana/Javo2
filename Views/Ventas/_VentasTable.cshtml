@@ -38,7 +38,7 @@
             }
         </td>
         <td class="text-center">
-            <div class="btn-group" role="group" aria-label="Acciones para venta @venta.VentaID">
+            <div class="btn-group action-buttons" role="group" aria-label="Acciones para venta @venta.VentaID">
                 <a asp-action="Details" asp-route-id="@venta.VentaID" class="btn btn-sm btn-outline-info" title="Ver Detalles">
                     <i class="bi bi-eye" aria-hidden="true"></i>
                 </a>
@@ -49,21 +49,21 @@
                         <i class="bi bi-pencil-square" aria-hidden="true"></i>
                     </a>
                 }
-                @* Aprobar/Rechazar *@
+                @* Aprobar/Rechazar - Mejorado visual y semánticamente *@
                 @if (venta.Estado == "PendienteDeAutorizacion")
                 {
                     <form asp-action="Aprobar" method="post" class="d-inline">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="id" value="@venta.VentaID" />
-                        <button type="submit" class="btn btn-sm btn-outline-success" title="Aprobar">
-                            <i class="bi bi-check-circle" aria-hidden="true"></i>
+                        <button type="submit" class="btn btn-sm btn-success autorizar-venta" title="Aprobar">
+                            <i class="bi bi-check-circle" aria-hidden="true"></i> Autorizar
                         </button>
                     </form>
                     <form asp-action="Rechazar" method="post" class="d-inline">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="id" value="@venta.VentaID" />
-                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Rechazar">
-                            <i class="bi bi-x-circle" aria-hidden="true"></i>
+                        <button type="submit" class="btn btn-sm btn-danger rechazar-venta" title="Rechazar">
+                            <i class="bi bi-x-circle" aria-hidden="true"></i> Rechazar
                         </button>
                     </form>
                 }

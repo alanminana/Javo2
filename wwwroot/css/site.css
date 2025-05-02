@@ -1,4 +1,4 @@
-/* site.css - Mejorado para tema oscuro con mejor contraste */
+﻿/* site.css - Mejorado para tema oscuro con mejor contraste */
 
 :root {
     --dark-bg: #222;
@@ -167,6 +167,17 @@ body, .text-dark, .text-black, .form-control, .form-select, .input-group-text {
     .table-dark td {
         vertical-align: middle;
     }
+/* --- Ajuste de utilidades Bootstrap para tema oscuro --- */
+.text-gray-900,
+.text-dark,
+.text-body {
+    color: var(--light-text) !important; /* blanco */
+}
+
+.text-muted,
+.text-body-secondary {
+    color: #adb5bd !important; /* gris claro */
+}
 
 /* BADGES */
 .badge {
@@ -223,6 +234,49 @@ body, .text-dark, .text-black, .form-control, .form-select, .input-group-text {
 .border-left-warning {
     border-left: 0.25rem solid #f6c23e !important;
 }
+/* Etiquetas y textos del formulario en blanco */
+label,
+.form-floating > label,
+.form-check-label {
+    color: #fff !important;
+}
+
+.form-floating > .form-control ~ label {
+    color: #6c757d;
+}
+/* --- Tema oscuro: etiquetas dentro de form‑floating --- */
+.form-floating > label,
+.form-floating > .form-control ~ label,
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-select ~ label {
+    color: #fff !important; /* blanco */
+}
+/* === Tema oscuro: forzar textos claros en todos los controles === */
+
+/* Etiquetas de formularios (form-floating, form-check, etc.) */
+.form-floating > label,
+.form-floating > .form-control ~ label,
+.form-floating > .form-select ~ label,
+.form-check-label,
+label {
+    color: #fff !important; /* blanco */
+}
+
+/* Utilidades de Bootstrap que traen grises oscuros */
+.text-body, /* Bootstrap <5.3 */
+.text-body-secondary, /* Bootstrap 5.3+ */
+.text-gray-900,
+.text-dark,
+.text-muted {
+    color: #f8f9fa !important; /* blanco o gris claro */
+}
+
+/* Mensajes de validación (si no los quieres rojos) */
+.field-validation-error,
+.input-validation-error {
+    color: #ff6b6b; /* o pon #fff si también los quieres blancos */
+}
+
 
 /* Espaciado para el dashboard */
 .card-header-tabs {
@@ -230,3 +284,126 @@ body, .text-dark, .text-black, .form-control, .form-select, .input-group-text {
     margin-left: 0;
     margin-bottom: -1px;
 }
+/* Estilos específicos para mejorar el SecurityDashboard */
+
+/* Mejorar el contraste para los textos en cards del dashboard */
+.card-body .text-gray-800,
+.card .text-dark,
+.card .text-gray-800,
+.card .fw-bold,
+.card .card-title,
+.card .h5,
+.card p,
+.card small,
+.card-body .text-xs,
+.card-body .h4 {
+    color: #f8f9fa !important; /* Texto claro para mejor contraste */
+}
+
+/* Asegurar que los íconos sean visibles */
+.card .text-muted {
+    color: #adb5bd !important; /* Gris más claro para íconos */
+}
+
+/* Mejorar tarjetas del dashboard */
+.card.border-left-primary,
+.card.border-left-success,
+.card.border-left-info,
+.card.border-left-warning {
+    background-color: #2c3034; /* Fondo ligeramente más claro */
+}
+
+/* Mejorar contraste en las tablas del dashboard */
+.table-hover tbody tr {
+    color: #f8f9fa; /* Texto claro en filas de tablas */
+}
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(255, 255, 255, 0.075); /* Hover sutil */
+    }
+
+/* Mejorar los tabs */
+.nav-tabs .nav-link {
+    color: #f8f9fa;
+}
+
+    .nav-tabs .nav-link.active {
+        background-color: #375a7f;
+        color: white;
+        border-color: #375a7f;
+    }
+/* security-dashboard.css - Mejora específica para el panel de seguridad */
+
+/* Corregir problemas de contraste en las tarjetas de dashboard */
+.card .text-gray-800,
+.card .h4,
+.card .fw-bold {
+    color: #f8f9fa !important; /* Color claro para números y textos importantes */
+}
+
+/* Mejorar contraste en las tablas */
+.table-hover {
+    color: #f8f9fa !important;
+    background-color: #2a2a2a !important;
+}
+
+    .table-hover thead th {
+        background-color: #375a7f !important;
+        color: white !important;
+        border-bottom: none !important;
+    }
+
+    .table-hover tbody tr {
+        color: #f8f9fa !important;
+    }
+
+        .table-hover tbody tr:hover {
+            background-color: #3a3f44 !important;
+            color: white !important;
+        }
+
+/* Mejorar estilos de cards */
+.card {
+    background-color: #2a2a2a !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.card-body {
+    background-color: #2a2a2a !important;
+    color: #f8f9fa !important;
+}
+
+    .card-body .card-title,
+    .card-body .card-text,
+    .card-body p {
+        color: #f8f9fa !important;
+    }
+
+/* Mejorar estilo de tarjetas con bordes coloreados */
+.border-left-primary,
+.border-left-success,
+.border-left-info,
+.border-left-warning {
+    border-left: 0.25rem solid;
+    background-color: #2a2a2a !important;
+}
+
+/* Asegurar visibilidad del texto en tabs */
+.nav-tabs .nav-link {
+    color: #f8f9fa !important;
+}
+
+    .nav-tabs .nav-link.active {
+        background-color: #375a7f !important;
+        color: white !important;
+        border-color: #375a7f !important;
+    }
+/* Asegurar que las badges sean legibles */
+.badge {
+    color: white;
+}
+
+    .badge.bg-secondary,
+    .badge.bg-warning {
+        color: #212529;
+    }
