@@ -142,5 +142,53 @@
     "Estado": 4,
     "CuotasPagas": [],
     "EstadosEntregaProductos": []
+  },
+  {
+    "VentaID": 4,
+    "FechaVenta": "2025-05-02T00:31:44.1721736-03:00",
+    "NumeroFactura": "FAC-20250502-0004",
+    "Usuario": "admin",
+    "Vendedor": "admin",
+    "DniCliente": 1231,
+    "NombreCliente": "weqwe weqwe",
+    "TelefonoCliente": "1234",
+    "DomicilioCliente": "dssads 123",
+    "LocalidadCliente": "qw1232req",
+    "CelularCliente": "12312321",
+    "LimiteCreditoCliente": 0,
+    "SaldoCliente": 0,
+    "SaldoDisponibleCliente": 0,
+    "FormaPagoID": 2,
+    "PromocionesAplicadas": [],
+    "BancoID": 4,
+    "TipoTarjeta": "MasterCard",
+    "Cuotas": 11,
+    "EntidadElectronica": null,
+    "PlanFinanciamiento": null,
+    "Observaciones": "eqw",
+    "Condiciones": "qwe",
+    "Credito": 0,
+    "ProductosPresupuesto": [
+      {
+        "ProductoID": 1,
+        "CodigoAlfa": "P001",
+        "CodigoBarra": "392733305",
+        "NombreProducto": "Producto Inicial",
+        "Marca": "Marca A",
+        "Cantidad": 1,
+        "PrecioUnitario": 183,
+        "PrecioTotal": 183,
+        "PrecioLista": 12444
+      }
+    ],
+    "PrecioTotal": 183,
+    "TotalProductos": 1,
+    "AdelantoDinero": 213,
+    "DineroContado": 231,
+    "MontoCheque": 1231,
+    "NumeroCheque": "123",
+    "Estado": 1,
+    "CuotasPagas": [],
+    "EstadosEntregaProductos": []
   }
 ]

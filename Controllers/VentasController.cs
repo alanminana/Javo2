@@ -169,7 +169,11 @@ namespace Javo2.Controllers
 
                 // Validar forma de pago primero para limpiar campos no necesarios
                 ValidarFormaPago(model);
+                if (string.IsNullOrEmpty(model.Observaciones))
+                    model.Observaciones = "Sin observaciones";
 
+                if (string.IsNullOrEmpty(model.Condiciones))
+                    model.Condiciones = "Condiciones estándar";
                 // Validaciones
                 if (!ModelState.IsValid)
                 {
@@ -186,9 +190,57 @@ namespace Javo2.Controllers
                     return View("Form", model);
                 }
 
-                
-                // GET: Ventas/Edit/5
-                [HttpGet]
+                // Validar que haya productos
+                if (model.ProductosPresupuesto == null || !model.ProductosPresupuesto.Any())
+                {
+                    ModelState.AddModelError("", "Debe agregar al menos un producto a la venta");
+                    await CargarCombosAsync(model);
+                    return View("Form", model);
+                }
+
+                // Convertir viewmodel a venta
+                var venta = _mapper.Map<Venta>(model);
+                venta.TotalProductos = venta.ProductosPresupuesto.Sum(p => p.Cantidad);
+                venta.PrecioTotal = venta.ProductosPresupuesto.Sum(p => p.PrecioTotal);
+                venta.Usuario = User.Identity?.Name ?? "Desconocido";
+                venta.Vendedor = User.Identity?.Name ?? "Desconocido";
+
+                // Definir estado según finalizar
+                bool finalizar = !string.IsNullOrEmpty(Finalizar) && Finalizar.ToLower() == "true";
+                venta.Estado = finalizar ? EstadoVenta.PendienteDeAutorizacion : EstadoVenta.Borrador;
+
+                // Crear venta
+                await _ventaService.CreateVentaAsync(venta);
+
+                // Registrar en auditoría
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = venta.Usuario,
+                    Entidad = "Venta",
+                    Accion = "Create",
+                    LlavePrimaria = venta.VentaID.ToString(),
+                    Detalle = $"Cliente={venta.NombreCliente}, Total={venta.PrecioTotal}, Estado={venta.Estado}"
+                });
+
+                string mensaje = finalizar ?
+                    "Venta enviada para autorización exitosamente." :
+                    "Borrador de venta guardado exitosamente.";
+
+                TempData["Success"] = mensaje;
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al crear venta");
+                ModelState.AddModelError(string.Empty, "Ocurrió un error al crear la venta: " + ex.Message);
+                await CargarCombosAsync(model);
+                return View("Form", model);
+            }
+        }
+
+        // GET: Ventas/Edit/5
+        [HttpGet]
         [Authorize(Policy = "Permission:ventas.editar")]
         public async Task<IActionResult> Edit(int id)
         {
@@ -384,7 +436,8 @@ namespace Javo2.Controllers
 
         // GET: Ventas/Autorizaciones
         [HttpGet]
-        [Authorize(Policy = "Permission:ventas.autorizaciones")]
+        [Authorize(Policy = "Permission:ventas.autorizar")]
+
         public async Task<IActionResult> Autorizaciones()
         {
             try
@@ -473,7 +526,7 @@ namespace Javo2.Controllers
         // POST: Ventas/MarcarEntregada
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = "Permission:ventas.entrega")]
+        [Authorize(Policy = "Permission:ventas.entregaProductos")]
         public async Task<IActionResult> MarcarEntregada(int id)
         {
             try
@@ -507,7 +560,7 @@ namespace Javo2.Controllers
 
         // GET: Ventas/Reimprimir/5
         [HttpGet]
-        [Authorize(Policy = "Permission:ventas.reimprimir")]
+        [Authorize(Policy = "Permission:ventas.ver")]
         public async Task<IActionResult> Reimprimir(int id)
         {
             try
@@ -690,7 +743,7 @@ namespace Javo2.Controllers
             switch (model.FormaPagoID)
             {
                 case 2: // Tarjeta de Crédito
-                    if (string.IsNullOrEmpty(model.TipoTarjeta))
+                        if (string.IsNullOrEmpty(model.TipoTarjeta))
                     {
                         ModelState.AddModelError(nameof(model.TipoTarjeta),
                             "Debe seleccionar un tipo de tarjeta para pagos con tarjeta de crédito.");

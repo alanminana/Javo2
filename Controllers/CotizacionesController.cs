@@ -2,6 +2,7 @@
 using Javo2.Controllers.Base;
 using Javo2.IServices;
 using Javo2.Models;
+using Javo2.ViewModels.Operaciones.Ventas;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -13,28 +14,28 @@ using System.Threading.Tasks;
 
 namespace Javo2.Controllers
 {
-    [Authorize]
-    public class CotizacionController : BaseController
+    [Authorize(Policy = "PermisoPolitica")]
+    public class CotizacionesController : BaseController
     {
         private readonly ICotizacionService _cotizacionService;
         private readonly IVentaService _ventaService;
-        private readonly IAuditoriaService _auditoriaService;
         private readonly IMapper _mapper;
+        private readonly IAuditoriaService _auditoriaService;
 
-        public CotizacionController(
+        public CotizacionesController(
             ICotizacionService cotizacionService,
             IVentaService ventaService,
-            IAuditoriaService auditoriaService,
             IMapper mapper,
-            ILogger<CotizacionController> logger) : base(logger)
+            IAuditoriaService auditoriaService,
+            ILogger<CotizacionesController> logger) : base(logger)
         {
             _cotizacionService = cotizacionService;
             _ventaService = ventaService;
-            _auditoriaService = auditoriaService;
             _mapper = mapper;
+            _auditoriaService = auditoriaService;
         }
 
-        // GET: Cotizacion/Index
+        // GET: Cotizaciones
         [HttpGet]
         [Authorize(Policy = "Permission:ventas.ver")]
         public async Task<IActionResult> Index()
@@ -42,20 +43,20 @@ namespace Javo2.Controllers
             try
             {
                 var cotizaciones = await _cotizacionService.GetAllCotizacionesAsync();
-                var model = _mapper.Map<IEnumerable<Javo2.ViewModels.Operaciones.Ventas.VentaListViewModel>>(cotizaciones);
+                var model = _mapper.Map<IEnumerable<VentaListViewModel>>(cotizaciones);
                 return View(model);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener la lista de cotizaciones");
+                _logger.LogError(ex, "Error al cargar lista de cotizaciones");
                 return View("Error");
             }
         }
 
-        // GET: Cotizacion/Detalles/5
+        // GET: Cotizaciones/Details/5
         [HttpGet]
         [Authorize(Policy = "Permission:ventas.ver")]
-        public async Task<IActionResult> Detalles(int id)
+        public async Task<IActionResult> Details(int id)
         {
             try
             {
@@ -63,36 +64,16 @@ namespace Javo2.Controllers
                 if (cotizacion == null)
                     return NotFound();
 
-                return View(cotizacion);
+                return View("Detalles", cotizacion);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener detalles de la cotización");
+                _logger.LogError(ex, "Error al cargar detalles de cotización: {ID}", id);
                 return View("Error");
             }
         }
 
-        // GET: Cotizacion/Print/5
-        [HttpGet]
-        [Authorize(Policy = "Permission:ventas.ver")]
-        public async Task<IActionResult> Print(int id)
-        {
-            try
-            {
-                var cotizacion = await _cotizacionService.GetCotizacionByIDAsync(id);
-                if (cotizacion == null)
-                    return NotFound();
-
-                return View(cotizacion);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al generar impresión de cotización");
-                return View("Error");
-            }
-        }
-
-        // POST: Cotizacion/Create
+        // POST: Cotizaciones/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Permission:ventas.crear")]
@@ -100,140 +81,107 @@ namespace Javo2.Controllers
         {
             try
             {
-                // Deserializar los datos del formulario
                 if (string.IsNullOrEmpty(cotizacionData))
                 {
-                    return BadRequest("No se proporcionaron datos para la cotización");
+                    TempData["Error"] = "No se recibieron datos válidos para crear la cotización.";
+                    return RedirectToAction("Create", "Ventas");
                 }
 
+                // Deserializar el formulario serializado
                 var formData = JsonSerializer.Deserialize<List<KeyValuePair<string, string>>>(cotizacionData);
-                var venta = new Venta
+
+                // Crear una nueva venta/cotización
+                var cotizacion = new Venta
                 {
-                    // Mapear los campos básicos
-                    NumeroFactura = await _cotizacionService.GenerarNumeroCotizacionAsync(),
                     FechaVenta = DateTime.Now,
                     Usuario = User.Identity?.Name ?? "Desconocido",
                     Vendedor = User.Identity?.Name ?? "Desconocido",
-                    Estado = EstadoVenta.Borrador
+                    NumeroFactura = $"COT-{DateTime.Now:yyyyMMdd}-",  // Se completará en el servicio
+                    Estado = EstadoVenta.Borrador,
+                    ProductosPresupuesto = new List<DetalleVenta>()
                 };
 
-                // Procesar los datos del formulario
+                // Extraer datos del formulario
                 foreach (var item in formData)
                 {
                     switch (item.Key)
                     {
                         case "NombreCliente":
-                            venta.NombreCliente = item.Value;
-                            break;
-                        case "TelefonoCliente":
-                            venta.TelefonoCliente = item.Value;
-                            break;
-                        case "DomicilioCliente":
-                            venta.DomicilioCliente = item.Value;
-                            break;
-                        case "LocalidadCliente":
-                            venta.LocalidadCliente = item.Value;
-                            break;
-                        case "CelularCliente":
-                            venta.CelularCliente = item.Value;
+                            cotizacion.NombreCliente = item.Value;
                             break;
                         case "DniCliente":
                             if (int.TryParse(item.Value, out int dni))
-                                venta.DniCliente = dni;
+                                cotizacion.DniCliente = dni;
                             break;
-                        case "FormaPagoID":
-                            if (int.TryParse(item.Value, out int formaPagoId))
-                                venta.FormaPagoID = formaPagoId;
+                        case "TelefonoCliente":
+                            cotizacion.TelefonoCliente = item.Value;
+                            break;
+                        case "DomicilioCliente":
+                            cotizacion.DomicilioCliente = item.Value;
+                            break;
+                        case "LocalidadCliente":
+                            cotizacion.LocalidadCliente = item.Value;
+                            break;
+                        case "CelularCliente":
+                            cotizacion.CelularCliente = item.Value;
                             break;
                         case "Observaciones":
-                            venta.Observaciones = item.Value;
+                            cotizacion.Observaciones = item.Value;
                             break;
                         case "Condiciones":
-                            venta.Condiciones = item.Value;
+                            cotizacion.Condiciones = item.Value;
                             break;
                     }
                 }
 
-                // Procesar productos
-                venta.ProductosPresupuesto = new List<DetalleVenta>();
-                for (int i = 0; i < formData.Count; i++)
+                // Extraer productos
+                var productos = new List<DetalleVenta>();
+                var index = 0;
+                while (true)
                 {
-                    // Buscar si hay un elemento ProductosPresupuesto[i].ProductoID
-                    var productoIdKey = $"ProductosPresupuesto[{i}].ProductoID";
-                    var productoIdItem = formData.FirstOrDefault(x => x.Key == productoIdKey);
-                    if (!string.IsNullOrEmpty(productoIdItem.Value))
+                    string productoIdKey = $"ProductosPresupuesto[{index}].ProductoID";
+                    string cantidadKey = $"ProductosPresupuesto[{index}].Cantidad";
+
+                    var productoIdItem = formData.FirstOrDefault(i => i.Key == productoIdKey);
+                    var cantidadItem = formData.FirstOrDefault(i => i.Key == cantidadKey);
+
+                    if (productoIdItem.Key == null || cantidadItem.Key == null)
+                        break;
+
+                    if (int.TryParse(productoIdItem.Value, out int productoId) &&
+                        int.TryParse(cantidadItem.Value, out int cantidad))
                     {
-                        if (int.TryParse(productoIdItem.Value, out int productoId))
+                        var producto = new DetalleVenta
                         {
-                            var producto = new DetalleVenta
-                            {
-                                ProductoID = productoId
-                            };
+                            ProductoID = productoId,
+                            Cantidad = cantidad,
+                            NombreProducto = formData.FirstOrDefault(i => i.Key == $"ProductosPresupuesto[{index}].NombreProducto").Value ?? "",
+                            CodigoAlfa = formData.FirstOrDefault(i => i.Key == $"ProductosPresupuesto[{index}].CodigoAlfa").Value ?? "",
+                            CodigoBarra = formData.FirstOrDefault(i => i.Key == $"ProductosPresupuesto[{index}].CodigoBarra").Value ?? "",
+                            Marca = formData.FirstOrDefault(i => i.Key == $"ProductosPresupuesto[{index}].Marca").Value ?? ""
+                        };
 
-                            // Buscar otros campos del producto
-                            foreach (var campo in new[] { "NombreProducto", "CodigoAlfa", "CodigoBarra", "Marca" })
-                            {
-                                var key = $"ProductosPresupuesto[{i}].{campo}";
-                                var item = formData.FirstOrDefault(x => x.Key == key);
-                                if (!string.IsNullOrEmpty(item.Value))
-                                {
-                                    switch (campo)
-                                    {
-                                        case "NombreProducto":
-                                            producto.NombreProducto = item.Value;
-                                            break;
-                                        case "CodigoAlfa":
-                                            producto.CodigoAlfa = item.Value;
-                                            break;
-                                        case "CodigoBarra":
-                                            producto.CodigoBarra = item.Value;
-                                            break;
-                                        case "Marca":
-                                            producto.Marca = item.Value;
-                                            break;
-                                    }
-                                }
-                            }
+                        if (decimal.TryParse(formData.FirstOrDefault(i => i.Key == $"ProductosPresupuesto[{index}].PrecioUnitario").Value, out decimal precioUnit))
+                            producto.PrecioUnitario = precioUnit;
 
-                            // Campos numéricos
-                            foreach (var campo in new[] { "Cantidad", "PrecioUnitario", "PrecioTotal", "PrecioLista" })
-                            {
-                                var key = $"ProductosPresupuesto[{i}].{campo}";
-                                var item = formData.FirstOrDefault(x => x.Key == key);
-                                if (!string.IsNullOrEmpty(item.Value))
-                                {
-                                    if (decimal.TryParse(item.Value, out decimal valor))
-                                    {
-                                        switch (campo)
-                                        {
-                                            case "Cantidad":
-                                                producto.Cantidad = (int)valor;
-                                                break;
-                                            case "PrecioUnitario":
-                                                producto.PrecioUnitario = valor;
-                                                break;
-                                            case "PrecioTotal":
-                                                producto.PrecioTotal = valor;
-                                                break;
-                                            case "PrecioLista":
-                                                producto.PrecioLista = valor;
-                                                break;
-                                        }
-                                    }
-                                }
-                            }
+                        if (decimal.TryParse(formData.FirstOrDefault(i => i.Key == $"ProductosPresupuesto[{index}].PrecioTotal").Value, out decimal precioTotal))
+                            producto.PrecioTotal = precioTotal;
 
-                            venta.ProductosPresupuesto.Add(producto);
-                        }
+                        if (decimal.TryParse(formData.FirstOrDefault(i => i.Key == $"ProductosPresupuesto[{index}].PrecioLista").Value, out decimal precioLista))
+                            producto.PrecioLista = precioLista;
+
+                        productos.Add(producto);
                     }
+
+                    index++;
                 }
 
-                // Calcular totales
-                venta.TotalProductos = venta.ProductosPresupuesto.Sum(p => p.Cantidad);
-                venta.PrecioTotal = venta.ProductosPresupuesto.Sum(p => p.PrecioTotal);
+                cotizacion.ProductosPresupuesto = productos;
+                cotizacion.TotalProductos = productos.Sum(p => p.Cantidad);
+                cotizacion.PrecioTotal = productos.Sum(p => p.PrecioTotal);
 
                 // Guardar la cotización
-                await _cotizacionService.CreateCotizacionAsync(venta);
+                await _cotizacionService.CreateCotizacionAsync(cotizacion);
 
                 // Registrar en auditoría
                 await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
@@ -242,25 +190,25 @@ namespace Javo2.Controllers
                     Usuario = User.Identity?.Name ?? "Desconocido",
                     Entidad = "Cotizacion",
                     Accion = "Create",
-                    LlavePrimaria = venta.VentaID.ToString(),
-                    Detalle = $"Cotización creada: Cliente={venta.NombreCliente}, Total={venta.PrecioTotal}"
+                    LlavePrimaria = cotizacion.VentaID.ToString(),
+                    Detalle = $"Cliente={cotizacion.NombreCliente}, Total={cotizacion.PrecioTotal}"
                 });
 
-                TempData["Success"] = "Cotización creada exitosamente.";
+                TempData["Success"] = "Cotización creada correctamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al crear cotización");
-                TempData["Error"] = "Error al crear cotización: " + ex.Message;
+                TempData["Error"] = "Ocurrió un error al crear la cotización.";
                 return RedirectToAction("Create", "Ventas");
             }
         }
 
-        // GET: Cotizacion/ConvertirAVenta/5
+        // GET: Cotizaciones/Delete/5
         [HttpGet]
-        [Authorize(Policy = "Permission:ventas.crear")]
-        public async Task<IActionResult> ConvertirAVenta(int id)
+        [Authorize(Policy = "Permission:ventas.eliminar")]
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
@@ -268,28 +216,28 @@ namespace Javo2.Controllers
                 if (cotizacion == null)
                     return NotFound();
 
-                // Almacenar el ID de la cotización en TempData
-                TempData["CotizacionID"] = id;
-
-                // Redireccionar a la creación de venta desde cotización
-                return RedirectToAction("CreateFromCotizacion", "Ventas");
+                var model = _mapper.Map<VentaListViewModel>(cotizacion);
+                return View(model);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al convertir cotización a venta");
-                TempData["Error"] = "Error al convertir cotización a venta: " + ex.Message;
-                return RedirectToAction(nameof(Index));
+                _logger.LogError(ex, "Error al cargar cotización para eliminación: {ID}", id);
+                return View("Error");
             }
         }
 
-        // POST: Cotizacion/Delete/5
-        [HttpPost]
+        // POST: Cotizaciones/Delete/5
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Permission:ventas.eliminar")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             try
             {
+                var cotizacion = await _cotizacionService.GetCotizacionByIDAsync(id);
+                if (cotizacion == null)
+                    return NotFound();
+
                 await _cotizacionService.DeleteCotizacionAsync(id);
 
                 // Registrar en auditoría
@@ -300,16 +248,82 @@ namespace Javo2.Controllers
                     Entidad = "Cotizacion",
                     Accion = "Delete",
                     LlavePrimaria = id.ToString(),
-                    Detalle = $"Cotización eliminada: ID={id}"
+                    Detalle = $"Cotización eliminada: Cliente={cotizacion.NombreCliente}, Total={cotizacion.PrecioTotal}"
                 });
 
-                TempData["Success"] = "Cotización eliminada exitosamente.";
+                TempData["Success"] = "Cotización eliminada correctamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar cotización");
-                TempData["Error"] = "Error al eliminar cotización: " + ex.Message;
+                _logger.LogError(ex, "Error al eliminar cotización: {ID}", id);
+                TempData["Error"] = "Ocurrió un error al eliminar la cotización.";
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        // GET: Cotizaciones/Print/5
+        [HttpGet]
+        [Authorize(Policy = "Permission:ventas.ver")]
+        public async Task<IActionResult> Print(int id)
+        {
+            try
+            {
+                var cotizacion = await _cotizacionService.GetCotizacionByIDAsync(id);
+                if (cotizacion == null)
+                    return NotFound();
+
+                // Registrar en auditoría
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = User.Identity?.Name ?? "Desconocido",
+                    Entidad = "Cotizacion",
+                    Accion = "Print",
+                    LlavePrimaria = id.ToString(),
+                    Detalle = $"Impresión de cotización: {cotizacion.NumeroFactura}"
+                });
+
+                return View(cotizacion);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al imprimir cotización: {ID}", id);
+                return View("Error");
+            }
+        }
+
+        // GET: Cotizaciones/ConvertirAVenta/5
+        [HttpGet]
+        [Authorize(Policy = "Permission:ventas.crear")]
+        public async Task<IActionResult> ConvertirAVenta(int id)
+        {
+            try
+            {
+                var cotizacion = await _cotizacionService.GetCotizacionByIDAsync(id);
+                if (cotizacion == null)
+                    return NotFound();
+
+                // Guardar ID en TempData para ser utilizado por VentasController
+                TempData["CotizacionID"] = id;
+
+                // Registrar en auditoría
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = User.Identity?.Name ?? "Desconocido",
+                    Entidad = "Cotizacion",
+                    Accion = "ConvertirAVenta",
+                    LlavePrimaria = id.ToString(),
+                    Detalle = $"Conversión de cotización a venta: {cotizacion.NumeroFactura}"
+                });
+
+                return RedirectToAction("CreateFromCotizacion", "Ventas");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al convertir cotización a venta: {ID}", id);
+                TempData["Error"] = "Ocurrió un error al convertir la cotización a venta.";
                 return RedirectToAction(nameof(Index));
             }
         }
