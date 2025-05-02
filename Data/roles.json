@@ -585,6 +585,41 @@
         "PermisoID": 14,
         "Rol": null,
         "Permiso": null
+      },
+      {
+        "RolPermisoID": 78,
+        "RolID": 8,
+        "PermisoID": 15,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 79,
+        "RolID": 8,
+        "PermisoID": 16,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 80,
+        "RolID": 8,
+        "PermisoID": 17,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 81,
+        "RolID": 8,
+        "PermisoID": 18,
+        "Rol": null,
+        "Permiso": null
+      },
+      {
+        "RolPermisoID": 82,
+        "RolID": 8,
+        "PermisoID": 56,
+        "Rol": null,
+        "Permiso": null
       }
     ]
   }

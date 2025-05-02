@@ -1,188 +1,134 @@
-﻿@model Javo2.ViewModels.Operaciones.Clientes.ClientesViewModel
+﻿@model Javo2.ViewModels.Authentication.UsuarioFormViewModel
 @{
-    bool isEdit = Model.ClienteID > 0;
-    ViewData["Title"] = isEdit ? "Editar Cliente" : "Crear Cliente";
+    ViewData["Title"] = Model.EsEdicion ? "Editar Usuario" : "Crear Usuario";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <section class="container-fluid py-3">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h2 mb-0">@ViewData["Title"]</h1>
-        <a asp-action="Index" class="btn btn-outline-light">
-            <i class="bi bi-arrow-left me-1"></i> Volver al listado
-        </a>
-    </div>
-
     <div class="card shadow-sm bg-dark text-light">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="h4 mb-0">@ViewData["Title"]</h2>
+            <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left me-1"></i> Volver al listado
+            </a>
+        </div>
         <div class="card-body">
-            <form asp-action="@(isEdit ? "Edit" : "Create")" method="post">
+            <form asp-action="@(Model.EsEdicion ? "Edit" : "Create")" method="post">
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
-                @if (isEdit)
+
+                @if (Model.EsEdicion)
                 {
-                    <input type="hidden" asp-for="ClienteID" />
+                    <input type="hidden" asp-for="Usuario.UsuarioID" />
                 }
 
-                <ul class="nav nav-tabs mb-3" id="clienteTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal"
-                                type="button" role="tab" aria-controls="personal" aria-selected="true">
-                            Datos Personales
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="domicilio-tab" data-bs-toggle="tab" data-bs-target="#domicilio"
-                                type="button" role="tab" aria-controls="domicilio" aria-selected="false">
-                            Domicilio
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="credito-tab" data-bs-toggle="tab" data-bs-target="#credito"
-                                type="button" role="tab" aria-controls="credito" aria-selected="false">
-                            Crédito
-                        </button>
-                    </li>
-                </ul>
+                <!-- Datos del Usuario -->
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="Usuario.NombreUsuario" class="form-label">Nombre de Usuario</label>
+                        @if (Model.EsEdicion)
+                        {
+                            <input asp-for="Usuario.NombreUsuario" class="form-control bg-secondary text-light" readonly />
+                        }
+                        else
+                        {
+                            <input asp-for="Usuario.NombreUsuario" class="form-control bg-secondary text-light" />
+                        }
+                        <span asp-validation-for="Usuario.NombreUsuario" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Usuario.Email" class="form-label">Email</label>
+                        <input asp-for="Usuario.Email" class="form-control bg-secondary text-light" />
+                        <span asp-validation-for="Usuario.Email" class="text-danger"></span>
+                    </div>
+                </div>
 
-                <div class="tab-content" id="clienteTabsContent">
-                    <!-- Pestaña: Datos Personales -->
-                    <div class="tab-pane fade show active" id="personal" role="tabpanel" aria-labelledby="personal-tab">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label asp-for="Nombre" class="form-label">Nombre</label>
-                                <input asp-for="Nombre" class="form-control bg-secondary text-light" />
-                                <span asp-validation-for="Nombre" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label asp-for="Apellido" class="form-label">Apellido</label>
-                                <input asp-for="Apellido" class="form-control bg-secondary text-light" />
-                                <span asp-validation-for="Apellido" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-4">
-                                <label asp-for="DNI" class="form-label">DNI</label>
-                                <input asp-for="DNI" class="form-control bg-secondary text-light" />
-                                <span asp-validation-for="DNI" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-8">
-                                <label asp-for="Email" class="form-label">Email</label>
-                                <input asp-for="Email" type="email" class="form-control bg-secondary text-light" />
-                                <span asp-validation-for="Email" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-4">
-                                <label asp-for="Telefono" class="form-label">Teléfono</label>
-                                <input asp-for="Telefono" class="form-control bg-secondary text-light" />
-                                <span asp-validation-for="Telefono" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-4">
-                                <label asp-for="Celular" class="form-label">Celular</label>
-                                <input asp-for="Celular" class="form-control bg-secondary text-light" />
-                                <span asp-validation-for="Celular" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-4">
-                                <label asp-for="TelefonoTrabajo" class="form-label">Teléfono Trabajo</label>
-                                <input asp-for="TelefonoTrabajo" class="form-control bg-secondary text-light" />
-                                <span asp-validation-for="TelefonoTrabajo" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-check form-switch mt-2">
-                                    <input asp-for="Activo" class="form-check-input" />
-                                    <label asp-for="Activo" class="form-check-label">Activo</label>
-                                    <span asp-validation-for="Activo" class="text-danger"></span>
-                                </div>
-                            </div>
+                <div class="row g-3 mt-3">
+                    <div class="col-md-6">
+                        <label asp-for="Usuario.Nombre" class="form-label">Nombre</label>
+                        <input asp-for="Usuario.Nombre" class="form-control bg-secondary text-light" />
+                        <span asp-validation-for="Usuario.Nombre" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Usuario.Apellido" class="form-label">Apellido</label>
+                        <input asp-for="Usuario.Apellido" class="form-control bg-secondary text-light" />
+                        <span asp-validation-for="Usuario.Apellido" class="text-danger"></span>
+                    </div>
+                </div>
+
+                @if (!Model.EsEdicion || (Model.EsEdicion && !string.IsNullOrEmpty(Model.Contraseña)))
+                {
+                    <div class="row g-3 mt-3">
+                        <div class="col-md-6">
+                            <label asp-for="Contraseña" class="form-label">Contraseña</label>
+                            <input asp-for="Contraseña" type="password" class="form-control bg-secondary text-light" />
+                            <span asp-validation-for="Contraseña" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="ConfirmarContraseña" class="form-label">Confirmar Contraseña</label>
+                            <input asp-for="ConfirmarContraseña" type="password" class="form-control bg-secondary text-light" />
+                            <span asp-validation-for="ConfirmarContraseña" class="text-danger"></span>
                         </div>
                     </div>
-
-                    <!-- Pestaña: Domicilio -->
-                    <div class="tab-pane fade" id="domicilio" role="tabpanel" aria-labelledby="domicilio-tab">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label asp-for="Calle" class="form-label">Calle</label>
-                                <input asp-for="Calle" class="form-control bg-secondary text-light" />
-                                <span asp-validation-for="Calle" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-2">
-                                <label asp-for="NumeroCalle" class="form-label">Número</label>
-                                <input asp-for="NumeroCalle" class="form-control bg-secondary text-light" />
-                                <span asp-validation-for="NumeroCalle" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-2">
-                                <label asp-for="NumeroPiso" class="form-label">Piso</label>
-                                <input asp-for="NumeroPiso" class="form-control bg-secondary text-light" />
-                                <span asp-validation-for="NumeroPiso" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-2">
-                                <label asp-for="Dpto" class="form-label">Dpto</label>
-                                <input asp-for="Dpto" class="form-control bg-secondary text-light" />
-                                <span asp-validation-for="Dpto" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-4">
-                                <label asp-for="ProvinciaID" class="form-label">Provincia</label>
-                                <select asp-for="ProvinciaID" asp-items="Model.Provincias" class="form-select bg-secondary text-light" id="provinciaSelect">
-                                    <option value="">-- Seleccione --</option>
-                                </select>
-                                <span asp-validation-for="ProvinciaID" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-4">
-                                <label asp-for="CiudadID" class="form-label">Ciudad</label>
-                                <select asp-for="CiudadID" asp-items="Model.Ciudades" class="form-select bg-secondary text-light" id="ciudadSelect">
-                                    <option value="">-- Seleccione --</option>
-                                </select>
-                                <span asp-validation-for="CiudadID" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-4">
-                                <label asp-for="Localidad" class="form-label">Localidad</label>
-                                <input asp-for="Localidad" class="form-control bg-secondary text-light" />
-                                <span asp-validation-for="Localidad" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-4">
-                                <label asp-for="CodigoPostal" class="form-label">Código Postal</label>
-                                <input asp-for="CodigoPostal" class="form-control bg-secondary text-light" />
-                                <span asp-validation-for="CodigoPostal" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-8">
-                                <label asp-for="DescripcionDomicilio" class="form-label">Descripción Domicilio</label>
-                                <input asp-for="DescripcionDomicilio" class="form-control bg-secondary text-light" />
-                                <span asp-validation-for="DescripcionDomicilio" class="text-danger"></span>
+                }
+                else
+                {
+                    <div class="row g-3 mt-3">
+                        <div class="col-12">
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle me-2"></i>
+                                Deje los campos de contraseña en blanco si no desea cambiarla
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <label asp-for="Contraseña" class="form-label">Nueva Contraseña (opcional)</label>
+                            <input asp-for="Contraseña" type="password" class="form-control bg-secondary text-light" />
+                            <span asp-validation-for="Contraseña" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="ConfirmarContraseña" class="form-label">Confirmar Contraseña</label>
+                            <input asp-for="ConfirmarContraseña" type="password" class="form-control bg-secondary text-light" />
+                            <span asp-validation-for="ConfirmarContraseña" class="text-danger"></span>
+                        </div>
                     </div>
+                }
 
-                    <!-- Pestaña: Crédito -->
-                    <div class="tab-pane fade" id="credito" role="tabpanel" aria-labelledby="credito-tab">
-                        <div class="row g-3">
-                            <div class="col-md-12">
-                                <div class="form-check form-switch mb-3">
-                                    <input asp-for="AptoCredito" class="form-check-input" id="aptoCreditoCheck" />
-                                    <label asp-for="AptoCredito" class="form-check-label">¿Apto para Crédito?</label>
-                                    <span asp-validation-for="AptoCredito" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6 credito-field">
-                                <label asp-for="LimiteCreditoInicial" class="form-label">Límite de Crédito Inicial</label>
-                                <input asp-for="LimiteCreditoInicial" type="number" step="0.01" min="0"
-                                       class="form-control bg-secondary text-light" />
-                                <span asp-validation-for="LimiteCreditoInicial" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6 credito-field">
-                                <div class="form-check form-switch mt-4">
-                                    <input asp-for="RequiereGarante" class="form-check-input" id="requiereGaranteCheck" />
-                                    <label asp-for="RequiereGarante" class="form-check-label">¿Requiere Garante?</label>
-                                    <span asp-validation-for="RequiereGarante" class="text-danger"></span>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12 credito-field" id="garanteInfo">
-                                <div class="alert alert-info">
-                                    <i class="bi bi-info-circle me-2"></i>
-                                    Se puede asignar un garante después de guardar el cliente.
-                                </div>
-                            </div>
+                <div class="row g-3 mt-3">
+                    <div class="col-md-12">
+                        <div class="form-check form-switch">
+                            <input asp-for="Usuario.Activo" class="form-check-input" />
+                            <label asp-for="Usuario.Activo" class="form-check-label">Usuario Activo</label>
                         </div>
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-end gap-2 mt-4">
-                    <a asp-action="Index" class="btn btn-outline-secondary">
+                <!-- Roles -->
+                <div class="mt-4">
+                    <h5 class="border-bottom pb-2">Roles</h5>
+                    <div class="row">
+                        @foreach (var rol in Model.RolesDisponibles)
+                        {
+                            bool isChecked = Model.RolesSeleccionados.Contains(int.Parse(rol.Value));
+                            <div class="col-md-4 mb-2">
+                                <div class="form-check">
+                                    @if (isChecked)
+                                    {
+                                        <input type="checkbox" name="RolesSeleccionados" value="@rol.Value"
+                                               id="rol_@rol.Value" class="form-check-input" checked />
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" name="RolesSeleccionados" value="@rol.Value"
+                                               id="rol_@rol.Value" class="form-check-input" />
+                                    }
+                                    <label for="rol_@rol.Value" class="form-check-label">@rol.Text</label>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end mt-4">
+                    <a asp-action="Index" class="btn btn-outline-secondary me-2">
                         <i class="bi bi-x-circle me-1"></i> Cancelar
                     </a>
                     <button type="submit" class="btn btn-primary">
@@ -196,45 +142,4 @@
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
-    <script>
-        $(function() {
-            // Cargar ciudades cuando cambia la provincia
-            $("#provinciaSelect").change(function() {
-                var provinciaId = $(this).val();
-                if (provinciaId) {
-                    $.ajax({
-                        url: '@Url.Action("GetCiudades")',
-                        type: 'GET',
-                        data: { provinciaID: provinciaId },
-                        success: function(data) {
-                            var ciudadSelect = $("#ciudadSelect");
-                            ciudadSelect.empty();
-                            ciudadSelect.append('<option value="">-- Seleccione --</option>');
-                            $.each(data, function(i, ciudad) {
-                                ciudadSelect.append($('<option></option>').val(ciudad.value).text(ciudad.text));
-                            });
-                        },
-                        error: function() {
-                            alert('Error al cargar ciudades');
-                        }
-                    });
-                } else {
-                    $("#ciudadSelect").empty().append('<option value="">-- Seleccione --</option>');
-                }
-            });
-
-            // Mostrar/ocultar campos de crédito
-            function toggleCreditoFields() {
-                var aptoCredito = $("#aptoCreditoCheck").is(":checked");
-                $(".credito-field").toggle(aptoCredito);
-            }
-
-            $("#aptoCreditoCheck").change(function() {
-                toggleCreditoFields();
-            });
-
-            // Inicializar al cargar la página
-            toggleCreditoFields();
-        });
-    </script>
 }

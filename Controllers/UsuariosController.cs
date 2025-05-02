@@ -103,6 +103,7 @@ namespace Javo2.Controllers
         }
 
         // GET: Usuarios/Create
+        // GET: Usuarios/Create
         [HttpGet]
         [Authorize(Policy = "Permission:usuarios.crear")]
         public async Task<IActionResult> Create()
