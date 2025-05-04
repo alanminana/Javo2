@@ -1,0 +1,54 @@
+﻿<!-- Views/Proveedores/EliminarCompra.cshtml -->
+@model Javo2.ViewModels.Operaciones.Proveedores.CompraProveedorViewModel
+@{
+    ViewBag.Title = "Eliminar Compra";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="container-fluid py-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">@ViewBag.Title</h1>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h3 class="mb-4">¿Está seguro que desea eliminar esta compra?</h3>
+
+            <dl class="row">
+                <dt class="col-sm-3">Factura</dt>
+                <dd class="col-sm-9">@Model.NumeroFactura</dd>
+
+                <dt class="col-sm-3">Fecha</dt>
+                <dd class="col-sm-9">@Model.FechaCompra.ToString("dd/MM/yyyy")</dd>
+
+                <dt class="col-sm-3">Proveedor</dt>
+                <dd class="col-sm-9">@Model.NombreProveedor</dd>
+
+                <dt class="col-sm-3">Total</dt>
+                <dd class="col-sm-9">@Model.PrecioTotal.ToString("C")</dd>
+
+                <dt class="col-sm-3">Estado</dt>
+                <dd class="col-sm-9">@Model.Estado</dd>
+            </dl>
+
+            <div class="alert alert-warning" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <strong>Advertencia:</strong> Esta acción no se puede deshacer. Si la compra está en estado Completada, el stock de los productos se revertirá.
+            </div>
+
+            <form asp-action="EliminarCompra" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="CompraID" />
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a asp-action="Compras" class="btn btn-secondary">
+                        <i class="bi bi-x-circle me-1"></i> Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash me-1"></i> Eliminar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

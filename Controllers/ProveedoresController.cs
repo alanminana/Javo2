@@ -1,9 +1,4 @@
-﻿// Archivo: Controllers/ProveedoresController.cs
-// Optimizaciones realizadas:
-// - Se consolidó la lógica repetida en métodos helper
-// - Se mejoró el manejo de excepciones
-// - Se eliminó código duplicado
-
+﻿// Controllers/ProveedoresController.cs
 using AutoMapper;
 using Javo2.Controllers.Base;
 using Javo2.IServices;
@@ -12,6 +7,7 @@ using Javo2.Models;
 using Javo2.ViewModels.Operaciones.Proveedores;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -20,12 +16,14 @@ using System.Threading.Tasks;
 
 namespace Javo2.Controllers
 {
+    [Authorize]
     public class ProveedoresController : BaseController
     {
         private readonly IProveedorService _proveedorService;
         private readonly IDropdownService _dropdownService;
         private readonly IProductoService _productoService;
         private readonly IStockService _stockService;
+        private readonly IVentaService _ventaService;
         private readonly IMapper _mapper;
 
         public ProveedoresController(
@@ -33,6 +31,7 @@ namespace Javo2.Controllers
             IDropdownService dropdownService,
             IProductoService productoService,
             IStockService stockService,
+            IVentaService ventaService,
             IMapper mapper,
             ILogger<ProveedoresController> logger)
             : base(logger)
@@ -41,66 +40,62 @@ namespace Javo2.Controllers
             _dropdownService = dropdownService;
             _productoService = productoService;
             _stockService = stockService;
+            _ventaService = ventaService;
             _mapper = mapper;
         }
-        [Authorize(Policy = "Permission:proveedores.ver")]
 
+        #region Proveedores CRUD
+
+        [Authorize(Policy = "Permission:proveedores.ver")]
         public async Task<IActionResult> Index()
         {
             try
             {
-                _logger.LogInformation("Index action called");
                 var proveedores = await _proveedorService.GetProveedoresAsync();
-                var proveedoresViewModel = _mapper.Map<IEnumerable<ProveedoresViewModel>>(proveedores);
-
-                await PopulateProductosAsignadosInfo(proveedoresViewModel);
-
-                return View(proveedoresViewModel);
+                var vm = _mapper.Map<IEnumerable<ProveedoresViewModel>>(proveedores);
+                await PopulateProductosAsignadosInfo(vm);
+                return View(vm);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in Index action of ProveedoresController");
+                _logger.LogError(ex, "Error en Index");
                 return View("Error");
             }
         }
 
         [HttpGet]
+        [Authorize(Policy = "Permission:proveedores.ver")]
         public async Task<IActionResult> Filter(string filterField, string filterValue)
         {
             try
             {
-                _logger.LogInformation("Filter action called with filterField: {FilterField}, filterValue: {FilterValue}", filterField, filterValue);
                 var proveedores = await _proveedorService.GetProveedoresAsync();
-                var proveedoresViewModel = _mapper.Map<IEnumerable<ProveedoresViewModel>>(proveedores);
-
-                await PopulateProductosAsignadosInfo(proveedoresViewModel);
+                var vm = _mapper.Map<IEnumerable<ProveedoresViewModel>>(proveedores);
+                await PopulateProductosAsignadosInfo(vm);
 
                 if (!string.IsNullOrEmpty(filterValue))
-                {
-                    proveedoresViewModel = ApplyFilter(proveedoresViewModel, filterField, filterValue);
-                }
+                    vm = ApplyFilter(vm, filterField, filterValue);
 
-                return PartialView("_ProveedoresTable", proveedoresViewModel);
+                return PartialView("_ProveedoresTable", vm);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in Filter action of ProveedoresController");
-                return PartialView("_ProveedoresTable", new List<ProveedoresViewModel>());
+                _logger.LogError(ex, "Error en Filter");
+                return PartialView("_ProveedoresTable", Array.Empty<ProveedoresViewModel>());
             }
         }
-        [Authorize(Policy = "Permission:proveedores.crear")]
 
+        [Authorize(Policy = "Permission:proveedores.crear")]
         public async Task<IActionResult> Create()
         {
             try
             {
-                _logger.LogInformation("Create GET action called");
-                var viewModel = await InitializeProveedorViewModelAsync();
-                return View("Form", viewModel);
+                var vm = await InitializeProveedorViewModelAsync();
+                return View("Form", vm);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in Create GET action of ProveedoresController");
+                _logger.LogError(ex, "Error en Create GET");
                 return View("Error");
             }
         }
@@ -108,58 +103,44 @@ namespace Javo2.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Permission:proveedores.crear")]
-
-        public async Task<IActionResult> Create(ProveedoresViewModel proveedorViewModel)
+        public async Task<IActionResult> Create(ProveedoresViewModel vm)
         {
-            _logger.LogInformation("Create POST action called with Proveedor: {Proveedor}", proveedorViewModel.Nombre);
-
-            await PopulateDropDownListsAsync(proveedorViewModel);
-
+            await PopulateDropDownListsAsync(vm);
             if (!ModelState.IsValid)
             {
                 LogModelStateErrors();
-                return View("Form", proveedorViewModel);
+                return View("Form", vm);
             }
 
             try
             {
-                var proveedor = _mapper.Map<Proveedor>(proveedorViewModel);
-                _logger.LogInformation("Mapped Proveedor ID before creation: {ProveedorID}", proveedor.ProveedorID);
-
-                await _proveedorService.CreateProveedorAsync(proveedor);
-
-                _logger.LogInformation("Proveedor created successfully with ID: {ProveedorID}", proveedor.ProveedorID);
+                var entidad = _mapper.Map<Proveedor>(vm);
+                await _proveedorService.CreateProveedorAsync(entidad);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error creating Proveedor");
+                _logger.LogError(ex, "Error creando proveedor");
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al crear el proveedor.");
-                return View("Form", proveedorViewModel);
+                return View("Form", vm);
             }
         }
-        [Authorize(Policy = "Permission:proveedores.editar")]
 
+        [Authorize(Policy = "Permission:proveedores.editar")]
         public async Task<IActionResult> Edit(int id)
         {
             try
             {
-                _logger.LogInformation("Edit GET action called with ID: {ID}", id);
-                var proveedor = await _proveedorService.GetProveedorByIDAsync(id);
-                if (proveedor == null)
-                {
-                    _logger.LogWarning("Proveedor with ID {ID} not found", id);
-                    return NotFound();
-                }
+                var entidad = await _proveedorService.GetProveedorByIDAsync(id);
+                if (entidad == null) return NotFound();
 
-                var proveedorViewModel = _mapper.Map<ProveedoresViewModel>(proveedor);
-                await PopulateProveedorViewModelAsync(proveedorViewModel, proveedor);
-
-                return View("Form", proveedorViewModel);
+                var vm = _mapper.Map<ProveedoresViewModel>(entidad);
+                await PopulateProveedorViewModelAsync(vm, entidad);
+                return View("Form", vm);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in Edit GET action of ProveedoresController");
+                _logger.LogError(ex, "Error en Edit GET");
                 return View("Error");
             }
         }
@@ -167,80 +148,62 @@ namespace Javo2.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Permission:proveedores.editar")]
-
-        public async Task<IActionResult> Edit(ProveedoresViewModel proveedorViewModel)
+        public async Task<IActionResult> Edit(ProveedoresViewModel vm)
         {
-            _logger.LogInformation("Edit POST action called with ProveedorID: {ProveedorID}", proveedorViewModel.ProveedorID);
-
-            await PopulateDropDownListsAsync(proveedorViewModel);
-
+            await PopulateDropDownListsAsync(vm);
             if (!ModelState.IsValid)
             {
                 LogModelStateErrors();
-                return View("Form", proveedorViewModel);
+                return View("Form", vm);
             }
 
             try
             {
-                var proveedor = _mapper.Map<Proveedor>(proveedorViewModel);
-                _logger.LogInformation("Mapped Proveedor ID: {ProveedorID}", proveedor.ProveedorID);
-
-                await _proveedorService.UpdateProveedorAsync(proveedor);
-                _logger.LogInformation("Proveedor updated successfully with ID: {ProveedorID}", proveedor.ProveedorID);
+                var entidad = _mapper.Map<Proveedor>(vm);
+                await _proveedorService.UpdateProveedorAsync(entidad);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error updating Proveedor");
+                _logger.LogError(ex, "Error actualizando proveedor");
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al actualizar el proveedor.");
-                return View("Form", proveedorViewModel);
+                return View("Form", vm);
             }
         }
-        [Authorize(Policy = "Permission:proveedores.ver")]
 
+        [Authorize(Policy = "Permission:proveedores.ver")]
         public async Task<IActionResult> Details(int id)
         {
             try
             {
-                _logger.LogInformation("Details action called with ID: {ID}", id);
-                var proveedor = await _proveedorService.GetProveedorByIDAsync(id);
-                if (proveedor == null)
-                {
-                    _logger.LogWarning("Proveedor with ID {ID} not found", id);
-                    return NotFound();
-                }
+                var entidad = await _proveedorService.GetProveedorByIDAsync(id);
+                if (entidad == null) return NotFound();
 
-                var proveedorViewModel = _mapper.Map<ProveedoresViewModel>(proveedor);
-                await PopulateProveedorViewModelAsync(proveedorViewModel, proveedor);
-
-                return View(proveedorViewModel);
+                var vm = _mapper.Map<ProveedoresViewModel>(entidad);
+                await PopulateProveedorViewModelAsync(vm, entidad);
+                return View(vm);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in Details GET action of ProveedoresController");
+                _logger.LogError(ex, "Error en Details");
                 return View("Error");
             }
         }
-        [Authorize(Policy = "Permission:proveedores.eliminar")]
 
+        [Authorize(Policy = "Permission:proveedores.eliminar")]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                _logger.LogInformation("Delete GET action called with ID: {ID}", id);
-                var proveedor = await _proveedorService.GetProveedorByIDAsync(id);
-                if (proveedor == null)
-                {
-                    _logger.LogWarning("Proveedor with ID {ID} not found", id);
-                    return NotFound();
-                }
+                var entidad = await _proveedorService.GetProveedorByIDAsync(id);
+                if (entidad == null) return NotFound();
 
-                var proveedorViewModel = _mapper.Map<ProveedoresViewModel>(proveedor);
-                return View(proveedorViewModel);
+                var vm = _mapper.Map<ProveedoresViewModel>(entidad);
+                return View(vm);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in Delete GET action of ProveedoresController");
+                _logger.LogError(ex, "Error en Delete GET");
                 return View("Error");
             }
         }
@@ -248,23 +211,20 @@ namespace Javo2.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Permission:proveedores.eliminar")]
-
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            _logger.LogInformation("Delete POST action called with ID: {ID}", id);
             try
             {
                 await _proveedorService.DeleteProveedorAsync(id);
-                _logger.LogInformation("Proveedor deleted successfully with ID: {ID}", id);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error deleting Proveedor");
+                _logger.LogError(ex, "Error eliminando proveedor");
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al eliminar el proveedor.");
-                var proveedor = await _proveedorService.GetProveedorByIDAsync(id);
-                var proveedorViewModel = _mapper.Map<ProveedoresViewModel>(proveedor);
-                return View(proveedorViewModel);
+                var entidad = await _proveedorService.GetProveedorByIDAsync(id);
+                var vm = _mapper.Map<ProveedoresViewModel>(entidad);
+                return View(vm);
             }
         }
 
@@ -273,18 +233,17 @@ namespace Javo2.Controllers
         {
             try
             {
-                var products = await _productoService.GetProductosByTermAsync(term);
-                var result = products.Select(p => new
-                {
+                var productos = await _productoService.GetProductosByTermAsync(term);
+                var result = productos.Select(p => new {
                     label = $"{p.Nombre} - {p.Marca?.Nombre ?? "Sin Marca"} {p.SubRubro?.Nombre ?? "Sin SubRubro"}",
                     value = p.ProductoID
-                }).ToList();
+                });
                 return Json(result);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in SearchProducts action of ProveedoresController");
-                return Json(new List<object>());
+                _logger.LogError(ex, "Error en SearchProducts");
+                return Json(Array.Empty<object>());
             }
         }
 
@@ -292,114 +251,414 @@ namespace Javo2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RegistrarCompra(int proveedorID, int ProductoID, int cantidad)
         {
-            _logger.LogInformation("RegistrarCompra POST called with ProveedorID={ProveedorID}, ProductoID={ProductoID}, Cantidad={Cantidad}",
-                proveedorID, ProductoID, cantidad);
-
             try
             {
                 await _proveedorService.RegistrarCompraAsync(proveedorID, ProductoID, cantidad);
-                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error registrando la compra");
+                _logger.LogError(ex, "Error registrando compra rápida");
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al registrar la compra.");
-                return RedirectToAction(nameof(Index));
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        #endregion
+
+        #region Compras de Proveedor
+
+        [HttpGet]
+        [Authorize(Policy = "Permission:proveedores.ver")]
+        public async Task<IActionResult> Compras()
+        {
+            try
+            {
+                var compras = await _proveedorService.GetComprasAsync();
+                var vm = _mapper.Map<IEnumerable<CompraProveedorViewModel>>(compras);
+                return View(vm);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en Compras");
+                return View("Error");
             }
         }
 
-        // Métodos auxiliares
-        private async Task PopulateDropDownListsAsync(ProveedoresViewModel model)
+        [HttpGet]
+        [Authorize(Policy = "Permission:proveedores.ver")]
+        public async Task<IActionResult> DetallesCompra(int id)
         {
-            model.ProductosDisponibles = await _dropdownService.GetProductosAsync();
+            try
+            {
+                var compra = await _proveedorService.GetCompraByIDAsync(id);
+                if (compra == null) return NotFound();
+
+                var vm = _mapper.Map<CompraProveedorViewModel>(compra);
+                var prov = await _proveedorService.GetProveedorByIDAsync(compra.ProveedorID);
+                vm.NombreProveedor = prov?.Nombre;
+                return View(vm);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en DetallesCompra");
+                return View("Error");
+            }
         }
 
-        private async Task<ProveedoresViewModel> InitializeProveedorViewModelAsync()
+        [HttpGet]
+        [Authorize(Policy = "Permission:proveedores.crear")]
+        public async Task<IActionResult> CrearCompra(int? proveedorId)
         {
-            var model = new ProveedoresViewModel
+            try
+            {
+                var vm = new CompraProveedorViewModel
+                {
+                    FechaCompra = DateTime.Now,
+                    NumeroFactura = await _proveedorService.GenerarNumeroFacturaCompraAsync(),
+                    Usuario = User.Identity?.Name ?? "Desconocido"
+                };
+                if (proveedorId.HasValue)
+                {
+                    var p = await _proveedorService.GetProveedorByIDAsync(proveedorId.Value);
+                    if (p != null)
+                    {
+                        vm.ProveedorID = p.ProveedorID;
+                        vm.NombreProveedor = p.Nombre;
+                    }
+                }
+                await CargarOpcionesParaCompraAsync(vm);
+                return View("FormCompra", vm);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en CrearCompra GET");
+                return View("Error");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:proveedores.crear")]
+        public async Task<IActionResult> CrearCompra(CompraProveedorViewModel vm)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    LogModelStateErrors();
+                    await CargarOpcionesParaCompraAsync(vm);
+                    return View("FormCompra", vm);
+                }
+                if (vm.ProductosCompra == null || !vm.ProductosCompra.Any())
+                {
+                    ModelState.AddModelError("", "Debe agregar al menos un producto.");
+                    await CargarOpcionesParaCompraAsync(vm);
+                    return View("FormCompra", vm);
+                }
+
+                var entidad = _mapper.Map<CompraProveedor>(vm);
+                entidad.TotalProductos = entidad.ProductosCompra.Sum(d => d.Cantidad);
+                entidad.PrecioTotal = entidad.ProductosCompra.Sum(d => d.PrecioTotal);
+                entidad.Usuario = User.Identity?.Name ?? "Desconocido";
+                entidad.Estado = Enum.Parse<EstadoCompra>(vm.Estado);
+
+                await _proveedorService.CreateCompraAsync(entidad);
+                TempData["Success"] = "Compra creada.";
+                return RedirectToAction(nameof(Compras));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en CrearCompra POST");
+                ModelState.AddModelError(string.Empty, "Ocurrió un error: " + ex.Message);
+                await CargarOpcionesParaCompraAsync(vm);
+                return View("FormCompra", vm);
+            }
+        }
+
+        [HttpGet]
+        [Authorize(Policy = "Permission:proveedores.editar")]
+        public async Task<IActionResult> EditarCompra(int id)
+        {
+            try
+            {
+                var compra = await _proveedorService.GetCompraByIDAsync(id);
+                if (compra == null) return NotFound();
+                if (compra.Estado == EstadoCompra.Completada || compra.Estado == EstadoCompra.Cancelada)
+                {
+                    TempData["Error"] = "No se puede editar.";
+                    return RedirectToAction(nameof(DetallesCompra), new { id });
+                }
+
+                var vm = _mapper.Map<CompraProveedorViewModel>(compra);
+                var p = await _proveedorService.GetProveedorByIDAsync(compra.ProveedorID);
+                vm.NombreProveedor = p?.Nombre;
+                await CargarOpcionesParaCompraAsync(vm);
+                return View("FormCompra", vm);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en EditarCompra GET");
+                return View("Error");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:proveedores.editar")]
+        public async Task<IActionResult> EditarCompra(CompraProveedorViewModel vm)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    LogModelStateErrors();
+                    await CargarOpcionesParaCompraAsync(vm);
+                    return View("FormCompra", vm);
+                }
+                if (vm.ProductosCompra == null || !vm.ProductosCompra.Any())
+                {
+                    ModelState.AddModelError("", "Debe agregar al menos un producto.");
+                    await CargarOpcionesParaCompraAsync(vm);
+                    return View("FormCompra", vm);
+                }
+
+                var orig = await _proveedorService.GetCompraByIDAsync(vm.CompraID);
+                if (orig == null) return NotFound();
+                if (orig.Estado == EstadoCompra.Completada || orig.Estado == EstadoCompra.Cancelada)
+                {
+                    TempData["Error"] = "No se puede editar.";
+                    return RedirectToAction(nameof(DetallesCompra), new { id = vm.CompraID });
+                }
+
+                var entidad = _mapper.Map<CompraProveedor>(vm);
+                entidad.TotalProductos = entidad.ProductosCompra.Sum(d => d.Cantidad);
+                entidad.PrecioTotal = entidad.ProductosCompra.Sum(d => d.PrecioTotal);
+                entidad.Usuario = User.Identity?.Name ?? "Desconocido";
+                entidad.Estado = Enum.Parse<EstadoCompra>(vm.Estado);
+
+                await _proveedorService.UpdateCompraAsync(entidad);
+                TempData["Success"] = "Compra actualizada.";
+                return RedirectToAction(nameof(Compras));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en EditarCompra POST");
+                ModelState.AddModelError(string.Empty, "Ocurrió un error: " + ex.Message);
+                await CargarOpcionesParaCompraAsync(vm);
+                return View("FormCompra", vm);
+            }
+        }
+
+        [HttpGet]
+        [Authorize(Policy = "Permission:proveedores.eliminar")]
+        public async Task<IActionResult> EliminarCompra(int id)
+        {
+            try
+            {
+                var compra = await _proveedorService.GetCompraByIDAsync(id);
+                if (compra == null) return NotFound();
+
+                var vm = _mapper.Map<CompraProveedorViewModel>(compra);
+                var p = await _proveedorService.GetProveedorByIDAsync(compra.ProveedorID);
+                vm.NombreProveedor = p?.Nombre;
+                return View(vm);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en EliminarCompra GET");
+                return View("Error");
+            }
+        }
+
+        [HttpPost, ActionName("EliminarCompra")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:proveedores.eliminar")]
+        public async Task<IActionResult> EliminarCompraConfirmado(int id)
+        {
+            try
+            {
+                await _proveedorService.DeleteCompraAsync(id);
+                TempData["Success"] = "Compra eliminada.";
+                return RedirectToAction(nameof(Compras));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en EliminarCompra POST");
+                TempData["Error"] = "Ocurrió un error: " + ex.Message;
+                return RedirectToAction(nameof(Compras));
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:proveedores.editar")]
+        public async Task<IActionResult> ProcesarCompra(int id)
+        {
+            try
+            {
+                await _proveedorService.ProcesarCompraAsync(id);
+                TempData["Success"] = "Compra procesada.";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error procesando compra");
+                TempData["Error"] = ex.Message;
+            }
+            return RedirectToAction(nameof(DetallesCompra), new { id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:proveedores.editar")]
+        public async Task<IActionResult> CompletarCompra(int id)
+        {
+            try
+            {
+                await _proveedorService.CompletarCompraAsync(id);
+                TempData["Success"] = "Compra completada.";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error completando compra");
+                TempData["Error"] = ex.Message;
+            }
+            return RedirectToAction(nameof(DetallesCompra), new { id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:proveedores.editar")]
+        public async Task<IActionResult> CancelarCompra(int id)
+        {
+            try
+            {
+                await _proveedorService.CancelarCompraAsync(id);
+                TempData["Success"] = "Compra cancelada.";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error cancelando compra");
+                TempData["Error"] = ex.Message;
+            }
+            return RedirectToAction(nameof(DetallesCompra), new { id });
+        }
+
+        [HttpPost]
+        [Authorize(Policy = "Permission:proveedores.ver")]
+        public async Task<IActionResult> BuscarProducto(string codigoProducto)
+        {
+            try
+            {
+                var p = await _productoService.GetProductoByCodigoAsync(codigoProducto);
+                if (p == null) return Json(new { success = false, message = "Producto no encontrado." });
+
+                return Json(new
+                {
+                    success = true,
+                    data = new
+                    {
+                        productoID = p.ProductoID,
+                        codigoBarra = p.CodigoBarra,
+                        codigoAlfa = p.CodigoAlfa,
+                        nombreProducto = p.Nombre,
+                        marca = p.Marca?.Nombre ?? "",
+                        cantidad = 1,
+                        precioUnitario = p.PCosto,
+                        precioTotal = p.PCosto
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en BuscarProducto");
+                return Json(new { success = false, message = "Error al buscar el producto." });
+            }
+        }
+
+        #endregion
+
+        #region Helpers
+
+        private async Task PopulateDropDownListsAsync(ProveedoresViewModel vm)
+            => vm.ProductosDisponibles = await _dropdownService.GetProductosAsync();
+
+        private async Task<ProveedoresViewModel> InitializeProveedorViewModelAsync()
+            => new ProveedoresViewModel
             {
                 ProductosDisponibles = await _dropdownService.GetProductosAsync()
             };
-            return model;
-        }
 
-        private async Task PopulateProductosAsignadosInfo(IEnumerable<ProveedoresViewModel> proveedoresViewModel)
+        private async Task PopulateProductosAsignadosInfo(IEnumerable<ProveedoresViewModel> list)
         {
-            foreach (var proveedorViewModel in proveedoresViewModel)
+            foreach (var vm in list)
             {
-                proveedorViewModel.ProductosAsignadosNombres = new List<string>();
-                proveedorViewModel.ProductosAsignadosStocks = new List<int>();
-
-                foreach (var ProductoID in proveedorViewModel.ProductosAsignados)
+                vm.ProductosAsignadosNombres = new List<string>();
+                vm.ProductosAsignadosStocks = new List<int>();
+                foreach (var pid in vm.ProductosAsignados)
                 {
-                    var producto = await _productoService.GetProductoByIDAsync(ProductoID);
-                    if (producto != null)
-                    {
-                        proveedorViewModel.ProductosAsignadosNombres.Add(producto.Nombre);
-
-                        var stockItem = await _stockService.GetStockItemByProductoIDAsync(ProductoID);
-                        int stockDisponible = stockItem != null ? stockItem.CantidadDisponible : 0;
-                        proveedorViewModel.ProductosAsignadosStocks.Add(stockDisponible);
-                    }
-                    else
-                    {
-                        _logger.LogWarning("Producto con ID {ProductoID} no encontrado", ProductoID);
-                        proveedorViewModel.ProductosAsignadosNombres.Add("Producto no encontrado");
-                        proveedorViewModel.ProductosAsignadosStocks.Add(0);
-                    }
+                    var prod = await _productoService.GetProductoByIDAsync(pid);
+                    vm.ProductosAsignadosNombres.Add(prod?.Nombre ?? "‑");
+                    var stk = await _stockService.GetStockItemByProductoIDAsync(pid);
+                    vm.ProductosAsignadosStocks.Add(stk?.CantidadDisponible ?? 0);
                 }
             }
         }
 
-        private async Task PopulateProveedorViewModelAsync(ProveedoresViewModel viewModel, Proveedor proveedor)
+        private async Task PopulateProveedorViewModelAsync(ProveedoresViewModel vm, Proveedor prov)
         {
-            viewModel.ProductosAsignadosNombres = new List<string>();
-            foreach (var ProductoID in proveedor.ProductosAsignados)
+            vm.ProductosAsignadosNombres = new List<string>();
+            foreach (var pid in prov.ProductosAsignados)
             {
-                var producto = await _productoService.GetProductoByIDAsync(ProductoID);
-                if (producto != null)
-                {
-                    viewModel.ProductosAsignadosNombres.Add(producto.Nombre);
-                }
-                else
-                {
-                    _logger.LogWarning("Producto con ID {ProductoID} no encontrado", ProductoID);
-                }
+                var prod = await _productoService.GetProductoByIDAsync(pid);
+                vm.ProductosAsignadosNombres.Add(prod?.Nombre ?? "‑");
             }
-
-            await PopulateDropDownListsAsync(viewModel);
-            await PopulateProductosAsignadosStocks(new List<ProveedoresViewModel> { viewModel });
+            await PopulateDropDownListsAsync(vm);
+            await PopulateProductosAsignadosStocks(new[] { vm });
         }
 
-        private async Task PopulateProductosAsignadosStocks(IEnumerable<ProveedoresViewModel> proveedoresViewModel)
+        private async Task PopulateProductosAsignadosStocks(IEnumerable<ProveedoresViewModel> list)
         {
-            foreach (var proveedorViewModel in proveedoresViewModel)
+            foreach (var vm in list)
             {
-                proveedorViewModel.ProductosAsignadosStocks = new List<int>();
-                foreach (var ProductoID in proveedorViewModel.ProductosAsignados)
+                vm.ProductosAsignadosStocks = new List<int>();
+                foreach (var pid in vm.ProductosAsignados)
                 {
-                    var stockItem = await _stockService.GetStockItemByProductoIDAsync(ProductoID);
-                    int stockDisponible = stockItem != null ? stockItem.CantidadDisponible : 0;
-                    proveedorViewModel.ProductosAsignadosStocks.Add(stockDisponible);
+                    var stk = await _stockService.GetStockItemByProductoIDAsync(pid);
+                    vm.ProductosAsignadosStocks.Add(stk?.CantidadDisponible ?? 0);
                 }
             }
         }
 
-        private IEnumerable<ProveedoresViewModel> ApplyFilter(IEnumerable<ProveedoresViewModel> proveedores, string filterField, string filterValue)
+        private IEnumerable<ProveedoresViewModel> ApplyFilter(IEnumerable<ProveedoresViewModel> items, string field, string value)
         {
-            switch (filterField)
+            return field switch
             {
-                case "nombre":
-                    return proveedores.Where(p => p.Nombre.Contains(filterValue, StringComparison.OrdinalIgnoreCase));
-                case "producto":
-                    return proveedores.Where(p => p.ProductosAsignadosNombres.Any(n => n.Contains(filterValue, StringComparison.OrdinalIgnoreCase)));
-                case "marca":
-                    return proveedores.Where(p => p.ProductosAsignadosMarcas.Any(m => m.Contains(filterValue, StringComparison.OrdinalIgnoreCase)));
-                case "submarca":
-                    return proveedores.Where(p => p.ProductosAsignadosSubMarcas.Any(sm => sm.Contains(filterValue, StringComparison.OrdinalIgnoreCase)));
-                default:
-                    return proveedores;
-            }
+                "nombre" => items.Where(x => x.Nombre.Contains(value, StringComparison.OrdinalIgnoreCase)),
+                "producto" => items.Where(x => x.ProductosAsignadosNombres.Any(n => n.Contains(value, StringComparison.OrdinalIgnoreCase))),
+                "marca" => items.Where(x => x.ProductosAsignadosMarcas.Any(m => m.Contains(value, StringComparison.OrdinalIgnoreCase))),
+                "submarca" => items.Where(x => x.ProductosAsignadosSubMarcas.Any(sm => sm.Contains(value, StringComparison.OrdinalIgnoreCase))),
+                _ => items
+            };
         }
+
+        private async Task CargarOpcionesParaCompraAsync(CompraProveedorViewModel vm)
+        {
+            // Formas de pago, bancos, tarjetas...
+            vm.FormasPago = _ventaService.GetFormasPagoSelectList();
+            vm.Bancos = _ventaService.GetBancosSelectList();
+            vm.TipoTarjetaOptions = _ventaService.GetTipoTarjetaSelectList();
+            vm.CuotasOptions = _ventaService.GetCuotasSelectList();
+            vm.EntidadesElectronicas = _ventaService.GetEntidadesElectronicasSelectList();
+
+            // Lista de proveedores
+            var provs = await _proveedorService.GetProveedoresAsync();
+            vm.Proveedores = provs.Select(p => new SelectListItem
+            {
+                Value = p.ProveedorID.ToString(),
+                Text = p.Nombre
+            });
+        }
+
+        #endregion
     }
 }

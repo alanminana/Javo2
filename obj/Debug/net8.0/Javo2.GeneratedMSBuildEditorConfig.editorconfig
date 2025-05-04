@@ -276,6 +276,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvbW9jaW9uZXNcX0NsaWVudGVzVGFibGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/github/Javo2/Views/Proveedores/Compras.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmVlZG9yZXNcQ29tcHJhcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/github/Javo2/Views/Proveedores/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmVlZG9yZXNcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -284,8 +288,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmVlZG9yZXNcRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/github/Javo2/Views/Proveedores/DetallesCompra.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmVlZG9yZXNcRGV0YWxsZXNDb21wcmEuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/Proveedores/EliminarCompra.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmVlZG9yZXNcRWxpbWluYXJDb21wcmEuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/github/Javo2/Views/Proveedores/Form.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmVlZG9yZXNcRm9ybS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/Proveedores/FormCompra.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmVlZG9yZXNcRm9ybUNvbXByYS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/github/Javo2/Views/Proveedores/Index.cshtml]
