@@ -117,7 +117,19 @@ namespace Javo2
                 .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.Estado.ToString()))
                 .ForMember(dest => dest.EstadoEntrega, opt => opt.Ignore())
                 .ReverseMap();
+            CreateMap<CompraProveedor, CompraProveedorViewModel>()
+    .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.Estado.ToString()))
+    .ForMember(dest => dest.FormasPago, opt => opt.Ignore())
+    .ForMember(dest => dest.Bancos, opt => opt.Ignore())
+    .ForMember(dest => dest.TipoTarjetaOptions, opt => opt.Ignore())
+    .ForMember(dest => dest.CuotasOptions, opt => opt.Ignore())
+    .ForMember(dest => dest.EntidadesElectronicas, opt => opt.Ignore())
+    .ForMember(dest => dest.Proveedores, opt => opt.Ignore())
+    .ReverseMap()
+    .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => Enum.Parse<EstadoCompra>(src.Estado)));
 
+            // DetalleCompraProveedor ↔ DetalleCompraProveedorViewModel
+            CreateMap<DetalleCompraProveedor, DetalleCompraProveedorViewModel>().ReverseMap();
             // Otros mapeos
             CreateMap<Compra, HistorialCompraViewModel>().ReverseMap();
             CreateMap<DetalleVenta, DetalleVentaViewModel>().ReverseMap();
