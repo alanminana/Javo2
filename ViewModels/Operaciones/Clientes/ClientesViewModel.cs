@@ -38,23 +38,11 @@ namespace Javo2.ViewModels.Operaciones.Clientes
         [Required(ErrorMessage = "El número de calle es obligatorio")]
         public string NumeroCalle { get; set; } = string.Empty;
 
-        [Display(Name = "Límite de Crédito Inicial")]
-        [Range(0, double.MaxValue, ErrorMessage = "El límite de crédito debe ser mayor o igual a cero")]
-        public decimal LimiteCreditoInicial { get; set; } = 0m;
-
-        [Display(Name = "¿Apto para Crédito?")]
-        public bool AptoCredito { get; set; } = false;
-
-        [Display(Name = "¿Requiere Garante?")]
-        public bool RequiereGarante { get; set; } = false;
-
-        // Relación con Garante
-        public int? GaranteID { get; set; }
-        public string NombreGarante { get; set; } = string.Empty;
-        public GaranteViewModel? Garante { get; set; }
-
+        // Datos del domicilio extendidos
         public string NumeroPiso { get; set; } = string.Empty;
         public string Dpto { get; set; } = string.Empty;
+        public string TipoDomicilio { get; set; } = string.Empty;
+        public int? AntiguedadDomicilio { get; set; }
 
         [Required(ErrorMessage = "La localidad es obligatoria")]
         public string Localidad { get; set; } = string.Empty;
@@ -65,11 +53,55 @@ namespace Javo2.ViewModels.Operaciones.Clientes
         [Required(ErrorMessage = "La descripción del domicilio es obligatoria")]
         public string DescripcionDomicilio { get; set; } = string.Empty;
 
+        // Datos personales extendidos
+        [DataType(DataType.Date)]
+        public DateTime? FechaNacimiento { get; set; }
+        public string EstadoCivil { get; set; } = string.Empty;
+
+        // Datos del cónyuge
+        public string NombreConyugue { get; set; } = string.Empty;
+        public string ApellidoConyugue { get; set; } = string.Empty;
+        public int? DniConyugue { get; set; }
+        public string CelularConyugue { get; set; } = string.Empty;
+        public string EmailConyugue { get; set; } = string.Empty;
+        public string TrabajoConyugue { get; set; } = string.Empty;
+
+        // Datos laborales
+        public string Ocupacion { get; set; } = string.Empty;
+        public string SituacionLaboral { get; set; } = string.Empty;
+        public string LugarTrabajo { get; set; } = string.Empty;
+        public string DireccionTrabajo { get; set; } = string.Empty;
+        public string Cuit { get; set; } = string.Empty;
+        public int? AntiguedadLaboral { get; set; }
+        public decimal? IngresosMensuales { get; set; }
+        public string ReferenciasLaborales { get; set; } = string.Empty;
+
+        // Relación con Provincia y Ciudad
         [Required(ErrorMessage = "La provincia es obligatoria")]
         public int ProvinciaID { get; set; }
 
         [Required(ErrorMessage = "La ciudad es obligatoria")]
         public int CiudadID { get; set; }
+
+        // Datos de crédito
+        [Display(Name = "Límite de Crédito Inicial")]
+        [Range(0, double.MaxValue, ErrorMessage = "El límite de crédito debe ser mayor o igual a cero")]
+        public decimal LimiteCreditoInicial { get; set; } = 0m;
+
+        [Display(Name = "¿Apto para Crédito?")]
+        public bool AptoCredito { get; set; } = false;
+
+        [Display(Name = "¿Requiere Garante?")]
+        public bool RequiereGarante { get; set; } = false;
+
+        // Datos de crédito adicionales
+        public string ScoreCredito { get; set; } = string.Empty;
+        public int? VencimientoCuotas { get; set; }
+
+        // Relación con Garante
+        public int? GaranteID { get; set; }
+        public string NombreGarante { get; set; } = string.Empty;
+        public GaranteViewModel? Garante { get; set; }
 
         public decimal SaldoInicial { get; set; }
         public decimal SaldoDisponible { get; set; }

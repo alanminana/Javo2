@@ -358,5 +358,17 @@
     "EsRevertido": false,
     "RollbackUser": "",
     "RollbackFecha": null
+  },
+  {
+    "ID": 31,
+    "FechaHora": "2025-05-02T03:00:54.5190624-03:00",
+    "Usuario": "admin",
+    "Entidad": "Producto",
+    "Accion": "Create",
+    "LlavePrimaria": "9",
+    "Detalle": "heladera  doble puerta ",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
   }
 ]

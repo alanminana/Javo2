@@ -370,5 +370,17 @@
     "EsRevertido": false,
     "RollbackUser": "",
     "RollbackFecha": null
+  },
+  {
+    "ID": 32,
+    "FechaHora": "2025-05-04T15:01:14.2506892-03:00",
+    "Usuario": "",
+    "Entidad": "Cliente",
+    "Accion": "Create",
+    "LlavePrimaria": "2",
+    "Detalle": "Cliente creado: wqewq qewew, DNI: 31231232",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
   }
 ]
