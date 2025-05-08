@@ -117,13 +117,13 @@ namespace Javo2.Data.Seeders
                     // Permisos de auditoria
                     ("auditoria.ver", "Ver auditoría", "Auditoría", "Permite ver registros de auditoría"),
                     ("auditoria.rollback", "Revertir cambios", "Auditoría", "Permite revertir cambios desde la auditoría"),
-                };
+            
 
                 // En algún archivo de inicialización, como Data/Seeders/PermissionSeeder.cs
                 // Agregar estos nuevos permisos:
                 ("proveedores.realizarcompra", "Realizar compras a proveedores", "Proveedores", "Permite realizar compras a proveedores"),
 ("proveedores.vercompras", "Ver compras a proveedores", "Proveedores", "Permite ver las compras realizadas a proveedores")
-
+    };
                 // Permisos actuales
                 var permisosActuales = await _permisoService.GetAllPermisosAsync();
                 var codigosExistentes = permisosActuales.Select(p => p.Codigo).ToList();
