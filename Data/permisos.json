@@ -502,5 +502,23 @@
     "Grupo": "Ventas",
     "EsSistema": false,
     "Activo": true
+  },
+  {
+    "PermisoID": 57,
+    "Nombre": "Realizar compras a proveedores",
+    "Codigo": "proveedores.realizarcompra",
+    "Descripcion": "Permite realizar compras a proveedores",
+    "Grupo": "Proveedores",
+    "EsSistema": false,
+    "Activo": true
+  },
+  {
+    "PermisoID": 58,
+    "Nombre": "Ver compras a proveedores",
+    "Codigo": "proveedores.vercompras",
+    "Descripcion": "Permite ver las compras realizadas a proveedores",
+    "Grupo": "Proveedores",
+    "EsSistema": false,
+    "Activo": true
   }
 ]

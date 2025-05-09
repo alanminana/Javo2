@@ -86,8 +86,7 @@
               "RelativeToolTip": "Controllers\\ConfiguracionController.cs",
               "ViewState": "AgIAAAkAAAAAAAAAAAAiwBgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-08T17:17:23.818Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-08T17:17:23.818Z"
             },
             {
               "$type": "Document",
@@ -99,8 +98,7 @@
               "RelativeToolTip": "Data\\Seeders\\PermissionSeeder.cs",
               "ViewState": "AgIAAGYAAAAAAAAAAAAqwH0AAAAGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T22:40:31.586Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-04T22:40:31.586Z"
             },
             {
               "$type": "Document",
@@ -110,7 +108,7 @@
               "RelativeDocumentMoniker": "Controllers\\ProveedoresController.cs",
               "ToolTip": "D:\\github\\Javo2\\Controllers\\ProveedoresController.cs",
               "RelativeToolTip": "Controllers\\ProveedoresController.cs",
-              "ViewState": "AgIAAE4AAAAAAAAAAAAAwBQAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAIcCAAAAAAAAAAAiwKMCAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-04T22:28:30.974Z",
               "EditorCaption": ""
@@ -125,8 +123,7 @@
               "RelativeToolTip": "IServices\\IProveedorService.cs",
               "ViewState": "AgIAABMAAAAAAAAAAAA5wBwAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T22:22:03.784Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-04T22:22:03.784Z"
             },
             {
               "$type": "Document",
@@ -138,8 +135,7 @@
               "RelativeToolTip": "Services\\ProveedorService.cs",
               "ViewState": "AgIAABQAAAAAAAAAAAAAwCMAAABJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T22:22:53.267Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-04T22:22:53.267Z"
             },
             {
               "$type": "Document",
@@ -151,8 +147,7 @@
               "RelativeToolTip": "ViewModels\\Operaciones\\Proveedores\\CompraProveedorViewModel.cs",
               "ViewState": "AgIAAFIAAAAAAAAAAAA2wG4AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T22:27:33.869Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-04T22:27:33.869Z"
             },
             {
               "$type": "Document",
@@ -164,8 +159,7 @@
               "RelativeToolTip": "Profiles\\AutoMapperProfile.cs",
               "ViewState": "AgIAAGgAAAAAAAAAAAAAAIMAAABeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T22:50:16.184Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-04T22:50:16.184Z"
             },
             {
               "$type": "Document",

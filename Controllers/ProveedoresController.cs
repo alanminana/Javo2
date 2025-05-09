@@ -1,6 +1,7 @@
-﻿// Controllers/ProveedoresController.cs (parcial, nuevos métodos)
+﻿// Controllers/ProveedoresController.cs
 using Microsoft.AspNetCore.Mvc;
 using Javo2.IServices;
+using Javo2.IServices.Common;
 using Javo2.Models;
 using Javo2.ViewModels.Operaciones.Proveedores;
 using System;
@@ -10,19 +11,195 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
-using DocumentFormat.OpenXml.Spreadsheet;
 using Javo2.Controllers.Base;
-using Javo2.Services;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Javo2.IServices.Authentication;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Javo2.Controllers
 {
     [Authorize]
     public class ProveedoresController : BaseController
     {
-        // Propiedades y constructor existentes
+        private readonly ILogger<ProveedoresController> _logger;
+        private readonly IProveedorService _proveedorService;
+        private readonly IProductoService _productoService;
+        private readonly IMapper _mapper;
+        private readonly IDropdownService _dropdownService;
 
-        // Métodos para gestión de compras
+        public ProveedoresController(
+            ILogger<ProveedoresController> logger,
+            IPermissionManagerService permissionManager,
+            IProveedorService proveedorService,
+            IProductoService productoService,
+            IMapper mapper,
+            IDropdownService dropdownService)
+            : base(logger, permissionManager)
+        {
+            _logger = logger;
+            _proveedorService = proveedorService;
+            _productoService = productoService;
+            _mapper = mapper;
+            _dropdownService = dropdownService;
+        }
+
+        #region Métodos de Proveedores
+
+        [HttpGet]
+        [Authorize(Policy = "Permission:proveedores.ver")]
+        public async Task<IActionResult> Index()
+        {
+            try
+            {
+                var proveedores = await _proveedorService.GetProveedoresAsync();
+                var viewModels = _mapper.Map<IEnumerable<ProveedoresViewModel>>(proveedores);
+                return View(viewModels);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cargar proveedores");
+                return View("Error");
+            }
+        }
+
+        [HttpGet]
+        [Authorize(Policy = "Permission:proveedores.ver")]
+        public async Task<IActionResult> Details(int id)
+        {
+            try
+            {
+                var proveedor = await _proveedorService.GetProveedorByIDAsync(id);
+                if (proveedor == null) return NotFound();
+
+                var viewModel = _mapper.Map<ProveedoresViewModel>(proveedor);
+                return View(viewModel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cargar detalles del proveedor");
+                return View("Error");
+            }
+        }
+
+        [HttpGet]
+        [Authorize(Policy = "Permission:proveedores.crear")]
+        public IActionResult Create()
+        {
+            var viewModel = new ProveedoresViewModel();
+            return View("Form", viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:proveedores.crear")]
+        public async Task<IActionResult> Create(ProveedoresViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                LogModelStateErrors();
+                return View("Form", viewModel);
+            }
+
+            try
+            {
+                var proveedor = _mapper.Map<Proveedor>(viewModel);
+                await _proveedorService.CreateProveedorAsync(proveedor);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al crear proveedor");
+                ModelState.AddModelError(string.Empty, $"Error al crear el proveedor: {ex.Message}");
+                return View("Form", viewModel);
+            }
+        }
+
+        [HttpGet]
+        [Authorize(Policy = "Permission:proveedores.editar")]
+        public async Task<IActionResult> Edit(int id)
+        {
+            try
+            {
+                var proveedor = await _proveedorService.GetProveedorByIDAsync(id);
+                if (proveedor == null) return NotFound();
+
+                var viewModel = _mapper.Map<ProveedoresViewModel>(proveedor);
+                return View("Form", viewModel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cargar proveedor para editar");
+                return View("Error");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:proveedores.editar")]
+        public async Task<IActionResult> Edit(ProveedoresViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                LogModelStateErrors();
+                return View("Form", viewModel);
+            }
+
+            try
+            {
+                var proveedor = _mapper.Map<Proveedor>(viewModel);
+                await _proveedorService.UpdateProveedorAsync(proveedor);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al actualizar proveedor");
+                ModelState.AddModelError(string.Empty, $"Error al actualizar el proveedor: {ex.Message}");
+                return View("Form", viewModel);
+            }
+        }
+
+        [HttpGet]
+        [Authorize(Policy = "Permission:proveedores.eliminar")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                var proveedor = await _proveedorService.GetProveedorByIDAsync(id);
+                if (proveedor == null) return NotFound();
+
+                var viewModel = _mapper.Map<ProveedoresViewModel>(proveedor);
+                return View(viewModel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cargar proveedor para eliminar");
+                return View("Error");
+            }
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:proveedores.eliminar")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            try
+            {
+                await _proveedorService.DeleteProveedorAsync(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar proveedor");
+                return View("Error");
+            }
+        }
+
+        #endregion
+
+        #region Métodos para Compras
+
         [HttpGet]
         [Authorize(Policy = "Permission:proveedores.ver")]
         public async Task<IActionResult> Compras()
@@ -372,19 +549,88 @@ namespace Javo2.Controllers
             }
         }
 
+        #endregion
+
+        #region Métodos de ayuda
+
+        [HttpPost]
+        public async Task<IActionResult> SearchProducts(string term)
+        {
+            try
+            {
+                // Vamos a usar directamente el método GetProductoByCodigoAsync, 
+                // ya que parece no existir otro método específico de búsqueda
+                var producto = await _productoService.GetProductoByCodigoAsync(term);
+
+                var results = new List<object>();
+                if (producto != null)
+                {
+                    results.Add(new
+                    {
+                        label = producto.Nombre,
+                        value = producto.ProductoID
+                    });
+                }
+
+                return Json(results);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al buscar productos");
+                return Json(new List<object>());
+            }
+        }
+
         // Método auxiliar para cargar opciones de compra
         private async Task CargarOpcionesParaCompraAsync(CompraProveedorViewModel model)
         {
-            // Cargar listas de opciones para los desplegables
-            var ventaService = HttpContext.RequestServices.GetService(typeof(IVentaService)) as IVentaService;
-            if (ventaService != null)
+            // Formas de pago (usamos lista estática para mantener la simplicidad)
+            model.FormasPago = new List<SelectListItem>
             {
-                model.FormasPago = ventaService.GetFormasPagoSelectList();
-                model.Bancos = ventaService.GetBancosSelectList();
-                model.TipoTarjetaOptions = ventaService.GetTipoTarjetaSelectList();
-                model.CuotasOptions = ventaService.GetCuotasSelectList();
-                model.EntidadesElectronicas = ventaService.GetEntidadesElectronicasSelectList();
-            }
+                new SelectListItem { Value = "1", Text = "Contado" },
+                new SelectListItem { Value = "2", Text = "Tarjeta de Crédito" },
+                new SelectListItem { Value = "3", Text = "Tarjeta de Débito" },
+                new SelectListItem { Value = "4", Text = "Transferencia" },
+                new SelectListItem { Value = "5", Text = "Pago Virtual" },
+                new SelectListItem { Value = "6", Text = "Crédito Personal" }
+            };
+
+            // Bancos (usamos lista estática porque parece que IDropdownService no tiene GetBancosAsync)
+            model.Bancos = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "1", Text = "Banco Nación" },
+                new SelectListItem { Value = "2", Text = "Banco Provincia" },
+                new SelectListItem { Value = "3", Text = "Banco Santander" },
+                new SelectListItem { Value = "4", Text = "Banco Galicia" },
+                new SelectListItem { Value = "5", Text = "BBVA" },
+                new SelectListItem { Value = "6", Text = "HSBC" }
+            };
+
+            // Tipos de tarjeta
+            model.TipoTarjetaOptions = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "Visa", Text = "Visa" },
+                new SelectListItem { Value = "MasterCard", Text = "MasterCard" },
+                new SelectListItem { Value = "American Express", Text = "American Express" },
+                new SelectListItem { Value = "Naranja", Text = "Naranja" }
+            };
+
+            // Cuotas
+            model.CuotasOptions = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "1", Text = "1 cuota" },
+                new SelectListItem { Value = "3", Text = "3 cuotas" },
+                new SelectListItem { Value = "6", Text = "6 cuotas" },
+                new SelectListItem { Value = "12", Text = "12 cuotas" }
+            };
+
+            // Entidades electrónicas
+            model.EntidadesElectronicas = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "MercadoPago", Text = "MercadoPago" },
+                new SelectListItem { Value = "Todo Pago", Text = "Todo Pago" },
+                new SelectListItem { Value = "PayPal", Text = "PayPal" }
+            };
 
             // Cargar lista de proveedores
             var proveedores = await _proveedorService.GetProveedoresAsync();
@@ -395,6 +641,36 @@ namespace Javo2.Controllers
             });
         }
 
-        // Aquí irían el resto de los métodos que ya tienes en el controlador
+        [HttpPost]
+        public async Task<IActionResult> Filter(string filterField, string filterValue)
+        {
+            try
+            {
+                var proveedores = await _proveedorService.GetProveedoresAsync();
+                var viewModels = _mapper.Map<IEnumerable<ProveedoresViewModel>>(proveedores);
+
+                if (!string.IsNullOrEmpty(filterValue))
+                {
+                    viewModels = filterField switch
+                    {
+                        "nombre" => viewModels.Where(p => p.Nombre.Contains(filterValue, StringComparison.OrdinalIgnoreCase)),
+                        "producto" => viewModels.Where(p => p.ProductosAsignadosNombres != null &&
+                                                          p.ProductosAsignadosNombres.Any(n => n.Contains(filterValue, StringComparison.OrdinalIgnoreCase))),
+                        "marca" => viewModels.Where(p => p.ProductosAsignadosMarcas != null &&
+                                                       p.ProductosAsignadosMarcas.Any(m => m.Contains(filterValue, StringComparison.OrdinalIgnoreCase))),
+                        _ => viewModels,
+                    };
+                }
+
+                return PartialView("_ProveedoresTable", viewModels);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al filtrar proveedores");
+                return PartialView("_ProveedoresTable", new List<ProveedoresViewModel>());
+            }
+        }
+
+        #endregion
     }
 }

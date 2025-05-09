@@ -131,9 +131,9 @@
     "CodigoBarra": "546084531",
     "Nombre": "afeitadora",
     "Descripcion": "afeita",
-    "PCosto": 48.96,
-    "PContado": 73.44,
-    "PLista": 49.45,
+    "PCosto": 59.7312,
+    "PContado": 89.60,
+    "PLista": 60.93,
     "RubroID": 1,
     "Rubro": {
       "ID": 1,
@@ -179,7 +179,7 @@
     },
     "PorcentajeIva": 21,
     "FechaMod": "2025-04-23T15:12:19.82925-03:00",
-    "FechaModPrecio": "2025-04-25T14:53:57.0477284-03:00",
+    "FechaModPrecio": "2025-05-08T20:41:33.560723-03:00",
     "Entregable": false,
     "NoListar": false,
     "Proveedor": {

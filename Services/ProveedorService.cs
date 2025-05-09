@@ -1,4 +1,4 @@
-﻿// Services/ProveedorService.cs (parcial, con nuevos métodos)
+﻿// Services/ProveedorService.cs
 using Javo2.IServices;
 using Javo2.Models;
 using Microsoft.Extensions.Logging;
@@ -12,17 +12,16 @@ namespace Javo2.Services
 {
     public class ProveedorService : IProveedorService
     {
-        // Propiedades existentes
         private readonly ILogger<ProveedorService> _logger;
         private readonly IStockService _stockService;
         private static List<Proveedor> _proveedores = new();
         private static List<CompraProveedor> _compras = new();
+        private static int _nextProveedorID = 1;
         private static int _nextCompraID = 1;
         private readonly string _jsonProveedoresFilePath = "Data/proveedores.json";
         private readonly string _jsonComprasFilePath = "Data/comprasProveedores.json";
         private static readonly object _lock = new();
 
-        // Constructor (ajustar según tu implementación actual)
         public ProveedorService(
             ILogger<ProveedorService> logger,
             IStockService stockService)
@@ -32,7 +31,149 @@ namespace Javo2.Services
             CargarDesdeJsonAsync().GetAwaiter().GetResult();
         }
 
-        // Implementaciones de métodos para compras
+        private async Task CargarDesdeJsonAsync()
+        {
+            await CargarProveedoresDesdeJsonAsync();
+            await CargarComprasDesdeJsonAsync();
+        }
+
+        #region Métodos de Proveedor
+
+        public async Task<IEnumerable<Proveedor>> GetProveedoresAsync()
+        {
+            lock (_lock)
+            {
+                return _proveedores.ToList();
+            }
+        }
+
+        public async Task<Proveedor?> GetProveedorByIDAsync(int id)
+        {
+            lock (_lock)
+            {
+                return _proveedores.FirstOrDefault(p => p.ProveedorID == id);
+            }
+        }
+
+        public async Task CreateProveedorAsync(Proveedor proveedor)
+        {
+            try
+            {
+                lock (_lock)
+                {
+                    proveedor.ProveedorID = _nextProveedorID++;
+                    _proveedores.Add(proveedor);
+                    _logger.LogInformation("Proveedor creado => ID: {ID}, Nombre: {Nombre}",
+                        proveedor.ProveedorID, proveedor.Nombre);
+                }
+
+                await GuardarProveedoresEnJsonAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al crear proveedor");
+                throw;
+            }
+        }
+
+        public async Task UpdateProveedorAsync(Proveedor proveedor)
+        {
+            try
+            {
+                lock (_lock)
+                {
+                    var existingProveedor = _proveedores.FirstOrDefault(p => p.ProveedorID == proveedor.ProveedorID);
+                    if (existingProveedor == null)
+                    {
+                        throw new KeyNotFoundException($"Proveedor con ID {proveedor.ProveedorID} no encontrado.");
+                    }
+
+                    // Actualizar campos
+                    existingProveedor.Nombre = proveedor.Nombre;
+                    existingProveedor.Direccion = proveedor.Direccion;
+                    existingProveedor.Telefono = proveedor.Telefono;
+                    existingProveedor.Email = proveedor.Email;
+                    existingProveedor.CondicionesPago = proveedor.CondicionesPago;
+                    existingProveedor.ProductosAsignados = proveedor.ProductosAsignados;
+                }
+
+                await GuardarProveedoresEnJsonAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al actualizar proveedor");
+                throw;
+            }
+        }
+
+        public async Task DeleteProveedorAsync(int id)
+        {
+            try
+            {
+                lock (_lock)
+                {
+                    var proveedor = _proveedores.FirstOrDefault(p => p.ProveedorID == id);
+                    if (proveedor == null)
+                    {
+                        throw new KeyNotFoundException($"Proveedor con ID {id} no encontrado.");
+                    }
+
+                    _proveedores.Remove(proveedor);
+                }
+
+                await GuardarProveedoresEnJsonAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar proveedor");
+                throw;
+            }
+        }
+
+        private async Task GuardarProveedoresEnJsonAsync()
+        {
+            try
+            {
+                List<Proveedor> proveedoresParaGuardar;
+                lock (_lock)
+                {
+                    proveedoresParaGuardar = _proveedores.ToList();
+                }
+                await JsonFileHelper.SaveToJsonFileAsync(_jsonProveedoresFilePath, proveedoresParaGuardar);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al guardar proveedores en JSON");
+                throw;
+            }
+        }
+
+        private async Task CargarProveedoresDesdeJsonAsync()
+        {
+            try
+            {
+                var data = await JsonFileHelper.LoadFromJsonFileAsync<List<Proveedor>>(_jsonProveedoresFilePath);
+                lock (_lock)
+                {
+                    _proveedores = data ?? new List<Proveedor>();
+                    if (_proveedores.Any())
+                    {
+                        _nextProveedorID = _proveedores.Max(p => p.ProveedorID) + 1;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cargar proveedores desde JSON");
+                _proveedores = new List<Proveedor>();
+                _nextProveedorID = 1;
+            }
+        }
+
+        #endregion
+
+        #region Métodos de Compras
+
         public async Task<IEnumerable<CompraProveedor>> GetComprasAsync()
         {
             lock (_lock)
@@ -307,7 +448,6 @@ namespace Javo2.Services
             }
         }
 
-        // Métodos para cargar/guardar JSON
         private async Task GuardarComprasEnJsonAsync()
         {
             try
@@ -348,6 +488,6 @@ namespace Javo2.Services
             }
         }
 
-        // Puedes agregar aquí el resto de los métodos que ya tengas en tu servicio
+        #endregion
     }
 }
