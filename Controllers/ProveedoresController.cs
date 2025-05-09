@@ -550,7 +550,41 @@ namespace Javo2.Controllers
         }
 
         #endregion
+        [HttpPost]
+        [Authorize(Policy = "Permission:proveedores.editar")]
+        public async Task<IActionResult> SearchProductsForPurchase(string term)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(term) || term.Length < 2)
+                    return Json(new List<object>());
 
+                // Buscar productos que coincidan con el término
+                var productos = await _productoService.GetAllProductosAsync();
+                var filteredProducts = productos
+                    .Where(p =>
+                        p.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                        p.CodigoAlfa.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                        p.CodigoBarra.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                        (p.Marca != null && p.Marca.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase)))
+                    .Take(20)
+                    .Select(p => new
+                    {
+                        id = p.ProductoID,
+                        name = p.Nombre,
+                        codigo = p.CodigoAlfa,
+                        marca = p.Marca?.Nombre ?? "Sin marca",
+                        precio = p.PCosto
+                    });
+
+                return Json(filteredProducts);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al buscar productos para compra");
+                return Json(new List<object>());
+            }
+        }
         #region Métodos de ayuda
 
         [HttpPost]

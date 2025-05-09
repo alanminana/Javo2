@@ -22,66 +22,192 @@
             <input asp-for="Email" class="form-control bg-secondary text-light" />
             <span asp-validation-for="Email" class="invalid-feedback d-block"></span>
         </div>
+        <div class="mb-3">
+            <label asp-for="CondicionesPago" class="form-label text-light"></label>
+            <textarea asp-for="CondicionesPago" class="form-control bg-secondary text-light" rows="3"></textarea>
+            <span asp-validation-for="CondicionesPago" class="invalid-feedback d-block"></span>
+        </div>
     </div>
     <div class="col-md-6">
-        <div class="mb-3">
-            <label for="productSearch" class="form-label text-light">Productos Asignados</label>
-            <input type="text" id="productSearch" class="form-control bg-secondary text-light" placeholder="Buscar productos..." autocomplete="off" />
+        <div class="card bg-dark text-light mb-3">
+            <div class="card-header">
+                <h5 class="mb-0">Productos del Proveedor</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="productSearch" class="form-label">Buscar Productos</label>
+                    <div class="input-group">
+                        <input type="text" id="productSearch" class="form-control bg-secondary text-light"
+                               placeholder="Buscar por nombre, código..." autocomplete="off" />
+                        <button type="button" id="searchProductBtn" class="btn btn-primary">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                    <small class="form-text text-muted">Busque y seleccione productos para asociar</small>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-dark table-sm mb-0">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Marca</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assignedProducts">
+                            @for (int i = 0; i < Model.ProductosAsignados.Count; i++)
+                            {
+                                var pid = Model.ProductosAsignados[i];
+                                var pname = Model.ProductosAsignadosNombres.ElementAtOrDefault(i) ?? "";
+                                var marca = Model.ProductosAsignadosMarcas?.ElementAtOrDefault(i) ?? "";
+                                <tr data-id="@pid">
+                                    <td>@pname</td>
+                                    <td>@marca</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-outline-danger remove-product">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                        <input type="hidden" name="ProductosAsignados" value="@pid" />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="searchResults" class="mt-3" style="max-height: 300px; overflow-y: auto; display: none;">
+                    <h6>Resultados de búsqueda</h6>
+                    <table class="table table-dark table-sm" id="productResultsTable">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Marca</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Los resultados de búsqueda se cargarán aquí dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <ul id="assignedProducts" class="list-group list-group-flush">
-            @for (int i = 0; i < Model.ProductosAsignados.Count; i++)
-            {
-                var pid = Model.ProductosAsignados[i];
-                var pname = Model.ProductosAsignadosNombres.ElementAtOrDefault(i) ?? "";
-                var stock = Model.ProductosAsignadosStocks.ElementAtOrDefault(i);
-                <li class="list-group-item d-flex justify-content-between align-items-center bg-secondary text-light" data-id="@pid">
-                    @pname (Stock: @stock)
-                    <button type="button" class="btn btn-link btn-sm remove-product" title="Eliminar">
-                        <i class="bi bi-x-circle" aria-hidden="true"></i>
-                        <span class="visually-hidden">Eliminar</span>
-                    </button>
-                    <input type="hidden" name="ProductosAsignados" value="@pid" />
-                </li>
-            }
-        </ul>
     </div>
 </div>
 
 @section Scripts {
-    <script defer src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    @await Html.PartialAsync("_ValidationScriptsPartial")
     <script defer>
         (function($) {
             $(function() {
-                var assigned = [];
-                $('#assignedProducts li').each(function() {
-                    assigned.push($(this).data('id'));
+                var assignedProducts = [];
+
+                // Inicializar la lista de productos asignados
+                $('#assignedProducts tr').each(function() {
+                    assignedProducts.push(parseInt($(this).data('id')));
                 });
-                $('#productSearch').autocomplete({
-                    source: function(req, resp) {
-                        $.getJSON('@Url.Action("SearchProducts", "Proveedores")', { term: req.term })
-                         .done(resp).fail(function() { alert('Error'); });
-                    },
-                    select: function(e, ui) {
-                        e.preventDefault();
-                        var id = ui.item.value, name=ui.item.label;
-                        if (!assigned.includes(id)) {
-                            assigned.push(id);
-                            $('#assignedProducts').append(
-                                `<li class="list-group-item d-flex justify-content-between align-items-center" data-id="${id}">`+
-                                `${name} <button type="button" class="btn btn-link btn-sm remove-product">Eliminar</button>`+
-                                `<input type="hidden" name="ProductosAsignados" value="${id}" />`+
-                                `</li>`);
+
+                // Buscar productos
+                $('#searchProductBtn').on('click', function() {
+                    var searchTerm = $('#productSearch').val();
+                    if (!searchTerm) return;
+
+                    $.ajax({
+                        url: '@Url.Action("SearchProductsForAssignment", "Proveedores")',
+                        method: 'POST',
+                        data: { term: searchTerm },
+                        success: function(data) {
+                            // Limpiar resultados anteriores
+                            $('#productResultsTable tbody').empty();
+
+                            if (data.length === 0) {
+                                $('#productResultsTable tbody').append(
+                                    '<tr><td colspan="3" class="text-center">No se encontraron productos</td></tr>'
+                                );
+                            } else {
+                                // Mostrar productos
+                                data.forEach(function(product) {
+                                    var isAssigned = assignedProducts.includes(product.id);
+                                    var assignBtn = isAssigned ?
+                                        '<button type="button" class="btn btn-sm btn-secondary" disabled>Asignado</button>' :
+                                        '<button type="button" class="btn btn-sm btn-primary assign-product" data-id="' + product.id +
+                                        '" data-name="' + product.name + '" data-marca="' + product.marca + '">Asignar</button>';
+
+                                    $('#productResultsTable tbody').append(
+                                        '<tr>' +
+                                        '<td>' + product.name + '</td>' +
+                                        '<td>' + product.marca + '</td>' +
+                                        '<td>' + assignBtn + '</td>' +
+                                        '</tr>'
+                                    );
+                                });
+                            }
+
+                            // Mostrar resultados
+                            $('#searchResults').show();
+                        },
+                        error: function() {
+                            alert('Error al buscar productos');
                         }
-                        $(this).val(''); return false;
+                    });
+                });
+
+                // Asignar producto al hacer clic en el botón Asignar
+                $(document).on('click', '.assign-product', function() {
+                    var id = $(this).data('id');
+                    var name = $(this).data('name');
+                    var marca = $(this).data('marca');
+
+                    if (!assignedProducts.includes(id)) {
+                        assignedProducts.push(id);
+
+                        // Agregar producto a la tabla de asignados
+                        $('#assignedProducts').append(
+                            '<tr data-id="' + id + '">' +
+                            '<td>' + name + '</td>' +
+                            '<td>' + marca + '</td>' +
+                            '<td>' +
+                            '<button type="button" class="btn btn-sm btn-outline-danger remove-product">' +
+                            '<i class="bi bi-trash"></i>' +
+                            '</button>' +
+                            '<input type="hidden" name="ProductosAsignados" value="' + id + '" />' +
+                            '</td>' +
+                            '</tr>'
+                        );
+
+                        // Actualizar botón en resultados
+                        $(this).replaceWith('<button type="button" class="btn btn-sm btn-secondary" disabled>Asignado</button>');
                     }
                 });
-                $('#assignedProducts').on('click', '.remove-product', function() {
-                    var li = $(this).closest('li'), id=li.data('id');
-                    assigned = assigned.filter(x=>x!=id); li.remove();
+
+                // Eliminar producto
+                $(document).on('click', '.remove-product', function() {
+                    var row = $(this).closest('tr');
+                    var id = row.data('id');
+
+                    // Eliminar de la lista
+                    assignedProducts = assignedProducts.filter(function(pid) {
+                        return pid !== id;
+                    });
+
+                    // Eliminar fila
+                    row.remove();
+
+                    // Actualizar botón en resultados si está visible
+                    $('#productResultsTable .assign-product[data-id="' + id + '"]').replaceWith(
+                        '<button type="button" class="btn btn-sm btn-primary assign-product" data-id="' + id +
+                        '" data-name="' + $(this).data('name') + '" data-marca="' + $(this).data('marca') + '">Asignar</button>'
+                    );
+                });
+
+                // Al presionar Enter en la búsqueda
+                $('#productSearch').keypress(function(e) {
+                    if (e.which === 13) {
+                        $('#searchProductBtn').click();
+                        return false;
+                    }
                 });
             });
         })(jQuery);
     </script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
 }

@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<Javo2.ViewModels.Operaciones.Proveedores.ProveedoresViewModel>
+
 @{
     ViewBag.Title = "Proveedores";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -45,6 +46,9 @@
                 <span>Agregar Proveedor</span>
             </a>
         </div>
+        <a asp-action="Compras" class="btn btn-primary ms-2">
+            <i class="bi bi-cart me-1"></i> Gestionar Compras
+        </a>
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover table-dark mb-0" aria-label="Listado de Proveedores">
@@ -65,7 +69,54 @@
         </div>
     </div>
 </section>
-
+@foreach (var proveedor in Model)
+{
+    <tr>
+        <td scope="row">@proveedor.Nombre</td>
+        <td>@proveedor.Telefono</td>
+        <td>@proveedor.Email</td>
+        <td>
+            @if (proveedor.ProductosAsignadosNombres?.Any() == true)
+            {
+                <ul class="list-unstyled mb-0">
+                    @for (int i = 0; i < proveedor.ProductosAsignadosNombres.Count; i++)
+                    {
+                        var name = proveedor.ProductosAsignadosNombres[i];
+                        var stock = proveedor.ProductosAsignadosStocks.ElementAtOrDefault(i);
+                        <li>@name (Stock: @stock)</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <span class="text-muted">Sin productos</span>
+            }
+        </td>
+      
+    </tr>
+    <td class="text-center">
+        <div class="btn-group" role="group" aria-label="Acciones para @proveedor.Nombre">
+            <a asp-action="Edit" asp-route-id="@proveedor.ProveedorID"
+               class="btn btn-sm btn-outline-warning" title="Editar">
+                <i class="bi bi-pencil-square" aria-hidden="true"></i>
+            </a>
+            <a asp-action="Details" asp-route-id="@proveedor.ProveedorID"
+               class="btn btn-sm btn-outline-info" title="Detalles">
+                <i class="bi bi-eye" aria-hidden="true"></i>
+            </a>
+            <a asp-action="CrearCompra" asp-route-proveedorId="@proveedor.ProveedorID"
+               class="btn btn-sm btn-outline-primary" title="Crear compra">
+                <i class="bi bi-cart-plus" aria-hidden="true"></i>
+            </a>
+            <form asp-action="Delete" asp-route-id="@proveedor.ProveedorID" method="post" class="d-inline" onsubmit="return confirm('¿Eliminar @proveedor.Nombre?');">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                    <i class="bi bi-trash" aria-hidden="true"></i>
+                </button>
+            </form>
+        </div>
+    </td>
+}
 @section Scripts {
     <script defer>
         (function($) {
