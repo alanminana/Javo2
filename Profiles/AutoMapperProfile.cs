@@ -9,6 +9,7 @@ using Javo2.ViewModels.Operaciones.Stock;
 using Javo2.ViewModels.Operaciones.Promociones;
 using Javo2.ViewModels.Operaciones.Ventas;
 using System;
+using Javo2.Controllers;
 
 namespace Javo2
 {
@@ -163,6 +164,12 @@ namespace Javo2
             // AjustePrecio mapeos
             CreateMap<AjustePrecioHistorico, AjustePrecioHistoricoViewModel>().ReverseMap();
             CreateMap<AjustePrecioDetalle, AjustePrecioDetalleViewModel>().ReverseMap();
+
+            CreateMap<AjustePrecioHistorico, AjusteTemporalViewModel>()
+    .ForMember(dest => dest.EstadoTemporal, opt => opt.MapFrom(src => src.EstadoTemporal.ToString()))
+    .ForMember(dest => dest.Detalles, opt => opt.MapFrom(src => src.Detalles))
+    .ReverseMap()
+    .ForMember(dest => dest.EstadoTemporal, opt => opt.MapFrom(src => Enum.Parse<EstadoAjusteTemporal>(src.EstadoTemporal)));
         }
     }
 }

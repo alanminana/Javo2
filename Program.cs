@@ -41,6 +41,9 @@ builder.Services.AddAuthenticationServices();  // Registra servicios de autentic
 builder.Services.AddAuthenticationPolicies();  // Registra políticas de permisos
 builder.Services.AddScoped<IAjustePrecioService, AjustePrecioService>();
 builder.Services.AddScoped<IProductoService, ProductoService>();
+
+builder.Services.AddHostedService<AjustesTemporalesBackgroundService>();
+
 // Servicios de la aplicación
 builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<IProveedorService, ProveedorService>();

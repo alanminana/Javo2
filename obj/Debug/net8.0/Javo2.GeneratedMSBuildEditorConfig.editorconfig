@@ -20,16 +20,32 @@ build_property._RazorSourceGeneratorDebug =
 build_property.EffectiveAnalysisLevelStyle = 8.0
 build_property.EnableCodeStyleSeverity = 
 
+[D:/github/Javo2/Views/AjustePrecios/Details - Copia (2).cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWp1c3RlUHJlY2lvc1xEZXRhaWxzIC0gQ29waWEgKDIpLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/github/Javo2/Views/AjustePrecios/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWp1c3RlUHJlY2lvc1xEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/AjustePrecios/DetailsTemporal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWp1c3RlUHJlY2lvc1xEZXRhaWxzVGVtcG9yYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/github/Javo2/Views/AjustePrecios/Form.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWp1c3RlUHJlY2lvc1xGb3JtLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/github/Javo2/Views/AjustePrecios/FromTemporal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWp1c3RlUHJlY2lvc1xGcm9tVGVtcG9yYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/github/Javo2/Views/AjustePrecios/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWp1c3RlUHJlY2lvc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/AjustePrecios/IndexTemporales.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWp1c3RlUHJlY2lvc1xJbmRleFRlbXBvcmFsZXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/github/Javo2/Views/Auditoria/Index.cshtml]

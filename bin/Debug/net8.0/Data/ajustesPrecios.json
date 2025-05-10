@@ -23,5 +23,30 @@
     "Revertido": false,
     "FechaReversion": null,
     "UsuarioReversion": ""
+  },
+  {
+    "AjusteHistoricoID": 2,
+    "FechaAjuste": "2025-05-10T16:05:56.6793883-03:00",
+    "UsuarioAjuste": "Sistema",
+    "Porcentaje": 12,
+    "EsAumento": true,
+    "Descripcion": "Ajuste r\u00E1pido desde lista de productos",
+    "Detalles": [
+      {
+        "DetalleID": 0,
+        "AjusteHistoricoID": 0,
+        "ProductoID": 1,
+        "NombreProducto": "Producto Inicial",
+        "PCostoAnterior": 136.6400,
+        "PContadoAnterior": 204.96,
+        "PListaAnterior": 139.37,
+        "PCostoPosterior": 153.036800,
+        "PContadoPosterior": 229.5552,
+        "PListaPosterior": 156.0944
+      }
+    ],
+    "Revertido": true,
+    "FechaReversion": "2025-05-10T16:06:07.8465518-03:00",
+    "UsuarioReversion": "admin"
   }
 ]

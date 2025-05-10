@@ -1,0 +1,351 @@
+﻿@model Javo2.Controllers.AjusteTemporalFormViewModel
+@{
+    ViewBag.Title = "Crear Ajuste de Precios Temporal";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="container-fluid py-3">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card shadow-sm bg-dark text-light">
+                <div class="card-header">
+                    <h2 class="h5 mb-0">
+                        <i class="bi bi-calendar-plus me-1"></i> @ViewBag.Title
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <form asp-action="FormTemporal" method="post" id="formAjusteTemporal">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="Porcentaje" class="form-label">Porcentaje de Ajuste</label>
+                                    <div class="input-group">
+                                        <input asp-for="Porcentaje" class="form-control bg-secondary text-light" type="number" step="0.01" min="0.01" max="100" />
+                                        <span class="input-group-text bg-secondary text-light">%</span>
+                                    </div>
+                                    <span asp-validation-for="Porcentaje" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="form-label">Tipo de Operación</label>
+                                    <div class="mt-2">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" asp-for="EsAumento" value="true" id="radioAumento" checked />
+                                            <label class="form-check-label text-success" for="radioAumento">
+                                                <i class="bi bi-arrow-up-circle me-1"></i>Aumento
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" asp-for="EsAumento" value="false" id="radioDescuento" />
+                                            <label class="form-check-label text-danger" for="radioDescuento">
+                                                <i class="bi bi-arrow-down-circle me-1"></i>Descuento
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="TipoAjuste" class="form-label">Motivo del Ajuste</label>
+                                    <select asp-for="TipoAjuste" asp-items="Model.TiposDeAjuste" class="form-select bg-secondary text-light">
+                                        <option value="">-- Seleccione un motivo --</option>
+                                    </select>
+                                    <span asp-validation-for="TipoAjuste" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="FechaInicio" class="form-label">Fecha de Inicio</label>
+                                    <input asp-for="FechaInicio" class="form-control bg-secondary text-light" type="datetime-local" />
+                                    <span asp-validation-for="FechaInicio" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="FechaFin" class="form-label">Fecha de Finalización</label>
+                                    <input asp-for="FechaFin" class="form-control bg-secondary text-light" type="datetime-local" />
+                                    <span asp-validation-for="FechaFin" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">Duración</label>
+                                    <div class="input-group">
+                                        <input type="text" id="duracion" class="form-control bg-secondary text-light" readonly />
+                                        <span class="input-group-text bg-secondary text-light">días</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label asp-for="Descripcion" class="form-label">Descripción</label>
+                            <textarea asp-for="Descripcion" class="form-control bg-secondary text-light" rows="2" placeholder="Ingrese una descripción opcional para este ajuste..."></textarea>
+                            <span asp-validation-for="Descripcion" class="text-danger"></span>
+                        </div>
+
+                        <div class="card bg-secondary mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h3 class="h6 mb-0">Productos a Ajustar</h3>
+                                <div class="d-flex gap-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="checkAll" />
+                                        <label class="form-check-label" for="checkAll">Seleccionar todos</label>
+                                    </div>
+                                    <button type="button" class="btn btn-sm btn-primary" id="btnSimular">
+                                        <i class="bi bi-calculator me-1"></i>Simular Ajuste
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-dark table-hover table-striped mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th width="40px">#</th>
+                                                <th>Producto</th>
+                                                <th>P. Costo</th>
+                                                <th>P. Contado</th>
+                                                <th>P. Lista</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @for (int i = 0; i < Model.Productos.Count; i++)
+                                            {
+                                                var producto = Model.Productos[i];
+                                                <tr>
+                                                    <td>
+                                                        <div class="form-check">
+                                                            <input type="hidden" name="Productos[@i].ProductoID" value="@producto.ProductoID" />
+                                                            <input type="hidden" name="Productos[@i].Nombre" value="@producto.Nombre" />
+                                                            <input type="hidden" name="Productos[@i].PCosto" value="@producto.PCosto" />
+                                                            <input type="hidden" name="Productos[@i].PContado" value="@producto.PContado" />
+                                                            <input type="hidden" name="Productos[@i].PLista" value="@producto.PLista" />
+                                                            <input type="checkbox" name="Productos[@i].Seleccionado" value="true" class="form-check-input producto-check"
+                                                                   data-id="@producto.ProductoID" id="check-@producto.ProductoID" @(producto.Seleccionado ? "checked" : "") />
+                                                            <label class="form-check-label" for="check-@producto.ProductoID"></label>
+                                                        </div>
+                                                    </td>
+                                                    <td>@producto.Nombre</td>
+                                                    <td>@producto.PCosto.ToString("C")</td>
+                                                    <td>@producto.PContado.ToString("C")</td>
+                                                    <td>@producto.PLista.ToString("C")</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="simulacionContainer" class="card mb-4 d-none">
+                            <div class="card-header bg-info text-dark">
+                                <h3 class="h6 mb-0">Simulación de Ajuste</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <h4 class="h6">Resumen:</h4>
+                                    <p>
+                                        <span id="simTipoAjuste" class="badge bg-primary"></span>
+                                        <span id="simOperacion" class="badge"></span>
+                                        <span id="simPorcentaje" class="badge bg-secondary"></span>
+                                        <span>desde</span>
+                                        <span id="simFechaInicio" class="badge bg-secondary"></span>
+                                        <span>hasta</span>
+                                        <span id="simFechaFin" class="badge bg-secondary"></span>
+                                        <span>(</span>
+                                        <span id="simDuracion" class="badge bg-secondary"></span>
+                                        <span>días)</span>
+                                    </p>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-striped table-bordered" id="tablaSimulacion">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Producto</th>
+                                                <th colspan="3" class="text-center">Precios Actuales</th>
+                                                <th colspan="3" class="text-center">Precios Ajustados</th>
+                                            </tr>
+                                            <tr>
+                                                <th></th>
+                                                <th>Costo</th>
+                                                <th>Contado</th>
+                                                <th>Lista</th>
+                                                <th>Costo</th>
+                                                <th>Contado</th>
+                                                <th>Lista</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="simulacionBody">
+                                            <!-- Aquí se cargarán los datos dinámicos -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="IndexTemporales" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>Volver
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-calendar-plus me-1"></i>Crear Ajuste Temporal
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar disponibilidad de jQuery
+            if (typeof jQuery === 'undefined') {
+                console.error('jQuery no está disponible.');
+                return;
+            }
+
+            // Funciones para el cálculo de duración
+            function actualizarDuracion() {
+                const fechaInicio = new Date(document.getElementById('FechaInicio').value);
+                const fechaFin = new Date(document.getElementById('FechaFin').value);
+
+                if (!isNaN(fechaInicio) && !isNaN(fechaFin)) {
+                    const diff = Math.ceil((fechaFin - fechaInicio) / (1000 * 60 * 60 * 24));
+                    document.getElementById('duracion').value = diff > 0 ? diff : 0;
+                } else {
+                    document.getElementById('duracion').value = '';
+                }
+            }
+
+            // Listeners para actualizar duración
+            document.getElementById('FechaInicio').addEventListener('change', actualizarDuracion);
+            document.getElementById('FechaFin').addEventListener('change', actualizarDuracion);
+
+            // Calcular duración inicial
+            actualizarDuracion();
+
+            // Seleccionar/deseleccionar todos
+            document.getElementById('checkAll').addEventListener('change', function() {
+                const isChecked = this.checked;
+                document.querySelectorAll('.producto-check').forEach(function(checkbox) {
+                    checkbox.checked = isChecked;
+                });
+            });
+
+            // Simulación de ajuste
+            document.getElementById('btnSimular').addEventListener('click', function() {
+                // Obtener productos seleccionados
+                const productosSeleccionados = Array.from(
+                    document.querySelectorAll('.producto-check:checked')
+                ).map(cb => parseInt(cb.dataset.id));
+
+                if (!productosSeleccionados.length) {
+                    alert('Debe seleccionar al menos un producto para simular.');
+                    return;
+                }
+
+                // Verificar porcentaje
+                const porcentaje = parseFloat(document.getElementById('Porcentaje').value);
+                if (isNaN(porcentaje) || porcentaje <= 0 || porcentaje > 100) {
+                    alert('Ingrese un porcentaje válido entre 0.01 y 100.');
+                    return;
+                }
+
+                // Verificar fechas
+                const fechaInicio = new Date(document.getElementById('FechaInicio').value);
+                const fechaFin = new Date(document.getElementById('FechaFin').value);
+                if (isNaN(fechaInicio) || isNaN(fechaFin)) {
+                    alert('Seleccione fechas válidas.');
+                    return;
+                }
+                if (fechaInicio >= fechaFin) {
+                    alert('La fecha de inicio debe ser anterior a la fecha de finalización.');
+                    return;
+                }
+
+                // Verificar tipo de ajuste
+                const tipoAjuste = document.getElementById('TipoAjuste').value;
+                if (!tipoAjuste) {
+                    alert('Seleccione un motivo para el ajuste.');
+                    return;
+                }
+
+                // Preparar datos para la simulación
+                const esAumento = document.getElementById('radioAumento').checked;
+                const requestData = {
+                    ProductoIDs: productosSeleccionados,
+                    Porcentaje: porcentaje,
+                    EsAumento: esAumento,
+                    FechaInicio: fechaInicio,
+                    FechaFin: fechaFin,
+                    TipoAjuste: tipoAjuste
+                };
+
+                // Enviar solicitud AJAX para la simulación
+                fetch('@Url.Action("SimularAjusteTemporal", "AjustePrecios")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('input[name="__RequestVerificationToken"]').value
+                    },
+                    body: JSON.stringify(requestData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Mostrar contenedor de simulación
+                        document.getElementById('simulacionContainer').classList.remove('d-none');
+
+                        // Actualizar resumen
+                        document.getElementById('simTipoAjuste').textContent = data.tipoAjuste;
+                        document.getElementById('simOperacion').textContent = esAumento ? 'AUMENTO' : 'DESCUENTO';
+                        document.getElementById('simOperacion').className = esAumento ? 'badge bg-success' : 'badge bg-danger';
+                        document.getElementById('simPorcentaje').textContent = porcentaje + '%';
+                        document.getElementById('simFechaInicio').textContent = data.fechaInicio;
+                        document.getElementById('simFechaFin').textContent = data.fechaFin;
+                        document.getElementById('simDuracion').textContent = data.duracion;
+
+                        // Construir tabla de simulación
+                        const tbody = document.getElementById('simulacionBody');
+                        tbody.innerHTML = '';
+
+                        data.productos.forEach(p => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${p.nombre}</td>
+                                <td class="text-end">${p.costoActual.toFixed(2)}</td>
+                                <td class="text-end">${p.contadoActual.toFixed(2)}</td>
+                                <td class="text-end">${p.listaActual.toFixed(2)}</td>
+                                <td class="text-end ${esAumento ? 'text-success' : 'text-danger'}">${p.costoNuevo.toFixed(2)}</td>
+                                <td class="text-end ${esAumento ? 'text-success' : 'text-danger'}">${p.contadoNuevo.toFixed(2)}</td>
+                                <td class="text-end ${esAumento ? 'text-success' : 'text-danger'}">${p.listaNuevo.toFixed(2)}</td>
+                            `;
+                            tbody.appendChild(row);
+                        });
+
+                        // Scroll hacia la simulación
+                        document.getElementById('simulacionContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else {
+                        alert('Error al simular: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error en la solicitud:', error);
+                    alert('Error al procesar la simulación. Consulte la consola para más detalles.');
+                });
+            });
+        });
+    </script>
+}

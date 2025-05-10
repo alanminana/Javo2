@@ -1,18 +1,35 @@
 ﻿@{
     var permisosClaims = User.Claims.Where(c => c.Type == "Permission").Select(c => c.Value).ToArray();
     var permisosJson = JsonSerializer.Serialize(permisosClaims);
-    var menuItems = new[] {
-        new { Ctrl = "Home", Icon = "house-fill", Text = "Inicio", Permiso = (string)null },
-        new { Ctrl = "Clientes", Icon = "people-fill", Text = "Clientes", Permiso = "clientes.ver" },
-        new { Ctrl = "Ventas", Icon = "cart-fill", Text = "Ventas", Permiso = "ventas.ver" },
-        new { Ctrl = "Productos", Icon = "box-seam", Text = "Productos", Permiso = "productos.ver" },
-        new { Ctrl = "Catalogo", Icon = "bookmark-fill", Text = "Catálogo", Permiso = "productos.ver" },
-        new { Ctrl = "Proveedores", Icon = "truck-flatbed", Text = "Proveedores", Permiso = "productos.ver" },
-        new { Ctrl = "Promociones", Icon = "tag-fill", Text = "Promociones", Permiso = "productos.ver" },
-        new { Ctrl = "DevolucionGarantia", Icon = "journal-check", Text = "Devoluciones/Garantías", Permiso = "ventas.ver" },
-        new { Ctrl = "Reportes", Icon = "bar-chart-fill", Text = "Reportes", Permiso = "reportes.ver" },
-        new { Ctrl = "Configuracion", Icon = "gear-fill", Text = "Configuración", Permiso = "configuracion.ver" },
-        new { Ctrl = "SecurityDashboard", Icon = "shield-lock", Text = "Seguridad", Permiso = "usuarios.ver" }
+
+    // Nueva estructura de menú que incluye submenús
+    var menuItems = new List<dynamic> {
+        new { Ctrl = "Home", Action = "Index", Icon = "house-fill", Text = "Inicio", Permiso = (string)null, HasSubmenu = false, Submenu = new List<dynamic>() },
+        new { Ctrl = "Clientes", Action = "Index", Icon = "people-fill", Text = "Clientes", Permiso = "clientes.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
+        new { Ctrl = "Ventas", Action = "Index", Icon = "cart-fill", Text = "Ventas", Permiso = "ventas.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
+        new { Ctrl = "Productos", Action = "Index", Icon = "box-seam", Text = "Productos", Permiso = "productos.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
+        new { Ctrl = "Catalogo", Action = "Index", Icon = "bookmark-fill", Text = "Catálogo", Permiso = "productos.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
+        new { Ctrl = "Proveedores", Action = "Index", Icon = "truck-flatbed", Text = "Proveedores", Permiso = "productos.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
+        new { Ctrl = "Promociones", Action = "Index", Icon = "tag-fill", Text = "Promociones", Permiso = "productos.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
+        // Ajustes de Precios con submenú
+        new {
+            Ctrl = "AjustePrecios",
+            Action = "Index",
+            Icon = "tags",
+            Text = "Ajustes de Precios",
+            Permiso = "productos.ajustarprecios",
+            HasSubmenu = true,
+            Submenu = new List<dynamic> {
+                new { Ctrl = "AjustePrecios", Action = "Index", Icon = "list-ul", Text = "Historial de Ajustes" },
+                new { Ctrl = "AjustePrecios", Action = "Form", Icon = "percent", Text = "Ajuste Permanente" },
+                new { Ctrl = "AjustePrecios", Action = "IndexTemporales", Icon = "calendar-event", Text = "Ajustes Temporales" },
+                new { Ctrl = "AjustePrecios", Action = "FormTemporal", Icon = "calendar-plus", Text = "Nuevo Ajuste Temporal" }
+            }
+        },
+        new { Ctrl = "DevolucionGarantia", Action = "Index", Icon = "journal-check", Text = "Devoluciones/Garantías", Permiso = "ventas.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
+        new { Ctrl = "Reportes", Action = "Index", Icon = "bar-chart-fill", Text = "Reportes", Permiso = "reportes.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
+        new { Ctrl = "Configuracion", Action = "Index", Icon = "gear-fill", Text = "Configuración", Permiso = "configuracion.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
+        new { Ctrl = "SecurityDashboard", Action = "Index", Icon = "shield-lock", Text = "Seguridad", Permiso = "usuarios.ver", HasSubmenu = false, Submenu = new List<dynamic>() }
     };
 }
 @using System.Text.Json
@@ -25,6 +42,20 @@
         if (string.IsNullOrEmpty(permiso))
             return true;
         return User.HasClaim(c => c.Type == "Permission" && c.Value == permiso);
+    }
+
+    bool IsActiveMenu(dynamic item)
+    {
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+
+        if (item.HasSubmenu && item.Submenu.Count > 0)
+        {
+            // Un menú con submenú está activo si cualquiera de sus elementos está activo
+            return currentController == item.Ctrl ||
+                   item.Submenu.Any(subItem => currentController == subItem.Ctrl);
+        }
+
+        return currentController == item.Ctrl;
     }
 }
 
@@ -73,13 +104,41 @@
             <ul class="nav nav-pills flex-column mb-4">
                 @foreach (var item in menuItems)
                 {
-                    @if (item.Permiso == null || TienePermiso(item.Permiso))
+                    @if (TienePermiso(item.Permiso))
                     {
-                        <li class="nav-item">
-                            <a class="nav-link text-white @(ViewContext.RouteData.Values["controller"]?.ToString()==item.Ctrl?"active":"")" asp-controller="@item.Ctrl" asp-action="Index">
-                                <i class="bi bi-@item.Icon me-2"></i>@item.Text
-                            </a>
-                        </li>
+                        @if (item.HasSubmenu)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-white @(IsActiveMenu(item) ? "active" : "")"
+                                   data-bs-toggle="collapse" href="#mobile-@item.Ctrl" role="button"
+                                   aria-expanded="@(IsActiveMenu(item) ? "true" : "false")" aria-controls="mobile-@item.Ctrl">
+                                    <i class="bi bi-@item.Icon me-2"></i>@item.Text
+                                    <i class="bi bi-chevron-down ms-2 small"></i>
+                                </a>
+                                <div class="collapse @(IsActiveMenu(item) ? "show" : "")" id="mobile-@item.Ctrl">
+                                    <ul class="nav nav-pills flex-column ms-3 mt-1">
+                                        @foreach (var subItem in item.Submenu)
+                                        {
+                                            <li class="nav-item">
+                                                <a class="nav-link text-white @(ViewContext.RouteData.Values["action"]?.ToString() == subItem.Action ? "active" : "")"
+                                                   asp-controller="@subItem.Ctrl" asp-action="@subItem.Action">
+                                                    <i class="bi bi-@subItem.Icon me-2"></i>@subItem.Text
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-white @(IsActiveMenu(item) ? "active" : "")"
+                                   asp-controller="@item.Ctrl" asp-action="@item.Action">
+                                    <i class="bi bi-@item.Icon me-2"></i>@item.Text
+                                </a>
+                            </li>
+                        }
                     }
                 }
             </ul>
@@ -112,13 +171,36 @@
                 <ul class="nav nav-pills flex-column mb-auto">
                     @foreach (var item in menuItems)
                     {
-                        @if (item.Permiso == null || TienePermiso(item.Permiso))
+                        @if (TienePermiso(item.Permiso))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-white @(ViewContext.RouteData.Values["controller"]?.ToString()==item.Ctrl?"active":"")" asp-controller="@item.Ctrl" asp-action="Index">
-                                    <i class="bi bi-@item.Icon me-2"></i>@item.Text
-                                </a>
-                            </li>
+                            @if (item.HasSubmenu)
+                            {
+                                <li class="nav-item dropdown" require-permission="@item.Permiso">
+                                    <a class="nav-link dropdown-toggle text-white @(IsActiveMenu(item) ? "active" : "")"
+                                       href="#" id="@item.Ctrl-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-@item.Icon me-2"></i>@item.Text
+                                    </a>
+                                    <ul class="dropdown-menu bg-dark" aria-labelledby="@item.Ctrl-dropdown">
+                                        @foreach (var subItem in item.Submenu)
+                                        {
+                                            <li>
+                                                <a class="dropdown-item text-light" asp-controller="@subItem.Ctrl" asp-action="@subItem.Action">
+                                                    <i class="bi bi-@subItem.Icon me-1"></i>@subItem.Text
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-white @(IsActiveMenu(item) ? "active" : "")"
+                                       asp-controller="@item.Ctrl" asp-action="@item.Action">
+                                        <i class="bi bi-@item.Icon me-2"></i>@item.Text
+                                    </a>
+                                </li>
+                            }
                         }
                     }
                 </ul>
