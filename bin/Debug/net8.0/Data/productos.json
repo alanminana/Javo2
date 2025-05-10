@@ -5,9 +5,9 @@
     "CodigoBarra": "392733305",
     "Nombre": "Producto Inicial",
     "Descripcion": "Descripci\u00F3n del producto inicial",
-    "PCosto": 122.00,
-    "PContado": 183.00,
-    "PLista": 124.44,
+    "PCosto": 136.6400,
+    "PContado": 204.96,
+    "PLista": 139.37,
     "RubroID": 1,
     "Rubro": {
       "ID": 1,
@@ -53,7 +53,7 @@
     },
     "PorcentajeIva": 21,
     "FechaMod": "2025-04-22T16:44:18.0592582-03:00",
-    "FechaModPrecio": "2025-05-01T11:00:53.3271201-03:00",
+    "FechaModPrecio": "2025-05-10T15:30:00.8214562-03:00",
     "Entregable": false,
     "NoListar": false,
     "Proveedor": {
@@ -131,9 +131,9 @@
     "CodigoBarra": "546084531",
     "Nombre": "afeitadora",
     "Descripcion": "afeita",
-    "PCosto": 59.7312,
-    "PContado": 89.60,
-    "PLista": 60.93,
+    "PCosto": 72.872064,
+    "PContado": 109.31,
+    "PLista": 74.33,
     "RubroID": 1,
     "Rubro": {
       "ID": 1,
@@ -178,8 +178,8 @@
       "Nombre": "samsung"
     },
     "PorcentajeIva": 21,
-    "FechaMod": "2025-04-23T15:12:19.82925-03:00",
-    "FechaModPrecio": "2025-05-08T20:41:33.560723-03:00",
+    "FechaMod": "2025-05-10T15:34:56.8989444-03:00",
+    "FechaModPrecio": "2025-05-10T15:34:56.8806456-03:00",
     "Entregable": false,
     "NoListar": false,
     "Proveedor": {

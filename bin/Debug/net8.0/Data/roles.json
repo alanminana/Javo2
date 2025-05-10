@@ -410,6 +410,13 @@
         "PermisoID": 58,
         "Rol": null,
         "Permiso": null
+      },
+      {
+        "RolPermisoID": 85,
+        "RolID": 1,
+        "PermisoID": 59,
+        "Rol": null,
+        "Permiso": null
       }
     ]
   },

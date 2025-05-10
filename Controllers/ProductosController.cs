@@ -5,6 +5,7 @@ using Javo2.DTOs;
 using Javo2.IServices;
 using Javo2.IServices.Common;
 using Javo2.Models;
+using Javo2.Services;
 using Javo2.ViewModels.Operaciones.Productos;
 using Javo2.ViewModels.Operaciones.Stock;
 using Microsoft.AspNetCore.Authorization;
@@ -28,16 +29,21 @@ namespace Javo2.Controllers
         private readonly IStockService _stockService;
         private readonly IMapper _mapper;
         private readonly IAuditoriaService _auditoriaService;
+        private readonly IAjustePrecioService _ajustePrecioService;
+        // Cambiar el campo _logger para que sea readonly y eliminar la asignación redundante en el constructor.
+
+        private readonly ILogger<ProductosController> _logger; // Ya es readonly, no necesita asignación adicional en el constructor.
 
         public ProductosController(
-            IProductoService productoService,
-            IDropdownService dropdownService,
-            ICatalogoService catalogoService,
-            IStockService stockService,
-            IMapper mapper,
-            IAuditoriaService auditoriaService,
-            ILogger<ProductosController> logger
-        ) : base(logger)
+     IProductoService productoService,
+     IDropdownService dropdownService,
+     ICatalogoService catalogoService,
+     IStockService stockService,
+     IMapper mapper,
+     IAuditoriaService auditoriaService,
+     IAjustePrecioService ajustePrecioService,  // Añadir esto
+     ILogger<ProductosController> logger
+ ) : base(logger)
         {
             _productoService = productoService;
             _dropdownService = dropdownService;
@@ -45,6 +51,8 @@ namespace Javo2.Controllers
             _stockService = stockService;
             _mapper = mapper;
             _auditoriaService = auditoriaService;
+            _ajustePrecioService = ajustePrecioService;  // Asignar esto
+            _logger = logger;
         }
 
         // GET: Productos
@@ -339,23 +347,48 @@ namespace Javo2.Controllers
         }
 
         // POST: Productos/IncrementarPrecios
+        // POST: Productos/IncrementarPrecios
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> IncrementarPrecios(string ProductoIDs, decimal porcentaje, bool isAumento)
+        public async Task<IActionResult> IncrementarPrecios(string ProductoIDs, decimal porcentaje, bool isAumento, string descripcion = "")
         {
-            if (string.IsNullOrEmpty(ProductoIDs)) return Json(new { success = false, message = "Seleccione productos." });
+            if (string.IsNullOrEmpty(ProductoIDs))
+                return Json(new { success = false, message = "Seleccione productos." });
+
             var ids = ProductoIDs.Split(',').Select(int.Parse).ToList();
-            await _productoService.AdjustPricesAsync(ids, porcentaje, isAumento);
-            await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+
+            try
             {
-                FechaHora = DateTime.Now,
-                Usuario = User.Identity?.Name ?? "Sistema",
-                Entidad = "Producto",
-                Accion = "UpdatePrices",
-                LlavePrimaria = string.Join(',', ids),
-                Detalle = $"{(isAumento ? "Aumento" : "Descuento")} {porcentaje}%"
-            });
-            return Json(new { success = true });
+                // Usar IAjustePrecioService en lugar de IProductoService
+                var ajusteId = await _ajustePrecioService.AjustarPreciosAsync(
+                    ids,
+                    porcentaje,
+                    isAumento,
+                    descripcion ?? "Ajuste rápido desde listado de productos"
+                );
+
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = User.Identity?.Name ?? "Sistema",
+                    Entidad = "Producto",
+                    Accion = "UpdatePrices",
+                    LlavePrimaria = string.Join(',', ids),
+                    Detalle = $"{(isAumento ? "Aumento" : "Descuento")} {porcentaje}%"
+                });
+
+                return Json(new
+                {
+                    success = true,
+                    message = $"Ajuste de precios aplicado correctamente a {ids.Count} productos.",
+                    ajusteId = ajusteId
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al aplicar ajuste rápido de precios");
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
+            }
         }
 
         // GET: Productos/AjusteStock/5

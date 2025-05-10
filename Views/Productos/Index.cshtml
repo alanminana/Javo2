@@ -54,7 +54,7 @@
         </form>
     </div>
 
-    <!-- Views/Productos/Index.cshtml (actualización de la sección de ajuste de precios) -->
+    <!-- Ajuste de precios -->
     <div class="card mb-4 shadow-sm bg-dark text-light p-3">
         <div class="d-flex justify-content-between align-items-center mb-2">
             <h5 class="card-title mb-0"><i class="bi bi-cash-coin me-2"></i>Ajuste de Precios</h5>
@@ -130,60 +130,166 @@
     </div>
 
     <!-- Token Anti-Forgery -->
-    <input type="hidden" id="__RequestVerificationToken" value="@Xsrf.GetAndStoreTokens(ViewContext.HttpContext).RequestToken" />
+    <input type="hidden" id="__RequestVerificationToken" name="__RequestVerificationToken" value="@Xsrf.GetAndStoreTokens(ViewContext.HttpContext).RequestToken" />
 </section>
 
 @section Scripts {
-    <script defer>
-        (function($) {
-            $(function() {
-                // Estilos de checkboxes
-                $('.form-check-input').addClass('bg-secondary border-light');
-                // Seleccionar todos
-                $('#checkAll').change(function() {
-                    $('input[name="ProductoIDs"]').prop('checked', this.checked).trigger('change');
-                });
-                // Resaltar filas
-                $(document).on('change', 'input[name="ProductoIDs"]', function() {
-                    $(this).closest('tr').toggleClass('table-primary', this.checked);
-                });
-                // Filtrado
-                $('#applyFilters').click(function() {
-                    var data = {};
-                    data[$('#filterType').val()] = $('#filterValue').val();
-                    $.get('@Url.Action("Filter", "Productos")', data)
-                     .done(html => {
-                         $('#productosTableBody').html(html);
-                         $('.form-check-input').addClass('bg-secondary border-light');
-                     })
-                     .fail(() => alert('Error al filtrar'));
-                });
-                // Escape para reset
-                $(document).keyup(e => {
-                    if (e.key==='Escape') {
-                        $('#filterType').val('Nombre');
-                        $('#filterValue').val('');
-                        $('#applyFilters').click();
-                    }
-                });
-                // Ajuste de precios
-                $('#btnAdjustPrices').click(function() {
-                    var ids = $('input[name="ProductoIDs"]:checked').map((i,e)=>e.value).get();
-                    if (!ids.length) { alert('Seleccione al menos un producto.'); return; }
-                    var pct = parseFloat($('#porcentaje').val());
-                    if (!(pct>0)) { alert('Ingrese un porcentaje válido mayor a cero.'); return; }
-                    var isUp = $('input[name="ajusteTipo"]:checked').val()==='true';
-                    if (!confirm(`¿Aplicar ${isUp?'aumento':'descuento'} de ${pct}% a ${ids.length} productos?`)) return;
+    <!-- Incluir SweetAlert2 y toastr directamente en esta vista -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+    <script>
+        // Esperar a que el documento esté listo y todas las dependencias cargadas
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar que jQuery esté disponible
+            if (typeof jQuery === 'undefined') {
+                console.error('jQuery no está disponible. El script no puede ejecutarse.');
+                return;
+            }
+
+            const $ = jQuery;
+
+            console.log('Script de productos inicializado');
+
+            /* ---------- utilidades ---------- */
+            const STYLE_CHECKBOX = 'bg-secondary border-light';
+            function estilizarCheckboxes() {
+                $('.form-check-input').addClass(STYLE_CHECKBOX);
+            }
+
+            /* ---------- inicio ---------- */
+            estilizarCheckboxes();
+
+            /* seleccionar todos */
+            $('#checkAll').on('change', function () {
+                $('input[name="ProductoIDs"]')
+                    .prop('checked', this.checked)
+                    .trigger('change');
+            });
+
+            /* resaltar filas */
+            $(document).on('change', 'input[name="ProductoIDs"]', function () {
+                $(this).closest('tr').toggleClass('table-primary', this.checked);
+            });
+
+            /* filtrado */
+            $('#applyFilters').on('click', function () {
+                console.log('Aplicando filtros...');
+                const data = {};
+                data[$('#filterType').val()] = $('#filterValue').val();
+
+                $.get('@Url.Action("Filter", "Productos")', data)
+                    .done(function(html) {
+                        $('#productosTableBody').html(html);
+                        estilizarCheckboxes();
+                        console.log('Filtro aplicado correctamente');
+                    })
+                    .fail(function(xhr, status, error) {
+                        console.error('Error al filtrar:', error);
+                        alert('Error al filtrar: ' + error);
+                    });
+            });
+
+            /* reset con Escape */
+            $(document).on('keyup', function(e) {
+                if (e.key === 'Escape') {
+                    console.log('Tecla Escape detectada, reiniciando filtros');
+                    $('#filterType').val('Nombre');
+                    $('#filterValue').val('');
+                    $('#applyFilters').trigger('click');
+                }
+            });
+
+            /* ajuste de precios */
+            $('#btnAdjustPrices').on('click', function () {
+                console.log('Iniciando ajuste de precios');
+
+                const ids = $('input[name="ProductoIDs"]:checked')
+                    .map(function(_, e) { return e.value; }).get();
+
+                if (!ids.length) {
+                    toastr.warning('Seleccione al menos un producto.');
+                    return;
+                }
+                console.log('Productos seleccionados:', ids);
+
+                const pct = Number($('#porcentaje').val().replace(',', '.'));
+                if (!(pct > 0)) {
+                    toastr.warning('Ingrese un porcentaje válido mayor a cero.');
+                    return;
+                }
+
+                const isUp = $('input[name="ajusteTipo"]:checked').val() === 'true';
+
+                // Usar SweetAlert2 para confirmar
+                Swal.fire({
+                    title: 'Confirmar Ajuste de Precios',
+                    html: `¿Está seguro de aplicar un <strong>${isUp ? 'aumento' : 'descuento'} del ${pct}%</strong> a <strong>${ids.length}</strong> productos?<br><br>Esta acción quedará registrada en el historial.`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, aplicar ajuste',
+                    cancelButtonText: 'Cancelar'
+                }).then(function(result) {
+                    if (!result.isConfirmed) return;
+
+                    Swal.fire({
+                        title: 'Procesando...',
+                        text: 'Aplicando ajuste de precios',
+                        allowOutsideClick: false,
+                        didOpen: function() {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    // Obtener el token
+                    const token = $('#__RequestVerificationToken').val();
+                    console.log('Token encontrado:', token ? 'Sí' : 'No');
+
+                    // Enviar la solicitud AJAX
                     $.ajax({
                         url: '@Url.Action("IncrementarPrecios", "Productos")',
                         type: 'POST',
-                        data: { ProductoIDs: ids.join(','), porcentaje: pct, isAumento: isUp },
-                        headers: { 'RequestVerificationToken': $('#__RequestVerificationToken').val() },
-                        success: resp => { if (resp.success) location.reload(); else alert(resp.message); },
-                        error: () => alert('Error al ajustar precios')
+                        data: {
+                            ProductoIDs: ids.join(','),
+                            porcentaje: pct,
+                            isAumento: isUp,
+                            descripcion: 'Ajuste rápido desde lista de productos'
+                        },
+                        headers: {
+                            'RequestVerificationToken': token
+                        },
+                        success: function(resp) {
+                            console.log('Respuesta del servidor:', resp);
+                            if (resp.success) {
+                                Swal.fire({
+                                    title: '¡Éxito!',
+                                    text: resp.message,
+                                    icon: 'success',
+                                    confirmButtonText: 'Ver detalles del ajuste',
+                                    showCancelButton: true,
+                                    cancelButtonText: 'Cerrar'
+                                }).then(function(r) {
+                                    if (r.isConfirmed && resp.ajusteId) {
+                                        window.location.href = '@Url.Action("Details", "AjustePrecios")/' + resp.ajusteId;
+                                    } else {
+                                        location.reload();
+                                    }
+                                });
+                            } else {
+                                Swal.fire('Error', resp.message || 'Error al realizar el ajuste', 'error');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error AJAX:', error);
+                            Swal.fire('Error', 'Ocurrió un error al comunicarse con el servidor: ' + error, 'error');
+                        }
                     });
                 });
             });
-        })(jQuery);
+
+            // Log para confirmar inicialización completa
+            console.log('Inicialización del script completada');
+        });
     </script>
 }
