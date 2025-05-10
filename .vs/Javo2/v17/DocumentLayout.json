@@ -172,7 +172,7 @@
               "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
               "ToolTip": "D:\\github\\Javo2\\Views\\Shared\\_Layout.cshtml",
               "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
-              "ViewState": "AgIAAOoAAAAAAAAAAAAiwP8AAAAHAAAAAAAAAA==",
+              "ViewState": "AgIAAPoAAAAAAAAAAAAkwA8BAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-05-10T19:18:34.087Z",
               "EditorCaption": ""
@@ -187,8 +187,7 @@
               "RelativeToolTip": "Views\\AjustePrecios\\IndexTemporales.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-10T19:15:31.881Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-10T19:15:31.881Z"
             },
             {
               "$type": "Document",
@@ -200,8 +199,7 @@
               "RelativeToolTip": "Views\\AjustePrecios\\DetailsTemporal.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-10T19:14:59.085Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-10T19:14:59.085Z"
             },
             {
               "$type": "Document",
@@ -213,8 +211,7 @@
               "RelativeToolTip": "Models\\AjustePrecioHistorico.cs",
               "ViewState": "AgIAADEAAAAAAAAAAAA0wDQAAABDAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-10T17:44:48.086Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-10T17:44:48.086Z"
             },
             {
               "$type": "Document",
@@ -226,8 +223,7 @@
               "RelativeToolTip": "Views\\AjustePrecios\\Form.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-10T17:54:24.407Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-10T17:54:24.407Z"
             },
             {
               "$type": "Document",
@@ -239,8 +235,7 @@
               "RelativeToolTip": "Controllers\\AjustePreciosController.cs",
               "ViewState": "AgIAAFEBAAAAAAAAAAAUwFgBAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-10T17:46:40.608Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-10T17:46:40.608Z"
             },
             {
               "$type": "Document",
@@ -252,8 +247,7 @@
               "RelativeToolTip": "Views\\AjustePrecios\\FromTemporal.cshtml",
               "ViewState": "AgIAAEkBAAAAAAAAAAAiwF4BAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-10T19:14:17.325Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-10T19:14:17.325Z"
             },
             {
               "$type": "Document",
@@ -265,8 +259,7 @@
               "RelativeToolTip": "Services\\AjustesTemporalesBackgroundService.cs",
               "ViewState": "AgIAACQAAAAAAAAAAAAiwDkAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-10T19:13:08.745Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-10T19:13:08.745Z"
             },
             {
               "$type": "Document",
@@ -278,8 +271,7 @@
               "RelativeToolTip": "Profiles\\AutoMapperProfile.cs",
               "ViewState": "AgIAAJ0AAAAAAAAAAAAUwKsAAAB9AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T22:50:16.184Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-04T22:50:16.184Z"
             },
             {
               "$type": "Document",
@@ -291,8 +283,7 @@
               "RelativeToolTip": "Views\\AjustePrecios\\Details.cshtml",
               "ViewState": "AgIAAH0AAAAAAAAAAAAiwJkAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-10T17:54:44.109Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-10T17:54:44.109Z"
             },
             {
               "$type": "Document",
@@ -304,8 +295,7 @@
               "RelativeToolTip": "Views\\Productos\\Index.cshtml",
               "ViewState": "AgIAABEBAAAAAAAAAAAiwCYBAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-10T17:55:12.274Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-10T17:55:12.274Z"
             },
             {
               "$type": "Document",
@@ -317,8 +307,7 @@
               "RelativeToolTip": "IServices\\IAjustePrecioService.cs",
               "ViewState": "AgIAADwAAAAAAAAAAAAiwFEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-10T17:45:21.267Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-10T17:45:21.267Z"
             },
             {
               "$type": "Document",
@@ -330,8 +319,7 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAABwAAAAAAAAAAAAAAC0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-10T18:15:50.863Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-10T18:15:50.863Z"
             },
             {
               "$type": "Document",
@@ -355,8 +343,7 @@
               "RelativeToolTip": "Services\\AjustePrecioService.cs",
               "ViewState": "AgIAAGEBAAAAAAAAAAAIwPoBAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-10T17:45:41.331Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-10T17:45:41.331Z"
             },
             {
               "$type": "Document",

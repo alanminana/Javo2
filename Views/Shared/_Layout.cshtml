@@ -48,14 +48,30 @@
     {
         var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
 
-        if (item.HasSubmenu && item.Submenu.Count > 0)
+        if (item.HasSubmenu)
         {
-            // Un menú con submenú está activo si cualquiera de sus elementos está activo
-            return currentController == item.Ctrl ||
-                   item.Submenu.Any(subItem => currentController == subItem.Ctrl);
+            // Si el controlador actual coincide con el controlador del menú principal
+            if (currentController == (string)item.Ctrl)
+                return true;
+
+            // Comprobar si coincide con algún submenú (sin usar expresiones lambda)
+            foreach (var subItem in item.Submenu)
+            {
+                if (currentController == (string)subItem.Ctrl)
+                    return true;
+            }
+            return false;
         }
 
-        return currentController == item.Ctrl;
+        return currentController == (string)item.Ctrl;
+    }
+
+    bool IsSubmenuItemActive(dynamic subItem)
+    {
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+        var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+
+        return (currentController == (string)subItem.Ctrl && currentAction == (string)subItem.Action);
     }
 }
 
@@ -120,7 +136,7 @@
                                         @foreach (var subItem in item.Submenu)
                                         {
                                             <li class="nav-item">
-                                                <a class="nav-link text-white @(ViewContext.RouteData.Values["action"]?.ToString() == subItem.Action ? "active" : "")"
+                                                <a class="nav-link text-white @(IsSubmenuItemActive(subItem) ? "active" : "")"
                                                    asp-controller="@subItem.Ctrl" asp-action="@subItem.Action">
                                                     <i class="bi bi-@subItem.Icon me-2"></i>@subItem.Text
                                                 </a>
