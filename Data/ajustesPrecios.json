@@ -1,1 +1,27 @@
-﻿
+[
+  {
+    "AjusteHistoricoID": 1,
+    "FechaAjuste": "2025-05-10T15:34:56.8690375-03:00",
+    "UsuarioAjuste": "Sistema",
+    "Porcentaje": 22,
+    "EsAumento": true,
+    "Descripcion": "sad",
+    "Detalles": [
+      {
+        "DetalleID": 0,
+        "AjusteHistoricoID": 0,
+        "ProductoID": 2,
+        "NombreProducto": "afeitadora",
+        "PCostoAnterior": 59.7312,
+        "PContadoAnterior": 89.60,
+        "PListaAnterior": 60.93,
+        "PCostoPosterior": 72.872064,
+        "PContadoPosterior": 109.3120,
+        "PListaPosterior": 74.3346
+      }
+    ],
+    "Revertido": false,
+    "FechaReversion": null,
+    "UsuarioReversion": ""
+  }
+]

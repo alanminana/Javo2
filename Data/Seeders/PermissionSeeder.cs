@@ -117,7 +117,9 @@ namespace Javo2.Data.Seeders
                     // Permisos de auditoria
                     ("auditoria.ver", "Ver auditoría", "Auditoría", "Permite ver registros de auditoría"),
                     ("auditoria.rollback", "Revertir cambios", "Auditoría", "Permite revertir cambios desde la auditoría"),
-            
+
+                    ("productos.ajustarhistorial", "Ver historial de ajustes", "Productos", "Permite ver el historial de ajustes de precios"),
+
 
                 // En algún archivo de inicialización, como Data/Seeders/PermissionSeeder.cs
                 // Agregar estos nuevos permisos:

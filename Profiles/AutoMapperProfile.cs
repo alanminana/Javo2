@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿// Profiles/AutoMapperProfile.cs
+using AutoMapper;
 using Javo2.Models;
 using Javo2.ViewModels.Operaciones.Catalogo;
 using Javo2.ViewModels.Operaciones.Clientes;
@@ -7,6 +8,7 @@ using Javo2.ViewModels.Operaciones.Proveedores;
 using Javo2.ViewModels.Operaciones.Stock;
 using Javo2.ViewModels.Operaciones.Promociones;
 using Javo2.ViewModels.Operaciones.Ventas;
+using System;
 
 namespace Javo2
 {
@@ -60,7 +62,12 @@ namespace Javo2
                 .ForMember(dest => dest.BancoID, opt => opt.MapFrom(src => src.BancoID))
                 .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.Estado));
 
-            // Otros mapeos (mantener el resto igual)
+            // VENTA ↔ VentaListViewModel
+            CreateMap<Venta, VentaListViewModel>()
+                .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.Estado.ToString()))
+                .ForMember(dest => dest.EstadoEntrega, opt => opt.Ignore())
+                .ReverseMap();
+
             // CLIENTE ↔ ClientesViewModel
             CreateMap<Cliente, ClientesViewModel>()
                 .ForMember(dest => dest.Provincias, opt => opt.Ignore())
@@ -68,6 +75,27 @@ namespace Javo2
                 .ForMember(dest => dest.HistorialCompras, opt => opt.MapFrom(src => src.Compras))
                 .ForMember(dest => dest.Verificar, opt => opt.Ignore())
                 .ForMember(dest => dest.EstadoComentario, opt => opt.Ignore())
+                .ForMember(dest => dest.TipoDomicilio, opt => opt.Ignore())
+                .ForMember(dest => dest.AntiguedadDomicilio, opt => opt.Ignore())
+                .ForMember(dest => dest.FechaNacimiento, opt => opt.Ignore())
+                .ForMember(dest => dest.EstadoCivil, opt => opt.Ignore())
+                .ForMember(dest => dest.NombreConyugue, opt => opt.Ignore())
+                .ForMember(dest => dest.ApellidoConyugue, opt => opt.Ignore())
+                .ForMember(dest => dest.DniConyugue, opt => opt.Ignore())
+                .ForMember(dest => dest.CelularConyugue, opt => opt.Ignore())
+                .ForMember(dest => dest.EmailConyugue, opt => opt.Ignore())
+                .ForMember(dest => dest.TrabajoConyugue, opt => opt.Ignore())
+                .ForMember(dest => dest.Ocupacion, opt => opt.Ignore())
+                .ForMember(dest => dest.SituacionLaboral, opt => opt.Ignore())
+                .ForMember(dest => dest.LugarTrabajo, opt => opt.Ignore())
+                .ForMember(dest => dest.DireccionTrabajo, opt => opt.Ignore())
+                .ForMember(dest => dest.Cuit, opt => opt.Ignore())
+                .ForMember(dest => dest.AntiguedadLaboral, opt => opt.Ignore())
+                .ForMember(dest => dest.IngresosMensuales, opt => opt.Ignore())
+                .ForMember(dest => dest.ReferenciasLaborales, opt => opt.Ignore())
+                .ForMember(dest => dest.ScoreCredito, opt => opt.Ignore())
+                .ForMember(dest => dest.VencimientoCuotas, opt => opt.Ignore())
+                .ForMember(dest => dest.NombreGarante, opt => opt.Ignore())
                 .ReverseMap()
                 .ForMember(dest => dest.Compras, opt => opt.Ignore());
 
@@ -112,27 +140,29 @@ namespace Javo2
             // PROMOCION ↔ PromocionViewModel
             CreateMap<Promocion, PromocionViewModel>().ReverseMap();
 
-            // VENTA ↔ VentaListViewModel
-            CreateMap<Venta, VentaListViewModel>()
-                .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.Estado.ToString()))
-                .ForMember(dest => dest.EstadoEntrega, opt => opt.Ignore())
-                .ReverseMap();
+            // CompraProveedor ↔ CompraProveedorViewModel
             CreateMap<CompraProveedor, CompraProveedorViewModel>()
-    .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.Estado.ToString()))
-    .ForMember(dest => dest.FormasPago, opt => opt.Ignore())
-    .ForMember(dest => dest.Bancos, opt => opt.Ignore())
-    .ForMember(dest => dest.TipoTarjetaOptions, opt => opt.Ignore())
-    .ForMember(dest => dest.CuotasOptions, opt => opt.Ignore())
-    .ForMember(dest => dest.EntidadesElectronicas, opt => opt.Ignore())
-    .ForMember(dest => dest.Proveedores, opt => opt.Ignore())
-    .ReverseMap()
-    .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => Enum.Parse<EstadoCompra>(src.Estado)));
+                .ForMember(dest => dest.NombreProveedor, opt => opt.MapFrom(src => src.Proveedor.Nombre))
+                .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.Estado.ToString()))
+                .ForMember(dest => dest.FormasPago, opt => opt.Ignore())
+                .ForMember(dest => dest.Bancos, opt => opt.Ignore())
+                .ForMember(dest => dest.TipoTarjetaOptions, opt => opt.Ignore())
+                .ForMember(dest => dest.CuotasOptions, opt => opt.Ignore())
+                .ForMember(dest => dest.EntidadesElectronicas, opt => opt.Ignore())
+                .ForMember(dest => dest.Proveedores, opt => opt.Ignore())
+                .ReverseMap()
+                .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => Enum.Parse<EstadoCompra>(src.Estado)));
 
             // DetalleCompraProveedor ↔ DetalleCompraProveedorViewModel
             CreateMap<DetalleCompraProveedor, DetalleCompraProveedorViewModel>().ReverseMap();
+
             // Otros mapeos
             CreateMap<Compra, HistorialCompraViewModel>().ReverseMap();
             CreateMap<DetalleVenta, DetalleVentaViewModel>().ReverseMap();
+
+            // AjustePrecio mapeos
+            CreateMap<AjustePrecioHistorico, AjustePrecioHistoricoViewModel>().ReverseMap();
+            CreateMap<AjustePrecioDetalle, AjustePrecioDetalleViewModel>().ReverseMap();
         }
     }
 }

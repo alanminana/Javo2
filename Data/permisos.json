@@ -520,5 +520,14 @@
     "Grupo": "Proveedores",
     "EsSistema": false,
     "Activo": true
+  },
+  {
+    "PermisoID": 59,
+    "Nombre": "Ver historial de ajustes",
+    "Codigo": "productos.ajustarhistorial",
+    "Descripcion": "Permite ver el historial de ajustes de precios",
+    "Grupo": "Productos",
+    "EsSistema": false,
+    "Activo": true
   }
 ]

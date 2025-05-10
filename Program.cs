@@ -39,7 +39,8 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 // Configurar autenticación y servicios relacionados
 builder.Services.AddAuthenticationServices();  // Registra servicios de autenticación
 builder.Services.AddAuthenticationPolicies();  // Registra políticas de permisos
-
+builder.Services.AddScoped<IAjustePrecioService, AjustePrecioService>();
+builder.Services.AddScoped<IProductoService, ProductoService>();
 // Servicios de la aplicación
 builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<IProveedorService, ProveedorService>();
