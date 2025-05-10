@@ -1,0 +1,222 @@
+﻿<!-- Views/AjustePrecios/Form.cshtml -->
+@model Javo2.Controllers.AjustePrecioFormViewModel
+@{
+    ViewBag.Title = "Nuevo Ajuste de Precios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid py-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">@ViewBag.Title</h1>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Volver al Historial
+        </a>
+    </div>
+
+    <form asp-action="Form" method="post" id="ajustePreciosForm">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card bg-dark text-light h-100">
+                    <div class="card-header">
+                        <h5 class="mb-0">Parámetros de Ajuste</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="Porcentaje" class="form-label"></label>
+                            <div class="input-group">
+                                <input asp-for="Porcentaje" class="form-control bg-dark text-light" id="porcentajeInput" />
+                                <span class="input-group-text bg-dark text-light">%</span>
+                            </div>
+                            <span asp-validation-for="Porcentaje" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Tipo de Ajuste</label>
+                            <div class="form-check">
+                                <input asp-for="EsAumento" class="form-check-input" id="esAumentoCheck" />
+                                <label class="form-check-label" for="esAumentoCheck">
+                                    <span id="tipoAjusteLabel" class="badge bg-success">Aumento</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Descripcion" class="form-label"></label>
+                            <textarea asp-for="Descripcion" class="form-control bg-dark text-light" rows="3" placeholder="Opcional: motivo del ajuste"></textarea>
+                            <span asp-validation-for="Descripcion" class="text-danger"></span>
+                        </div>
+
+                        <button type="button" id="btnSimular" class="btn btn-info w-100 mb-2">
+                            <i class="bi bi-calculator me-1"></i>Simular Ajuste
+                        </button>
+
+                        <button type="submit" class="btn btn-success w-100" id="btnAplicar">
+                            <i class="bi bi-check-circle me-1"></i>Aplicar Ajuste
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8 mb-4">
+                <div class="card bg-dark text-light">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Productos a Ajustar</h5>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="seleccionarTodos" />
+                            <label class="form-check-label" for="seleccionarTodos">Seleccionar Todos</label>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                            <table class="table table-dark table-hover table-striped mb-0">
+                                <thead class="sticky-top bg-dark">
+                                    <tr>
+                                        <th width="50px"></th>
+                                        <th>Producto</th>
+                                        <th>P.Costo</th>
+                                        <th>P.Contado</th>
+                                        <th>P.Lista</th>
+                                        <th id="colSimulacion" class="text-center bg-info d-none">Simulación</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < Model.Productos.Count; i++)
+                                    {
+                                        <tr data-producto-id="@Model.Productos[i].ProductoID">
+                                            <td>
+                                                <div class="form-check">
+                                                    <input type="hidden" asp-for="Productos[i].ProductoID" />
+                                                    <input type="hidden" asp-for="Productos[i].Nombre" />
+                                                    <input type="hidden" asp-for="Productos[i].PCosto" />
+                                                    <input type="hidden" asp-for="Productos[i].PContado" />
+                                                    <input type="hidden" asp-for="Productos[i].PLista" />
+                                                    <input type="checkbox" class="form-check-input producto-check" asp-for="Productos[i].Seleccionado" />
+                                                </div>
+                                            </td>
+                                            <td>@Model.Productos[i].Nombre</td>
+                                            <td>@Model.Productos[i].PCosto.ToString("C")</td>
+                                            <td>@Model.Productos[i].PContado.ToString("C")</td>
+                                            <td>@Model.Productos[i].PLista.ToString("C")</td>
+                                            <td class="sim-resultados d-none text-center"></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            // Gestión del toggle de tipo de ajuste
+            $('#esAumentoCheck').change(function () {
+                var esAumento = $(this).is(':checked');
+                $('#tipoAjusteLabel')
+                    .removeClass(esAumento ? 'bg-danger' : 'bg-success')
+                    .addClass(esAumento ? 'bg-success' : 'bg-danger')
+                    .text(esAumento ? 'Aumento' : 'Descuento');
+            });
+
+            // Seleccionar todos
+            $('#seleccionarTodos').change(function () {
+                $('.producto-check').prop('checked', $(this).is(':checked'));
+            });
+
+            // Función para formatear moneda
+            function formatCurrency(value) {
+                return new Intl.NumberFormat('es-AR', {
+                    style: 'currency',
+                    currency: 'ARS'
+                }).format(value);
+            }
+
+            // Simulación de ajuste
+            $('#btnSimular').click(function () {
+                // Recopilar IDs de productos seleccionados
+                var productosSeleccionados = [];
+                $('.producto-check:checked').each(function () {
+                    productosSeleccionados.push($(this).closest('tr').data('producto-id'));
+                });
+
+                if (productosSeleccionados.length === 0) {
+                    alert('Debe seleccionar al menos un producto para simular el ajuste.');
+                    return;
+                }
+
+                var porcentaje = parseFloat($('#porcentajeInput').val());
+                if (isNaN(porcentaje) || porcentaje <= 0) {
+                    alert('Ingrese un porcentaje válido mayor a cero.');
+                    return;
+                }
+
+                var esAumento = $('#esAumentoCheck').is(':checked');
+
+                // Ejecutar simulación
+                $.ajax({
+                    url: '@Url.Action("SimularAjuste")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        ProductoIDs: productosSeleccionados,
+                        Porcentaje: porcentaje,
+                        EsAumento: esAumento
+                    }),
+                    success: function (result) {
+                        if (result.success) {
+                            // Mostrar columna de simulación
+                            $('#colSimulacion, .sim-resultados').removeClass('d-none');
+
+                            // Limpiar resultados anteriores
+                            $('.sim-resultados').empty();
+
+                            // Asignar resultados a cada fila
+                            $.each(result.productos, function (index, item) {
+                                var $row = $('tr[data-producto-id="' + item.id + '"]');
+                                var $cell = $row.find('.sim-resultados');
+
+                                var content = '<div class="border-start border-info ps-2">' +
+                                    '<strong>Costo:</strong> ' + formatCurrency(item.costoNuevo) + '<br>' +
+                                    '<strong>Contado:</strong> ' + formatCurrency(item.contadoNuevo) + '<br>' +
+                                    '<strong>Lista:</strong> ' + formatCurrency(item.listaNuevo) +
+                                    '</div>';
+
+                                $cell.html(content);
+                                $row.addClass('table-active');
+                            });
+                        } else {
+                            alert('Error al simular: ' + result.message);
+                        }
+                    },
+                    error: function () {
+                        alert('Error al comunicarse con el servidor');
+                    }
+                });
+            });
+
+            // Validación antes de enviar
+            $('#ajustePreciosForm').submit(function (e) {
+                if ($('.producto-check:checked').length === 0) {
+                    e.preventDefault();
+                    alert('Debe seleccionar al menos un producto para aplicar el ajuste.');
+                    return false;
+                }
+
+                var porcentaje = parseFloat($('#porcentajeInput').val());
+                if (isNaN(porcentaje) || porcentaje <= 0) {
+                    e.preventDefault();
+                    alert('Ingrese un porcentaje válido mayor a cero.');
+                    return false;
+                }
+
+                return confirm('¿Está seguro que desea aplicar este ajuste de precios? Esta acción modificará los precios en el sistema.');
+            });
+        });
+    </script>
+}

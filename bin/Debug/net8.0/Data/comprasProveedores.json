@@ -1,0 +1,41 @@
+[
+  {
+    "CompraID": 1,
+    "ProveedorID": 1,
+    "Proveedor": {
+      "ProveedorID": 0,
+      "Nombre": "",
+      "Direccion": "",
+      "Telefono": "",
+      "Email": "",
+      "CondicionesPago": "",
+      "ProductosAsignados": []
+    },
+    "FechaCompra": "2025-05-09T17:36:53.9161416-03:00",
+    "NumeroFactura": "COM-20250509-0001",
+    "Usuario": "admin",
+    "ProductosCompra": [
+      {
+        "DetalleCompraID": 0,
+        "CompraID": 0,
+        "ProductoID": 1,
+        "NombreProducto": "Producto Inicial",
+        "Cantidad": 3,
+        "PrecioUnitario": 122,
+        "PrecioTotal": 366
+      }
+    ],
+    "FormaPagoID": 1,
+    "BancoID": null,
+    "TipoTarjeta": null,
+    "Cuotas": null,
+    "EntidadElectronica": null,
+    "FechaVencimiento": null,
+    "MontoCheque": null,
+    "NumeroCheque": null,
+    "PrecioTotal": 366,
+    "TotalProductos": 3,
+    "Observaciones": "dsa",
+    "Estado": 0
+  }
+]

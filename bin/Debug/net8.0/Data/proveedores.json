@@ -1,38 +1,13 @@
-{
-  "Proveedores": [
-    {
-      "ProveedorID": 1,
-      "Nombre": "Proveedor Ejemplo 1",
-      "Direccion": "Calle Falsa 123",
-      "Telefono": "123456789",
-      "Email": "proveedor1@example.com",
-      "CondicionesPago": "30 d\u00EDas",
-      "ProductosAsignados": [
-        1,
-        2
-      ]
-    },
-    {
-      "ProveedorID": 2,
-      "Nombre": "Proveedor Ejemplo 2",
-      "Direccion": "Avenida Siempre Viva 742",
-      "Telefono": "987654321",
-      "Email": "proveedor2@example.com",
-      "CondicionesPago": "15 d\u00EDas",
-      "ProductosAsignados": [
-        3
-      ]
-    },
-    {
-      "ProveedorID": 3,
-      "Nombre": "cosmefulanito",
-      "Direccion": "dska\u00F1saldk",
-      "Telefono": "1231",
-      "Email": "ewqkwj@xn--falk-hqa.com",
-      "CondicionesPago": "criptomonedas",
-      "ProductosAsignados": [
-        2
-      ]
-    }
-  ]
-}
+[
+  {
+    "ProveedorID": 1,
+    "Nombre": "iytyu",
+    "Direccion": "yutyu",
+    "Telefono": "12321",
+    "Email": "wqe@sda.com",
+    "CondicionesPago": "sdads",
+    "ProductosAsignados": [
+      1
+    ]
+  }
+]

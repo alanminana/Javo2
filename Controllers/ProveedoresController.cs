@@ -587,26 +587,28 @@ namespace Javo2.Controllers
         }
         #region Métodos de ayuda
 
-        [HttpPost]
+        // Cambiar de [HttpPost] a [HttpGet]
+        [HttpGet]
         public async Task<IActionResult> SearchProducts(string term)
         {
             try
             {
-                // Vamos a usar directamente el método GetProductoByCodigoAsync, 
-                // ya que parece no existir otro método específico de búsqueda
-                var producto = await _productoService.GetProductoByCodigoAsync(term);
+                if (string.IsNullOrEmpty(term) || term.Length < 2)
+                    return Json(new List<object>());
 
-                var results = new List<object>();
-                if (producto != null)
-                {
-                    results.Add(new
+                var productos = await _productoService.GetAllProductosAsync();
+                var filteredProducts = productos
+                    .Where(p => p.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                                p.CodigoAlfa.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                                p.CodigoBarra.Contains(term, StringComparison.OrdinalIgnoreCase))
+                    .Take(10)
+                    .Select(p => new
                     {
-                        label = producto.Nombre,
-                        value = producto.ProductoID
+                        label = p.Nombre,
+                        value = p.ProductoID
                     });
-                }
 
-                return Json(results);
+                return Json(filteredProducts);
             }
             catch (Exception ex)
             {
@@ -626,7 +628,9 @@ namespace Javo2.Controllers
                 new SelectListItem { Value = "3", Text = "Tarjeta de Débito" },
                 new SelectListItem { Value = "4", Text = "Transferencia" },
                 new SelectListItem { Value = "5", Text = "Pago Virtual" },
-                new SelectListItem { Value = "6", Text = "Crédito Personal" }
+                new SelectListItem { Value = "6", Text = "Crédito Personal" },
+                new SelectListItem { Value = "7", Text = "Cheque" }
+
             };
 
             // Bancos (usamos lista estática porque parece que IDropdownService no tiene GetBancosAsync)

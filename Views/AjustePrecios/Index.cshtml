@@ -1,0 +1,87 @@
+﻿<!-- Views/AjustePrecios/Index.cshtml -->
+@model List<Javo2.ViewModels.Operaciones.Productos.AjustePrecioHistoricoViewModel>
+@{
+    ViewBag.Title = "Historial de Ajustes de Precios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid py-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">@ViewBag.Title</h1>
+        <a asp-action="Form" class="btn btn-primary">
+            <i class="bi bi-percent me-1"></i>Nuevo Ajuste
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card bg-dark text-light shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Usuario</th>
+                            <th>Tipo</th>
+                            <th>Porcentaje</th>
+                            <th>Productos</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model?.Any() == true)
+                        {
+                            foreach (var ajuste in Model)
+                            {
+                                <tr>
+                                    <td>@ajuste.AjusteHistoricoID</td>
+                                    <td>@ajuste.FechaAjuste.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>@ajuste.UsuarioAjuste</td>
+                                    <td>
+                                        <span class="badge @(ajuste.EsAumento ? "bg-success" : "bg-danger")">
+                                            @ajuste.TipoAjuste
+                                        </span>
+                                    </td>
+                                    <td>@ajuste.Porcentaje.ToString("N2")%</td>
+                                    <td>@ajuste.CantidadProductos</td>
+                                    <td>
+                                        @if (ajuste.Revertido)
+                                        {
+                                            <span class="badge bg-warning text-dark" title="Revertido por @ajuste.UsuarioReversion el @ajuste.FechaReversion?.ToString("dd/MM/yyyy HH:mm")">
+                                                Revertido
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success">Activo</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a asp-action="Details" asp-route-id="@ajuste.AjusteHistoricoID" class="btn btn-sm btn-info">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="8" class="text-center">No hay ajustes de precios registrados.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
