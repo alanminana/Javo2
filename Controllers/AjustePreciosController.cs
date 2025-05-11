@@ -1,5 +1,5 @@
-﻿// Controllers/AjustePreciosController.cs (Extendido)
-using Javo2.IServices;
+﻿using Javo2.IServices;
+using Javo2.Models;
 using Javo2.ViewModels.Operaciones.Productos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Javo2.Controllers
 {
@@ -95,6 +96,16 @@ namespace Javo2.Controllers
                     model.EsAumento,
                     model.Descripcion);
 
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = User.Identity?.Name ?? "Sistema",
+                    Entidad = "AjustePrecio",
+                    Accion = "CrearAjuste",
+                    LlavePrimaria = ajusteID.ToString(),
+                    Detalle = $"Ajuste permanente {(model.EsAumento ? "aumento" : "descuento")} del {model.Porcentaje}%"
+                });
+
                 TempData["Success"] = "Ajuste de precios aplicado correctamente.";
                 return RedirectToAction(nameof(Details), new { id = ajusteID });
             }
@@ -121,39 +132,86 @@ namespace Javo2.Controllers
             return View(viewModel);
         }
 
+        // POST: AjustePrecios/Revert/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:productos.ajustarprecios")]
+        public async Task<IActionResult> Revert(int id)
+        {
+            try
+            {
+                await _ajustePrecioService.RevertirAjusteAsync(id, User.Identity?.Name ?? "Sistema");
+
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = User.Identity?.Name ?? "Sistema",
+                    Entidad = "AjustePrecio",
+                    Accion = "RevertirAjuste",
+                    LlavePrimaria = id.ToString(),
+                    Detalle = $"Reversión manual de ajuste de precios"
+                });
+
+                TempData["Success"] = "Ajuste de precios revertido correctamente.";
+                return RedirectToAction(nameof(Details), new { id });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al revertir ajuste de precios");
+                TempData["Error"] = $"Error: {ex.Message}";
+                return RedirectToAction(nameof(Details), new { id });
+            }
+        }
+
         [HttpGet]
         [Authorize(Policy = "Permission:productos.ajustarprecios")]
         public IActionResult FormSelector()
         {
             return View();
         }
+
         // GET: AjustePrecios/FormTemporal
         [HttpGet]
         [Authorize(Policy = "Permission:productos.ajustarprecios")]
         public async Task<IActionResult> FormTemporal()
         {
-            var productos = await _productoService.GetAllProductosAsync();
             var viewModel = new AjusteTemporalFormViewModel
             {
-                Productos = productos.Select(p => new ProductoAjusteViewModel
-                {
-                    ProductoID = p.ProductoID,
-                    Nombre = p.Nombre,
-                    PCosto = p.PCosto,
-                    PContado = p.PContado,
-                    PLista = p.PLista,
-                    Seleccionado = false
-                }).ToList(),
-                TiposDeAjuste = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>
-                {
-                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "Promoción", Text = "Promoción" },
-                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "Hot Sale", Text = "Hot Sale" },
-                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "Oferta Especial", Text = "Oferta Especial" },
-                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "Liquidación", Text = "Liquidación" },
-                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "Descuento Temporal", Text = "Descuento Temporal" }
-                }
+                FechaInicio = DateTime.Now.AddHours(1).Date.AddHours(DateTime.Now.Hour + 1),
+                FechaFin = DateTime.Now.AddDays(7).Date.AddHours(DateTime.Now.Hour + 1),
+                EsAumento = false, // Por defecto es descuento para ajustes temporales
             };
+
+            await CargarProductosFormularioTemporal(viewModel);
             return View(viewModel);
+        }
+
+        // Método auxiliar para cargar productos y opciones de ajustes temporales
+        private async Task CargarProductosFormularioTemporal(AjusteTemporalFormViewModel model)
+        {
+            var productos = await _productoService.GetAllProductosAsync();
+            model.Productos = productos.Select(p => new ProductoAjusteViewModel
+            {
+                ProductoID = p.ProductoID,
+                Nombre = p.Nombre,
+                PCosto = p.PCosto,
+                PContado = p.PContado,
+                PLista = p.PLista,
+                Seleccionado = model.Productos?.FirstOrDefault(m => m.ProductoID == p.ProductoID)?.Seleccionado ?? false
+            }).ToList();
+
+            model.TiposDeAjuste = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "Promoción", Text = "Promoción" },
+                new SelectListItem { Value = "Hot Sale", Text = "Hot Sale" },
+                new SelectListItem { Value = "Oferta Especial", Text = "Oferta Especial" },
+                new SelectListItem { Value = "Liquidación", Text = "Liquidación" },
+                new SelectListItem { Value = "Descuento Temporal", Text = "Descuento Temporal" },
+                new SelectListItem { Value = "Black Friday", Text = "Black Friday" },
+                new SelectListItem { Value = "Cyber Monday", Text = "Cyber Monday" },
+                new SelectListItem { Value = "Navidad", Text = "Navidad" },
+                new SelectListItem { Value = "Aniversario", Text = "Aniversario" }
+            };
         }
 
         // POST: AjustePrecios/FormTemporal
@@ -162,33 +220,37 @@ namespace Javo2.Controllers
         [Authorize(Policy = "Permission:productos.ajustarprecios")]
         public async Task<IActionResult> FormTemporal(AjusteTemporalFormViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                var productos = await _productoService.GetAllProductosAsync();
-                model.Productos = productos.Select(p => new ProductoAjusteViewModel
-                {
-                    ProductoID = p.ProductoID,
-                    Nombre = p.Nombre,
-                    PCosto = p.PCosto,
-                    PContado = p.PContado,
-                    PLista = p.PLista,
-                    Seleccionado = model.Productos?.FirstOrDefault(m => m.ProductoID == p.ProductoID)?.Seleccionado ?? false
-                }).ToList();
-
-                model.TiposDeAjuste = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>
-                {
-                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "Promoción", Text = "Promoción" },
-                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "Hot Sale", Text = "Hot Sale" },
-                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "Oferta Especial", Text = "Oferta Especial" },
-                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "Liquidación", Text = "Liquidación" },
-                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "Descuento Temporal", Text = "Descuento Temporal" }
-                };
-
-                return View(model);
-            }
-
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    await CargarProductosFormularioTemporal(model);
+                    return View(model);
+                }
+
+                // Validaciones básicas
+                if (model.Porcentaje <= 0 || model.Porcentaje > 100)
+                {
+                    ModelState.AddModelError("Porcentaje", "El porcentaje debe estar entre 0.01 y 100");
+                    await CargarProductosFormularioTemporal(model);
+                    return View(model);
+                }
+
+                if (model.FechaInicio >= model.FechaFin)
+                {
+                    ModelState.AddModelError("FechaFin", "La fecha de finalización debe ser posterior a la fecha de inicio");
+                    await CargarProductosFormularioTemporal(model);
+                    return View(model);
+                }
+
+                if (string.IsNullOrEmpty(model.TipoAjuste))
+                {
+                    ModelState.AddModelError("TipoAjuste", "Debe seleccionar un tipo de ajuste");
+                    await CargarProductosFormularioTemporal(model);
+                    return View(model);
+                }
+
+                // Obtener productos seleccionados
                 var productosSeleccionados = model.Productos
                     .Where(p => p.Seleccionado)
                     .Select(p => p.ProductoID)
@@ -196,54 +258,59 @@ namespace Javo2.Controllers
 
                 if (!productosSeleccionados.Any())
                 {
-                    ModelState.AddModelError("", "Debe seleccionar al menos un producto.");
+                    ModelState.AddModelError("", "Debe seleccionar al menos un producto");
+                    await CargarProductosFormularioTemporal(model);
                     return View(model);
                 }
 
-                if (model.FechaFin <= model.FechaInicio)
-                {
-                    ModelState.AddModelError("FechaFin", "La fecha de fin debe ser posterior a la fecha de inicio.");
-                    return View(model);
-                }
+                // Redondear fechas a minutos para evitar problemas con segundos/milisegundos
+                var fechaInicio = new DateTime(
+                    model.FechaInicio.Value.Year,
+                    model.FechaInicio.Value.Month,
+                    model.FechaInicio.Value.Day,
+                    model.FechaInicio.Value.Hour,
+                    model.FechaInicio.Value.Minute,
+                    0
+                );
 
+                var fechaFin = new DateTime(
+                    model.FechaFin.Value.Year,
+                    model.FechaFin.Value.Month,
+                    model.FechaFin.Value.Day,
+                    model.FechaFin.Value.Hour,
+                    model.FechaFin.Value.Minute,
+                    0
+                );
+
+                // Crear el ajuste temporal - Asegurando estado programado
                 var ajusteID = await _ajustePrecioService.CrearAjusteTemporalAsync(
                     productosSeleccionados,
                     model.Porcentaje,
                     model.EsAumento,
-                    model.FechaInicio,
-                    model.FechaFin,
+                    fechaInicio,
+                    fechaFin,
                     model.TipoAjuste,
-                    model.Descripcion);
+                    model.Descripcion ?? $"Ajuste temporal {(model.EsAumento ? "aumento" : "descuento")} del {model.Porcentaje}%"
+                );
 
-                await _auditoriaService.RegistrarCambioAsync(new Models.AuditoriaRegistro
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
                 {
                     FechaHora = DateTime.Now,
                     Usuario = User.Identity?.Name ?? "Sistema",
                     Entidad = "AjustePrecio",
                     Accion = "CrearAjusteTemporal",
                     LlavePrimaria = ajusteID.ToString(),
-                    Detalle = $"Ajuste temporal {model.TipoAjuste}, {(model.EsAumento ? "aumento" : "descuento")} del {model.Porcentaje}%, Vigencia: {model.FechaInicio.ToShortDateString()} - {model.FechaFin.ToShortDateString()}"
+                    Detalle = $"Ajuste temporal {model.TipoAjuste}, {(model.EsAumento ? "aumento" : "descuento")} del {model.Porcentaje}%, Vigencia: {fechaInicio:dd/MM/yyyy HH:mm} - {fechaFin:dd/MM/yyyy HH:mm}"
                 });
 
-                TempData["Success"] = "Ajuste temporal creado exitosamente.";
+                TempData["Success"] = $"Ajuste temporal creado correctamente. Se aplicará el {fechaInicio:dd/MM/yyyy HH:mm} y finalizará el {fechaFin:dd/MM/yyyy HH:mm}";
                 return RedirectToAction("DetailsTemporal", new { id = ajusteID });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear ajuste temporal.");
-                ModelState.AddModelError("", "Ocurrió un error al crear el ajuste temporal: " + ex.Message);
-
-                var productos = await _productoService.GetAllProductosAsync();
-                model.Productos = productos.Select(p => new ProductoAjusteViewModel
-                {
-                    ProductoID = p.ProductoID,
-                    Nombre = p.Nombre,
-                    PCosto = p.PCosto,
-                    PContado = p.PContado,
-                    PLista = p.PLista,
-                    Seleccionado = model.Productos?.FirstOrDefault(m => m.ProductoID == p.ProductoID)?.Seleccionado ?? false
-                }).ToList();
-
+                _logger.LogError(ex, "Error al crear ajuste temporal: {Message}", ex.Message);
+                ModelState.AddModelError("", $"Ocurrió un error al crear el ajuste temporal: {ex.Message}");
+                await CargarProductosFormularioTemporal(model);
                 return View(model);
             }
         }
@@ -273,9 +340,9 @@ namespace Javo2.Controllers
         [Authorize(Policy = "Permission:productos.ajustarprecios")]
         public async Task<IActionResult> IndexTemporales()
         {
-            var activos = await _ajustePrecioService.ObtenerAjustesTemporalesPorEstadoAsync(Models.EstadoAjusteTemporal.Activo);
-            var programados = await _ajustePrecioService.ObtenerAjustesTemporalesPorEstadoAsync(Models.EstadoAjusteTemporal.Programado);
-            var finalizados = await _ajustePrecioService.ObtenerAjustesTemporalesPorEstadoAsync(Models.EstadoAjusteTemporal.Finalizado);
+            var activos = await _ajustePrecioService.ObtenerAjustesTemporalesPorEstadoAsync(EstadoAjusteTemporal.Activo);
+            var programados = await _ajustePrecioService.ObtenerAjustesTemporalesPorEstadoAsync(EstadoAjusteTemporal.Programado);
+            var finalizados = await _ajustePrecioService.ObtenerAjustesTemporalesPorEstadoAsync(EstadoAjusteTemporal.Finalizado);
 
             var viewModel = new AjustesTemporalesIndexViewModel
             {
@@ -297,7 +364,7 @@ namespace Javo2.Controllers
             {
                 await _ajustePrecioService.ActivarAjusteTemporalAsync(id);
 
-                await _auditoriaService.RegistrarCambioAsync(new Models.AuditoriaRegistro
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
                 {
                     FechaHora = DateTime.Now,
                     Usuario = User.Identity?.Name ?? "Sistema",
@@ -328,7 +395,7 @@ namespace Javo2.Controllers
             {
                 await _ajustePrecioService.FinalizarAjusteTemporalAsync(id, User.Identity?.Name ?? "Sistema");
 
-                await _auditoriaService.RegistrarCambioAsync(new Models.AuditoriaRegistro
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
                 {
                     FechaHora = DateTime.Now,
                     Usuario = User.Identity?.Name ?? "Sistema",
@@ -374,109 +441,80 @@ namespace Javo2.Controllers
                     listaNuevo = Math.Round(p.PLista * factor, 2)
                 }).ToList();
 
+                // Formatear fechas sin segundos
+                var fechaInicio = new DateTime(
+                    model.FechaInicio.Year,
+                    model.FechaInicio.Month,
+                    model.FechaInicio.Day,
+                    model.FechaInicio.Hour,
+                    model.FechaInicio.Minute,
+                    0
+                );
+
+                var fechaFin = new DateTime(
+                    model.FechaFin.Year,
+                    model.FechaFin.Month,
+                    model.FechaFin.Day,
+                    model.FechaFin.Hour,
+                    model.FechaFin.Minute,
+                    0
+                );
+
                 return Json(new
                 {
                     success = true,
                     productos = resultado,
-                    fechaInicio = model.FechaInicio.ToString("dd/MM/yyyy"),
-                    fechaFin = model.FechaFin.ToString("dd/MM/yyyy"),
+                    fechaInicio = fechaInicio.ToString("dd/MM/yyyy HH:mm"),
+                    fechaFin = fechaFin.ToString("dd/MM/yyyy HH:mm"),
                     tipoAjuste = model.TipoAjuste,
-                    duracion = (model.FechaFin - model.FechaInicio).TotalDays
+                    duracion = Math.Ceiling((fechaFin - fechaInicio).TotalDays)
                 });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al simular ajuste temporal.");
+                _logger.LogError(ex, "Error al simular ajuste temporal: {Message}", ex.Message);
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        // AJAX: AjustePrecios/SimularAjuste (para ajustes permanentes)
+        [HttpPost]
+        [Authorize(Policy = "Permission:productos.ajustarprecios")]
+        public async Task<IActionResult> SimularAjuste([FromBody] SimulacionAjusteViewModel model)
+        {
+            try
+            {
+                var productos = await _productoService.GetAllProductosAsync();
+                var productosSeleccionados = productos
+                    .Where(p => model.ProductoIDs.Contains(p.ProductoID))
+                    .ToList();
+
+                var factor = model.EsAumento ? (1 + model.Porcentaje / 100m) : (1 - model.Porcentaje / 100m);
+
+                var resultado = productosSeleccionados.Select(p => new {
+                    id = p.ProductoID,
+                    nombre = p.Nombre,
+                    costoActual = p.PCosto,
+                    contadoActual = p.PContado,
+                    listaActual = p.PLista,
+                    costoNuevo = Math.Round(p.PCosto * factor, 2),
+                    contadoNuevo = Math.Round(p.PContado * factor, 2),
+                    listaNuevo = Math.Round(p.PLista * factor, 2)
+                }).ToList();
+
+                return Json(new
+                {
+                    success = true,
+                    productos = resultado
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al simular ajuste permanente: {Message}", ex.Message);
                 return Json(new { success = false, message = ex.Message });
             }
         }
     }
 
-    public class AjusteTemporalFormViewModel
-    {
-        [Required(ErrorMessage = "El porcentaje es obligatorio")]
-        [Range(0.01, 100, ErrorMessage = "El porcentaje debe estar entre 0.01 y 100")]
-        [Display(Name = "Porcentaje")]
-        public decimal Porcentaje { get; set; }
-
-        [Display(Name = "Tipo de Ajuste")]
-        public bool EsAumento { get; set; } = true;
-
-        [Required(ErrorMessage = "El tipo de ajuste es obligatorio")]
-        [Display(Name = "Motivo del Ajuste")]
-        public string TipoAjuste { get; set; }
-
-        [Required(ErrorMessage = "La fecha de inicio es obligatoria")]
-        [Display(Name = "Fecha de Inicio")]
-        public DateTime FechaInicio { get; set; } = DateTime.Now;
-
-        [Required(ErrorMessage = "La fecha de finalización es obligatoria")]
-        [Display(Name = "Fecha de Finalización")]
-        public DateTime FechaFin { get; set; } = DateTime.Now.AddDays(7);
-
-        [Display(Name = "Descripción")]
-        [StringLength(250, ErrorMessage = "La descripción no puede exceder los 250 caracteres")]
-        public string Descripcion { get; set; }
-
-        public List<ProductoAjusteViewModel> Productos { get; set; } = new List<ProductoAjusteViewModel>();
-        public List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> TiposDeAjuste { get; set; } = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>();
-    }
-    public class AjustePrecioFormViewModel
-    {
-        [Required(ErrorMessage = "El porcentaje es obligatorio")]
-        [Range(0.01, 100, ErrorMessage = "El porcentaje debe estar entre 0.01 y 100")]
-        [Display(Name = "Porcentaje")]
-        public decimal Porcentaje { get; set; }
-
-        [Display(Name = "Tipo de Ajuste")]
-        public bool EsAumento { get; set; } = true;
-
-        [Display(Name = "Descripción")]
-        [StringLength(250, ErrorMessage = "La descripción no puede exceder los 250 caracteres")]
-        public string Descripcion { get; set; }
-
-        public List<ProductoAjusteViewModel> Productos { get; set; } = new List<ProductoAjusteViewModel>();
-    }
-
-    public class SimulacionAjusteTemporalViewModel
-    {
-        public List<int> ProductoIDs { get; set; }
-        public decimal Porcentaje { get; set; }
-        public bool EsAumento { get; set; }
-        public DateTime FechaInicio { get; set; }
-        public DateTime FechaFin { get; set; }
-        public string TipoAjuste { get; set; }
-    }
-
-    public class AjusteTemporalViewModel
-    {
-        public int AjusteHistoricoID { get; set; }
-        public DateTime FechaAjuste { get; set; }
-        public string UsuarioAjuste { get; set; }
-        public decimal Porcentaje { get; set; }
-        public bool EsAumento { get; set; }
-        public string Descripcion { get; set; }
-        public List<AjustePrecioDetalleViewModel> Detalles { get; set; } = new List<AjustePrecioDetalleViewModel>();
-        public bool Revertido { get; set; }
-        public DateTime? FechaReversion { get; set; }
-        public string UsuarioReversion { get; set; }
-
-        // Propiedades específicas para ajustes temporales
-        public DateTime? FechaInicio { get; set; }
-        public DateTime? FechaFin { get; set; }
-        public string TipoAjusteTemporal { get; set; }
-        public string EstadoTemporal { get; set; }
-
-        public bool PuedeActivar => EstadoTemporal == "Programado" && !Revertido;
-        public bool PuedeFinalizar => EstadoTemporal == "Activo" && !Revertido;
-        public TimeSpan DuracionTotal => FechaFin.HasValue && FechaInicio.HasValue ? FechaFin.Value - FechaInicio.Value : TimeSpan.Zero;
-        public int DiasRestantes => FechaFin.HasValue && DateTime.Now < FechaFin.Value ? (FechaFin.Value - DateTime.Now).Days : 0;
-    }
-
-    public class AjustesTemporalesIndexViewModel
-    {
-        public List<AjusteTemporalViewModel> AjustesActivos { get; set; } = new List<AjusteTemporalViewModel>();
-        public List<AjusteTemporalViewModel> AjustesProgramados { get; set; } = new List<AjusteTemporalViewModel>();
-        public List<AjusteTemporalViewModel> AjustesFinalizados { get; set; } = new List<AjusteTemporalViewModel>();
-    }
+    
 }

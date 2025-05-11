@@ -5,29 +5,16 @@
     // Nueva estructura de menú que incluye submenús
     var menuItems = new List<dynamic> {
         new { Ctrl = "Home", Action = "Index", Icon = "house-fill", Text = "Inicio", Permiso = (string)null, HasSubmenu = false, Submenu = new List<dynamic>() },
-        new { Ctrl = "Clientes", Action = "Index", Icon = "people-fill", Text = "Clientes", Permiso = "clientes.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
-        new { Ctrl = "Ventas", Action = "Index", Icon = "cart-fill", Text = "Ventas", Permiso = "ventas.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
-        new { Ctrl = "Productos", Action = "Index", Icon = "box-seam", Text = "Productos", Permiso = "productos.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
-        new { Ctrl = "Catalogo", Action = "Index", Icon = "bookmark-fill", Text = "Catálogo", Permiso = "productos.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
-        new { Ctrl = "Proveedores", Action = "Index", Icon = "truck-flatbed", Text = "Proveedores", Permiso = "productos.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
-        new { Ctrl = "Promociones", Action = "Index", Icon = "tag-fill", Text = "Promociones", Permiso = "productos.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
-        // Ajustes de Precios con submenú
-       new {
-    Ctrl = "AjustePrecios",
-    Action = "Index",
-    Icon = "tags",
-    Text = "Ajustes de Precios",
-    Permiso = "productos.ajustarprecios",
-    HasSubmenu = true,
-    Submenu = new List<dynamic> {
-        new { Ctrl = "AjustePrecios", Action = "Index", Icon = "list-ul", Text = "Historial" },
-        new { Ctrl = "AjustePrecios", Action = "FormSelector", Icon = "plus-circle", Text = "Nuevo Ajuste" },
-    }
-},
-        new { Ctrl = "DevolucionGarantia", Action = "Index", Icon = "journal-check", Text = "Devoluciones/Garantías", Permiso = "ventas.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
-        new { Ctrl = "Reportes", Action = "Index", Icon = "bar-chart-fill", Text = "Reportes", Permiso = "reportes.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
-        new { Ctrl = "Configuracion", Action = "Index", Icon = "gear-fill", Text = "Configuración", Permiso = "configuracion.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
-        new { Ctrl = "SecurityDashboard", Action = "Index", Icon = "shield-lock", Text = "Seguridad", Permiso = "usuarios.ver", HasSubmenu = false, Submenu = new List<dynamic>() }
+    new { Ctrl = "Clientes", Action = "Index", Icon = "people-fill", Text = "Clientes", Permiso = "clientes.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
+    new { Ctrl = "Ventas", Action = "Index", Icon = "cart-fill", Text = "Ventas", Permiso = "ventas.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
+    new { Ctrl = "Productos", Action = "Index", Icon = "box-seam", Text = "Productos", Permiso = "productos.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
+    new { Ctrl = "Catalogo", Action = "Index", Icon = "bookmark-fill", Text = "Catálogo", Permiso = "productos.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
+    new { Ctrl = "Proveedores", Action = "Index", Icon = "truck-flatbed", Text = "Proveedores", Permiso = "productos.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
+    new { Ctrl = "Promociones", Action = "Index", Icon = "tag-fill", Text = "Promociones", Permiso = "productos.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
+    new { Ctrl = "DevolucionGarantia", Action = "Index", Icon = "journal-check", Text = "Devoluciones/Garantías", Permiso = "ventas.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
+    new { Ctrl = "Reportes", Action = "Index", Icon = "bar-chart-fill", Text = "Reportes", Permiso = "reportes.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
+    new { Ctrl = "Configuracion", Action = "Index", Icon = "gear-fill", Text = "Configuración", Permiso = "configuracion.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
+    new { Ctrl = "SecurityDashboard", Action = "Index", Icon = "shield-lock", Text = "Seguridad", Permiso = "usuarios.ver", HasSubmenu = false, Submenu = new List<dynamic>() }
     };
 }
 @using System.Text.Json

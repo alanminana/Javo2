@@ -1,4 +1,4 @@
-﻿@model Javo2.Controllers.AjusteTemporalFormViewModel
+﻿@model Javo2.ViewModels.Operaciones.Productos.ajus
 @{
     ViewBag.Title = "Crear Ajuste de Precios Temporal";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -59,9 +59,27 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label asp-for="TipoAjuste" class="form-label">Motivo del Ajuste</label>
-                                    <select asp-for="TipoAjuste" asp-items="Model.TiposDeAjuste" class="form-select bg-secondary text-light">
-                                        <option value="">-- Seleccione un motivo --</option>
-                                    </select>
+                                    @if (Model.TiposDeAjuste == null || !Model.TiposDeAjuste.Any())
+                                    {
+                                        <select asp-for="TipoAjuste" class="form-select bg-secondary text-light">
+                                            <option value="">-- Seleccione un motivo --</option>
+                                            <option value="Promoción">Promoción</option>
+                                            <option value="Descuento Temporal">Descuento Temporal</option>
+                                            <option value="Hot Sale">Hot Sale</option>
+                                            <option value="Liquidación">Liquidación</option>
+                                            <option value="Black Friday">Black Friday</option>
+                                            <option value="Cyber Monday">Cyber Monday</option>
+                                            <option value="Navidad">Navidad</option>
+                                            <option value="Aniversario">Aniversario</option>
+                                            <option value="Otra">Otra</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select asp-for="TipoAjuste" asp-items="Model.TiposDeAjuste" class="form-select bg-secondary text-light">
+                                            <option value="">-- Seleccione un motivo --</option>
+                                        </select>
+                                    }
                                     <span asp-validation-for="TipoAjuste" class="text-danger"></span>
                                 </div>
                             </div>
@@ -71,14 +89,14 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label asp-for="FechaInicio" class="form-label">Fecha de Inicio</label>
-                                    <input asp-for="FechaInicio" class="form-control bg-secondary text-light" type="datetime-local" />
+                                    <input asp-for="FechaInicio" class="form-control bg-secondary text-light" type="datetime-local" step="60" />
                                     <span asp-validation-for="FechaInicio" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label asp-for="FechaFin" class="form-label">Fecha de Finalización</label>
-                                    <input asp-for="FechaFin" class="form-control bg-secondary text-light" type="datetime-local" />
+                                    <input asp-for="FechaFin" class="form-control bg-secondary text-light" type="datetime-local" step="60" />
                                     <span asp-validation-for="FechaFin" class="text-danger"></span>
                                 </div>
                             </div>
@@ -198,6 +216,9 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Campo oculto para forzar estado Programado -->
+                        <input type="hidden" name="ForzarEstadoProgramado" value="true" />
 
                         <div class="d-flex justify-content-between">
                             <a asp-action="IndexTemporales" class="btn btn-outline-secondary">

@@ -1,89 +1,118 @@
-﻿// ViewModels/Operaciones/Productos/AjustePrecioHistoricoViewModel.cs
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
-namespace Javo2.ViewModels.Operaciones.Productos
+public class AjusteTemporalFormViewModel
 {
-    public class AjustePrecioHistoricoViewModel
-    {
-        public int AjusteHistoricoID { get; set; }
+    [Required(ErrorMessage = "El porcentaje es obligatorio")]
+    [Range(0.01, 100, ErrorMessage = "El porcentaje debe estar entre 0.01 y 100")]
+    [Display(Name = "Porcentaje")]
+    public decimal Porcentaje { get; set; }
 
-        [Display(Name = "Fecha de Ajuste")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}")]
-        public DateTime FechaAjuste { get; set; }
+    [Display(Name = "Tipo de Ajuste")]
+    public bool EsAumento { get; set; } = false;
 
-        [Display(Name = "Usuario")]
-        public string UsuarioAjuste { get; set; }
+    [Required(ErrorMessage = "El tipo de ajuste es obligatorio")]
+    [Display(Name = "Motivo del Ajuste")]
+    public string TipoAjuste { get; set; }
 
-        [Display(Name = "Porcentaje")]
-        [DisplayFormat(DataFormatString = "{0:N2}%")]
-        public decimal Porcentaje { get; set; }
+    [Required(ErrorMessage = "La fecha de inicio es obligatoria")]
+    [Display(Name = "Fecha de Inicio")]
+    public DateTime? FechaInicio { get; set; }
 
-        [Display(Name = "Tipo")]
-        public bool EsAumento { get; set; }
+    [Required(ErrorMessage = "La fecha de finalización es obligatoria")]
+    [Display(Name = "Fecha de Finalización")]
+    public DateTime? FechaFin { get; set; }
 
-        [Display(Name = "Tipo de Ajuste")]
-        public string TipoAjuste => EsAumento ? "Aumento" : "Descuento";
+    [Display(Name = "Descripción")]
+    [StringLength(250, ErrorMessage = "La descripción no puede exceder los 250 caracteres")]
+    public string Descripcion { get; set; }
 
-        [Display(Name = "Descripción")]
-        public string Descripcion { get; set; }
+    public List<ProductoAjusteViewModel> Productos { get; set; } = new List<ProductoAjusteViewModel>();
+    public List<SelectListItem> TiposDeAjuste { get; set; } = new List<SelectListItem>();
+}
 
-        [Display(Name = "Revertido")]
-        public bool Revertido { get; set; }
+public class AjustePrecioFormViewModel
+{
+    [Required(ErrorMessage = "El porcentaje es obligatorio")]
+    [Range(0.01, 100, ErrorMessage = "El porcentaje debe estar entre 0.01 y 100")]
+    [Display(Name = "Porcentaje")]
+    public decimal Porcentaje { get; set; }
 
-        [Display(Name = "Fecha de Reversión")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}")]
-        public DateTime? FechaReversion { get; set; }
+    [Display(Name = "Tipo de Ajuste")]
+    public bool EsAumento { get; set; } = true;
 
-        [Display(Name = "Usuario Reversión")]
-        public string UsuarioReversion { get; set; }
+    [Display(Name = "Descripción")]
+    [StringLength(250, ErrorMessage = "La descripción no puede exceder los 250 caracteres")]
+    public string Descripcion { get; set; }
 
-        [Display(Name = "# Productos")]
-        public int CantidadProductos => Detalles?.Count ?? 0;
+    public List<ProductoAjusteViewModel> Productos { get; set; } = new List<ProductoAjusteViewModel>();
+}
 
-        public List<AjustePrecioDetalleViewModel> Detalles { get; set; } = new List<AjustePrecioDetalleViewModel>();
-    }
+public class ProductoAjusteViewModel
+{
+    public int ProductoID { get; set; }
+    public string Nombre { get; set; }
+    public decimal PCosto { get; set; }
+    public decimal PContado { get; set; }
+    public decimal PLista { get; set; }
+    public bool Seleccionado { get; set; }
+}
 
-    public class AjustePrecioDetalleViewModel
-    {
-        public int DetalleID { get; set; }
-        public int AjusteHistoricoID { get; set; }
-        public int ProductoID { get; set; }
+public class SimulacionAjusteTemporalViewModel
+{
+    public List<int> ProductoIDs { get; set; }
+    public decimal Porcentaje { get; set; }
+    public bool EsAumento { get; set; }
+    public DateTime FechaInicio { get; set; }
+    public DateTime FechaFin { get; set; }
+    public string TipoAjuste { get; set; }
+}
 
-        [Display(Name = "Producto")]
-        public string NombreProducto { get; set; }
+public class SimulacionAjusteViewModel
+{
+    public List<int> ProductoIDs { get; set; }
+    public decimal Porcentaje { get; set; }
+    public bool EsAumento { get; set; }
+}
 
-        [Display(Name = "P.Costo Anterior")]
-        [DisplayFormat(DataFormatString = "{0:C}")]
-        public decimal PCostoAnterior { get; set; }
+public class AjusteTemporalViewModel
+{
+    public int AjusteHistoricoID { get; set; }
+    public DateTime FechaAjuste { get; set; }
+    public string UsuarioAjuste { get; set; }
+    public decimal Porcentaje { get; set; }
+    public bool EsAumento { get; set; }
+    public string Descripcion { get; set; }
+    public List<AjustePrecioDetalleViewModel> Detalles { get; set; } = new List<AjustePrecioDetalleViewModel>();
+    public bool Revertido { get; set; }
+    public DateTime? FechaReversion { get; set; }
+    public string UsuarioReversion { get; set; }
 
-        [Display(Name = "P.Contado Anterior")]
-        [DisplayFormat(DataFormatString = "{0:C}")]
-        public decimal PContadoAnterior { get; set; }
+    // Propiedades específicas para ajustes temporales
+    public DateTime? FechaInicio { get; set; }
+    public DateTime? FechaFin { get; set; }
+    public string TipoAjusteTemporal { get; set; }
+    public string EstadoTemporal { get; set; }
 
-        [Display(Name = "P.Lista Anterior")]
-        [DisplayFormat(DataFormatString = "{0:C}")]
-        public decimal PListaAnterior { get; set; }
+    public bool PuedeActivar => EstadoTemporal == "Programado" && !Revertido;
+    public bool PuedeFinalizar => EstadoTemporal == "Activo" && !Revertido;
+    public TimeSpan DuracionTotal => FechaFin.HasValue && FechaInicio.HasValue ? FechaFin.Value - FechaInicio.Value : TimeSpan.Zero;
+    public int DiasRestantes => FechaFin.HasValue && DateTime.Now < FechaFin.Value ? (FechaFin.Value - DateTime.Now).Days : 0;
+}
 
-        [Display(Name = "P.Costo Posterior")]
-        [DisplayFormat(DataFormatString = "{0:C}")]
-        public decimal PCostoPosterior { get; set; }
+public class AjustesTemporalesIndexViewModel
+{
+    public List<AjusteTemporalViewModel> AjustesActivos { get; set; } = new List<AjusteTemporalViewModel>();
+    public List<AjusteTemporalViewModel> AjustesProgramados { get; set; } = new List<AjusteTemporalViewModel>();
+    public List<AjusteTemporalViewModel> AjustesFinalizados { get; set; } = new List<AjusteTemporalViewModel>();
+}
 
-        [Display(Name = "P.Contado Posterior")]
-        [DisplayFormat(DataFormatString = "{0:C}")]
-        public decimal PContadoPosterior { get; set; }
-
-        [Display(Name = "P.Lista Posterior")]
-        [DisplayFormat(DataFormatString = "{0:C}")]
-        public decimal PListaPosterior { get; set; }
-
-        [Display(Name = "Diferencia P.Costo")]
-        [DisplayFormat(DataFormatString = "{0:C}")]
-        public decimal DiferenciaPCosto => PCostoPosterior - PCostoAnterior;
-
-        [Display(Name = "Diferencia %")]
-        [DisplayFormat(DataFormatString = "{0:P2}")]
-        public decimal PorcentajeCambio => PCostoAnterior != 0 ? (PCostoPosterior / PCostoAnterior) - 1 : 0;
-    }
+public class ProductoAjusteViewModel
+{
+    public int ProductoID { get; set; }
+    public string Nombre { get; set; }
+    public decimal PCosto { get; set; }
+    public decimal PContado { get; set; }
+    public decimal PLista { get; set; }
+    public bool Seleccionado { get; set; }
 }

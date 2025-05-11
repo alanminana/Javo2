@@ -10,6 +10,12 @@
     <!-- Encabezado sin acción -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h2 mb-0">@ViewBag.Title</h1>
+        @if (User.HasPermission("productos.crear"))
+        {
+            <a asp-action="Create" class="btn btn-success btn-sm">
+                <i class="bi bi-plus-circle me-1"></i>Crear Producto
+            </a>
+        }
     </div>
 
     <!-- Resumen de Productos -->
@@ -54,37 +60,99 @@
         </form>
     </div>
 
-    <div class="card mb-4 shadow-sm bg-dark text-light p-3">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-            <h5 class="card-title mb-0"><i class="bi bi-cash-coin me-2"></i>Ajuste de Precios</h5>
-            <div>
-                <a asp-controller="AjustePrecios" asp-action="Index" class="btn btn-sm btn-outline-light me-2">
-                    <i class="bi bi-clock-history me-1"></i>Ver Historial
-                </a>
-                <a asp-controller="AjustePrecios" asp-action="FormSelector" class="btn btn-sm btn-primary">
-                    <i class="bi bi-plus-circle me-1"></i>Nuevo Ajuste
-                </a>
+    <!-- Panel de Ajuste de Precios Integrado -->
+    @if (User.HasPermission("productos.ajustarprecios"))
+    {
+        <div class="card mb-4 shadow-sm bg-dark text-light">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-cash-coin me-2"></i>Ajuste de Precios</h5>
+                <button class="btn btn-sm btn-outline-light" type="button" data-bs-toggle="collapse" data-bs-target="#ajustePreciosPanel">
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            </div>
+            <div class="collapse" id="ajustePreciosPanel">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label for="porcentaje" class="form-label">Porcentaje</label>
+                                    <div class="input-group">
+                                        <input type="number" id="porcentaje" class="form-control bg-secondary text-light" value="5" min="0.01" max="100" step="0.01" />
+                                        <span class="input-group-text bg-secondary text-light">%</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Tipo de Ajuste</label>
+                                    <div class="mt-2">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="ajusteTipo" id="radioAumento" value="true" checked />
+                                            <label class="form-check-label text-success" for="radioAumento">
+                                                <i class="bi bi-arrow-up-circle me-1"></i>Aumento
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="ajusteTipo" id="radioDescuento" value="false" />
+                                            <label class="form-check-label text-danger" for="radioDescuento">
+                                                <i class="bi bi-arrow-down-circle me-1"></i>Descuento
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Descripción</label>
+                                    <input type="text" id="descripcionAjuste" class="form-control bg-secondary text-light" placeholder="Opcional: motivo del ajuste" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-grid gap-2 h-100 align-items-end">
+                                <button type="button" id="btnAdjustPrices" class="btn btn-primary btn-lg mt-4">
+                                    <i class="bi bi-check-circle me-1"></i>Aplicar Ajuste
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="border-secondary" />
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="me-3"><i class="bi bi-info-circle me-1"></i>Seleccione los productos a ajustar</span>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="checkAll" />
+                                <label class="form-check-label" for="checkAll">Seleccionar todos</label>
+                            </div>
+                        </div>
+                        <div class="btn-group mb-3" role="group" aria-label="Acciones ajustes de precios">
+                            <a href="@Url.Action("Index", "AjustePrecios")"
+                               class="btn btn-sm btn-outline-light d-flex align-items-center">
+                                <i class="bi bi-clock-history me-1"></i>
+                                <span>Ver Historial</span>
+                            </a>
+                            <a href="@Url.Action("IndexTemporales", "AjustePrecios")"
+                               class="btn btn-sm btn-outline-light d-flex align-items-center">
+                                <i class="bi bi-calendar-check me-1"></i>
+                                <span>Ajustes Temporales</span>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    }
 
     <!-- Tabla de Productos con acción -->
     <div class="card shadow-sm">
         <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="card-title mb-0"><i class="bi bi-list-ul me-1"></i>Listado de Productos</h5>
-                @if (User.HasPermission("productos.crear"))
-                {
-                    <a asp-action="Create" class="btn btn-success btn-sm">
-                        <i class="bi bi-plus-circle me-1"></i>Crear Producto
-                    </a>
-                }
-            </div>
             <div class="table-responsive">
                 <table class="table table-hover table-dark table-striped mb-0" id="productosTable">
                     <thead class="bg-secondary text-light">
                         <tr>
-                            <th width="50px"><i class="bi bi-check-square"></i></th>
+                            <th width="50px">
+                                <div class="form-check">
+                                    <input class="form-check-input bg-secondary border-light" type="checkbox" id="table-checkAll">
+                                </div>
+                            </th>
                             <th>Nombre</th>
                             <th>Precio Costo</th>
                             <th>Precio Contado</th>
@@ -94,7 +162,44 @@
                         </tr>
                     </thead>
                     <tbody id="productosTableBody">
-                        @await Html.PartialAsync("_ProductosTable", Model)
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="form-check">
+                                        <input class="form-check-input producto-check bg-secondary border-light"
+                                               type="checkbox" name="ProductoIDs" value="@item.ProductoID" />
+                                    </div>
+                                </td>
+                                <td>@item.Nombre</td>
+                                <td>@item.PCosto.ToString("C")</td>
+                                <td>@item.PContado.ToString("C")</td>
+                                <td>@item.PLista.ToString("C")</td>
+                                <td>@item.CantidadDisponible</td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm">
+                                        @if (User.HasPermission("productos.editar"))
+                                        {
+                                            <a asp-action="Edit" asp-route-id="@item.ProductoID" class="btn btn-outline-primary" title="Editar">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+                                        }
+                                        @if (User.HasPermission("productos.ver"))
+                                        {
+                                            <a asp-action="Details" asp-route-id="@item.ProductoID" class="btn btn-outline-info" title="Ver">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                        }
+                                        @if (User.HasPermission("productos.eliminar"))
+                                        {
+                                            <a asp-action="Delete" asp-route-id="@item.ProductoID" class="btn btn-outline-danger" title="Eliminar">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
@@ -112,156 +217,156 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
     <script>
-        // Esperar a que el documento esté listo y todas las dependencias cargadas
-        document.addEventListener('DOMContentLoaded', function() {
-            // Verificar que jQuery esté disponible
-            if (typeof jQuery === 'undefined') {
-                console.error('jQuery no está disponible. El script no puede ejecutarse.');
-                return;
-            }
+        $(document).ready(function() {
+            // Configuración de toastr
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "timeOut": "3000"
+            };
 
-            const $ = jQuery;
+            // Sincronizar checkboxes de selección
+            $("#checkAll, #table-checkAll").on('change', function() {
+                const isChecked = $(this).prop('checked');
+                $('.producto-check').prop('checked', isChecked);
+                $("#checkAll, #table-checkAll").prop('checked', isChecked);
 
-            console.log('Script de productos inicializado');
-
-            /* ---------- utilidades ---------- */
-            const STYLE_CHECKBOX = 'bg-secondary border-light';
-            function estilizarCheckboxes() {
-                $('.form-check-input').addClass(STYLE_CHECKBOX);
-            }
-
-            /* ---------- inicio ---------- */
-            estilizarCheckboxes();
-
-            /* seleccionar todos */
-            $('#checkAll').on('change', function () {
-                $('input[name="ProductoIDs"]')
-                    .prop('checked', this.checked)
-                    .trigger('change');
+                // Resaltar filas seleccionadas
+                if (isChecked) {
+                    $('.producto-check').closest('tr').addClass('table-primary');
+                } else {
+                    $('.producto-check').closest('tr').removeClass('table-primary');
+                }
             });
 
-            /* resaltar filas */
-            $(document).on('change', 'input[name="ProductoIDs"]', function () {
+            // Manejar el cambio de checkbox individual
+            $(document).on('change', '.producto-check', function() {
                 $(this).closest('tr').toggleClass('table-primary', this.checked);
+
+                // Actualizar estado de "Seleccionar todos"
+                const totalCheckboxes = $('.producto-check').length;
+                const checkedCheckboxes = $('.producto-check:checked').length;
+                $("#checkAll, #table-checkAll").prop('checked', totalCheckboxes === checkedCheckboxes);
             });
 
-            /* filtrado */
-            $('#applyFilters').on('click', function () {
-                console.log('Aplicando filtros...');
+            // Filtrado
+            $('#applyFilters').on('click', function() {
                 const data = {};
                 data[$('#filterType').val()] = $('#filterValue').val();
 
-                $.get('@Url.Action("Filter", "Productos")', data)
-                    .done(function(html) {
+                $.ajax({
+                    url: '@Url.Action("Filter", "Productos")',
+                    type: 'GET',
+                    data: data,
+                    success: function(html) {
                         $('#productosTableBody').html(html);
-                        estilizarCheckboxes();
-                        console.log('Filtro aplicado correctamente');
-                    })
-                    .fail(function(xhr, status, error) {
-                        console.error('Error al filtrar:', error);
-                        alert('Error al filtrar: ' + error);
-                    });
+                        $('.form-check-input').addClass('bg-secondary border-light');
+                    },
+                    error: function(xhr, status, error) {
+                        toastr.error('Error al filtrar: ' + error);
+                    }
+                });
             });
 
-            /* reset con Escape */
-            $(document).on('keyup', function(e) {
+            // Reset con Escape
+            $(document).keyup(function(e) {
                 if (e.key === 'Escape') {
-                    console.log('Tecla Escape detectada, reiniciando filtros');
                     $('#filterType').val('Nombre');
                     $('#filterValue').val('');
                     $('#applyFilters').trigger('click');
                 }
             });
 
-            /* ajuste de precios */
-            $('#btnAdjustPrices').on('click', function () {
-                console.log('Iniciando ajuste de precios');
+            // Ajuste de precios
+            $('#btnAdjustPrices').on('click', function() {
+                const selectedProducts = $('.producto-check:checked');
 
-                const ids = $('input[name="ProductoIDs"]:checked')
-                    .map(function(_, e) { return e.value; }).get();
-
-                if (!ids.length) {
-                    toastr.warning('Seleccione al menos un producto.');
-                    return;
-                }
-                console.log('Productos seleccionados:', ids);
-
-                const pct = Number($('#porcentaje').val().replace(',', '.'));
-                if (!(pct > 0)) {
-                    toastr.warning('Ingrese un porcentaje válido mayor a cero.');
+                if (selectedProducts.length === 0) {
+                    toastr.warning('Seleccione al menos un producto para ajustar precios.');
                     return;
                 }
 
-                const isUp = $('input[name="ajusteTipo"]:checked').val() === 'true';
+                const ids = selectedProducts.map(function() {
+                    return $(this).val();
+                }).get();
 
-                // Usar SweetAlert2 para confirmar
+                const porcentaje = parseFloat($('#porcentaje').val().replace(',', '.'));
+                if (isNaN(porcentaje) || porcentaje <= 0 || porcentaje > 100) {
+                    toastr.warning('Ingrese un porcentaje válido entre 0.01 y 100.');
+                    return;
+                }
+
+                const esAumento = $('input[name="ajusteTipo"]:checked').val() === 'true';
+                const descripcion = $('#descripcionAjuste').val() || 'Ajuste desde listado de productos';
+
                 Swal.fire({
                     title: 'Confirmar Ajuste de Precios',
-                    html: `¿Está seguro de aplicar un <strong>${isUp ? 'aumento' : 'descuento'} del ${pct}%</strong> a <strong>${ids.length}</strong> productos?<br><br>Esta acción quedará registrada en el historial.`,
+                    html: `¿Está seguro de aplicar un <strong>${esAumento ? 'aumento' : 'descuento'} del ${porcentaje}%</strong> a <strong>${ids.length}</strong> productos?`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Sí, aplicar ajuste',
-                    cancelButtonText: 'Cancelar'
-                }).then(function(result) {
-                    if (!result.isConfirmed) return;
-
-                    Swal.fire({
-                        title: 'Procesando...',
-                        text: 'Aplicando ajuste de precios',
-                        allowOutsideClick: false,
-                        didOpen: function() {
-                            Swal.showLoading();
-                        }
-                    });
-
-                    // Obtener el token
-                    const token = $('#__RequestVerificationToken').val();
-                    console.log('Token encontrado:', token ? 'Sí' : 'No');
-
-                    // Enviar la solicitud AJAX
-                    $.ajax({
-                        url: '@Url.Action("IncrementarPrecios", "Productos")',
-                        type: 'POST',
-                        data: {
-                            ProductoIDs: ids.join(','),
-                            porcentaje: pct,
-                            isAumento: isUp,
-                            descripcion: 'Ajuste rápido desde lista de productos'
-                        },
-                        headers: {
-                            'RequestVerificationToken': token
-                        },
-                        success: function(resp) {
-                            console.log('Respuesta del servidor:', resp);
-                            if (resp.success) {
-                                Swal.fire({
-                                    title: '¡Éxito!',
-                                    text: resp.message,
-                                    icon: 'success',
-                                    confirmButtonText: 'Ver detalles del ajuste',
-                                    showCancelButton: true,
-                                    cancelButtonText: 'Cerrar'
-                                }).then(function(r) {
-                                    if (r.isConfirmed && resp.ajusteId) {
-                                        window.location.href = '@Url.Action("Details", "AjustePrecios")/' + resp.ajusteId;
-                                    } else {
-                                        location.reload();
-                                    }
-                                });
-                            } else {
-                                Swal.fire('Error', resp.message || 'Error al realizar el ajuste', 'error');
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: 'Procesando...',
+                            text: 'Aplicando ajuste de precios',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading();
                             }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error AJAX:', error);
-                            Swal.fire('Error', 'Ocurrió un error al comunicarse con el servidor: ' + error, 'error');
-                        }
-                    });
+                        });
+
+                        // Enviar solicitud AJAX
+                        $.ajax({
+                            url: '@Url.Action("IncrementarPrecios", "Productos")',
+                            type: 'POST',
+                            data: {
+                                ProductoIDs: ids.join(','),
+                                porcentaje: porcentaje,
+                                isAumento: esAumento,
+                                descripcion: descripcion
+                            },
+                            headers: {
+                                'RequestVerificationToken': $('#__RequestVerificationToken').val()
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    Swal.fire({
+                                        title: '¡Éxito!',
+                                        text: response.message,
+                                        icon: 'success',
+                                        confirmButtonText: 'Ver detalles',
+                                        showCancelButton: true,
+                                        cancelButtonText: 'Cerrar'
+                                    }).then((result) => {
+                                        if (result.isConfirmed && response.ajusteId) {
+                                            window.location.href = '@Url.Action("Details", "AjustePrecios")/' + response.ajusteId;
+                                        } else {
+                                            location.reload();
+                                        }
+                                    });
+                                } else {
+                                    Swal.fire('Error', response.message || 'Error al realizar el ajuste', 'error');
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                Swal.fire('Error', 'Ocurrió un error al comunicarse con el servidor', 'error');
+                            }
+                        });
+                    }
                 });
             });
 
-            // Log para confirmar inicialización completa
-            console.log('Inicialización del script completada');
+            // Auto-expandir el panel de ajuste de precios si hay productos seleccionados
+            $('.producto-check').on('change', function() {
+                if ($('.producto-check:checked').length > 0 && !$('#ajustePreciosPanel').hasClass('show')) {
+                    $('#ajustePreciosPanel').collapse('show');
+                }
+            });
         });
     </script>
 }
