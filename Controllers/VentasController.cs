@@ -68,30 +68,37 @@ namespace Javo2.Controllers
                 return View("Error");
             }
         }
-        // En VentasController.CreateFromCotizacion
+        // En VentasController.cs, actualiza el método CreateFromCotizacion
+        [HttpGet]
+        [Authorize(Policy = "Permission:ventas.crear")]
         public async Task<IActionResult> CreateFromCotizacion(int id)
         {
-            var cotizacion = await _cotizacionService.GetCotizacionByIDAsync(id);
-            if (cotizacion == null)
-                return NotFound();
+            try
+            {
+                var cotizacion = await _cotizacionService.GetCotizacionByIDAsync(id);
+                if (cotizacion == null)
+                    return NotFound();
 
-            // Usar AutoMapper en lugar de casteo directo
-            var ventaViewModel = _mapper.Map<VentaFormViewModel>(cotizacion);
+                // Utilizar el mapeo para convertir la cotización en formulario de venta
+                var ventaViewModel = _mapper.Map<VentaFormViewModel>(cotizacion);
 
-            // Ajustar campos específicos de venta
-            ventaViewModel.FechaVenta = DateTime.Today;
-            ventaViewModel.NumeroFactura = await _ventaService.GenerarNumeroFacturaAsync();
-            ventaViewModel.Usuario = User.Identity?.Name ?? "Desconocido";
-            ventaViewModel.Vendedor = User.Identity?.Name ?? "Desconocido";
-            ventaViewModel.Estado = EstadoVenta.Borrador.ToString();
+                // Obtener número de factura nuevo
+                ventaViewModel.NumeroFactura = await _ventaService.GenerarNumeroFacturaAsync();
 
-            // Mapear productos
-            ventaViewModel.ProductosPresupuesto = _mapper.Map<List<DetalleVentaViewModel>>(cotizacion.ProductosPresupuesto);
+                // Asignar usuario actual
+                ventaViewModel.Usuario = User.Identity?.Name ?? "Desconocido";
+                ventaViewModel.Vendedor = User.Identity?.Name ?? "Desconocido";
 
-            // Cargar opciones de formulario
-            await CargarCombosAsync(ventaViewModel);
+                // Cargar combos para el formulario
+                await CargarCombosAsync(ventaViewModel);
 
-            return View("Form", ventaViewModel);
+                return View("Form", ventaViewModel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al crear venta desde cotización");
+                return View("Error");
+            }
         }
         // GET: Ventas/Create
         [HttpGet]

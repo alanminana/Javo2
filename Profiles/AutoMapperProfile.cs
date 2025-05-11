@@ -40,7 +40,6 @@ namespace Javo2
                 .ForMember(dest => dest.Marca, opt => opt.Ignore())
                 .ForMember(dest => dest.Estado, opt => opt.Ignore());
 
-            // En AutoMapperProfile.cs, actualizar el mapeo de Cotizacion -> Venta
             CreateMap<Cotizacion, Venta>()
                 .ForMember(dest => dest.VentaID, opt => opt.Ignore())
                 .ForMember(dest => dest.FechaVenta, opt => opt.MapFrom(src => src.FechaCotizacion))
@@ -52,7 +51,12 @@ namespace Javo2
                 .ForMember(dest => dest.LimiteCreditoCliente, opt => opt.MapFrom(src => 0))
                 .ForMember(dest => dest.SaldoCliente, opt => opt.MapFrom(src => 0))
                 .ForMember(dest => dest.SaldoDisponibleCliente, opt => opt.MapFrom(src => 0))
-                .ForMember(dest => dest.FormaPagoID, opt => opt.MapFrom(src => 1))
+                .ForMember(dest => dest.FormaPagoID, opt => opt.MapFrom(src => 1))  // Default: Contado
+                .ForMember(dest => dest.BancoID, opt => opt.MapFrom(src => (int?)null))
+                .ForMember(dest => dest.TipoTarjeta, opt => opt.MapFrom(src => string.Empty))
+                .ForMember(dest => dest.Cuotas, opt => opt.MapFrom(src => (int?)null))
+                .ForMember(dest => dest.EntidadElectronica, opt => opt.MapFrom(src => string.Empty))
+                .ForMember(dest => dest.PlanFinanciamiento, opt => opt.MapFrom(src => string.Empty))
                 .ForMember(dest => dest.PromocionesAplicadas, opt => opt.MapFrom(src => new List<PromocionAplicada>()))
                 .ForMember(dest => dest.Condiciones, opt => opt.MapFrom(src => string.Empty))
                 .ForMember(dest => dest.Credito, opt => opt.MapFrom(src => 0))
@@ -67,6 +71,28 @@ namespace Javo2
 
             // COTIZACION ↔ VentaFormViewModel mapping
             CreateMap<Cotizacion, VentaFormViewModel>()
+                .ForMember(dest => dest.VentaID, opt => opt.MapFrom(src => 0))
+                .ForMember(dest => dest.FechaVenta, opt => opt.MapFrom(src => DateTime.Today))
+                .ForMember(dest => dest.NumeroFactura, opt => opt.Ignore())
+                .ForMember(dest => dest.Vendedor, opt => opt.MapFrom(src => src.Usuario))
+                .ForMember(dest => dest.DomicilioCliente, opt => opt.MapFrom(src => string.Empty))
+                .ForMember(dest => dest.LocalidadCliente, opt => opt.MapFrom(src => string.Empty))
+                .ForMember(dest => dest.CelularCliente, opt => opt.MapFrom(src => string.Empty))
+                .ForMember(dest => dest.LimiteCreditoCliente, opt => opt.MapFrom(src => 0))
+                .ForMember(dest => dest.SaldoCliente, opt => opt.MapFrom(src => 0))
+                .ForMember(dest => dest.SaldoDisponibleCliente, opt => opt.MapFrom(src => 0))
+                .ForMember(dest => dest.FormaPagoID, opt => opt.MapFrom(src => 1))  // Default: Contado
+                .ForMember(dest => dest.BancoID, opt => opt.MapFrom(src => (int?)null))
+                .ForMember(dest => dest.TipoTarjeta, opt => opt.MapFrom(src => string.Empty))
+                .ForMember(dest => dest.Cuotas, opt => opt.MapFrom(src => (int?)null))
+                .ForMember(dest => dest.EntidadElectronica, opt => opt.MapFrom(src => string.Empty))
+                .ForMember(dest => dest.PlanFinanciamiento, opt => opt.MapFrom(src => string.Empty))
+                .ForMember(dest => dest.Condiciones, opt => opt.MapFrom(src => $"Generado desde cotización - {src.NumeroCotizacion}"))
+                .ForMember(dest => dest.Credito, opt => opt.MapFrom(src => 0))
+                .ForMember(dest => dest.AdelantoDinero, opt => opt.Ignore())
+                .ForMember(dest => dest.DineroContado, opt => opt.Ignore())
+                .ForMember(dest => dest.MontoCheque, opt => opt.Ignore())
+                .ForMember(dest => dest.NumeroCheque, opt => opt.MapFrom(src => string.Empty))
                 .ForMember(dest => dest.FormasPago, opt => opt.Ignore())
                 .ForMember(dest => dest.Bancos, opt => opt.Ignore())
                 .ForMember(dest => dest.TipoTarjetaOptions, opt => opt.Ignore())
@@ -77,7 +103,6 @@ namespace Javo2
                 .ForMember(dest => dest.Promociones, opt => opt.Ignore())
                 .ForMember(dest => dest.EstadosEntregaProductos, opt => opt.Ignore())
                 .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => EstadoVenta.Borrador.ToString()));
-
             // VENTA ↔ VentaFormViewModel
             CreateMap<Venta, VentaFormViewModel>()
                 .ForMember(dest => dest.FormasPago, opt => opt.Ignore())
