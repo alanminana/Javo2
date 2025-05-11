@@ -46,8 +46,87 @@ namespace Javo2.Controllers
             return View(viewModel);
         }
 
-        // Métodos existentes...
+        // GET: AjustePrecios/Form
+        [HttpGet]
+        [Authorize(Policy = "Permission:productos.ajustarprecios")]
+        public async Task<IActionResult> Form()
+        {
+            var productos = await _productoService.GetAllProductosAsync();
+            var viewModel = new AjustePrecioFormViewModel
+            {
+                Productos = productos.Select(p => new ProductoAjusteViewModel
+                {
+                    ProductoID = p.ProductoID,
+                    Nombre = p.Nombre,
+                    PCosto = p.PCosto,
+                    PContado = p.PContado,
+                    PLista = p.PLista,
+                    Seleccionado = false
+                }).ToList()
+            };
+            return View(viewModel);
+        }
 
+        // POST: AjustePrecios/Form
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:productos.ajustarprecios")]
+        public async Task<IActionResult> Form(AjustePrecioFormViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            try
+            {
+                var productosIDs = model.Productos
+                    .Where(p => p.Seleccionado)
+                    .Select(p => p.ProductoID)
+                    .ToList();
+
+                if (!productosIDs.Any())
+                {
+                    ModelState.AddModelError("", "Debe seleccionar al menos un producto.");
+                    return View(model);
+                }
+
+                var ajusteID = await _ajustePrecioService.AjustarPreciosAsync(
+                    productosIDs,
+                    model.Porcentaje,
+                    model.EsAumento,
+                    model.Descripcion);
+
+                TempData["Success"] = "Ajuste de precios aplicado correctamente.";
+                return RedirectToAction(nameof(Details), new { id = ajusteID });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al aplicar ajuste de precios");
+                ModelState.AddModelError("", $"Error: {ex.Message}");
+                return View(model);
+            }
+        }
+
+        // GET: AjustePrecios/Details/5
+        [HttpGet]
+        [Authorize(Policy = "Permission:productos.ajustarprecios")]
+        public async Task<IActionResult> Details(int id)
+        {
+            var ajuste = await _ajustePrecioService.ObtenerAjusteHistoricoAsync(id);
+            if (ajuste == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = _mapper.Map<AjustePrecioHistoricoViewModel>(ajuste);
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        [Authorize(Policy = "Permission:productos.ajustarprecios")]
+        public IActionResult FormSelector()
+        {
+            return View();
+        }
         // GET: AjustePrecios/FormTemporal
         [HttpGet]
         [Authorize(Policy = "Permission:productos.ajustarprecios")]

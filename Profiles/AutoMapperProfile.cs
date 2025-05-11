@@ -98,8 +98,12 @@ namespace Javo2
                 .ForMember(dest => dest.VencimientoCuotas, opt => opt.Ignore())
                 .ForMember(dest => dest.NombreGarante, opt => opt.Ignore())
                 .ReverseMap()
-                .ForMember(dest => dest.Compras, opt => opt.Ignore());
-
+                .ForMember(dest => dest.Compras, opt => opt.Ignore())
+            .ForMember(dest => dest.ClasificacionCredito, opt => opt.MapFrom(src => src.ClasificacionCredito))
+    .ForMember(dest => dest.TextoClasificacionCredito, opt => opt.MapFrom(src => src.TextoClasificacionCredito))
+    .ReverseMap()
+    // Mapeos reversos existentes...
+    .ForMember(dest => dest.ClasificacionCredito, opt => opt.MapFrom(src => src.ClasificacionCredito));
             // PROVEEDOR ↔ ProveedoresViewModel
             CreateMap<Proveedor, ProveedoresViewModel>()
                 .ForMember(dest => dest.ProductosAsignadosMarcas, opt => opt.Ignore())
@@ -172,4 +176,6 @@ namespace Javo2
     .ForMember(dest => dest.EstadoTemporal, opt => opt.MapFrom(src => Enum.Parse<EstadoAjusteTemporal>(src.EstadoTemporal)));
         }
     }
+    // Fix: Add missing property "ClasificacionCredito" to ClientesViewModel
+
 }

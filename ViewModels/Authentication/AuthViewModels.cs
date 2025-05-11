@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Javo2.ViewModels.Authentication
 {
@@ -267,7 +268,27 @@ namespace Javo2.ViewModels.Authentication
         public int TotalPermisos { get; set; }
         public List<UsuarioSimpleViewModel> UltimosUsuariosRegistrados { get; set; } = new List<UsuarioSimpleViewModel>();
         public List<UsuarioSimpleViewModel> UltimosAccesos { get; set; } = new List<UsuarioSimpleViewModel>();
-    }
+    
+    [Display(Name = "Clasificación de Crédito")]
+        [Range(1, 10, ErrorMessage = "La clasificación debe estar entre 1 y 10")]
+        public int ClasificacionCredito { get; set; } = 1;
 
-    #endregion
-}
+        public string TextoClasificacionCredito { get; set; } = "Sin clasificar";
+
+        // Diccionario para mostrar las opciones de clasificación en la vista
+        [NotMapped]
+        public Dictionary<int, string> OpcionesClasificacion => new()
+    {
+        { 1, "1 - No apto para crédito" },
+        { 2, "2 - No apto para crédito" },
+        { 3, "3 - Riesgo alto" },
+        { 4, "4 - Riesgo alto" },
+        { 5, "5 - Riesgo moderado" },
+        { 6, "6 - Riesgo moderado" },
+        { 7, "7 - Apto con garantía" },
+        { 8, "8 - Apto con garantía" },
+        { 9, "9 - Totalmente apto" },
+        { 10, "10 - Totalmente apto" }
+    };
+        #endregion
+    }    }

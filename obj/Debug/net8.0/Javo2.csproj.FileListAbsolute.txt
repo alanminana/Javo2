@@ -118,3 +118,5 @@ D:\github\Javo2\obj\Debug\net8.0\scopedcss\Views\Shared\_ActionButtons.cshtml.rz
 D:\github\Javo2\bin\Debug\net8.0\Data\Backups\clientes_backup_20250429201136.json
 D:\github\Javo2\bin\Debug\net8.0\Data\Backups\clientes_backup_20250504150114.json
 D:\github\Javo2\bin\Debug\net8.0\Data\comprasProveedores.json
+D:\github\Javo2\bin\Debug\net8.0\Data\Backups\clientes_backup_20250510185037.json
+D:\github\Javo2\bin\Debug\net8.0\Data\Backups\clientes_backup_20250510185102.json

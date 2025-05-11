@@ -102,7 +102,8 @@ namespace Javo2.ViewModels.Operaciones.Clientes
         public int? GaranteID { get; set; }
         public string NombreGarante { get; set; } = string.Empty;
         public GaranteViewModel? Garante { get; set; }
-
+        public int ClasificacionCredito { get; set; } // Add this property
+        public string TextoClasificacionCredito { get; set; } // Add this property
         public decimal SaldoInicial { get; set; }
         public decimal SaldoDisponible { get; set; }
         public decimal Saldo { get; set; }

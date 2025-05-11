@@ -418,5 +418,29 @@
     "EsRevertido": false,
     "RollbackUser": "",
     "RollbackFecha": null
+  },
+  {
+    "ID": 36,
+    "FechaHora": "2025-05-10T18:50:37.7534913-03:00",
+    "Usuario": "",
+    "Entidad": "Cliente",
+    "Accion": "Create",
+    "LlavePrimaria": "3",
+    "Detalle": "Cliente creado: pepito comefulanito, DNI: 11111111",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
+  },
+  {
+    "ID": 37,
+    "FechaHora": "2025-05-10T18:51:02.3387392-03:00",
+    "Usuario": "Sistema",
+    "Entidad": "Cliente",
+    "Accion": "Delete",
+    "LlavePrimaria": "2",
+    "Detalle": "Cliente eliminado: wqewq qewew, DNI: 31231232",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
   }
 ]

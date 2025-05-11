@@ -12,20 +12,18 @@
         new { Ctrl = "Proveedores", Action = "Index", Icon = "truck-flatbed", Text = "Proveedores", Permiso = "productos.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
         new { Ctrl = "Promociones", Action = "Index", Icon = "tag-fill", Text = "Promociones", Permiso = "productos.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
         // Ajustes de Precios con submenú
-        new {
-            Ctrl = "AjustePrecios",
-            Action = "Index",
-            Icon = "tags",
-            Text = "Ajustes de Precios",
-            Permiso = "productos.ajustarprecios",
-            HasSubmenu = true,
-            Submenu = new List<dynamic> {
-                new { Ctrl = "AjustePrecios", Action = "Index", Icon = "list-ul", Text = "Historial de Ajustes" },
-                new { Ctrl = "AjustePrecios", Action = "Form", Icon = "percent", Text = "Ajuste Permanente" },
-                new { Ctrl = "AjustePrecios", Action = "IndexTemporales", Icon = "calendar-event", Text = "Ajustes Temporales" },
-                new { Ctrl = "AjustePrecios", Action = "FormTemporal", Icon = "calendar-plus", Text = "Nuevo Ajuste Temporal" }
-            }
-        },
+       new {
+    Ctrl = "AjustePrecios",
+    Action = "Index",
+    Icon = "tags",
+    Text = "Ajustes de Precios",
+    Permiso = "productos.ajustarprecios",
+    HasSubmenu = true,
+    Submenu = new List<dynamic> {
+        new { Ctrl = "AjustePrecios", Action = "Index", Icon = "list-ul", Text = "Historial" },
+        new { Ctrl = "AjustePrecios", Action = "FormSelector", Icon = "plus-circle", Text = "Nuevo Ajuste" },
+    }
+},
         new { Ctrl = "DevolucionGarantia", Action = "Index", Icon = "journal-check", Text = "Devoluciones/Garantías", Permiso = "ventas.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
         new { Ctrl = "Reportes", Action = "Index", Icon = "bar-chart-fill", Text = "Reportes", Permiso = "reportes.ver", HasSubmenu = false, Submenu = new List<dynamic>() },
         new { Ctrl = "Configuracion", Action = "Index", Icon = "gear-fill", Text = "Configuración", Permiso = "configuracion.ver", HasSubmenu = false, Submenu = new List<dynamic>() },

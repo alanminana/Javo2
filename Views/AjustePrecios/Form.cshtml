@@ -11,6 +11,14 @@
         <a asp-action="Index" class="btn btn-secondary">
             <i class="bi bi-arrow-left me-1"></i>Volver al Historial
         </a>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Inicio</a></li>
+                <li class="breadcrumb-item"><a asp-controller="AjustePrecios" asp-action="Index">Ajustes de Precios</a></li>
+                <li class="breadcrumb-item"><a asp-controller="AjustePrecios" asp-action="FormSelector">Selector</a></li>
+                <li class="breadcrumb-item active">Ajuste Permanente</li>
+            </ol>
+        </nav>
     </div>
 
     <form asp-action="Form" method="post" id="ajustePreciosForm">

@@ -100,5 +100,25 @@ namespace Javo2.Models
 
         [NotMapped]
         public string Domicilio => $"{Calle} {NumeroCalle}, Piso: {NumeroPiso}, Dpto: {Dpto}";
+        [Range(1, 10, ErrorMessage = "La clasificación debe estar entre 1 y 10")]
+        public int ClasificacionCredito { get; set; } = 1;
+
+        // Esta propiedad calculada mostrará el texto según la clasificación
+        [NotMapped]
+        public string TextoClasificacionCredito
+        {
+            get
+            {
+                return ClasificacionCredito switch
+                {
+                    1 or 2 => "No apto para crédito",
+                    3 or 4 => "Riesgo alto",
+                    5 or 6 => "Riesgo moderado",
+                    7 or 8 => "Apto con garantía",
+                    9 or 10 => "Totalmente apto",
+                    _ => "Sin clasificar"
+                };
+            }
+        }
     }
 }

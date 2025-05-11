@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "Selector de Ajuste de Precios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid py-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Inicio</a></li>
+            <li class="breadcrumb-item"><a asp-controller="AjustePrecios" asp-action="Index">Ajustes de Precios</a></li>
+            <li class="breadcrumb-item active">Selector de Ajuste</li>
+        </ol>
+    </nav>
+
+    <h2 class="mb-4">@ViewBag.Title</h2>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card bg-dark text-light h-100">
+                <div class="card-body text-center p-5">
+                    <i class="bi bi-percent display-1 mb-3 text-primary"></i>
+                    <h3>Ajuste Permanente</h3>
+                    <p class="mb-4">Aplicar un ajuste de precios inmediato y permanente a los productos seleccionados.</p>
+                    <a asp-action="Form" class="btn btn-primary">
+                        <i class="bi bi-arrow-right me-1"></i>Continuar
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card bg-dark text-light h-100">
+                <div class="card-body text-center p-5">
+                    <i class="bi bi-calendar-event display-1 mb-3 text-success"></i>
+                    <h3>Ajuste Temporal</h3>
+                    <p class="mb-4">Programar un ajuste de precios para un período específico (promociones, ofertas, etc).</p>
+                    <a asp-action="FormTemporal" class="btn btn-success">
+                        <i class="bi bi-arrow-right me-1"></i>Continuar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -5,6 +5,14 @@
 }
 
 <section class="container-fluid py-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Inicio</a></li>
+            <li class="breadcrumb-item"><a asp-controller="AjustePrecios" asp-action="Index">Ajustes de Precios</a></li>
+            <li class="breadcrumb-item"><a asp-controller="AjustePrecios" asp-action="FormSelector">Selector</a></li>
+            <li class="breadcrumb-item active">Ajuste Temporal</li>
+        </ol>
+    </nav>
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="card shadow-sm bg-dark text-light">
