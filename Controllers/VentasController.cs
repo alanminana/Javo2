@@ -68,7 +68,31 @@ namespace Javo2.Controllers
                 return View("Error");
             }
         }
+        // En VentasController.CreateFromCotizacion
+        public async Task<IActionResult> CreateFromCotizacion(int id)
+        {
+            var cotizacion = await _cotizacionService.GetCotizacionByIDAsync(id);
+            if (cotizacion == null)
+                return NotFound();
 
+            // Usar AutoMapper en lugar de casteo directo
+            var ventaViewModel = _mapper.Map<VentaFormViewModel>(cotizacion);
+
+            // Ajustar campos específicos de venta
+            ventaViewModel.FechaVenta = DateTime.Today;
+            ventaViewModel.NumeroFactura = await _ventaService.GenerarNumeroFacturaAsync();
+            ventaViewModel.Usuario = User.Identity?.Name ?? "Desconocido";
+            ventaViewModel.Vendedor = User.Identity?.Name ?? "Desconocido";
+            ventaViewModel.Estado = EstadoVenta.Borrador.ToString();
+
+            // Mapear productos
+            ventaViewModel.ProductosPresupuesto = _mapper.Map<List<DetalleVentaViewModel>>(cotizacion.ProductosPresupuesto);
+
+            // Cargar opciones de formulario
+            await CargarCombosAsync(ventaViewModel);
+
+            return View("Form", ventaViewModel);
+        }
         // GET: Ventas/Create
         [HttpGet]
         [Authorize(Policy = "Permission:ventas.crear")]

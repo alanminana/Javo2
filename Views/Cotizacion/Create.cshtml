@@ -1,0 +1,369 @@
+﻿@model Javo2.ViewModels.Operaciones.Ventas.CotizacionViewModel
+@{
+    ViewData["Title"] = "Nueva Cotización";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="container-fluid py-3">
+    <h1 class="h2 mb-4">@ViewData["Title"]</h1>
+
+    <div class="card shadow-sm bg-dark text-light">
+        <div class="card-body">
+            <form asp-action="Create" method="post" id="cotizacionForm" novalidate>
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="row g-3 mb-4">
+                    <!-- Datos básicos de la cotización -->
+                    <div class="col-md-4">
+                        <label asp-for="FechaCotizacion" class="form-label text-light">Fecha</label>
+                        <input asp-for="FechaCotizacion" type="date" class="form-control bg-secondary text-light" />
+                        <span asp-validation-for="FechaCotizacion" class="invalid-feedback d-block"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="NumeroCotizacion" class="form-label text-light">Número</label>
+                        <input asp-for="NumeroCotizacion" class="form-control bg-secondary text-light" readonly />
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="DiasVigencia" class="form-label text-light">Vigencia (días)</label>
+                        <input asp-for="DiasVigencia" type="number" min="1" max="90" class="form-control bg-secondary text-light" />
+                        <span asp-validation-for="DiasVigencia" class="invalid-feedback d-block"></span>
+                    </div>
+                </div>
+
+                <!-- Datos del Cliente (simplificados) -->
+                <fieldset class="mb-4">
+                    <legend class="text-light h5">Datos del Cliente</legend>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label for="DniCliente" class="form-label text-light">DNI</label>
+                            <div class="input-group">
+                                <input type="number" id="DniCliente" name="DniCliente" class="form-control bg-secondary text-light" />
+                                <button type="button" id="buscarCliente" class="btn btn-primary">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <label asp-for="NombreCliente" class="form-label text-light">Cliente</label>
+                            <input asp-for="NombreCliente" class="form-control bg-secondary text-light" />
+                            <span asp-validation-for="NombreCliente" class="invalid-feedback d-block"></span>
+                        </div>
+                    </div>
+                    <div class="row g-3 mt-3">
+                        <div class="col-md-6">
+                            <label asp-for="TelefonoCliente" class="form-label text-light">Teléfono</label>
+                            <input asp-for="TelefonoCliente" class="form-control bg-secondary text-light" />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="EmailCliente" class="form-label text-light">Email</label>
+                            <input asp-for="EmailCliente" class="form-control bg-secondary text-light" />
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Sección de productos (similar a ventas) -->
+                <fieldset class="mb-4">
+                    <legend class="text-light h5">Productos</legend>
+
+                    <!-- Búsqueda de Productos -->
+                    <div class="card mb-4 bg-secondary">
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label for="productoCodigo" class="form-label">Código/Barras</label>
+                                    <div class="input-group">
+                                        <input type="text" id="productoCodigo" class="form-control bg-dark text-light" placeholder="Código o barras" />
+                                        <button type="button" id="buscarProducto" class="btn btn-primary">
+                                            <i class="bi bi-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="productoNombre" class="form-label">Nombre Producto</label>
+                                    <input type="text" id="productoNombre" class="form-control bg-dark text-light" readonly />
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="productoCantidad" class="form-label">Cantidad</label>
+                                    <input type="number" id="productoCantidad" class="form-control bg-dark text-light" value="1" min="1" />
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="productoPrecio" class="form-label">Precio Unit.</label>
+                                    <input type="number" id="productoPrecio" class="form-control bg-dark text-light" readonly />
+                                </div>
+                                <div class="col-12 text-end">
+                                    <button type="button" id="agregarProducto" class="btn btn-success">
+                                        <i class="bi bi-plus-circle me-1"></i> Agregar Producto
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabla de Productos -->
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover table-striped mb-0" id="productosTable">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Producto</th>
+                                    <th>Cant.</th>
+                                    <th>Precio Unit.</th>
+                                    <th>Subtotal</th>
+                                    <th class="text-center">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.ProductosPresupuesto.Count; i++)
+                                {
+                                    var p = Model.ProductosPresupuesto[i];
+                                    <tr data-index="@i">
+                                        <td>
+                                            <input type="hidden" name="ProductosPresupuesto[@i].ProductoID" value="@p.ProductoID" />
+                                            <input type="hidden" name="ProductosPresupuesto[@i].CodigoAlfa" value="@p.CodigoAlfa" />
+                                            <input type="hidden" name="ProductosPresupuesto[@i].CodigoBarra" value="@p.CodigoBarra" />
+                                            <input type="hidden" name="ProductosPresupuesto[@i].Marca" value="@p.Marca" />
+                                            <input type="hidden" name="ProductosPresupuesto[@i].NombreProducto" value="@p.NombreProducto" />
+                                            <input type="hidden" name="ProductosPresupuesto[@i].PrecioUnitario" value="@p.PrecioUnitario" />
+                                            <input type="hidden" name="ProductosPresupuesto[@i].PrecioTotal" value="@p.PrecioTotal" />
+                                            <input type="hidden" name="ProductosPresupuesto[@i].PrecioLista" value="@p.PrecioLista" />
+                                            @(string.IsNullOrEmpty(p.CodigoAlfa) ? p.CodigoBarra : p.CodigoAlfa)
+                                        </td>
+                                        <td>@p.NombreProducto</td>
+                                        <td>
+                                            <input type="number" name="ProductosPresupuesto[@i].Cantidad" value="@p.Cantidad" min="1"
+                                                   class="form-control form-control-sm bg-dark text-light cantidad" />
+                                        </td>
+                                        <td>@p.PrecioUnitario.ToString("C")</td>
+                                        <td><span class="subtotal">@(p.Cantidad * p.PrecioUnitario).ToString("C")</span></td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-sm btn-outline-danger eliminar-producto">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr class="fw-bold">
+                                    <td colspan="2" class="text-end">Total:</td>
+                                    <td><span id="totalProductos">@Model.TotalProductos</span></td>
+                                    <td></td>
+                                    <td><span id="totalVenta">@Model.PrecioTotal.ToString("C")</span></td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </fieldset>
+
+                <!-- Observaciones -->
+                <fieldset class="mb-4">
+                    <legend class="text-light h5">Observaciones</legend>
+                    <div class="row">
+                        <div class="col-12">
+                            <textarea asp-for="Observaciones" class="form-control bg-secondary text-light" rows="3"
+                                      placeholder="Ingrese observaciones o notas para la cotización"></textarea>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Botones de acción -->
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a asp-action="Index" class="btn btn-outline-light">
+                        <i class="bi bi-arrow-left me-1"></i> Volver al listado
+                    </a>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-save me-1"></i> Guardar Cotización
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        $(function() {
+            // Variables para producto actual
+            let productoActual = { id: 0, codigo: '', nombre: '', precio: 0 };
+
+            // Formato moneda
+            const formatCurrency = new Intl.NumberFormat('es-AR', {
+                style: 'currency',
+                currency: 'ARS'
+            });
+
+            // Búsqueda de cliente
+            $('#buscarCliente').on('click', function() {
+                const dni = $('#DniCliente').val();
+                if (!dni) {
+                    alert('Ingrese un DNI para buscar');
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("BuscarClientePorDNI")',
+                    type: 'POST',
+                    data: { dni },
+                    success: function(response) {
+                        if (response.success) {
+                            $('#NombreCliente').val(response.data.nombre);
+                            $('#TelefonoCliente').val(response.data.telefono);
+                            $('#EmailCliente').val(response.data.email);
+                        } else {
+                            alert('Cliente no encontrado');
+                        }
+                    },
+                    error: function() {
+                        alert('Error al buscar cliente');
+                    }
+                });
+            });
+
+            // Búsqueda de producto
+            $('#buscarProducto').on('click', function() {
+                const codigo = $('#productoCodigo').val();
+                if (!codigo) {
+                    alert('Ingrese un código para buscar');
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("BuscarProducto")',
+                    type: 'POST',
+                    data: { codigoProducto: codigo },
+                    success: function(response) {
+                        if (response.success) {
+                            productoActual = {
+                                id: response.data.productoID,
+                                codigoAlfa: response.data.codigoAlfa,
+                                codigoBarra: response.data.codigoBarra,
+                                nombre: response.data.nombreProducto,
+                                marca: response.data.marca,
+                                precio: response.data.precioUnitario,
+                                precioLista: response.data.precioLista
+                            };
+                            $('#productoNombre').val(productoActual.nombre);
+                            $('#productoPrecio').val(productoActual.precio);
+                            $('#productoCantidad').val(1);
+                            $('#productoCantidad').focus();
+                        } else {
+                            alert('Producto no encontrado');
+                            productoActual = { id: 0, nombre: '', precio: 0 };
+                            $('#productoNombre, #productoPrecio').val('');
+                        }
+                    },
+                    error: function() {
+                        alert('Error al buscar producto');
+                    }
+                });
+            });
+
+            // Agregar producto a la tabla
+            $('#agregarProducto').on('click', function() {
+                if (productoActual.id === 0) {
+                    alert('Debe buscar un producto primero');
+                    return;
+                }
+
+                const cantidad = parseInt($('#productoCantidad').val());
+                if (isNaN(cantidad) || cantidad <= 0) {
+                    alert('La cantidad debe ser mayor a cero');
+                    return;
+                }
+
+                // Crear nueva fila
+                const rowCount = $('#productosTable tbody tr').length;
+                const newRow = `
+                    <tr data-index="${rowCount}">
+                        <td>
+                            <input type="hidden" name="ProductosPresupuesto[${rowCount}].ProductoID" value="${productoActual.id}" />
+                            <input type="hidden" name="ProductosPresupuesto[${rowCount}].CodigoAlfa" value="${productoActual.codigoAlfa}" />
+                            <input type="hidden" name="ProductosPresupuesto[${rowCount}].CodigoBarra" value="${productoActual.codigoBarra}" />
+                            <input type="hidden" name="ProductosPresupuesto[${rowCount}].Marca" value="${productoActual.marca}" />
+                            <input type="hidden" name="ProductosPresupuesto[${rowCount}].NombreProducto" value="${productoActual.nombre}" />
+                            <input type="hidden" name="ProductosPresupuesto[${rowCount}].PrecioUnitario" value="${productoActual.precio}" />
+                            <input type="hidden" name="ProductosPresupuesto[${rowCount}].PrecioTotal" value="${productoActual.precio * cantidad}" />
+                            <input type="hidden" name="ProductosPresupuesto[${rowCount}].PrecioLista" value="${productoActual.precioLista}" />
+                            ${productoActual.codigoAlfa || productoActual.codigoBarra}
+                        </td>
+                        <td>${productoActual.nombre}</td>
+                        <td><input type="number" name="ProductosPresupuesto[${rowCount}].Cantidad" value="${cantidad}" min="1" class="form-control form-control-sm bg-dark text-light cantidad" /></td>
+                        <td>${formatCurrency.format(productoActual.precio)}</td>
+                        <td><span class="subtotal">${formatCurrency.format(productoActual.precio * cantidad)}</span></td>
+                        <td class="text-center">
+                            <button type="button" class="btn btn-sm btn-outline-danger eliminar-producto">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+
+                $('#productosTable tbody').append(newRow);
+                updateTotals();
+
+                // Limpiar campos
+                $('#productoCodigo, #productoNombre').val('');
+                productoActual = { id: 0, nombre: '', precio: 0 };
+            });
+
+            // Eliminar producto
+            $(document).on('click', '.eliminar-producto', function() {
+                $(this).closest('tr').remove();
+                updateTotals();
+                reindexRows();
+            });
+
+            // Actualizar totales al cambiar cantidad
+            $(document).on('change', '.cantidad', function() {
+                const row = $(this).closest('tr');
+                const cantidad = parseInt($(this).val());
+                const precio = parseFloat(row.find('input[name$=".PrecioUnitario"]').val());
+                const subtotal = cantidad * precio;
+
+                row.find('.subtotal').text(formatCurrency.format(subtotal));
+                row.find('input[name$=".PrecioTotal"]').val(subtotal);
+
+                updateTotals();
+            });
+
+            // Función para actualizar totales
+            function updateTotals() {
+                let totalProductos = 0;
+                let totalVenta = 0;
+
+                $('#productosTable tbody tr').each(function() {
+                    const cantidad = parseInt($(this).find('.cantidad').val()) || 0;
+                    const precio = parseFloat($(this).find('input[name$=".PrecioUnitario"]').val()) || 0;
+                    const subtotal = cantidad * precio;
+
+                    totalProductos += cantidad;
+                    totalVenta += subtotal;
+                });
+
+                $('#totalProductos').text(totalProductos);
+                $('#totalVenta').text(formatCurrency.format(totalVenta));
+            }
+
+            // Función para reindexar filas después de eliminar
+            function reindexRows() {
+                $('#productosTable tbody tr').each(function(index) {
+                    $(this).attr('data-index', index);
+
+                    $(this).find('input').each(function() {
+                        const name = $(this).attr('name');
+                        if (name) {
+                            const newName = name.replace(/\[\d+\]/, `[${index}]`);
+                            $(this).attr('name', newName);
+                        }
+                    });
+                });
+            }
+
+            // Inicializar totales
+            updateTotals();
+        });
+    </script>
+}

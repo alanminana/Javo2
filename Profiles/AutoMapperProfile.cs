@@ -68,7 +68,17 @@ namespace Javo2
                 .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.Estado.ToString()))
                 .ForMember(dest => dest.EstadoEntrega, opt => opt.Ignore())
                 .ReverseMap();
+            CreateMap<Cotizacion, CotizacionViewModel>()
+    .ForMember(dest => dest.DiasVigencia, opt => opt.Ignore())
+    .ForMember(dest => dest.ProductosPresupuesto, opt => opt.MapFrom(src => src.ProductosPresupuesto))
+    .ReverseMap()
+    .ForMember(dest => dest.ProductosPresupuesto, opt => opt.MapFrom(src => src.ProductosPresupuesto))
+    .ForMember(dest => dest.FechaVencimiento, opt => opt.Ignore())
+    .ForMember(dest => dest.Usuario, opt => opt.Ignore());
 
+            // COTIZACION ↔ CotizacionListViewModel
+            CreateMap<Cotizacion, CotizacionListViewModel>()
+                .ReverseMap();
             // CLIENTE ↔ ClientesViewModel
             CreateMap<Cliente, ClientesViewModel>()
                 .ForMember(dest => dest.Provincias, opt => opt.Ignore())
@@ -170,6 +180,8 @@ namespace Javo2
             CreateMap<AjustePrecioDetalle, AjustePrecioDetalleViewModel>().ReverseMap();
 
             CreateMap<AjustePrecioHistorico, AjusteTemporalViewModel>()
+
+
     .ForMember(dest => dest.EstadoTemporal, opt => opt.MapFrom(src => src.EstadoTemporal.ToString()))
     .ForMember(dest => dest.Detalles, opt => opt.MapFrom(src => src.Detalles))
     .ReverseMap()
