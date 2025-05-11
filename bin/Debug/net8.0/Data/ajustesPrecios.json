@@ -22,7 +22,12 @@
     ],
     "Revertido": false,
     "FechaReversion": null,
-    "UsuarioReversion": ""
+    "UsuarioReversion": "",
+    "EsTemporal": false,
+    "FechaInicio": null,
+    "FechaFin": null,
+    "TipoAjusteTemporal": "",
+    "EstadoTemporal": 0
   },
   {
     "AjusteHistoricoID": 2,
@@ -47,6 +52,41 @@
     ],
     "Revertido": true,
     "FechaReversion": "2025-05-10T16:06:07.8465518-03:00",
-    "UsuarioReversion": "admin"
+    "UsuarioReversion": "admin",
+    "EsTemporal": false,
+    "FechaInicio": null,
+    "FechaFin": null,
+    "TipoAjusteTemporal": "",
+    "EstadoTemporal": 0
+  },
+  {
+    "AjusteHistoricoID": 3,
+    "FechaAjuste": "2025-05-11T13:22:05.3964713-03:00",
+    "UsuarioAjuste": "Sistema",
+    "Porcentaje": 22,
+    "EsAumento": true,
+    "Descripcion": "ewfee",
+    "Detalles": [
+      {
+        "DetalleID": 0,
+        "AjusteHistoricoID": 0,
+        "ProductoID": 2,
+        "NombreProducto": "afeitadora",
+        "PCostoAnterior": 72.872064,
+        "PContadoAnterior": 109.31,
+        "PListaAnterior": 74.33,
+        "PCostoPosterior": 72.872064,
+        "PContadoPosterior": 109.31,
+        "PListaPosterior": 74.33
+      }
+    ],
+    "Revertido": false,
+    "FechaReversion": null,
+    "UsuarioReversion": "",
+    "EsTemporal": true,
+    "FechaInicio": "2025-05-11T13:21:11.5",
+    "FechaFin": "2025-05-22T13:21:11.449",
+    "TipoAjusteTemporal": "Hot Sale",
+    "EstadoTemporal": 2
   }
 ]
