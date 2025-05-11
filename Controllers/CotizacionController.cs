@@ -72,7 +72,7 @@ namespace Javo2.Controllers
                     ProductosPresupuesto = new List<DetalleVentaViewModel>()
                 };
 
-                return View(viewModel);
+                return View("~/Views/Cotizacion/Create.cshtml", viewModel);
             }
             catch (Exception ex)
             {
@@ -91,7 +91,7 @@ namespace Javo2.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return View(model);
+                    return View("~/Views/Cotizacion/Create.cshtml", model);
                 }
 
                 // Mapear a modelo de dominio Cotizacion (no directamente a Venta)
@@ -99,7 +99,8 @@ namespace Javo2.Controllers
                 cotizacion.FechaCotizacion = DateTime.Now;
                 cotizacion.FechaVencimiento = DateTime.Now.AddDays(model.DiasVigencia);
                 cotizacion.Usuario = User.Identity?.Name ?? "Sistema";
-
+                cotizacion.FechaVencimiento = cotizacion.FechaCotizacion
+    .AddDays(cotizacion.DiasVigencia);
                 // Calcular totales
                 if (cotizacion.ProductosPresupuesto != null && cotizacion.ProductosPresupuesto.Any())
                 {
@@ -117,7 +118,7 @@ namespace Javo2.Controllers
             {
                 _logger.LogError(ex, "Error al crear cotización");
                 ModelState.AddModelError(string.Empty, "Error al crear la cotización: " + ex.Message);
-                return View(model);
+                return View("~/Views/Cotizacion/Create.cshtml", model);
             }
         }
 
@@ -147,6 +148,7 @@ namespace Javo2.Controllers
                     DniCliente = formData.ContainsKey("DniCliente") ? int.Parse(formData["DniCliente"]) : 0,
                     TelefonoCliente = formData.ContainsKey("TelefonoCliente") ? formData["TelefonoCliente"] : string.Empty,
                     Observaciones = formData.ContainsKey("Observaciones") ? formData["Observaciones"] : string.Empty,
+
                     ProductosPresupuesto = new List<DetalleVentaViewModel>()
                 };
 
@@ -154,7 +156,11 @@ namespace Javo2.Controllers
                 // Esta parte requeriría una implementación más compleja para extraer 
                 // productos del formulario serializado
 
-                return View("Create", cotizacionViewModel);
+                if (!ModelState.IsValid)
+                {
+                    return View("~/Views/Cotizacion/Create.cshtml", cotizacionViewModel);
+                }
+                return View("~/Views/Cotizacion/Create.cshtml", cotizacionViewModel);
             }
             catch (Exception ex)
             {

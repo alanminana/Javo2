@@ -1,1 +1,50 @@
-﻿
+[
+  {
+    "VentaID": 1,
+    "FechaVenta": "2025-05-11T15:48:09.2237321-03:00",
+    "NumeroFactura": "COT-20250511-1",
+    "Usuario": "admin",
+    "Vendedor": "admin",
+    "DniCliente": 1231,
+    "NombreCliente": "weqwe weqwe",
+    "TelefonoCliente": "1234",
+    "DomicilioCliente": "",
+    "LocalidadCliente": "",
+    "CelularCliente": "",
+    "LimiteCreditoCliente": 0,
+    "SaldoCliente": 0,
+    "SaldoDisponibleCliente": 0,
+    "FormaPagoID": 1,
+    "PromocionesAplicadas": [],
+    "BancoID": null,
+    "TipoTarjeta": "",
+    "Cuotas": null,
+    "EntidadElectronica": "",
+    "PlanFinanciamiento": "",
+    "Observaciones": "sdasd",
+    "Condiciones": "",
+    "Credito": 0,
+    "ProductosPresupuesto": [
+      {
+        "ProductoID": 1,
+        "CodigoAlfa": "P001",
+        "CodigoBarra": "392733305",
+        "NombreProducto": "Producto Inicial",
+        "Marca": "Marca A",
+        "Cantidad": 1,
+        "PrecioUnitario": 20496,
+        "PrecioTotal": 20496,
+        "PrecioLista": 13937
+      }
+    ],
+    "PrecioTotal": 20496,
+    "TotalProductos": 1,
+    "AdelantoDinero": null,
+    "DineroContado": null,
+    "MontoCheque": null,
+    "NumeroCheque": "",
+    "Estado": 0,
+    "CuotasPagas": [],
+    "EstadosEntregaProductos": []
+  }
+]

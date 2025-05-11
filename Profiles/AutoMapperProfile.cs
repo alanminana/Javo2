@@ -147,6 +147,8 @@ namespace Javo2
             // CLIENTE ↔ ClientesViewModel
             CreateMap<Cliente, ClientesViewModel>()
                 .ForMember(dest => dest.Provincias, opt => opt.Ignore())
+                    .ForMember(dest => dest.Garante, opt => opt.Ignore()) // Ignorar la propiedad Garante
+
                 .ForMember(dest => dest.Ciudades, opt => opt.Ignore())
                 .ForMember(dest => dest.HistorialCompras, opt => opt.MapFrom(src => src.Compras))
                 .ForMember(dest => dest.Verificar, opt => opt.Ignore())

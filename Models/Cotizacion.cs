@@ -8,9 +8,15 @@ namespace Javo2.Models
     {
         public int CotizacionID { get; set; }
         public DateTime FechaCotizacion { get; set; }
+
+        // Nuevo: días de vigencia desde la fecha de cotización
+        public int DiasVigencia { get; set; } = 15;
+
         public DateTime FechaVencimiento { get; set; }
         public string NumeroCotizacion { get; set; } = string.Empty;
         public string Usuario { get; set; } = string.Empty;
+        public string EstadoCotizacion { get; set; } = "Borrador";
+
 
         // Datos del Cliente
         public int DniCliente { get; set; }

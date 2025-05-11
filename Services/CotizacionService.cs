@@ -1,102 +1,31 @@
-﻿// File: Services/CotizacionService.cs
+﻿// Services/CotizacionService.cs
 using Javo2.IServices;
 using Javo2.Models;
 using Microsoft.Extensions.Logging;
-using Javo2.Helpers;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
+using Javo2.Helpers;
 
 namespace Javo2.Services
 {
     public class CotizacionService : ICotizacionService
     {
         private readonly ILogger<CotizacionService> _logger;
-        private readonly IMapper _mapper;
-        private static List<Venta> _cotizaciones = new List<Venta>();
-        private static int _nextCotizacionID = 1;
+        private static List<Cotizacion> _cotizaciones = new();
+        private static int _nextId = 1;
         private readonly string _jsonFilePath = "Data/cotizaciones.json";
-        private static readonly object _lock = new object();
+        private static readonly object _lock = new();
 
-        public CotizacionService(ILogger<CotizacionService> logger, IMapper mapper)
+        public CotizacionService(ILogger<CotizacionService> logger)
         {
             _logger = logger;
-            _mapper = mapper;
             CargarDesdeJson();
         }
 
-        public Task CreateCotizacionAsync(Cotizacion cotizacion)
-        {
-            lock (_lock)
-            {
-                var ventaCotizacion = _mapper.Map<Venta>(cotizacion);
-
-                ventaCotizacion.VentaID = _nextCotizacionID++;
-                ventaCotizacion.NumeroFactura = $"COT-{DateTime.Now:yyyyMMdd}-{ventaCotizacion.VentaID}";
-                ventaCotizacion.Estado = EstadoVenta.Borrador;
-
-                _cotizaciones.Add(ventaCotizacion);
-                GuardarEnJson();
-                _logger.LogInformation("Cotización creada: ID={ID}, Cliente={Cliente}", ventaCotizacion.VentaID, ventaCotizacion.NombreCliente);
-            }
-            return Task.CompletedTask;
-        }
-
-        private void CargarDesdeJson()
-        {
-            try
-            {
-                var directory = Path.GetDirectoryName(_jsonFilePath);
-                if (!Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-
-                if (!File.Exists(_jsonFilePath))
-                {
-                    File.WriteAllText(_jsonFilePath, "[]");
-                }
-
-                var data = JsonFileHelper.LoadFromJsonFileAsync<List<Venta>>(_jsonFilePath).GetAwaiter().GetResult();
-
-                lock (_lock)
-                {
-                    _cotizaciones = data ?? new List<Venta>();
-                    if (_cotizaciones.Any())
-                    {
-                        _nextCotizacionID = _cotizaciones.Max(c => c.VentaID) + 1;
-                    }
-                }
-
-                _logger.LogInformation("CotizacionService: {Count} cotizaciones cargadas desde {File}",
-                    _cotizaciones.Count, _jsonFilePath);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al cargar desde JSON: {Path}", _jsonFilePath);
-                _cotizaciones = new List<Venta>();
-            }
-        }
-
-        private void GuardarEnJson()
-        {
-            lock (_lock)
-            {
-                try
-                {
-                    JsonFileHelper.SaveToJsonFile(_jsonFilePath, _cotizaciones);
-                    _logger.LogInformation("CotizacionService: {Count} cotizaciones guardadas en {File}", _cotizaciones.Count, _jsonFilePath);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error al guardar cotizaciones en JSON");
-                }
-            }
-        }
-
-        public Task<IEnumerable<Venta>> GetAllCotizacionesAsync()
+        public Task<IEnumerable<Cotizacion>> GetAllCotizacionesAsync()
         {
             lock (_lock)
             {
@@ -104,47 +33,81 @@ namespace Javo2.Services
             }
         }
 
-        public Task<Venta?> GetCotizacionByIDAsync(int id)
+        public Task<Cotizacion?> GetCotizacionByIDAsync(int id)
         {
             lock (_lock)
             {
-                var cotizacion = _cotizaciones.FirstOrDefault(c => c.VentaID == id);
-                return Task.FromResult(cotizacion);
+                return Task.FromResult(_cotizaciones.FirstOrDefault(c => c.CotizacionID == id));
             }
         }
 
-
-        public Task UpdateCotizacionAsync(Venta cotizacion)
+        public Task<string> GenerarNumeroCotizacionAsync()
         {
             lock (_lock)
             {
-                var existing = _cotizaciones.FirstOrDefault(c => c.VentaID == cotizacion.VentaID);
+                var numero = $"COT-{DateTime.Now:yyyyMMdd}-{_nextId}";
+                return Task.FromResult(numero);
+            }
+        }
+
+        public Task CreateCotizacionAsync(Cotizacion cotizacion)
+        {
+            lock (_lock)
+            {
+                // Asignar ID y número
+                cotizacion.CotizacionID = _nextId++;
+                cotizacion.NumeroCotizacion = $"COT-{DateTime.Now:yyyyMMdd}-{cotizacion.CotizacionID}";
+                cotizacion.EstadoCotizacion = "Borrador";
+
+                // Calcular fechas
+                cotizacion.FechaCotizacion = DateTime.Now;
+                cotizacion.FechaVencimiento = cotizacion.FechaCotizacion
+                                               .AddDays(cotizacion.DiasVigencia);
+
+                // Recalcular totales
+                cotizacion.TotalProductos = cotizacion.ProductosPresupuesto?
+                    .Sum(p => p.Cantidad) ?? 0;
+                cotizacion.PrecioTotal = cotizacion.ProductosPresupuesto?
+                    .Sum(p => p.PrecioTotal) ?? 0m;
+
+                _cotizaciones.Add(cotizacion);
+                GuardarEnJson();
+
+                _logger.LogInformation("Cotización creada: ID={ID}, Vence={Vence}",
+                    cotizacion.CotizacionID, cotizacion.FechaVencimiento.ToShortDateString());
+            }
+            return Task.CompletedTask;
+        }
+
+        public Task UpdateCotizacionAsync(Cotizacion cotizacion)
+        {
+            lock (_lock)
+            {
+                var existing = _cotizaciones
+                    .FirstOrDefault(c => c.CotizacionID == cotizacion.CotizacionID);
                 if (existing != null)
                 {
-                    existing.FechaVenta = cotizacion.FechaVenta;
-                    existing.NumeroFactura = cotizacion.NumeroFactura;
+                    // Actualizar campos básicos
+                    existing.FechaCotizacion = cotizacion.FechaCotizacion;
+                    existing.DiasVigencia = cotizacion.DiasVigencia;
+                    existing.FechaVencimiento = cotizacion.FechaCotizacion
+                                                    .AddDays(cotizacion.DiasVigencia);
                     existing.NombreCliente = cotizacion.NombreCliente;
+                    existing.DniCliente = cotizacion.DniCliente;
                     existing.TelefonoCliente = cotizacion.TelefonoCliente;
-                    existing.DomicilioCliente = cotizacion.DomicilioCliente;
-                    existing.LocalidadCliente = cotizacion.LocalidadCliente;
-                    existing.CelularCliente = cotizacion.CelularCliente;
-                    existing.LimiteCreditoCliente = cotizacion.LimiteCreditoCliente;
-                    existing.SaldoCliente = cotizacion.SaldoCliente;
-                    existing.SaldoDisponibleCliente = cotizacion.SaldoDisponibleCliente;
-                    existing.FormaPagoID = cotizacion.FormaPagoID;
-                    existing.BancoID = cotizacion.BancoID;
-                    existing.TipoTarjeta = cotizacion.TipoTarjeta;
-                    existing.Cuotas = cotizacion.Cuotas;
-                    existing.EntidadElectronica = cotizacion.EntidadElectronica;
-                    existing.PlanFinanciamiento = cotizacion.PlanFinanciamiento;
+                    existing.EmailCliente = cotizacion.EmailCliente;
                     existing.Observaciones = cotizacion.Observaciones;
-                    existing.Condiciones = cotizacion.Condiciones;
-                    existing.Credito = cotizacion.Credito;
+                    existing.EstadoCotizacion = cotizacion.EstadoCotizacion;
+
+                    // Actualizar lista de productos y totales
                     existing.ProductosPresupuesto = cotizacion.ProductosPresupuesto;
-                    existing.PrecioTotal = cotizacion.PrecioTotal;
-                    existing.TotalProductos = cotizacion.TotalProductos;
+                    existing.TotalProductos = cotizacion.ProductosPresupuesto?
+                        .Sum(p => p.Cantidad) ?? 0;
+                    existing.PrecioTotal = cotizacion.ProductosPresupuesto?
+                        .Sum(p => p.PrecioTotal) ?? 0m;
+
                     GuardarEnJson();
-                    _logger.LogInformation("Cotización actualizada: ID={ID}", cotizacion.VentaID);
+                    _logger.LogInformation("Cotización actualizada ID={ID}", cotizacion.CotizacionID);
                 }
             }
             return Task.CompletedTask;
@@ -154,23 +117,54 @@ namespace Javo2.Services
         {
             lock (_lock)
             {
-                var existing = _cotizaciones.FirstOrDefault(c => c.VentaID == id);
+                var existing = _cotizaciones.FirstOrDefault(c => c.CotizacionID == id);
                 if (existing != null)
                 {
                     _cotizaciones.Remove(existing);
                     GuardarEnJson();
-                    _logger.LogInformation("Cotización ID={ID} eliminada", id);
+                    _logger.LogInformation("Cotización eliminada ID={ID}", id);
                 }
             }
             return Task.CompletedTask;
         }
 
-        public Task<string> GenerarNumeroCotizacionAsync()
+        private void CargarDesdeJson()
         {
-            lock (_lock)
+            try
             {
-                var numero = $"COT-{DateTime.Now:yyyyMMdd}-{_nextCotizacionID}";
-                return Task.FromResult(numero);
+                if (!File.Exists(_jsonFilePath))
+                    File.WriteAllText(_jsonFilePath, "[]");
+
+                var data = JsonFileHelper
+                    .LoadFromJsonFileAsync<List<Cotizacion>>(_jsonFilePath)
+                    .GetAwaiter().GetResult();
+
+                lock (_lock)
+                {
+                    _cotizaciones = data ?? new List<Cotizacion>();
+                    _nextId = _cotizaciones.Any()
+                        ? _cotizaciones.Max(c => c.CotizacionID) + 1
+                        : 1;
+                }
+
+                _logger.LogInformation("Cargadas {Count} cotizaciones desde JSON", _cotizaciones.Count);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error cargando cotizaciones desde JSON");
+                _cotizaciones = new();
+            }
+        }
+
+        private void GuardarEnJson()
+        {
+            try
+            {
+                JsonFileHelper.SaveToJsonFile(_jsonFilePath, _cotizaciones);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error guardando cotizaciones en JSON");
             }
         }
     }
