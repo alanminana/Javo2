@@ -9,7 +9,7 @@ namespace Javo2.IServices
     {
         Task<IEnumerable<Venta>> GetAllCotizacionesAsync();
         Task<Venta?> GetCotizacionByIDAsync(int id);
-        Task CreateCotizacionAsync(Venta cotizacion);
+        Task CreateCotizacionAsync(Cotizacion cotizacion);
         Task UpdateCotizacionAsync(Venta cotizacion);
         Task DeleteCotizacionAsync(int id);
         Task<string> GenerarNumeroCotizacionAsync();

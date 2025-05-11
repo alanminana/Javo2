@@ -7,43 +7,58 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Javo2.Models.Authentication;
+using AutoMapper;
 
 namespace Javo2.Services
 {
     public class CotizacionService : ICotizacionService
     {
         private readonly ILogger<CotizacionService> _logger;
+        private readonly IMapper _mapper;
         private static List<Venta> _cotizaciones = new List<Venta>();
         private static int _nextCotizacionID = 1;
         private readonly string _jsonFilePath = "Data/cotizaciones.json";
         private static readonly object _lock = new object();
 
-        public CotizacionService(ILogger<CotizacionService> logger)
+        public CotizacionService(ILogger<CotizacionService> logger, IMapper mapper)
         {
             _logger = logger;
+            _mapper = mapper;
             CargarDesdeJson();
         }
 
-        // En cada método correspondiente de CargarDesdeJson
+        public Task CreateCotizacionAsync(Cotizacion cotizacion)
+        {
+            lock (_lock)
+            {
+                var ventaCotizacion = _mapper.Map<Venta>(cotizacion);
+
+                ventaCotizacion.VentaID = _nextCotizacionID++;
+                ventaCotizacion.NumeroFactura = $"COT-{DateTime.Now:yyyyMMdd}-{ventaCotizacion.VentaID}";
+                ventaCotizacion.Estado = EstadoVenta.Borrador;
+
+                _cotizaciones.Add(ventaCotizacion);
+                GuardarEnJson();
+                _logger.LogInformation("Cotización creada: ID={ID}, Cliente={Cliente}", ventaCotizacion.VentaID, ventaCotizacion.NombreCliente);
+            }
+            return Task.CompletedTask;
+        }
+
         private void CargarDesdeJson()
         {
             try
             {
-                // Asegurarse de que el directorio exista
                 var directory = Path.GetDirectoryName(_jsonFilePath);
                 if (!Directory.Exists(directory))
                 {
                     Directory.CreateDirectory(directory);
                 }
 
-                // Asegurarse de que el archivo exista
                 if (!File.Exists(_jsonFilePath))
                 {
                     File.WriteAllText(_jsonFilePath, "[]");
                 }
 
-                // CORRECCIÓN: Cargar las cotizaciones, no los usuarios
                 var data = JsonFileHelper.LoadFromJsonFileAsync<List<Venta>>(_jsonFilePath).GetAwaiter().GetResult();
 
                 lock (_lock)
@@ -61,10 +76,10 @@ namespace Javo2.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al cargar desde JSON: {Path}", _jsonFilePath);
-                // Reset a una lista vacía de COTIZACIONES (no usuarios)
                 _cotizaciones = new List<Venta>();
             }
         }
+
         private void GuardarEnJson()
         {
             lock (_lock)
@@ -98,20 +113,6 @@ namespace Javo2.Services
             }
         }
 
-        public Task CreateCotizacionAsync(Venta cotizacion)
-        {
-            lock (_lock)
-            {
-                cotizacion.VentaID = _nextCotizacionID++;
-                cotizacion.NumeroFactura = $"COT-{DateTime.Now:yyyyMMdd}-{cotizacion.VentaID}";
-                // Se asigna estado "Borrador" para cotización; se podría definir un estado específico si se extiende el enum.
-                cotizacion.Estado = EstadoVenta.Borrador;
-                _cotizaciones.Add(cotizacion);
-                GuardarEnJson();
-                _logger.LogInformation("Cotización creada: ID={ID}, Cliente={Cliente}", cotizacion.VentaID, cotizacion.NombreCliente);
-            }
-            return Task.CompletedTask;
-        }
 
         public Task UpdateCotizacionAsync(Venta cotizacion)
         {

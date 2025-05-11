@@ -9,7 +9,6 @@ using Javo2.ViewModels.Operaciones.Stock;
 using Javo2.ViewModels.Operaciones.Promociones;
 using Javo2.ViewModels.Operaciones.Ventas;
 using System;
-using Javo2.Controllers;
 
 namespace Javo2
 {
@@ -41,6 +40,44 @@ namespace Javo2
                 .ForMember(dest => dest.Marca, opt => opt.Ignore())
                 .ForMember(dest => dest.Estado, opt => opt.Ignore());
 
+            // En AutoMapperProfile.cs, actualizar el mapeo de Cotizacion -> Venta
+            CreateMap<Cotizacion, Venta>()
+                .ForMember(dest => dest.VentaID, opt => opt.Ignore())
+                .ForMember(dest => dest.FechaVenta, opt => opt.MapFrom(src => src.FechaCotizacion))
+                .ForMember(dest => dest.NumeroFactura, opt => opt.Ignore())
+                .ForMember(dest => dest.Vendedor, opt => opt.MapFrom(src => src.Usuario))
+                .ForMember(dest => dest.DomicilioCliente, opt => opt.MapFrom(src => string.Empty))
+                .ForMember(dest => dest.LocalidadCliente, opt => opt.MapFrom(src => string.Empty))
+                .ForMember(dest => dest.CelularCliente, opt => opt.MapFrom(src => string.Empty))
+                .ForMember(dest => dest.LimiteCreditoCliente, opt => opt.MapFrom(src => 0))
+                .ForMember(dest => dest.SaldoCliente, opt => opt.MapFrom(src => 0))
+                .ForMember(dest => dest.SaldoDisponibleCliente, opt => opt.MapFrom(src => 0))
+                .ForMember(dest => dest.FormaPagoID, opt => opt.MapFrom(src => 1))
+                .ForMember(dest => dest.PromocionesAplicadas, opt => opt.MapFrom(src => new List<PromocionAplicada>()))
+                .ForMember(dest => dest.Condiciones, opt => opt.MapFrom(src => string.Empty))
+                .ForMember(dest => dest.Credito, opt => opt.MapFrom(src => 0))
+                .ForMember(dest => dest.AdelantoDinero, opt => opt.Ignore())
+                .ForMember(dest => dest.DineroContado, opt => opt.Ignore())
+                .ForMember(dest => dest.MontoCheque, opt => opt.Ignore())
+                .ForMember(dest => dest.NumeroCheque, opt => opt.MapFrom(src => string.Empty))
+                .ForMember(dest => dest.CuotasPagas, opt => opt.MapFrom(src => new List<Cuota>()))
+                .ForMember(dest => dest.EstadosEntregaProductos, opt => opt.MapFrom(src => new List<EstadoEntregaProducto>()))
+                .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => EstadoVenta.Borrador));
+
+
+            // COTIZACION ↔ VentaFormViewModel mapping
+            CreateMap<Cotizacion, VentaFormViewModel>()
+                .ForMember(dest => dest.FormasPago, opt => opt.Ignore())
+                .ForMember(dest => dest.Bancos, opt => opt.Ignore())
+                .ForMember(dest => dest.TipoTarjetaOptions, opt => opt.Ignore())
+                .ForMember(dest => dest.CuotasOptions, opt => opt.Ignore())
+                .ForMember(dest => dest.EntidadesElectronicas, opt => opt.Ignore())
+                .ForMember(dest => dest.PlanesFinanciamiento, opt => opt.Ignore())
+                .ForMember(dest => dest.PromocionID, opt => opt.Ignore())
+                .ForMember(dest => dest.Promociones, opt => opt.Ignore())
+                .ForMember(dest => dest.EstadosEntregaProductos, opt => opt.Ignore())
+                .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => EstadoVenta.Borrador.ToString()));
+
             // VENTA ↔ VentaFormViewModel
             CreateMap<Venta, VentaFormViewModel>()
                 .ForMember(dest => dest.FormasPago, opt => opt.Ignore())
@@ -68,17 +105,20 @@ namespace Javo2
                 .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.Estado.ToString()))
                 .ForMember(dest => dest.EstadoEntrega, opt => opt.Ignore())
                 .ReverseMap();
+
+            // COTIZACION ↔ CotizacionViewModel
             CreateMap<Cotizacion, CotizacionViewModel>()
-    .ForMember(dest => dest.DiasVigencia, opt => opt.Ignore())
-    .ForMember(dest => dest.ProductosPresupuesto, opt => opt.MapFrom(src => src.ProductosPresupuesto))
-    .ReverseMap()
-    .ForMember(dest => dest.ProductosPresupuesto, opt => opt.MapFrom(src => src.ProductosPresupuesto))
-    .ForMember(dest => dest.FechaVencimiento, opt => opt.Ignore())
-    .ForMember(dest => dest.Usuario, opt => opt.Ignore());
+                .ForMember(dest => dest.DiasVigencia, opt => opt.Ignore())
+                .ForMember(dest => dest.ProductosPresupuesto, opt => opt.MapFrom(src => src.ProductosPresupuesto))
+                .ReverseMap()
+                .ForMember(dest => dest.ProductosPresupuesto, opt => opt.MapFrom(src => src.ProductosPresupuesto))
+                .ForMember(dest => dest.FechaVencimiento, opt => opt.Ignore())
+                .ForMember(dest => dest.Usuario, opt => opt.Ignore());
 
             // COTIZACION ↔ CotizacionListViewModel
             CreateMap<Cotizacion, CotizacionListViewModel>()
                 .ReverseMap();
+
             // CLIENTE ↔ ClientesViewModel
             CreateMap<Cliente, ClientesViewModel>()
                 .ForMember(dest => dest.Provincias, opt => opt.Ignore())
@@ -109,11 +149,9 @@ namespace Javo2
                 .ForMember(dest => dest.NombreGarante, opt => opt.Ignore())
                 .ReverseMap()
                 .ForMember(dest => dest.Compras, opt => opt.Ignore())
-            .ForMember(dest => dest.ClasificacionCredito, opt => opt.MapFrom(src => src.ClasificacionCredito))
-    .ForMember(dest => dest.TextoClasificacionCredito, opt => opt.MapFrom(src => src.TextoClasificacionCredito))
-    .ReverseMap()
-    // Mapeos reversos existentes...
-    .ForMember(dest => dest.ClasificacionCredito, opt => opt.MapFrom(src => src.ClasificacionCredito));
+                .ForMember(dest => dest.ClasificacionCredito, opt => opt.MapFrom(src => src.ClasificacionCredito))
+                .ForMember(dest => dest.TextoClasificacionCredito, opt => opt.MapFrom(src => src.TextoClasificacionCredito));
+
             // PROVEEDOR ↔ ProveedoresViewModel
             CreateMap<Proveedor, ProveedoresViewModel>()
                 .ForMember(dest => dest.ProductosAsignadosMarcas, opt => opt.Ignore())
@@ -180,14 +218,10 @@ namespace Javo2
             CreateMap<AjustePrecioDetalle, AjustePrecioDetalleViewModel>().ReverseMap();
 
             CreateMap<AjustePrecioHistorico, AjusteTemporalViewModel>()
-
-
-    .ForMember(dest => dest.EstadoTemporal, opt => opt.MapFrom(src => src.EstadoTemporal.ToString()))
-    .ForMember(dest => dest.Detalles, opt => opt.MapFrom(src => src.Detalles))
-    .ReverseMap()
-    .ForMember(dest => dest.EstadoTemporal, opt => opt.MapFrom(src => Enum.Parse<EstadoAjusteTemporal>(src.EstadoTemporal)));
+                .ForMember(dest => dest.EstadoTemporal, opt => opt.MapFrom(src => src.EstadoTemporal.ToString()))
+                .ForMember(dest => dest.Detalles, opt => opt.MapFrom(src => src.Detalles))
+                .ReverseMap()
+                .ForMember(dest => dest.EstadoTemporal, opt => opt.MapFrom(src => Enum.Parse<EstadoAjusteTemporal>(src.EstadoTemporal)));
         }
     }
-    // Fix: Add missing property "ClasificacionCredito" to ClientesViewModel
-
 }

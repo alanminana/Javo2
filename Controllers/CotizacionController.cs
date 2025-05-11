@@ -94,7 +94,7 @@ namespace Javo2.Controllers
                     return View(model);
                 }
 
-                // Mapear a modelo de dominio
+                // Mapear a modelo de dominio Cotizacion (no directamente a Venta)
                 var cotizacion = _mapper.Map<Cotizacion>(model);
                 cotizacion.FechaCotizacion = DateTime.Now;
                 cotizacion.FechaVencimiento = DateTime.Now.AddDays(model.DiasVigencia);
@@ -107,7 +107,7 @@ namespace Javo2.Controllers
                     cotizacion.PrecioTotal = cotizacion.ProductosPresupuesto.Sum(p => p.PrecioTotal);
                 }
 
-                // Guardar
+                // Guardar - El servicio se encargará de la conversión a Venta si es necesario
                 await _cotizacionService.CreateCotizacionAsync(cotizacion);
 
                 TempData["Success"] = "Cotización creada exitosamente";
@@ -188,7 +188,7 @@ namespace Javo2.Controllers
             }
         }
 
-        // Métodos para búsqueda de cliente y productos (similar a VentasController)
+        // Métodos para búsqueda de cliente y productos
         [HttpPost]
         [Authorize(Policy = "Permission:ventas.ver")]
         public async Task<IActionResult> BuscarClientePorDNI(int dni)
