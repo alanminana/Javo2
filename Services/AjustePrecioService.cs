@@ -214,18 +214,37 @@ namespace Javo2.Services
 
         // Nuevos métodos para ajustes temporales
         public async Task<int> CrearAjusteTemporalAsync(
-            IEnumerable<int> productoIDs,
-            decimal porcentaje,
-            bool esAumento,
-            DateTime fechaInicio,
-            DateTime fechaFin,
-            string tipoAjuste,
-            string descripcion = "")
+    IEnumerable<int> productoIDs,
+    decimal porcentaje,
+    bool esAumento,
+    DateTime fechaInicio,
+    DateTime fechaFin,
+    string tipoAjuste,
+    string descripcion = "")
         {
             if (fechaInicio >= fechaFin)
             {
                 throw new ArgumentException("La fecha de inicio debe ser anterior a la fecha de fin.");
             }
+
+            // Truncar fechas a minutos (sin segundos ni milisegundos)
+            fechaInicio = new DateTime(
+                fechaInicio.Year,
+                fechaInicio.Month,
+                fechaInicio.Day,
+                fechaInicio.Hour,
+                fechaInicio.Minute,
+                0
+            );
+
+            fechaFin = new DateTime(
+                fechaFin.Year,
+                fechaFin.Month,
+                fechaFin.Day,
+                fechaFin.Hour,
+                fechaFin.Minute,
+                0
+            );
 
             // Verificar si hay conflictos con otros ajustes temporales
             await VerificarConflictosAjustesTemporalesAsync(productoIDs, fechaInicio, fechaFin);
@@ -242,7 +261,8 @@ namespace Javo2.Services
                 FechaInicio = fechaInicio,
                 FechaFin = fechaFin,
                 TipoAjusteTemporal = tipoAjuste,
-                EstadoTemporal = DateTime.Now >= fechaInicio ? EstadoAjusteTemporal.Activo : EstadoAjusteTemporal.Programado
+                // IMPORTANTE: Siempre configurar como Programado inicialmente
+                EstadoTemporal = EstadoAjusteTemporal.Programado
             };
 
             var detalles = new List<AjustePrecioDetalle>();
@@ -285,15 +305,14 @@ namespace Javo2.Services
 
             await GuardarHistorialAsync();
 
-            // Si debe activarse inmediatamente
-            if (ajusteHistorico.EstadoTemporal == EstadoAjusteTemporal.Activo)
+            // Si debe activarse inmediatamente (la fecha de inicio es ahora o anterior)
+            if (fechaInicio <= DateTime.Now)
             {
                 await ActivarAjusteTemporalAsync(ajusteHistorico.AjusteHistoricoID);
             }
 
             return ajusteHistorico.AjusteHistoricoID;
         }
-
         private async Task VerificarConflictosAjustesTemporalesAsync(IEnumerable<int> productoIDs, DateTime fechaInicio, DateTime fechaFin)
         {
             var ajustesActivos = await ObtenerAjustesTemporalesActivosAsync();
