@@ -730,6 +730,38 @@ namespace Javo2.Controllers
             }
         }
 
+        // GET: Ventas/Create
+        [HttpGet]
+        [Authorize(Policy = "Permission:ventas.crear")]
+        public async Task<IActionResult> Create()
+        {
+            try
+            {
+                _logger.LogInformation("Create GET");
+
+                // Initialize new view model
+                var model = new VentaFormViewModel
+                {
+                    FechaVenta = DateTime.Today,
+                    NumeroFactura = await _ventaService.GenerarNumeroFacturaAsync(),
+                    Usuario = User.Identity?.Name ?? "Desconocido",
+                    Vendedor = User.Identity?.Name ?? "Desconocido",
+                    ProductosPresupuesto = new List<DetalleVentaViewModel>(),
+                    Estado = EstadoVenta.Borrador.ToString()
+                };
+
+                // Load form combos
+                await CargarCombosAsync(model);
+
+                return View("Form", model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al inicializar formulario de venta");
+                return View("Error");
+            }
+        }
+
         // GET: Ventas/GetFormasPagoOptions
         [HttpGet]
         public async Task<IActionResult> GetFormasPagoOptions()

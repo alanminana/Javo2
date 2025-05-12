@@ -22,8 +22,7 @@ namespace Javo2.ViewModels.Operaciones.Ventas
         public string Vendedor { get; set; } = string.Empty;
 
         // Datos del Cliente
-        public int DniCliente { get; set; }
-        public string NombreCliente { get; set; } = string.Empty;
+        public int? DniCliente { get; set; } = 0; public string NombreCliente { get; set; } = string.Empty;
         public string TelefonoCliente { get; set; } = string.Empty;
         public string DomicilioCliente { get; set; } = string.Empty;
         public string LocalidadCliente { get; set; } = string.Empty;

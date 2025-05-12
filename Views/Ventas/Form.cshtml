@@ -197,7 +197,8 @@
                                                        class="form-control form-control-sm bg-dark text-light cantidad" />
                                             </td>
                                             <td>@p.PrecioUnitario.ToString("C")</td>
-                                            <td><span class="subtotal">@(p.Cantidad * p.PrecioUnitario).ToString("C")</span></td>
+                                            <td><span class="subtotal">@((p.Cantidad * p.PrecioUnitario).ToString("C"))</span></td>
+
                                             <td class="text-center">
                                                 <button type="button" class="btn btn-sm btn-outline-danger eliminar-producto" aria-label="Eliminar producto">
                                                     <i class="bi bi-trash"></i>
@@ -610,23 +611,32 @@
             });
 
             // Función para actualizar totales
-            function updateTotals() {
-                let totalProductos = 0;
-                let totalVenta = 0;
+         function updateTotals() {
+            let totalProductos = 0;
+            let totalVenta = 0;
 
-                $('#productosTable tbody tr').each(function() {
-                    const cantidad = parseInt($(this).find('.cantidad').val()) || 0;
-                    const precio = parseFloat($(this).find('input[name$=".PrecioUnitario"]').val()) || 0;
-                    const subtotal = cantidad * precio;
+            $('#productosTable tbody tr').each(function() {
+                const cantidad = parseInt($(this).find('.cantidad').val()) || 0;
+                const precio = parseFloat($(this).find('input[name$=".PrecioUnitario"]').val()) || 0;
+                const subtotal = cantidad * precio;
 
-                    totalProductos += cantidad;
-                    totalVenta += subtotal;
-                });
+                totalProductos += cantidad;
+                totalVenta += subtotal;
 
-                $('#totalProductos').text(totalProductos);
-                $('#totalVenta').text(formatCurrency.format(totalVenta));
-            }
+                // Update hidden field with correct total
+                $(this).find('input[name$=".PrecioTotal"]').val(subtotal);
+            });
 
+            $('#totalProductos').text(totalProductos);
+            $('#totalVenta').text(formatCurrency.format(totalVenta));
+
+            // Add this to update the viewmodel's total
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'PrecioTotal',
+                value: totalVenta
+            }).appendTo('#cotizacionForm');
+        }
             // Función para reindexar filas después de eliminar
             function reindexRows() {
                 $('#productosTable tbody tr').each(function(index) {

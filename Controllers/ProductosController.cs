@@ -405,7 +405,27 @@ namespace Javo2.Controllers
             };
             return View(model);
         }
+        // GET: Productos/Edit/5
+        [HttpGet]
+        [Authorize(Policy = "Permission:productos.editar")]
+        public async Task<IActionResult> Edit(int id)
+        {
+            try
+            {
+                _logger.LogInformation("ProductosController: Edit GET con ID={ID}", id);
+                var producto = await _productoService.GetProductoByIDAsync(id);
+                if (producto == null) return NotFound();
 
+                var model = _mapper.Map<ProductosViewModel>(producto);
+                await PopulateDropdownsAsync(model);
+                return View("Form", model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en Edit GET de Productos");
+                return View("Error");
+            }
+        }
         // POST: Productos/AjusteStock/5
         [HttpPost]
         [ValidateAntiForgeryToken]

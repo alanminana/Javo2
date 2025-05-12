@@ -99,31 +99,44 @@ namespace Javo2.Controllers
             model.EntidadesElectronicas = _ventaService.GetEntidadesElectronicasSelectList();
             model.PlanesFinanciamiento = _ventaService.GetPlanesFinanciamientoSelectList();
         }
-        // POST: Cotizaciones/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = "Permission:ventas.crear")]
+        [Authorize(Policy = "Permission:ventas.ver")]
+
         public async Task<IActionResult> Create(CotizacionViewModel model)
         {
             try
             {
+                // Debug logging to see received values
+                _logger.LogInformation("Create cotización POST - Total productos: {Count}, Precio total: {Price}",
+                    model.ProductosPresupuesto?.Count ?? 0, model.PrecioTotal);
+
                 if (!ModelState.IsValid)
                 {
                     await CargarCombosAsync(model);
                     return View("~/Views/Cotizacion/Create.cshtml", model);
                 }
 
-                // Mapear a modelo de dominio
+                // Map to domain model
                 var cotizacion = _mapper.Map<Cotizacion>(model);
                 cotizacion.FechaCotizacion = DateTime.Now;
                 cotizacion.FechaVencimiento = DateTime.Now.AddDays(model.DiasVigencia);
                 cotizacion.Usuario = User.Identity?.Name ?? "Sistema";
 
-                // Calcular totales
+                // CRITICAL FIX: Calculate totals properly
+                cotizacion.TotalProductos = 0;
+                cotizacion.PrecioTotal = 0;
+
                 if (cotizacion.ProductosPresupuesto != null && cotizacion.ProductosPresupuesto.Any())
                 {
                     cotizacion.TotalProductos = cotizacion.ProductosPresupuesto.Sum(p => p.Cantidad);
-                    cotizacion.PrecioTotal = cotizacion.ProductosPresupuesto.Sum(p => p.PrecioTotal);
+                    cotizacion.PrecioTotal = cotizacion.ProductosPresupuesto.Sum(p => p.Cantidad * p.PrecioUnitario);
+
+                    // Update each item's price total
+                    foreach (var item in cotizacion.ProductosPresupuesto)
+                    {
+                        item.PrecioTotal = item.Cantidad * item.PrecioUnitario;
+                    }
                 }
 
                 await _cotizacionService.CreateCotizacionAsync(cotizacion);

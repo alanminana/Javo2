@@ -190,5 +190,53 @@
     "Estado": 1,
     "CuotasPagas": [],
     "EstadosEntregaProductos": []
+  },
+  {
+    "VentaID": 5,
+    "FechaVenta": "2025-05-12T02:18:52.8975184-03:00",
+    "NumeroFactura": "FAC-20250512-0005",
+    "Usuario": "admin",
+    "Vendedor": "admin",
+    "DniCliente": 0,
+    "NombreCliente": "weqwe weqwe",
+    "TelefonoCliente": "1234",
+    "DomicilioCliente": "dssads 123",
+    "LocalidadCliente": "qw1232req",
+    "CelularCliente": "12312321",
+    "LimiteCreditoCliente": 0,
+    "SaldoCliente": 0,
+    "SaldoDisponibleCliente": 0,
+    "FormaPagoID": 1,
+    "PromocionesAplicadas": [],
+    "BancoID": null,
+    "TipoTarjeta": null,
+    "Cuotas": null,
+    "EntidadElectronica": null,
+    "PlanFinanciamiento": null,
+    "Observaciones": "wqeqw",
+    "Condiciones": "qew",
+    "Credito": 0,
+    "ProductosPresupuesto": [
+      {
+        "ProductoID": 1,
+        "CodigoAlfa": "P001",
+        "CodigoBarra": "392733305",
+        "NombreProducto": "Producto Inicial",
+        "Marca": "Marca A",
+        "Cantidad": 1,
+        "PrecioUnitario": 20496,
+        "PrecioTotal": 20496,
+        "PrecioLista": 13937
+      }
+    ],
+    "PrecioTotal": 20496,
+    "TotalProductos": 1,
+    "AdelantoDinero": 21,
+    "DineroContado": 21,
+    "MontoCheque": 21,
+    "NumeroCheque": "21",
+    "Estado": 1,
+    "CuotasPagas": [],
+    "EstadosEntregaProductos": []
   }
 ]

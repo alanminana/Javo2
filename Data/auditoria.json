@@ -454,5 +454,29 @@
     "EsRevertido": false,
     "RollbackUser": "",
     "RollbackFecha": null
+  },
+  {
+    "ID": 39,
+    "FechaHora": "2025-05-12T02:18:53.0153638-03:00",
+    "Usuario": "admin",
+    "Entidad": "Venta",
+    "Accion": "Create",
+    "LlavePrimaria": "5",
+    "Detalle": "Cliente=weqwe weqwe, Total=20496, Estado=PendienteDeAutorizacion",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
+  },
+  {
+    "ID": 40,
+    "FechaHora": "2025-05-12T02:18:53.0572929-03:00",
+    "Usuario": "admin",
+    "Entidad": "Venta",
+    "Accion": "Create",
+    "LlavePrimaria": "5",
+    "Detalle": "Cliente=weqwe weqwe, Total=20496, Estado=PendienteDeAutorizacion",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
   }
 ]

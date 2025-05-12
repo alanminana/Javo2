@@ -881,5 +881,54 @@
     "DeudaTotal": 0,
     "Estado": 0,
     "StockItem": null
+  },
+  {
+    "ProductoID": 10,
+    "CodigoAlfa": "P010",
+    "CodigoBarra": "745346701",
+    "Nombre": "saddsa",
+    "Descripcion": "wwwq",
+    "PCosto": 100,
+    "PContado": 150.0,
+    "PLista": 102.00,
+    "RubroID": 1,
+    "Rubro": {
+      "ID": 0,
+      "Nombre": "",
+      "SubRubros": []
+    },
+    "SubRubroID": 2,
+    "SubRubro": {
+      "ID": 0,
+      "Nombre": "",
+      "RubroID": 0,
+      "Rubro": {
+        "ID": 0,
+        "Nombre": "",
+        "SubRubros": []
+      }
+    },
+    "MarcaID": 1,
+    "Marca": null,
+    "PorcentajeIva": 21.00,
+    "FechaMod": "2025-05-11T20:41:01.7569675-03:00",
+    "FechaModPrecio": "2025-05-11T20:41:01.7569693-03:00",
+    "Entregable": false,
+    "NoListar": false,
+    "Proveedor": {
+      "ProveedorID": 0,
+      "Nombre": "",
+      "Direccion": "",
+      "Telefono": "",
+      "Email": "",
+      "CondicionesPago": "",
+      "ProductosAsignados": []
+    },
+    "Usuario": "",
+    "ModificadoPor": "admin",
+    "EstadoComentario": "",
+    "DeudaTotal": 0,
+    "Estado": 0,
+    "StockItem": null
   }
 ]
