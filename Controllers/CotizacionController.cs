@@ -39,16 +39,20 @@ namespace Javo2.Controllers
             _mapper = mapper;
         }
 
-        // GET: Cotizaciones
         [HttpGet]
         [Authorize(Policy = "Permission:ventas.ver")]
         public async Task<IActionResult> Index()
         {
             try
             {
+                // Carga las cotizaciones
                 var cotizaciones = await _cotizacionService.GetAllCotizacionesAsync();
+
+                // Mapea al modelo de vista
                 var viewModel = _mapper.Map<IEnumerable<CotizacionListViewModel>>(cotizaciones);
-                return View(viewModel);
+
+                // Pasa el modelo a la vista
+                return View("~/Views/Cotizacion/Index.cshtml", viewModel);
             }
             catch (Exception ex)
             {
@@ -58,8 +62,9 @@ namespace Javo2.Controllers
         }
 
         // GET: Cotizaciones/Create
+
         [HttpGet]
-        [Authorize(Policy = "Permission:ventas.crear")]
+        [Authorize(Policy = "Permission:ventas.ver")]
         public async Task<IActionResult> Create()
         {
             try
@@ -72,6 +77,9 @@ namespace Javo2.Controllers
                     ProductosPresupuesto = new List<DetalleVentaViewModel>()
                 };
 
+                // Cargar opciones de forma de pago
+                await CargarCombosAsync(viewModel);
+
                 return View("~/Views/Cotizacion/Create.cshtml", viewModel);
             }
             catch (Exception ex)
@@ -81,6 +89,16 @@ namespace Javo2.Controllers
             }
         }
 
+        private async Task CargarCombosAsync(CotizacionViewModel model)
+        {
+            // Cargar las formas de pago y otras opciones desde el servicio de ventas
+            model.FormasPago = _ventaService.GetFormasPagoSelectList();
+            model.Bancos = _ventaService.GetBancosSelectList();
+            model.TipoTarjetaOptions = _ventaService.GetTipoTarjetaSelectList();
+            model.CuotasOptions = _ventaService.GetCuotasSelectList();
+            model.EntidadesElectronicas = _ventaService.GetEntidadesElectronicasSelectList();
+            model.PlanesFinanciamiento = _ventaService.GetPlanesFinanciamientoSelectList();
+        }
         // POST: Cotizaciones/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -91,16 +109,16 @@ namespace Javo2.Controllers
             {
                 if (!ModelState.IsValid)
                 {
+                    await CargarCombosAsync(model);
                     return View("~/Views/Cotizacion/Create.cshtml", model);
                 }
 
-                // Mapear a modelo de dominio Cotizacion (no directamente a Venta)
+                // Mapear a modelo de dominio
                 var cotizacion = _mapper.Map<Cotizacion>(model);
                 cotizacion.FechaCotizacion = DateTime.Now;
                 cotizacion.FechaVencimiento = DateTime.Now.AddDays(model.DiasVigencia);
                 cotizacion.Usuario = User.Identity?.Name ?? "Sistema";
-                cotizacion.FechaVencimiento = cotizacion.FechaCotizacion
-    .AddDays(cotizacion.DiasVigencia);
+
                 // Calcular totales
                 if (cotizacion.ProductosPresupuesto != null && cotizacion.ProductosPresupuesto.Any())
                 {
@@ -108,7 +126,6 @@ namespace Javo2.Controllers
                     cotizacion.PrecioTotal = cotizacion.ProductosPresupuesto.Sum(p => p.PrecioTotal);
                 }
 
-                // Guardar - El servicio se encargará de la conversión a Venta si es necesario
                 await _cotizacionService.CreateCotizacionAsync(cotizacion);
 
                 TempData["Success"] = "Cotización creada exitosamente";
@@ -118,6 +135,7 @@ namespace Javo2.Controllers
             {
                 _logger.LogError(ex, "Error al crear cotización");
                 ModelState.AddModelError(string.Empty, "Error al crear la cotización: " + ex.Message);
+                await CargarCombosAsync(model);
                 return View("~/Views/Cotizacion/Create.cshtml", model);
             }
         }
@@ -169,6 +187,104 @@ namespace Javo2.Controllers
             }
         }
 
+        [HttpPost]
+        [Authorize(Policy = "Permission:ventas.ver")]
+        public async Task<IActionResult> BuscarProducto(string codigoProducto)
+        {
+            try
+            {
+                // Try by specific code first
+                var producto = await _productoService.GetProductoByCodigoAsync(codigoProducto);
+
+                // If not found, try by name or general term
+                if (producto == null)
+                {
+                    var productos = await _productoService.GetProductosByTermAsync(codigoProducto);
+                    producto = productos.FirstOrDefault();
+                }
+
+                if (producto == null)
+                    return Json(new { success = false, message = "Producto no encontrado" });
+
+                return Json(new
+                {
+                    success = true,
+                    data = new
+                    {
+                        productoID = producto.ProductoID,
+                        codigoBarra = producto.CodigoBarra,
+                        codigoAlfa = producto.CodigoAlfa,
+                        nombreProducto = producto.Nombre,
+                        marca = producto.Marca?.Nombre ?? "",
+                        precioUnitario = producto.PContado,
+                        precioLista = producto.PLista
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al buscar producto");
+                return Json(new { success = false, message = "Error al buscar producto" });
+            }
+        }
+        [HttpGet]
+        [Authorize(Policy = "Permission:ventas.ver")]
+        public async Task<IActionResult> Details(int id)
+        {
+            try
+            {
+                var cotizacion = await _cotizacionService.GetCotizacionByIDAsync(id);
+                if (cotizacion == null)
+                    return NotFound();
+
+                return View("~/Views/Cotizacion/Detalles.cshtml", cotizacion);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener detalles de cotización");
+                return View("Error");
+            }
+        }
+
+        [HttpGet]
+        [Authorize(Policy = "Permission:ventas.eliminar")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                var cotizacion = await _cotizacionService.GetCotizacionByIDAsync(id);
+                if (cotizacion == null)
+                    return NotFound();
+
+                var viewModel = _mapper.Map<CotizacionListViewModel>(cotizacion);
+                return View("~/Views/Cotizacion/Delete.cshtml", viewModel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cargar cotización para eliminar");
+                return View("Error");
+            }
+        }
+
+        [HttpPost]
+        [ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:ventas.eliminar")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            try
+            {
+                await _cotizacionService.DeleteCotizacionAsync(id);
+                TempData["Success"] = "Cotización eliminada exitosamente";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar cotización");
+                TempData["Error"] = "Error al eliminar la cotización";
+                return RedirectToAction(nameof(Index));
+            }
+        }
         // GET: Cotizaciones/ConvertToVenta/5
         [HttpGet]
         [Authorize(Policy = "Permission:ventas.crear")]
@@ -223,36 +339,6 @@ namespace Javo2.Controllers
             }
         }
 
-        [HttpPost]
-        [Authorize(Policy = "Permission:ventas.ver")]
-        public async Task<IActionResult> BuscarProducto(string codigoProducto)
-        {
-            try
-            {
-                var producto = await _productoService.GetProductoByCodigoAsync(codigoProducto);
-                if (producto == null)
-                    return Json(new { success = false, message = "Producto no encontrado" });
-
-                return Json(new
-                {
-                    success = true,
-                    data = new
-                    {
-                        productoID = producto.ProductoID,
-                        codigoBarra = producto.CodigoBarra,
-                        codigoAlfa = producto.CodigoAlfa,
-                        nombreProducto = producto.Nombre,
-                        marca = producto.Marca?.Nombre ?? "",
-                        precioUnitario = producto.PContado,
-                        precioLista = producto.PLista
-                    }
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al buscar producto");
-                return Json(new { success = false, message = "Error al buscar producto" });
-            }
-        }
+        
     }
 }

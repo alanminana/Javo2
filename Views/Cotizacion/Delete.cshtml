@@ -51,7 +51,7 @@
                 </div>
             </div>
 
-            <form asp-action="Delete" method="post">
+            <form asp-action="DeleteCotizacionConfirmed" method="post">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="id" value="@Model.VentaID" />
                 <div class="d-flex justify-content-between">

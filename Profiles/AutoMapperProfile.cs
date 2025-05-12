@@ -85,6 +85,7 @@ namespace Javo2
                 .ForMember(dest => dest.BancoID, opt => opt.MapFrom(src => (int?)null))
                 .ForMember(dest => dest.TipoTarjeta, opt => opt.MapFrom(src => string.Empty))
                 .ForMember(dest => dest.Cuotas, opt => opt.MapFrom(src => (int?)null))
+
                 .ForMember(dest => dest.EntidadElectronica, opt => opt.MapFrom(src => string.Empty))
                 .ForMember(dest => dest.PlanFinanciamiento, opt => opt.MapFrom(src => string.Empty))
                 .ForMember(dest => dest.Condiciones, opt => opt.MapFrom(src => $"Generado desde cotización - {src.NumeroCotizacion}"))
@@ -131,15 +132,20 @@ namespace Javo2
                 .ForMember(dest => dest.EstadoEntrega, opt => opt.Ignore())
                 .ReverseMap();
 
+            // En AutoMapperProfile.cs
             // COTIZACION ↔ CotizacionViewModel
             CreateMap<Cotizacion, CotizacionViewModel>()
-                .ForMember(dest => dest.DiasVigencia, opt => opt.Ignore())
                 .ForMember(dest => dest.ProductosPresupuesto, opt => opt.MapFrom(src => src.ProductosPresupuesto))
                 .ReverseMap()
                 .ForMember(dest => dest.ProductosPresupuesto, opt => opt.MapFrom(src => src.ProductosPresupuesto))
                 .ForMember(dest => dest.FechaVencimiento, opt => opt.Ignore())
                 .ForMember(dest => dest.Usuario, opt => opt.Ignore());
 
+            // COTIZACION ↔ CotizacionListViewModel
+            CreateMap<Cotizacion, CotizacionListViewModel>().ReverseMap();
+
+            // DetalleVenta ↔ DetalleVentaViewModel
+            CreateMap<DetalleVenta, DetalleVentaViewModel>().ReverseMap();
             // COTIZACION ↔ CotizacionListViewModel
             CreateMap<Cotizacion, CotizacionListViewModel>()
                 .ReverseMap();

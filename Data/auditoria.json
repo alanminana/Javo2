@@ -442,5 +442,17 @@
     "EsRevertido": false,
     "RollbackUser": "",
     "RollbackFecha": null
+  },
+  {
+    "ID": 38,
+    "FechaHora": "2025-05-11T20:41:01.8646921-03:00",
+    "Usuario": "admin",
+    "Entidad": "Producto",
+    "Accion": "Create",
+    "LlavePrimaria": "10",
+    "Detalle": "saddsa",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
   }
 ]

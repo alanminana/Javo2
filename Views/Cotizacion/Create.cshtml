@@ -31,38 +31,118 @@
                     </div>
                 </div>
 
-                <!-- Datos del Cliente (simplificados) -->
+                <!-- Forma de Pago -->
                 <fieldset class="mb-4">
-                    <legend class="text-light h5">Datos del Cliente</legend>
+                    <legend class="text-light h5">Forma de Pago</legend>
                     <div class="row g-3">
-                        <div class="col-md-4">
-                            <label for="DniCliente" class="form-label text-light">DNI</label>
-                            <div class="input-group">
-                                <input type="number" id="DniCliente" name="DniCliente" class="form-control bg-secondary text-light" />
-                                <button type="button" id="buscarCliente" class="btn btn-primary">
-                                    <i class="bi bi-search"></i>
-                                </button>
+                        <div class="col-md-6">
+                            <label asp-for="FormaPagoID" class="form-label text-light">Forma de Pago</label>
+                            <select asp-for="FormaPagoID" asp-items="Model.FormasPago" class="form-select bg-secondary text-light">
+                                <option value="">-- Seleccione --</option>
+                            </select>
+                            <span asp-validation-for="FormaPagoID" class="invalid-feedback d-block"></span>
+                        </div>
+
+                        <!-- Contenedores condicionales para cada forma de pago -->
+                        <div class="col-md-6">
+                            <!-- Tarjeta de Crédito (FormaPagoID = 2) -->
+                            <div id="tarjetaCreditoContainer" class="payment-container d-none">
+                                <div class="row g-2">
+                                    <div class="col-12">
+                                        <label asp-for="TipoTarjeta" class="form-label text-light">Tipo de Tarjeta</label>
+                                        <select asp-for="TipoTarjeta" asp-items="Model.TipoTarjetaOptions"
+                                                class="form-select bg-secondary text-light">
+                                            <option value="">-- Seleccione --</option>
+                                        </select>
+                                        <span asp-validation-for="TipoTarjeta" class="invalid-feedback d-block"></span>
+                                    </div>
+                                    <div class="col-12 mt-2">
+                                        <label asp-for="Cuotas" class="form-label text-light">Cuotas</label>
+                                        <select asp-for="Cuotas" asp-items="Model.CuotasOptions"
+                                                class="form-select bg-secondary text-light">
+                                            <option value="">-- Seleccione --</option>
+                                        </select>
+                                        <span asp-validation-for="Cuotas" class="invalid-feedback d-block"></span>
+                                    </div>
+                                    <div class="col-12 mt-2">
+                                        <label asp-for="BancoID" class="form-label text-light">Banco</label>
+                                        <select asp-for="BancoID" asp-items="Model.Bancos"
+                                                class="form-select bg-secondary text-light">
+                                            <option value="">-- Seleccione --</option>
+                                        </select>
+                                        <span asp-validation-for="BancoID" class="invalid-feedback d-block"></span>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-8">
-                            <label asp-for="NombreCliente" class="form-label text-light">Cliente</label>
-                            <input asp-for="NombreCliente" class="form-control bg-secondary text-light" />
-                            <span asp-validation-for="NombreCliente" class="invalid-feedback d-block"></span>
-                        </div>
-                    </div>
-                    <div class="row g-3 mt-3">
-                        <div class="col-md-6">
-                            <label asp-for="TelefonoCliente" class="form-label text-light">Teléfono</label>
-                            <input asp-for="TelefonoCliente" class="form-control bg-secondary text-light" />
-                        </div>
-                        <div class="col-md-6">
-                            <label asp-for="EmailCliente" class="form-label text-light">Email</label>
-                            <input asp-for="EmailCliente" class="form-control bg-secondary text-light" />
+
+                            <!-- Tarjeta de Débito (FormaPagoID = 3) -->
+                            <div id="tarjetaDebitoContainer" class="payment-container d-none">
+                                <div class="row g-2">
+                                    <div class="col-12">
+                                        <label asp-for="BancoID" class="form-label text-light">Banco</label>
+                                        <select asp-for="BancoID" asp-items="Model.Bancos"
+                                                class="form-select bg-secondary text-light">
+                                            <option value="">-- Seleccione --</option>
+                                        </select>
+                                        <span asp-validation-for="BancoID" class="invalid-feedback d-block"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Transferencia (FormaPagoID = 4) -->
+                            <div id="transferenciaContainer" class="payment-container d-none">
+                                <div class="row g-2">
+                                    <div class="col-12">
+                                        <label asp-for="BancoID" class="form-label text-light">Banco</label>
+                                        <select asp-for="BancoID" asp-items="Model.Bancos"
+                                                class="form-select bg-secondary text-light">
+                                            <option value="">-- Seleccione --</option>
+                                        </select>
+                                        <span asp-validation-for="BancoID" class="invalid-feedback d-block"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pago Virtual (FormaPagoID = 5) -->
+                            <div id="pagoVirtualContainer" class="payment-container d-none">
+                                <div class="row g-2">
+                                    <div class="col-12">
+                                        <label asp-for="EntidadElectronica" class="form-label text-light">Entidad Electrónica</label>
+                                        <select asp-for="EntidadElectronica" asp-items="Model.EntidadesElectronicas"
+                                                class="form-select bg-secondary text-light">
+                                            <option value="">-- Seleccione --</option>
+                                        </select>
+                                        <span asp-validation-for="EntidadElectronica" class="invalid-feedback d-block"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Crédito Personal (FormaPagoID = 6) -->
+                            <div id="creditoPersonalContainer" class="payment-container d-none">
+                                <div class="row g-2">
+                                    <div class="col-12">
+                                        <label asp-for="PlanFinanciamiento" class="form-label text-light">Plan de Financiamiento</label>
+                                        <select asp-for="PlanFinanciamiento" asp-items="Model.PlanesFinanciamiento"
+                                                class="form-select bg-secondary text-light">
+                                            <option value="">-- Seleccione --</option>
+                                        </select>
+                                        <span asp-validation-for="PlanFinanciamiento" class="invalid-feedback d-block"></span>
+                                    </div>
+                                    <div class="col-12 mt-2">
+                                        <label asp-for="Cuotas" class="form-label text-light">Cuotas</label>
+                                        <select asp-for="Cuotas" asp-items="Model.CuotasOptions"
+                                                class="form-select bg-secondary text-light">
+                                            <option value="">-- Seleccione --</option>
+                                        </select>
+                                        <span asp-validation-for="Cuotas" class="invalid-feedback d-block"></span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </fieldset>
 
-                <!-- Sección de productos (similar a ventas) -->
+                <!-- Sección de productos -->
                 <fieldset class="mb-4">
                     <legend class="text-light h5">Productos</legend>
 
@@ -71,9 +151,9 @@
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-md-4">
-                                    <label for="productoCodigo" class="form-label">Código/Barras</label>
+                                    <label for="productoCodigo" class="form-label">Código/Nombre</label>
                                     <div class="input-group">
-                                        <input type="text" id="productoCodigo" class="form-control bg-dark text-light" placeholder="Código o barras" />
+                                        <input type="text" id="productoCodigo" class="form-control bg-dark text-light" placeholder="Código, barras o nombre" />
                                         <button type="button" id="buscarProducto" class="btn btn-primary">
                                             <i class="bi bi-search"></i>
                                         </button>
@@ -182,12 +262,38 @@
     </div>
 </section>
 
+<!-- Modal de producto no encontrado -->
+<div class="modal fade" id="productoNoEncontradoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+                <h5 class="modal-title">Producto no encontrado</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>No se encontró ningún producto con ese código o nombre.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
     <script>
         $(function() {
             // Variables para producto actual
-            let productoActual = { id: 0, codigo: '', nombre: '', precio: 0 };
+            let productoActual = {
+                id: 0,
+                codigoAlfa: '',
+                codigoBarra: '',
+                nombre: '',
+                marca: '',
+                precio: 0,
+                precioLista: 0
+            };
 
             // Formato moneda
             const formatCurrency = new Intl.NumberFormat('es-AR', {
@@ -195,38 +301,11 @@
                 currency: 'ARS'
             });
 
-            // Búsqueda de cliente
-            $('#buscarCliente').on('click', function() {
-                const dni = $('#DniCliente').val();
-                if (!dni) {
-                    alert('Ingrese un DNI para buscar');
-                    return;
-                }
-
-                $.ajax({
-                    url: '@Url.Action("BuscarClientePorDNI")',
-                    type: 'POST',
-                    data: { dni },
-                    success: function(response) {
-                        if (response.success) {
-                            $('#NombreCliente').val(response.data.nombre);
-                            $('#TelefonoCliente').val(response.data.telefono);
-                            $('#EmailCliente').val(response.data.email);
-                        } else {
-                            alert('Cliente no encontrado');
-                        }
-                    },
-                    error: function() {
-                        alert('Error al buscar cliente');
-                    }
-                });
-            });
-
             // Búsqueda de producto
             $('#buscarProducto').on('click', function() {
                 const codigo = $('#productoCodigo').val();
                 if (!codigo) {
-                    alert('Ingrese un código para buscar');
+                    alert('Ingrese un código o nombre para buscar');
                     return;
                 }
 
@@ -250,7 +329,7 @@
                             $('#productoCantidad').val(1);
                             $('#productoCantidad').focus();
                         } else {
-                            alert('Producto no encontrado');
+                            $('#productoNoEncontradoModal').modal('show');
                             productoActual = { id: 0, nombre: '', precio: 0 };
                             $('#productoNombre, #productoPrecio').val('');
                         }
@@ -361,6 +440,44 @@
                     });
                 });
             }
+
+            // Enter key search
+            $('#productoCodigo').keypress(function(e) {
+                if(e.which === 13) {
+                    e.preventDefault();
+                    $('#buscarProducto').click();
+                }
+            });
+
+            // Mostrar/ocultar campos según forma de pago
+            $('#FormaPagoID').change(function() {
+                const formaPagoID = parseInt($(this).val());
+
+                // Ocultar todos los contenedores
+                $('.payment-container').addClass('d-none');
+
+                // Mostrar el contenedor correspondiente
+                switch (formaPagoID) {
+                    case 2: // Tarjeta de Crédito
+                        $('#tarjetaCreditoContainer').removeClass('d-none');
+                        break;
+                    case 3: // Tarjeta de Débito
+                        $('#tarjetaDebitoContainer').removeClass('d-none');
+                        break;
+                    case 4: // Transferencia
+                        $('#transferenciaContainer').removeClass('d-none');
+                        break;
+                    case 5: // Pago Virtual
+                        $('#pagoVirtualContainer').removeClass('d-none');
+                        break;
+                    case 6: // Crédito Personal
+                        $('#creditoPersonalContainer').removeClass('d-none');
+                        break;
+                }
+            });
+
+            // Ejecutar cambio inicial para mostrar campos si ya hay forma de pago seleccionada
+            $('#FormaPagoID').trigger('change');
 
             // Inicializar totales
             updateTotals();

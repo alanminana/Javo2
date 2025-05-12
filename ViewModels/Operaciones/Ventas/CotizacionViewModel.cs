@@ -18,7 +18,7 @@ namespace Javo2.ViewModels.Operaciones.Ventas
         [Display(Name = "Número")]
         public string NumeroCotizacion { get; set; } = string.Empty;
 
-        // Datos básicos del Cliente (reducidos)
+        // Datos básicos del Cliente
         public int DniCliente { get; set; }
 
         [Required(ErrorMessage = "El nombre del cliente es requerido")]
@@ -28,14 +28,14 @@ namespace Javo2.ViewModels.Operaciones.Ventas
         public string TelefonoCliente { get; set; } = string.Empty;
         public string EmailCliente { get; set; } = string.Empty;
 
-        // Productos (igual a ventas, necesitamos el detalle)
+        // Productos
         public List<DetalleVentaViewModel> ProductosPresupuesto { get; set; } = new List<DetalleVentaViewModel>();
 
         // Totales
         public decimal PrecioTotal { get; set; }
         public int TotalProductos { get; set; }
 
-        // Vigencia y observaciones para cotización
+        // Vigencia y observaciones
         [Display(Name = "Vigencia (días)")]
         [Range(1, 90, ErrorMessage = "La vigencia debe estar entre 1 y 90 días")]
         public int DiasVigencia { get; set; } = 15;
@@ -43,17 +43,24 @@ namespace Javo2.ViewModels.Operaciones.Ventas
         [Display(Name = "Observaciones")]
         public string Observaciones { get; set; } = string.Empty;
 
-        // Validación
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            if (ProductosPresupuesto == null || ProductosPresupuesto.Count == 0)
-            {
-                yield return new ValidationResult(
-                    "Debe agregar al menos un producto a la cotización.",
-                    new[] { nameof(ProductosPresupuesto) }
-                );
-            }
-        }
+        // Formas de pago
+        public int FormaPagoID { get; set; }
+        public IEnumerable<SelectListItem> FormasPago { get; set; } = new List<SelectListItem>();
+
+        public int? BancoID { get; set; }
+        public IEnumerable<SelectListItem> Bancos { get; set; } = new List<SelectListItem>();
+
+        public string TipoTarjeta { get; set; } = string.Empty;
+        public IEnumerable<SelectListItem> TipoTarjetaOptions { get; set; } = new List<SelectListItem>();
+
+        public int? Cuotas { get; set; }
+        public IEnumerable<SelectListItem> CuotasOptions { get; set; } = new List<SelectListItem>();
+
+        public string EntidadElectronica { get; set; } = string.Empty;
+        public IEnumerable<SelectListItem> EntidadesElectronicas { get; set; } = new List<SelectListItem>();
+
+        public string PlanFinanciamiento { get; set; } = string.Empty;
+        public IEnumerable<SelectListItem> PlanesFinanciamiento { get; set; } = new List<SelectListItem>();
     }
 
     public class CotizacionListViewModel

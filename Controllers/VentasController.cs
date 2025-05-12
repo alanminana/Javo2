@@ -89,6 +89,20 @@ namespace Javo2.Controllers
                 ventaViewModel.Usuario = User.Identity?.Name ?? "Desconocido";
                 ventaViewModel.Vendedor = User.Identity?.Name ?? "Desconocido";
 
+                // Asignar manualmente los datos faltantes
+                ventaViewModel.NombreCliente = cotizacion.NombreCliente;
+                ventaViewModel.DniCliente = cotizacion.DniCliente;
+                ventaViewModel.TelefonoCliente = cotizacion.TelefonoCliente;
+
+                // Usar valores por defecto para los campos faltantes
+                ventaViewModel.DomicilioCliente = string.Empty;
+                ventaViewModel.LocalidadCliente = string.Empty;
+                ventaViewModel.CelularCliente = string.Empty;
+
+                // Observaciones relacionadas con la cotización
+                ventaViewModel.Observaciones = cotizacion.Observaciones;
+                ventaViewModel.Condiciones = $"Generado desde cotización #{cotizacion.CotizacionID} - {cotizacion.NumeroCotizacion}";
+
                 // Cargar combos para el formulario
                 await CargarCombosAsync(ventaViewModel);
 
@@ -100,29 +114,43 @@ namespace Javo2.Controllers
                 return View("Error");
             }
         }
-        // GET: Ventas/Create
         [HttpGet]
         [Authorize(Policy = "Permission:ventas.crear")]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> ConvertirCotizacionAVenta(int id)
         {
             try
             {
-                _logger.LogInformation("Create GET => Inicializando formulario de venta");
-                var viewModel = new VentaFormViewModel
+                var cotizacion = await _cotizacionService.GetCotizacionByIDAsync(id);
+                if (cotizacion == null)
+                    return NotFound();
+
+                // Crear VentaFormViewModel directamente sin mapeo automático
+                var ventaViewModel = new VentaFormViewModel
                 {
                     FechaVenta = DateTime.Today,
                     NumeroFactura = await _ventaService.GenerarNumeroFacturaAsync(),
                     Usuario = User.Identity?.Name ?? "Desconocido",
                     Vendedor = User.Identity?.Name ?? "Desconocido",
-                    ProductosPresupuesto = new List<DetalleVentaViewModel>(),
-                    Estado = EstadoVenta.Borrador.ToString()
+                    DniCliente = cotizacion.DniCliente,
+                    NombreCliente = cotizacion.NombreCliente,
+                    TelefonoCliente = cotizacion.TelefonoCliente,
+                    DomicilioCliente = cotizacion.DomicilioCliente ?? string.Empty,
+                    LocalidadCliente = cotizacion.LocalidadCliente ?? string.Empty,
+                    CelularCliente = cotizacion.CelularCliente ?? string.Empty,
+                    ProductosPresupuesto = _mapper.Map<List<DetalleVentaViewModel>>(cotizacion.ProductosPresupuesto),
+                    Estado = EstadoVenta.Borrador.ToString(),
+                    Observaciones = cotizacion.Observaciones,
+                    Condiciones = $"Generado desde cotización #{cotizacion.CotizacionID} - {cotizacion.NumeroCotizacion}"
                 };
-                await CargarCombosAsync(viewModel);
-                return View("Form", viewModel);
+
+                // Cargar combos para el formulario
+                await CargarCombosAsync(ventaViewModel);
+
+                return View("Form", ventaViewModel);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al inicializar el formulario de venta");
+                _logger.LogError(ex, "Error al crear venta desde cotización");
                 return View("Error");
             }
         }
@@ -373,55 +401,44 @@ namespace Javo2.Controllers
             }
         }
 
-        // GET: Ventas/Details/5
         [HttpGet]
         [Authorize(Policy = "Permission:ventas.ver")]
         public async Task<IActionResult> Details(int id)
         {
             try
             {
-                _logger.LogInformation("Details GET => VentaID={ID}", id);
-                var venta = await _ventaService.GetVentaByIDAsync(id);
-                if (venta == null) return NotFound();
-                var model = _mapper.Map<VentaListViewModel>(venta);
-                return View(model);
+                var cotizacion = await _cotizacionService.GetCotizacionByIDAsync(id);
+                if (cotizacion == null)
+                    return NotFound();
+
+                return View("~/Views/Cotizacion/Detalles.cshtml", cotizacion);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener los detalles de la venta");
+                _logger.LogError(ex, "Error al obtener detalles de cotización");
                 return View("Error");
             }
-        }
-
-        // GET: Ventas/Delete/5
+        }// Agrega también un método Delete
         [HttpGet]
         [Authorize(Policy = "Permission:ventas.eliminar")]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                _logger.LogInformation("Delete GET => VentaID={ID}", id);
-                var venta = await _ventaService.GetVentaByIDAsync(id);
-                if (venta == null) return NotFound();
+                var cotizacion = await _cotizacionService.GetCotizacionByIDAsync(id);
+                if (cotizacion == null)
+                    return NotFound();
 
-                // Verificar que la venta esté en un estado que permite eliminación
-                if (venta.Estado != EstadoVenta.Borrador && venta.Estado != EstadoVenta.Rechazada)
-                {
-                    TempData["Error"] = "Solo se pueden eliminar ventas en estado Borrador o Rechazada.";
-                    return RedirectToAction(nameof(Details), new { id });
-                }
-
-                var model = _mapper.Map<VentaListViewModel>(venta);
-                return View(model);
+                var viewModel = _mapper.Map<CotizacionListViewModel>(cotizacion);
+                return View("~/Views/Cotizacion/Delete.cshtml", viewModel);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al cargar la venta para eliminación");
+                _logger.LogError(ex, "Error al cargar cotización para eliminar");
                 return View("Error");
             }
         }
 
-        // POST: Ventas/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Permission:ventas.eliminar")]
@@ -429,38 +446,33 @@ namespace Javo2.Controllers
         {
             try
             {
-                _logger.LogInformation("DeleteConfirmed POST => VentaID={ID}", id);
-
-                // Verificar que la venta esté en un estado que permite eliminación
-                var venta = await _ventaService.GetVentaByIDAsync(id);
-                if (venta == null) return NotFound();
-
-                if (venta.Estado != EstadoVenta.Borrador && venta.Estado != EstadoVenta.Rechazada)
-                {
-                    TempData["Error"] = "Solo se pueden eliminar ventas en estado Borrador o Rechazada.";
-                    return RedirectToAction(nameof(Details), new { id });
-                }
-
-                await _ventaService.DeleteVentaAsync(id);
-
-                // Registrar en auditoría
-                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
-                {
-                    FechaHora = DateTime.Now,
-                    Usuario = User.Identity?.Name ?? "Desconocido",
-                    Entidad = "Venta",
-                    Accion = "Delete",
-                    LlavePrimaria = id.ToString(),
-                    Detalle = $"Eliminada venta: Cliente={venta.NombreCliente}, Total={venta.PrecioTotal}"
-                });
-
-                TempData["Success"] = "Venta eliminada exitosamente.";
+                await _cotizacionService.DeleteCotizacionAsync(id);
+                TempData["Success"] = "Cotización eliminada exitosamente";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar la venta");
-                TempData["Error"] = "Ocurrió un error al eliminar la venta.";
+                _logger.LogError(ex, "Error al eliminar cotización");
+                TempData["Error"] = "Error al eliminar la cotización";
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:ventas.eliminar")]
+        public async Task<IActionResult> DeleteCotizacionConfirmed(int id)
+        {
+            try
+            {
+                await _cotizacionService.DeleteCotizacionAsync(id);
+                TempData["Success"] = "Cotización eliminada exitosamente";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar cotización");
+                TempData["Error"] = "Error al eliminar la cotización";
                 return RedirectToAction(nameof(Index));
             }
         }

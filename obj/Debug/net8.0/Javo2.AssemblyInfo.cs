@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Javo2")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c967f048896bb80f8708216683a548c35bab1b16")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b1f8d9760ced1c02e97fd97c8022c44857f27354")]
 [assembly: System.Reflection.AssemblyProductAttribute("Javo2")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Javo2")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

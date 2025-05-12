@@ -8,15 +8,11 @@ namespace Javo2.Models
     {
         public int CotizacionID { get; set; }
         public DateTime FechaCotizacion { get; set; }
-
-        // Nuevo: días de vigencia desde la fecha de cotización
         public int DiasVigencia { get; set; } = 15;
-
         public DateTime FechaVencimiento { get; set; }
         public string NumeroCotizacion { get; set; } = string.Empty;
         public string Usuario { get; set; } = string.Empty;
         public string EstadoCotizacion { get; set; } = "Borrador";
-
 
         // Datos del Cliente
         public int DniCliente { get; set; }
@@ -24,8 +20,14 @@ namespace Javo2.Models
         public string TelefonoCliente { get; set; } = string.Empty;
         public string EmailCliente { get; set; } = string.Empty;
 
-        // Si necesitas añadir dirección:
-        // public string DireccionCliente { get; set; } = string.Empty;
+        // Propiedades necesarias para mapeo con Venta
+        public string DomicilioCliente { get; set; } = string.Empty;
+        public string LocalidadCliente { get; set; } = string.Empty;
+        public string CelularCliente { get; set; } = string.Empty;
+
+        // Para compatibilidad con el mapeo
+        public string NumeroFactura => NumeroCotizacion;
+        public int VentaID => CotizacionID;
 
         // Productos cotizados
         public List<DetalleVenta> ProductosPresupuesto { get; set; } = new List<DetalleVenta>();

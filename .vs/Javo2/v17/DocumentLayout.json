@@ -3,16 +3,56 @@
   "WorkspaceRootPath": "D:\\github\\Javo2\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\controllers\\ventascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:controllers\\ventascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\cotizacion\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\cotizacion\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\cotizacion\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\cotizacion\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\controllers\\cotizacioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:controllers\\cotizacioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\iservices\\iproductoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:iservices\\iproductoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\cotizacion\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\cotizacion\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\ventas\\form.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\ventas\\form.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\ventas\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\ventas\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\viewmodels\\operaciones\\ventas\\cotizacionviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:viewmodels\\operaciones\\ventas\\cotizacionviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\controllers\\catalogocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:controllers\\catalogocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\controllers\\ventascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:controllers\\ventascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\ventas\\_ventastable.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\ventas\\_ventastable.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\profiles\\automapperprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:profiles\\automapperprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\models\\cotizacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:models\\cotizacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\services\\cotizacionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -23,32 +63,12 @@
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:iservices\\icotizacionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\models\\cotizacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:models\\cotizacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\services\\configuracionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:services\\configuracionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\cotizacion\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\cotizacion\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\cotizacion\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\cotizacion\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\viewmodels\\operaciones\\ventas\\cotizacionviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:viewmodels\\operaciones\\ventas\\cotizacionviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\ventas\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\ventas\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -66,80 +86,98 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "ICotizacionService.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\IServices\\ICotizacionService.cs",
-              "RelativeDocumentMoniker": "IServices\\ICotizacionService.cs",
-              "ToolTip": "D:\\github\\Javo2\\IServices\\ICotizacionService.cs",
-              "RelativeToolTip": "IServices\\ICotizacionService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAbAAAAAAAAAA==",
+              "DocumentIndex": 3,
+              "Title": "IProductoService.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\IServices\\IProductoService.cs",
+              "RelativeDocumentMoniker": "IServices\\IProductoService.cs",
+              "ToolTip": "D:\\github\\Javo2\\IServices\\IProductoService.cs",
+              "RelativeToolTip": "IServices\\IProductoService.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAqwCkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-11T18:00:10.535Z"
+              "WhenOpened": "2025-05-11T23:27:52.66Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 5,
-              "Title": "Cotizacion.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Models\\Cotizacion.cs",
-              "RelativeDocumentMoniker": "Models\\Cotizacion.cs",
-              "ToolTip": "D:\\github\\Javo2\\Models\\Cotizacion.cs",
-              "RelativeToolTip": "Models\\Cotizacion.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAABCAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-11T17:38:53.002Z"
+              "Title": "Form.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Ventas\\Form.cshtml",
+              "RelativeDocumentMoniker": "Views\\Ventas\\Form.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Ventas\\Form.cshtml",
+              "RelativeToolTip": "Views\\Ventas\\Form.cshtml",
+              "ViewState": "AgIAAL0CAAAAAAAAAAAAAL0CAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-11T23:22:09.858Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "AutoMapperProfile.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Profiles\\AutoMapperProfile.cs",
-              "RelativeDocumentMoniker": "Profiles\\AutoMapperProfile.cs",
-              "ToolTip": "D:\\github\\Javo2\\Profiles\\AutoMapperProfile.cs",
-              "RelativeToolTip": "Profiles\\AutoMapperProfile.cs",
-              "ViewState": "AgIAAEIAAAAAAAAAAAAcwE0AAAAkAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-11T17:36:52.419Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "CotizacionService.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Services\\CotizacionService.cs",
-              "RelativeDocumentMoniker": "Services\\CotizacionService.cs",
-              "ToolTip": "D:\\github\\Javo2\\Services\\CotizacionService.cs",
-              "RelativeToolTip": "Services\\CotizacionService.cs",
-              "ViewState": "AgIAAIEAAAAAAAAAAAAswKsAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-11T18:01:35.311Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
               "Title": "CotizacionController.cs",
               "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\CotizacionController.cs",
               "RelativeDocumentMoniker": "Controllers\\CotizacionController.cs",
               "ToolTip": "D:\\github\\Javo2\\Controllers\\CotizacionController.cs",
               "RelativeToolTip": "Controllers\\CotizacionController.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAAAcwBQAAAA/AAAAAAAAAA==",
+              "ViewState": "AgIAAM0AAAAAAAAAAAAowOQAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-11T17:35:23.706Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "VentasController.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\VentasController.cs",
-              "RelativeDocumentMoniker": "Controllers\\VentasController.cs",
-              "ToolTip": "D:\\github\\Javo2\\Controllers\\VentasController.cs",
-              "RelativeToolTip": "Controllers\\VentasController.cs",
-              "ViewState": "AgIAAJEAAAAAAAAAAAAvwKQAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-11T17:41:09.865Z",
+              "WhenOpened": "2025-05-11T17:35:23.706Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 4,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Cotizacion\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Cotizacion\\Index.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Cotizacion\\Index.cshtml",
+              "RelativeToolTip": "Views\\Cotizacion\\Index.cshtml",
+              "ViewState": "AgIAAFAAAAAAAAAAAAAowGcAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-11T17:34:30.208Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Delete.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Cotizacion\\Delete.cshtml",
+              "RelativeDocumentMoniker": "Views\\Cotizacion\\Delete.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Cotizacion\\Delete.cshtml",
+              "RelativeToolTip": "Views\\Cotizacion\\Delete.cshtml",
+              "ViewState": "AgIAABcAAAAAAAAAAAAtwDUAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-11T22:54:41.466Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Cotizacion\\Create.cshtml",
+              "RelativeDocumentMoniker": "Views\\Cotizacion\\Create.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Cotizacion\\Create.cshtml",
+              "RelativeToolTip": "Views\\Cotizacion\\Create.cshtml",
+              "ViewState": "AgIAANABAAAAAAAAAAAYwOUBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-11T17:36:13.06Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "CotizacionViewModel.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\ViewModels\\Operaciones\\Ventas\\CotizacionViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModels\\Operaciones\\Ventas\\CotizacionViewModel.cs",
+              "ToolTip": "D:\\github\\Javo2\\ViewModels\\Operaciones\\Ventas\\CotizacionViewModel.cs",
+              "RelativeToolTip": "ViewModels\\Operaciones\\Ventas\\CotizacionViewModel.cs",
+              "ViewState": "AgIAADgAAAAAAAAAAAAxwEwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-11T17:35:07.255Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
               "Title": "ConfiguracionService.cs",
               "DocumentMoniker": "D:\\github\\Javo2\\Services\\ConfiguracionService.cs",
               "RelativeDocumentMoniker": "Services\\ConfiguracionService.cs",
@@ -151,7 +189,109 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 6,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Ventas\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Ventas\\Index.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Ventas\\Index.cshtml",
+              "RelativeToolTip": "Views\\Ventas\\Index.cshtml",
+              "ViewState": "AgIAACgAAAAAAAAAAAAcwEEAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-11T17:33:49.628Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "VentasController.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\VentasController.cs",
+              "RelativeDocumentMoniker": "Controllers\\VentasController.cs",
+              "ToolTip": "D:\\github\\Javo2\\Controllers\\VentasController.cs",
+              "RelativeToolTip": "Controllers\\VentasController.cs",
+              "ViewState": "AgIAAIkBAAAAAAAAAAAQwJQBAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-11T17:41:09.865Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "CatalogoController.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\CatalogoController.cs",
+              "RelativeDocumentMoniker": "Controllers\\CatalogoController.cs",
+              "ToolTip": "D:\\github\\Javo2\\Controllers\\CatalogoController.cs",
+              "RelativeToolTip": "Controllers\\CatalogoController.cs",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-11T23:04:58.948Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "AutoMapperProfile.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Profiles\\AutoMapperProfile.cs",
+              "RelativeDocumentMoniker": "Profiles\\AutoMapperProfile.cs",
+              "ToolTip": "D:\\github\\Javo2\\Profiles\\AutoMapperProfile.cs",
+              "RelativeToolTip": "Profiles\\AutoMapperProfile.cs",
+              "ViewState": "AgIAAHIAAAAAAAAAAAAcwJUAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-11T17:36:52.419Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "_VentasTable.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Ventas\\_VentasTable.cshtml",
+              "RelativeDocumentMoniker": "Views\\Ventas\\_VentasTable.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Ventas\\_VentasTable.cshtml",
+              "RelativeToolTip": "Views\\Ventas\\_VentasTable.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-11T22:54:24.393Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Cotizacion.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Models\\Cotizacion.cs",
+              "RelativeDocumentMoniker": "Models\\Cotizacion.cs",
+              "ToolTip": "D:\\github\\Javo2\\Models\\Cotizacion.cs",
+              "RelativeToolTip": "Models\\Cotizacion.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAswCoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-11T17:38:53.002Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "CotizacionService.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Services\\CotizacionService.cs",
+              "RelativeDocumentMoniker": "Services\\CotizacionService.cs",
+              "ToolTip": "D:\\github\\Javo2\\Services\\CotizacionService.cs",
+              "RelativeToolTip": "Services\\CotizacionService.cs",
+              "ViewState": "AgIAAIEAAAAAAAAAAAAswKsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-11T18:01:35.311Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "ICotizacionService.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\IServices\\ICotizacionService.cs",
+              "RelativeDocumentMoniker": "IServices\\ICotizacionService.cs",
+              "ToolTip": "D:\\github\\Javo2\\IServices\\ICotizacionService.cs",
+              "RelativeToolTip": "IServices\\ICotizacionService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-11T18:00:10.535Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\github\\Javo2\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -160,54 +300,6 @@
               "ViewState": "AgIAAIUAAAAAAAAAAAAswJoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-11T18:48:57.061Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "Create.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Cotizacion\\Create.cshtml",
-              "RelativeDocumentMoniker": "Views\\Cotizacion\\Create.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Cotizacion\\Create.cshtml",
-              "RelativeToolTip": "Views\\Cotizacion\\Create.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAArAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-11T17:36:13.06Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "CotizacionViewModel.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\ViewModels\\Operaciones\\Ventas\\CotizacionViewModel.cs",
-              "RelativeDocumentMoniker": "ViewModels\\Operaciones\\Ventas\\CotizacionViewModel.cs",
-              "ToolTip": "D:\\github\\Javo2\\ViewModels\\Operaciones\\Ventas\\CotizacionViewModel.cs",
-              "RelativeToolTip": "ViewModels\\Operaciones\\Ventas\\CotizacionViewModel.cs",
-              "ViewState": "AgIAABsAAAAAAAAAAAA9wEUAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-11T17:35:07.255Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Cotizacion\\Index.cshtml",
-              "RelativeDocumentMoniker": "Views\\Cotizacion\\Index.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Cotizacion\\Index.cshtml",
-              "RelativeToolTip": "Views\\Cotizacion\\Index.cshtml",
-              "ViewState": "AgIAAFEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-11T17:34:30.208Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Ventas\\Index.cshtml",
-              "RelativeDocumentMoniker": "Views\\Ventas\\Index.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Ventas\\Index.cshtml",
-              "RelativeToolTip": "Views\\Ventas\\Index.cshtml",
-              "ViewState": "AgIAACgAAAAAAAAAAAAcwEEAAAAYAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-11T17:33:49.628Z"
             }
           ]
         }

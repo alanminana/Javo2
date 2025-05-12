@@ -37,5 +37,44 @@
     "TotalProductos": 3,
     "Observaciones": "dsa",
     "Estado": 0
+  },
+  {
+    "CompraID": 2,
+    "ProveedorID": 1,
+    "Proveedor": {
+      "ProveedorID": 0,
+      "Nombre": "",
+      "Direccion": "",
+      "Telefono": "",
+      "Email": "",
+      "CondicionesPago": "",
+      "ProductosAsignados": []
+    },
+    "FechaCompra": "2025-05-11T20:43:48.251539-03:00",
+    "NumeroFactura": "COM-20250511-0002",
+    "Usuario": "admin",
+    "ProductosCompra": [
+      {
+        "DetalleCompraID": 0,
+        "CompraID": 0,
+        "ProductoID": 1,
+        "NombreProducto": "Producto Inicial",
+        "Cantidad": 1,
+        "PrecioUnitario": 13664,
+        "PrecioTotal": 13664
+      }
+    ],
+    "FormaPagoID": 7,
+    "BancoID": null,
+    "TipoTarjeta": null,
+    "Cuotas": null,
+    "EntidadElectronica": null,
+    "FechaVencimiento": "0002-02-12T00:00:00",
+    "MontoCheque": 123,
+    "NumeroCheque": "12312",
+    "PrecioTotal": 13664,
+    "TotalProductos": 1,
+    "Observaciones": "dsaasd",
+    "Estado": 0
   }
 ]

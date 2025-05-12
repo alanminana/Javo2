@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Javo2.ViewModels.Operaciones.Ventas.VentaListViewModel>
+﻿@model IEnumerable<Javo2.ViewModels.Operaciones.Ventas.CotizacionListViewModel>
 @{
     ViewData["Title"] = "Cotizaciones";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -7,7 +7,7 @@
 <section class="container-fluid py-3">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h2 mb-0">@ViewData["Title"]</h1>
-        <a asp-controller="Ventas" asp-action="Create" class="btn btn-success btn-sm">
+        <a asp-action="Create" class="btn btn-success btn-sm">
             <i class="bi bi-plus-circle me-1"></i> Nueva Cotización
         </a>
     </div>
@@ -29,36 +29,6 @@
         </div>
     }
 
-    <!-- Resumen -->
-    <div class="row row-cols-1 row-cols-md-3 g-3 mb-4">
-        <div class="col">
-            <div class="card bg-dark text-light h-100">
-                <div class="card-body text-center">
-                    <h6 class="card-title">Total Cotizaciones</h6>
-                    <p class="display-5 fw-semibold mb-0">@Model.Count()</p>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card bg-dark text-light h-100">
-                <div class="card-body text-center">
-                    <h6 class="card-title">Monto Total</h6>
-                    <p class="display-5 fw-semibold mb-0">@Model.Sum(v => v.PrecioTotal).ToString("C")</p>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card bg-dark text-light h-100">
-                <div class="card-body text-center">
-                    <h6 class="card-title">Última Cotización</h6>
-                    <p class="display-5 fw-semibold mb-0">
-                        @(Model.Any() ? Model.Max(v => v.FechaVenta).ToString("dd/MM/yyyy") : "N/A")
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Tabla de Cotizaciones -->
     <div class="card shadow-sm bg-dark text-light">
         <div class="card-header">
@@ -70,39 +40,46 @@
                     <thead>
                         <tr>
                             <th>Fecha</th>
-                            <th>N° Cotización</th>
+                            <th>Número</th>
                             <th>Cliente</th>
                             <th>Productos</th>
                             <th>Total</th>
+                            <th>Vigencia</th>
                             <th class="text-center">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         @if (Model.Any())
                         {
-                            @foreach (var cotizacion in Model)
+                            @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td>@cotizacion.FechaVenta.ToString("dd/MM/yyyy")</td>
-                                    <td>@cotizacion.NumeroFactura</td>
-                                    <td>@cotizacion.NombreCliente</td>
-                                    <td>@cotizacion.TotalProductos</td>
-                                    <td>@cotizacion.PrecioTotal.ToString("C")</td>
+                                    <td>@item.FechaCotizacion.ToString("dd/MM/yyyy")</td>
+                                    <td>@item.NumeroCotizacion</td>
+                                    <td>@item.NombreCliente</td>
+                                    <td>@item.TotalProductos</td>
+                                    <td>@item.PrecioTotal.ToString("C")</td>
+                                    <td>
+                                        @if (item.Vigente)
+                                        {
+                                            <span class="badge bg-success">Vigente</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Vencida</span>
+                                        }
+                                    </td>
                                     <td class="text-center">
                                         <div class="btn-group">
-                                            <a asp-action="Details" asp-route-id="@cotizacion.VentaID"
+                                            <a asp-action="Details" asp-route-id="@item.CotizacionID"
                                                class="btn btn-sm btn-outline-info" title="Ver Detalles">
                                                 <i class="bi bi-eye"></i>
                                             </a>
-                                            <a asp-action="Print" asp-route-id="@cotizacion.VentaID" target="_blank"
-                                               class="btn btn-sm btn-outline-secondary" title="Imprimir Cotización">
-                                                <i class="bi bi-printer"></i>
-                                            </a>
-                                            <a asp-action="ConvertirAVenta" asp-route-id="@cotizacion.VentaID"
+                                            <a asp-action="ConvertToVenta" asp-route-id="@item.CotizacionID"
                                                class="btn btn-sm btn-outline-success" title="Convertir a Venta">
                                                 <i class="bi bi-cart-check"></i>
                                             </a>
-                                            <a asp-action="Delete" asp-route-id="@cotizacion.VentaID"
+                                            <a asp-action="Delete" asp-route-id="@item.CotizacionID"
                                                class="btn btn-sm btn-outline-danger" title="Eliminar">
                                                 <i class="bi bi-trash"></i>
                                             </a>
@@ -114,7 +91,7 @@
                         else
                         {
                             <tr>
-                                <td colspan="6" class="text-center py-3">
+                                <td colspan="7" class="text-center py-3">
                                     <p class="text-muted mb-0">No hay cotizaciones disponibles</p>
                                 </td>
                             </tr>
