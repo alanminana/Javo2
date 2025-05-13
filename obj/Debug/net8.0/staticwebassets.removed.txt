@@ -1,1 +1,7 @@
+D:\github\Javo2\wwwroot\js\core.js
+D:\github\Javo2\wwwroot\js\debug-helper.js
+D:\github\Javo2\wwwroot\js\forms.js
+D:\github\Javo2\wwwroot\js\products.js
+D:\github\Javo2\wwwroot\js\site.js
+D:\github\Javo2\wwwroot\js\tables.js
 D:\github\Javo2\wwwroot\js\ventas.js

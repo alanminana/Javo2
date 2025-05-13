@@ -77,7 +77,7 @@
 
     @RenderSection("Styles", required: false)
 </head>
-<body class="bg-dark text-white d-flex flex-column min-vh-100" data-permissions='@permisosJson'>
+<body class="bg-dark text-white d-flex flex-column min-vh-100" data-permissions='@permisosJson' data-controller="@ViewContext.RouteData.Values["controller"]" data-action="@ViewContext.RouteData.Values["action"]">
 
     <!-- Mobile Navbar -->
     <nav class="navbar navbar-dark bg-dark d-md-none">
@@ -250,14 +250,99 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" crossorigin="anonymous"></script>
-    <script src="~/js/core.js" asp-append-version="true"></script>
-    <script src="~/js/forms.js" asp-append-version="true"></script>
-    <script src="~/js/products.js" asp-append-version="true"></script>
-    <script src="~/js/tables.js" asp-append-version="true"></script>
-    <script src="~/js/ventas.js" asp-append-version="true"></script>
-    <script src="~/js/permission-validator.js" asp-append-version="true"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/permission-validator.js" asp-append-version="true"></script>
+
+    <!-- Core Framework -->
+    <script src="~/js/app.js" asp-append-version="true"></script>
+    <script src="~/js/modules/debug.js" asp-append-version="true"></script>
+    <script src="~/js/modules/permissions.js" asp-append-version="true"></script>
+    <script src="~/js/modules/forms.js" asp-append-version="true"></script>
+    <script src="~/js/modules/tables.js" asp-append-version="true"></script>
+    <script src="~/js/modules/products.js" asp-append-version="true"></script>
+
+    <!-- Controladores -->
+    <script src="~/js/productos-controller.js" asp-append-version="true"></script>
+    <script src="~/js/ventas-controller.js" asp-append-version="true"></script>
+    <script src="~/js/proveedores-controller.js" asp-append-version="true"></script>
+    <script src="~/js/clientes-controller.js" asp-append-version="true"></script>
+
+    <!-- Módulos específicos -->
+    <script src="~/js/modules/producto-form.js" asp-append-version="true"></script>
+    <script src="~/js/modules/precio-ajuste.js" asp-append-version="true"></script>
+    <script src="~/js/modules/venta-form.js" asp-append-version="true"></script>
+    <script src="~/js/modules/cotizacion-form.js" asp-append-version="true"></script>
+    <script src="~/js/modules/entrega-productos.js" asp-append-version="true"></script>
+    <script src="~/js/modules/proveedor-form.js" asp-append-version="true"></script>
+    <script src="~/js/modules/compra-form.js" asp-append-version="true"></script>
+    <script src="~/js/modules/cliente-form.js" asp-append-version="true"></script>
+    <script src="~/js/modules/devolucion-form.js" asp-append-version="true"></script>
+    <script src="~/js/modules/usuarios-permisos.js" asp-append-version="true"></script>
+    <script src="~/js/modules/auth.js" asp-append-version="true"></script>
+    <script src="~/js/modules/catalogo.js" asp-append-version="true"></script>
+    <script src="~/js/modules/reportes.js" asp-append-version="true"></script>
+
+    <!-- Inicialización -->
+    <script>
+        // Configuración de la aplicación
+        $(document).ready(function() {
+            // Inicializar core
+            App.config.debug = @(ViewBag.DebugMode ?? false ? "true" : "false");
+
+            // Inicializar módulos básicos según la página actual
+            const controller = document.body.dataset.controller?.toLowerCase();
+            const action = document.body.dataset.action?.toLowerCase();
+
+            // Inicializar controladores apropiados según la página actual
+            if (controller === "productos" && App.productoForm) {
+                App.productoForm.init();
+            }
+
+            if (controller === "ventas" && App.ventaForm) {
+                App.ventaForm.init();
+            }
+
+            if (controller === "ajusteprecios" && App.precioAjuste) {
+                App.precioAjuste.init();
+            }
+
+            if (controller === "proveedores") {
+                if (action === "create" || action === "edit" && App.proveedorForm) {
+                    App.proveedorForm.init();
+                }
+                if (action === "compra" && App.compraForm) {
+                    App.compraForm.init();
+                }
+            }
+
+            if (controller === "clientes" && App.clienteForm) {
+                App.clienteForm.init();
+            }
+
+            if (controller === "devoluciongarantia" && App.devolucionForm) {
+                App.devolucionForm.init();
+            }
+
+            if (controller === "home" || controller === "dashboard") {
+                App.dashboard?.init();
+            }
+
+            if (controller === "reportes") {
+                App.reportes?.init();
+            }
+
+            // Seguridad
+            if (["permisos", "usuarios", "roles"].includes(controller)) {
+                App.usuariosPermisos?.init();
+            }
+
+            if (controller === "auth") {
+                App.auth?.init();
+            }
+
+            if (controller === "catalogo") {
+                App.catalogo?.init();
+            }
+        });
+    </script>
 
     @RenderSection("Scripts", required: false)
 </body>
