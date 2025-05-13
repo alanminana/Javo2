@@ -21,16 +21,32 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "D:\\github\\Javo2\\wwwroot\\js\\core.js",
+      "PackagePath": "staticwebassets\\js\\core.js"
+    },
+    {
       "Id": "D:\\github\\Javo2\\wwwroot\\js\\debug-helper.js",
       "PackagePath": "staticwebassets\\js\\debug-helper.js"
     },
     {
-      "Id": "D:\\github\\Javo2\\wwwroot\\js\\permission-validator.js",
-      "PackagePath": "staticwebassets\\js\\permission-validator.js"
+      "Id": "D:\\github\\Javo2\\wwwroot\\js\\forms.js",
+      "PackagePath": "staticwebassets\\js\\forms.js"
+    },
+    {
+      "Id": "D:\\github\\Javo2\\wwwroot\\js\\productos-controller.js",
+      "PackagePath": "staticwebassets\\js\\productos-controller.js"
+    },
+    {
+      "Id": "D:\\github\\Javo2\\wwwroot\\js\\products.js",
+      "PackagePath": "staticwebassets\\js\\products.js"
     },
     {
       "Id": "D:\\github\\Javo2\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
+    },
+    {
+      "Id": "D:\\github\\Javo2\\wwwroot\\js\\tables.js",
+      "PackagePath": "staticwebassets\\js\\tables.js"
     },
     {
       "Id": "D:\\github\\Javo2\\wwwroot\\js\\ventas.js",

@@ -127,30 +127,11 @@
         </div>
     </div>
 </section>
-
 @section Scripts {
-    <script>
-        // Validación según el tipo de dato
-        $(function() {
-            const tipoDato = '@Model.TipoDato';
-            const valorInput = $('#Valor');
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        <script src="~/js/Configuracion/Edit.js"></script>
 
-            valorInput.on('input', function() {
-                let isValid = true;
-                const valor = $(this).val();
+    }
 
-                if (tipoDato === 'int') {
-                    isValid = /^\d+$/.test(valor);
-                } else if (tipoDato === 'decimal') {
-                    isValid = /^\d+(\.\d+)?$/.test(valor);
-                }
-
-                if (isValid) {
-                    $(this).removeClass('is-invalid').addClass('is-valid');
-                } else {
-                    $(this).removeClass('is-valid').addClass('is-invalid');
-                }
-            });
-        });
-    </script>
 }

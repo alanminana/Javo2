@@ -2,9 +2,13 @@ wwwroot\css\layout.css
 wwwroot\css\login.css
 wwwroot\css\site.css
 wwwroot\favicon.ico
+wwwroot\js\core.js
 wwwroot\js\debug-helper.js
-wwwroot\js\permission-validator.js
+wwwroot\js\forms.js
+wwwroot\js\productos-controller.js
+wwwroot\js\products.js
 wwwroot\js\site.js
+wwwroot\js\tables.js
 wwwroot\js\ventas.js
 wwwroot\lib\bootstrap\dist\css\bootstrap.css
 wwwroot\lib\bootstrap\dist\css\bootstrap.css.map

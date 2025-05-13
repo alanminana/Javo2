@@ -58,7 +58,14 @@
         </tbody>
     </table>
 </div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        <script src="~/js/Configuracion/_ConfiguracionTable.js"></script>
 
+    }
+
+}
 @functions {
     public string GetNombreAmigable(string clave)
     {

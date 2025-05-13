@@ -36,41 +36,16 @@
     </div>
 </section>
 
+
 @section Scripts {
-    <script defer src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    @await Html.PartialAsync("_ValidationScriptsPartial")
-    <script defer>
-        (function($) {
-            $(function() {
-                var assigned = [];
-                $('#assignedProducts li').each(function() {
-                    assigned.push($(this).data('id'));
-                });
-                $('#productSearch').autocomplete({
-                    source: function(req, resp) {
-                        $.getJSON('@Url.Action("SearchProducts", "Proveedores")', { term: req.term })
-                         .done(resp).fail(function() { alert('Error'); });
-                    },
-                    select: function(e, ui) {
-                        e.preventDefault();
-                        var id = ui.item.value, name=ui.item.label;
-                        if (!assigned.includes(id)) {
-                            assigned.push(id);
-                            $('#assignedProducts').append(
-                                `<li class="list-group-item d-flex justify-content-between align-items-center" data-id="${id}">`+
-                                `${name} <button type="button" class="btn btn-link btn-sm remove-product">Eliminar</button>`+
-                                `<input type="hidden" name="ProductosAsignados" value="${id}" />`+
-                                `</li>`);
-                        }
-                        $(this).val(''); return false;
-                    }
-                });
-                $('#assignedProducts').on('click', '.remove-product', function() {
-                    var li = $(this).closest('li'), id=li.data('id');
-                    assigned = assigned.filter(x=>x!=id); li.remove();
-                });
-            });
-        })(jQuery);
-    </script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+    @{
+        <script defer src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        <script src="~/js/Proveedores/Form.js"></script>
+        <link rel="stylesheet" hre="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+
+
+    }
+
 }

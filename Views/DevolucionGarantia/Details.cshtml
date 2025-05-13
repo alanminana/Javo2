@@ -250,10 +250,10 @@
 </section>
 
 @section Scripts {
-    <script>
-        // Ocultar alertas después de 5 segundos
-        setTimeout(function() {
-            $('.alert').alert('close');
-        }, 5000);
-    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        <script src="~/js/DevolucionGarantia/Details.js"></script>
+
+    }
+
 }

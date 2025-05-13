@@ -208,10 +208,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGV2b2x1Y2lvbkdhcmFudGlhXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/github/Javo2/Views/Home/Dashboard.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxEYXNoYm9hcmQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/github/Javo2/Views/Home/Diagnostico.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxEaWFnbm9zdGljby5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -248,8 +244,8 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGVybWlzb3NcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/github/Javo2/Views/Productos/AjusteStockViewModel.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdG9zXEFqdXN0ZVN0b2NrVmlld01vZGVsLmNzaHRtbA==
+[D:/github/Javo2/Views/Productos/AjusteStock.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdG9zXEFqdXN0ZVN0b2NrLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/github/Javo2/Views/Productos/Delete.cshtml]
@@ -294,14 +290,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/github/Javo2/Views/Promociones/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvbW9jaW9uZXNcSW5kZXguY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/github/Javo2/Views/Promociones/_ClientesForm.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvbW9jaW9uZXNcX0NsaWVudGVzRm9ybS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/github/Javo2/Views/Promociones/_ClientesTable.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvbW9jaW9uZXNcX0NsaWVudGVzVGFibGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/github/Javo2/Views/Proveedores/Compras.cshtml]

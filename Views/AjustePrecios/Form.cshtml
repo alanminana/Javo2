@@ -1,4 +1,5 @@
-﻿<!-- Views/AjustePrecios/Form.cshtml -->
+﻿
+<!-- Views/AjustePrecios/Form.cshtml -->
 @model Javo2.ViewModels.Operaciones.Productos.AjusteTemporalFormViewModel
 @{
     ViewBag.Title = "Nuevo Ajuste de Precios";
@@ -121,110 +122,5 @@
 </div>
 
 @section Scripts {
-    <script>
-        $(function () {
-            // Gestión del toggle de tipo de ajuste
-            $('#esAumentoCheck').change(function () {
-                var esAumento = $(this).is(':checked');
-                $('#tipoAjusteLabel')
-                    .removeClass(esAumento ? 'bg-danger' : 'bg-success')
-                    .addClass(esAumento ? 'bg-success' : 'bg-danger')
-                    .text(esAumento ? 'Aumento' : 'Descuento');
-            });
-
-            // Seleccionar todos
-            $('#seleccionarTodos').change(function () {
-                $('.producto-check').prop('checked', $(this).is(':checked'));
-            });
-
-            // Función para formatear moneda
-            function formatCurrency(value) {
-                return new Intl.NumberFormat('es-AR', {
-                    style: 'currency',
-                    currency: 'ARS'
-                }).format(value);
-            }
-
-            // Simulación de ajuste
-            $('#btnSimular').click(function () {
-                // Recopilar IDs de productos seleccionados
-                var productosSeleccionados = [];
-                $('.producto-check:checked').each(function () {
-                    productosSeleccionados.push($(this).closest('tr').data('producto-id'));
-                });
-
-                if (productosSeleccionados.length === 0) {
-                    alert('Debe seleccionar al menos un producto para simular el ajuste.');
-                    return;
-                }
-
-                var porcentaje = parseFloat($('#porcentajeInput').val());
-                if (isNaN(porcentaje) || porcentaje <= 0) {
-                    alert('Ingrese un porcentaje válido mayor a cero.');
-                    return;
-                }
-
-                var esAumento = $('#esAumentoCheck').is(':checked');
-
-                // Ejecutar simulación
-                $.ajax({
-                    url: '@Url.Action("SimularAjuste")',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        ProductoIDs: productosSeleccionados,
-                        Porcentaje: porcentaje,
-                        EsAumento: esAumento
-                    }),
-                    success: function (result) {
-                        if (result.success) {
-                            // Mostrar columna de simulación
-                            $('#colSimulacion, .sim-resultados').removeClass('d-none');
-
-                            // Limpiar resultados anteriores
-                            $('.sim-resultados').empty();
-
-                            // Asignar resultados a cada fila
-                            $.each(result.productos, function (index, item) {
-                                var $row = $('tr[data-producto-id="' + item.id + '"]');
-                                var $cell = $row.find('.sim-resultados');
-
-                                var content = '<div class="border-start border-info ps-2">' +
-                                    '<strong>Costo:</strong> ' + formatCurrency(item.costoNuevo) + '<br>' +
-                                    '<strong>Contado:</strong> ' + formatCurrency(item.contadoNuevo) + '<br>' +
-                                    '<strong>Lista:</strong> ' + formatCurrency(item.listaNuevo) +
-                                    '</div>';
-
-                                $cell.html(content);
-                                $row.addClass('table-active');
-                            });
-                        } else {
-                            alert('Error al simular: ' + result.message);
-                        }
-                    },
-                    error: function () {
-                        alert('Error al comunicarse con el servidor');
-                    }
-                });
-            });
-
-            // Validación antes de enviar
-            $('#ajustePreciosForm').submit(function (e) {
-                if ($('.producto-check:checked').length === 0) {
-                    e.preventDefault();
-                    alert('Debe seleccionar al menos un producto para aplicar el ajuste.');
-                    return false;
-                }
-
-                var porcentaje = parseFloat($('#porcentajeInput').val());
-                if (isNaN(porcentaje) || porcentaje <= 0) {
-                    e.preventDefault();
-                    alert('Ingrese un porcentaje válido mayor a cero.');
-                    return false;
-                }
-
-                return confirm('¿Está seguro que desea aplicar este ajuste de precios? Esta acción modificará los precios en el sistema.');
-            });
-        });
-    </script>
+    <script src="~/js/ajusteprecios/Form.js"></script>
 }
