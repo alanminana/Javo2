@@ -25,23 +25,23 @@
                     <legend class="text-light">Datos Personales</legend>
                     <div class="row g-3">
                         <div class="col-md-4">
-                            <label asp-for="Nombre" class="form-label">Nombre</label>
-                            <input asp-for="Nombre" class="form-control bg-secondary text-light" />
+                            <label asp-for="Nombre" class="form-label">Nombre *</label>
+                            <input asp-for="Nombre" class="form-control bg-secondary text-light" required />
                             <span asp-validation-for="Nombre" class="text-danger"></span>
                         </div>
                         <div class="col-md-4">
-                            <label asp-for="Apellido" class="form-label">Apellido</label>
-                            <input asp-for="Apellido" class="form-control bg-secondary text-light" />
+                            <label asp-for="Apellido" class="form-label">Apellido *</label>
+                            <input asp-for="Apellido" class="form-control bg-secondary text-light" required />
                             <span asp-validation-for="Apellido" class="text-danger"></span>
                         </div>
                         <div class="col-md-4">
-                            <label asp-for="DNI" class="form-label">DNI</label>
-                            <input asp-for="DNI" type="number" class="form-control bg-secondary text-light" />
+                            <label asp-for="DNI" class="form-label">DNI *</label>
+                            <input asp-for="DNI" type="number" class="form-control bg-secondary text-light" required />
                             <span asp-validation-for="DNI" class="text-danger"></span>
                         </div>
                         <div class="col-md-4">
-                            <label asp-for="Email" class="form-label">Email</label>
-                            <input asp-for="Email" type="email" class="form-control bg-secondary text-light" />
+                            <label asp-for="Email" class="form-label">Email *</label>
+                            <input asp-for="Email" type="email" class="form-control bg-secondary text-light" required />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                         <div class="col-md-4">
@@ -50,8 +50,8 @@
                             <span asp-validation-for="Telefono" class="text-danger"></span>
                         </div>
                         <div class="col-md-4">
-                            <label asp-for="Celular" class="form-label">Celular</label>
-                            <input asp-for="Celular" class="form-control bg-secondary text-light" />
+                            <label asp-for="Celular" class="form-label">Celular *</label>
+                            <input asp-for="Celular" class="form-control bg-secondary text-light" required />
                             <span asp-validation-for="Celular" class="text-danger"></span>
                         </div>
                     </div>
@@ -64,24 +64,33 @@
                         ViewData["CiudadSelectId"] = "CiudadID";
                     }
                     @await Html.PartialAsync("_DireccionPartial", Model)
+
+                    <!-- Campo para descripción del domicilio -->
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <label asp-for="DescripcionDomicilio" class="form-label">Descripción del Domicilio *</label>
+                            <textarea asp-for="DescripcionDomicilio" class="form-control bg-secondary text-light" rows="2" required></textarea>
+                            <span asp-validation-for="DescripcionDomicilio" class="text-danger"></span>
+                        </div>
+                    </div>
                 </fieldset>
 
                 <fieldset class="mb-4">
                     <legend class="text-light">Información Laboral y Relación</legend>
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label asp-for="LugarTrabajo" class="form-label">Lugar de Trabajo</label>
-                            <input asp-for="LugarTrabajo" class="form-control bg-secondary text-light" />
+                            <label asp-for="LugarTrabajo" class="form-label">Lugar de Trabajo *</label>
+                            <input asp-for="LugarTrabajo" class="form-control bg-secondary text-light" required />
                             <span asp-validation-for="LugarTrabajo" class="text-danger"></span>
                         </div>
                         <div class="col-md-6">
-                            <label asp-for="IngresosMensuales" class="form-label">Ingresos Mensuales</label>
-                            <input asp-for="IngresosMensuales" type="number" step="0.01" class="form-control bg-secondary text-light" />
+                            <label asp-for="IngresosMensuales" class="form-label">Ingresos Mensuales *</label>
+                            <input asp-for="IngresosMensuales" type="number" step="0.01" class="form-control bg-secondary text-light" required />
                             <span asp-validation-for="IngresosMensuales" class="text-danger"></span>
                         </div>
                         <div class="col-md-12">
-                            <label asp-for="RelacionCliente" class="form-label">Relación con el Cliente</label>
-                            <select asp-for="RelacionCliente" class="form-select bg-secondary text-light">
+                            <label asp-for="RelacionCliente" class="form-label">Relación con el Cliente *</label>
+                            <select asp-for="RelacionCliente" class="form-select bg-secondary text-light" required>
                                 <option value="">-- Seleccione --</option>
                                 <option value="Familiar">Familiar</option>
                                 <option value="Amistad">Amistad</option>
@@ -92,6 +101,7 @@
                         </div>
                     </div>
                 </fieldset>
+
                 <div class="d-flex justify-content-end mt-4">
                     <a asp-action="Details" asp-route-id="@Model.ClienteID" class="btn btn-outline-secondary me-2">Cancelar</a>
                     <button type="submit" class="btn btn-primary">Asignar Garante</button>
@@ -100,6 +110,7 @@
         </div>
     </div>
 </section>
+
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

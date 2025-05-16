@@ -168,9 +168,6 @@ namespace Javo2.Controllers
             }
         }
 
-        [HttpGet]
-        [Authorize(Policy = "Permission:clientes.crear")]
-
         public async Task<IActionResult> Create()
         {
             try
@@ -180,7 +177,7 @@ namespace Javo2.Controllers
                     Provincias = await ObtenerProvincias(),
                     Ciudades = new List<SelectListItem>()
                 };
-                return View("Form", viewModel);
+                return View("Form", viewModel); // Asegúrate que sea "Form" y no "AsignarGarante"
             }
             catch (Exception ex)
             {

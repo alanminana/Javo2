@@ -29,10 +29,10 @@
                 const aptoCredito = $("#aptoCredito").is(":checked");
                 $(".credito-field").toggleClass("d-none", !aptoCredito);
 
+                // Solo mostrar sección de garante si está habilitado aptoCredito y requiereGarante
                 const requiereGarante = $("#requiereGarante").is(":checked");
                 $("#garanteInfo").toggleClass("d-none", !(aptoCredito && requiereGarante));
             };
-
             $("#aptoCredito, #requiereGarante").change(toggleCreditoFields);
 
             // Inicializar campos de crédito
