@@ -37,6 +37,11 @@
 
             // Inicializar campos de crédito
             toggleCreditoFields();
+            $('#cambiarGarante').on('click', function (e) {
+                e.preventDefault();
+                const clienteId = $('#ClienteID').val();
+                window.location.href = `/Clientes/AsignarGarante/${clienteId}`;
+            });
         }
     };
 

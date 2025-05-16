@@ -21,7 +21,6 @@ D:\github\Javo2\bin\Debug\net8.0\appsettings.Development.json
 D:\github\Javo2\bin\Debug\net8.0\appsettings.json
 D:\github\Javo2\bin\Debug\net8.0\Data\ajustesPrecios.json
 D:\github\Javo2\bin\Debug\net8.0\Data\auditoria.json
-D:\github\Javo2\bin\Debug\net8.0\Data\Backups\clientes_backup_20250422164617.json
 D:\github\Javo2\bin\Debug\net8.0\Data\Backups\clientes_backup_20250423150741.json
 D:\github\Javo2\bin\Debug\net8.0\Data\catalogo.json
 D:\github\Javo2\bin\Debug\net8.0\Data\clientes.json
@@ -116,3 +115,9 @@ D:\github\Javo2\bin\Debug\net8.0\Data\Backups\clientes_backup_20250510185037.jso
 D:\github\Javo2\bin\Debug\net8.0\Data\Backups\clientes_backup_20250510185102.json
 D:\github\Javo2\obj\Debug\net8.0\scopedcss\Views\Shared\_DireccionPartial.cshtml.rz.scp.css
 D:\github\Javo2\obj\Debug\net8.0\staticwebassets.build.json.cache
+D:\github\Javo2\bin\Debug\net8.0\Data\Backups\clientes_backup_20250516190221.json
+D:\github\Javo2\bin\Debug\net8.0\Data\Backups\clientes_backup_20250516190309.json
+D:\github\Javo2\bin\Debug\net8.0\Data\garantes.json
+D:\github\Javo2\bin\Debug\net8.0\Data\Backups\clientes_backup_20250516194647.json
+D:\github\Javo2\bin\Debug\net8.0\Data\Backups\clientes_backup_20250516194706.json
+D:\github\Javo2\bin\Debug\net8.0\Data\Backups\clientes_backup_20250516194821.json

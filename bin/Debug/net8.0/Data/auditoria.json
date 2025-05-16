@@ -478,5 +478,101 @@
     "EsRevertido": false,
     "RollbackUser": "",
     "RollbackFecha": null
+  },
+  {
+    "ID": 41,
+    "FechaHora": "2025-05-16T19:02:21.2240657-03:00",
+    "Usuario": "",
+    "Entidad": "Cliente",
+    "Accion": "Create",
+    "LlavePrimaria": "1",
+    "Detalle": "Cliente creado:  wweqwe, DNI: 12345678",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
+  },
+  {
+    "ID": 42,
+    "FechaHora": "2025-05-16T19:03:09.5444392-03:00",
+    "Usuario": "Sistema",
+    "Entidad": "Cliente",
+    "Accion": "AsignarGarante",
+    "LlavePrimaria": "1",
+    "Detalle": "Garante (ID: 1) asignado al cliente ID: 1",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
+  },
+  {
+    "ID": 43,
+    "FechaHora": "2025-05-16T19:46:47.7612206-03:00",
+    "Usuario": "",
+    "Entidad": "Cliente",
+    "Accion": "Create",
+    "LlavePrimaria": "1",
+    "Detalle": "Cliente creado:  sadsd, DNI: 12345678",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
+  },
+  {
+    "ID": 44,
+    "FechaHora": "2025-05-16T19:47:06.159262-03:00",
+    "Usuario": "",
+    "Entidad": "Cliente",
+    "Accion": "Update",
+    "LlavePrimaria": "1",
+    "Detalle": "Cliente actualizado:  sadsd, DNI: 12345678",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
+  },
+  {
+    "ID": 45,
+    "FechaHora": "2025-05-16T19:48:21.2118161-03:00",
+    "Usuario": "Sistema",
+    "Entidad": "Cliente",
+    "Accion": "AsignarGarante",
+    "LlavePrimaria": "1",
+    "Detalle": "Garante (ID: 1) asignado al cliente ID: 1",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
+  },
+  {
+    "ID": 46,
+    "FechaHora": "2025-05-16T19:57:17.6889776-03:00",
+    "Usuario": "",
+    "Entidad": "Cliente",
+    "Accion": "Create",
+    "LlavePrimaria": "1",
+    "Detalle": "Cliente creado: weqwe weqwe wweqwe, DNI: 12345678",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
+  },
+  {
+    "ID": 47,
+    "FechaHora": "2025-05-16T19:58:10.9006601-03:00",
+    "Usuario": "Sistema",
+    "Entidad": "Cliente",
+    "Accion": "AsignarGarante",
+    "LlavePrimaria": "1",
+    "Detalle": "Garante (ID: 1) asignado al cliente ID: 1",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
+  },
+  {
+    "ID": 48,
+    "FechaHora": "2025-05-16T19:58:34.8388453-03:00",
+    "Usuario": "",
+    "Entidad": "Cliente",
+    "Accion": "Update",
+    "LlavePrimaria": "1",
+    "Detalle": "Cliente actualizado: weqwe weqwe wweqwe, DNI: 12345678",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
   }
 ]

@@ -103,7 +103,8 @@ namespace Javo2.Controllers
                     return View(model);
                 }
 
-                // Mapear solo al modelo Garante, evitando propiedades como TextoClasificacionCredito
+                // Mapear solo al modelo Garante, evitando propiedades como
+                // 
                 var garante = new Garante
                 {
                     Nombre = model.Nombre,

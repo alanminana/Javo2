@@ -7,7 +7,7 @@
 <h2>@ViewBag.Title</h2>
 
 <!-- Partial de confirmación -->
-@await Html.PartialAsync("_ConfirmDelete", $"Cliente: {Model.Nombre} {Model.Apellido}")
+@await Html.PartialAsync("_ConfirmDelete", $"Cliente: {Model.NombreCliente} {Model.Apellido}")
 
 <form asp-action="Delete" method="post">
     @Html.AntiForgeryToken()

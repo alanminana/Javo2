@@ -152,6 +152,8 @@ namespace Javo2
 
             // CLIENTE ↔ ClientesViewModel
             CreateMap<Cliente, ClientesViewModel>()
+                    .ForMember(dest => dest.NombreCliente, opt => opt.MapFrom(src => src.Nombre))
+
                 .ForMember(dest => dest.Provincias, opt => opt.Ignore())
                     .ForMember(dest => dest.Garante, opt => opt.Ignore()) // Ignorar la propiedad Garante
 
@@ -183,7 +185,9 @@ namespace Javo2
                 .ReverseMap()
                 .ForMember(dest => dest.Compras, opt => opt.Ignore())
                 .ForMember(dest => dest.ClasificacionCredito, opt => opt.MapFrom(src => src.ClasificacionCredito))
-                .ForMember(dest => dest.TextoClasificacionCredito, opt => opt.MapFrom(src => src.TextoClasificacionCredito));
+                .ForMember(dest => dest.TextoClasificacionCredito, opt => opt.MapFrom(src => src.TextoClasificacionCredito))
+                .ForMember(dest => dest.Nombre, opt => opt.MapFrom(src => src.NombreCliente));
+
 
             // PROVEEDOR ↔ ProveedoresViewModel
             CreateMap<Proveedor, ProveedoresViewModel>()

@@ -5,9 +5,7 @@ namespace Javo2.ViewModels.Shared
 {
     public abstract class PersonaBaseViewModel
     {
-        [Required(ErrorMessage = "El nombre es obligatorio")]
-        [StringLength(50, ErrorMessage = "El nombre no puede superar los 50 caracteres")]
-        public string Nombre { get; set; } = string.Empty;
+
 
         [Required(ErrorMessage = "El apellido es obligatorio")]
         [StringLength(50, ErrorMessage = "El apellido no puede superar los 50 caracteres")]

@@ -384,6 +384,9 @@ namespace Javo2.Services
                 }
 
                 cliente.GaranteID = garanteID;
+                // Agregar estas dos líneas:
+                cliente.AptoCredito = true;    // Al asignar garante, marcar como apto para crédito
+                cliente.RequiereGarante = true; // Y que requiere garante
                 cliente.FechaModificacion = DateTime.UtcNow;
             }
             finally

@@ -1,0 +1,25 @@
+[
+  {
+    "GaranteID": 1,
+    "Nombre": "adads",
+    "Apellido": "asd",
+    "DNI": 12345678,
+    "Email": "123@sd.com",
+    "Telefono": "1234",
+    "Celular": "12312321",
+    "Calle": "avenida siempre viva ",
+    "NumeroCalle": "123",
+    "NumeroPiso": "1",
+    "Dpto": "a",
+    "Localidad": "213",
+    "CodigoPostal": "1824",
+    "ProvinciaID": 2,
+    "Provincia": null,
+    "CiudadID": 3,
+    "Ciudad": null,
+    "LugarTrabajo": "sdfsfd",
+    "IngresosMensuales": 123132,
+    "RelacionCliente": "Laboral",
+    "FechaCreacion": "2025-05-16T22:58:10.8707555Z"
+  }
+]
