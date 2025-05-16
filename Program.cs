@@ -30,7 +30,11 @@ builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
 // Registrar servicios
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    // elimina el [Required] automático en reference types no-nullable
+    options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+}); 
 builder.Services.AddHttpContextAccessor();
 
 // Primero registrar servicios básicos

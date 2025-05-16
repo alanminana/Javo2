@@ -68,10 +68,10 @@
                     <!-- TAB: Datos Personales -->
                     <div class="tab-pane fade show active" id="datos-personales" role="tabpanel">
                         <div class="row g-3">
-                            <div class="col-md-6">
-                                <label asp-for="Nombre" class="form-label">Nombre *</label>
-                                <input asp-for="Nombre" class="form-control bg-secondary text-light" required />
-                                <span asp-validation-for="Nombre" class="text-danger"></span>
+                              <div class="col-md-6">
+                                <label asp-for="NombreCliente" class="form-label">Nombre *</label>
+                                <input asp-for="NombreCliente" class="form-control bg-secondary text-light" required />
+                                <span asp-validation-for="NombreCliente" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
                                 <label asp-for="Apellido" class="form-label">Apellido *</label>
@@ -143,32 +143,32 @@
                             </div>
                             <div class="col-md-6">
                                 <label asp-for="NombreConyugue" class="form-label">Nombre del Cónyuge</label>
-                                <input asp-for="NombreConyugue" class="form-control bg-secondary text-light" />
+                                <input asp-for="NombreConyugue" data-val="false"  class="form-control bg-secondary text-light" />
                                 <span asp-validation-for="NombreConyugue" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
                                 <label asp-for="ApellidoConyugue" class="form-label">Apellido del Cónyuge</label>
-                                <input asp-for="ApellidoConyugue" class="form-control bg-secondary text-light" />
+                                <input asp-for="ApellidoConyugue" data-val="false"  class="form-control bg-secondary text-light" />
                                 <span asp-validation-for="ApellidoConyugue" class="text-danger"></span>
                             </div>
                             <div class="col-md-4">
                                 <label asp-for="DniConyugue" class="form-label">DNI del Cónyuge</label>
-                                <input asp-for="DniConyugue" class="form-control bg-secondary text-light" />
+                                <input asp-for="DniConyugue" data-val="false"  class="form-control bg-secondary text-light" />
                                 <span asp-validation-for="DniConyugue" class="text-danger"></span>
                             </div>
                             <div class="col-md-4">
                                 <label asp-for="CelularConyugue" class="form-label">Celular del Cónyuge</label>
-                                <input asp-for="CelularConyugue" class="form-control bg-secondary text-light" />
+                                <input asp-for="CelularConyugue" data-val="false"  class="form-control bg-secondary text-light" />
                                 <span asp-validation-for="CelularConyugue" class="text-danger"></span>
                             </div>
                             <div class="col-md-4">
                                 <label asp-for="EmailConyugue" class="form-label">Email del Cónyuge</label>
-                                <input asp-for="EmailConyugue" class="form-control bg-secondary text-light" />
+                                <input asp-for="EmailConyugue" data-val="false"  class="form-control bg-secondary text-light" />
                                 <span asp-validation-for="EmailConyugue" class="text-danger"></span>
                             </div>
                             <div class="col-md-12">
                                 <label asp-for="TrabajoConyugue" class="form-label">Lugar de Trabajo del Cónyuge</label>
-                                <input asp-for="TrabajoConyugue" class="form-control bg-secondary text-light" />
+                                <input asp-for="TrabajoConyugue" data-val="false"  class="form-control bg-secondary text-light" />
                                 <span asp-validation-for="TrabajoConyugue" class="text-danger"></span>
                             </div>
                         </div>
@@ -197,12 +197,12 @@
                         <div class="row g-3">
                             <div class="col-md-4">
                                 <label asp-for="Ocupacion" class="form-label">Ocupación</label>
-                                <input asp-for="Ocupacion" class="form-control bg-secondary text-light" />
+                                <input asp-for="Ocupacion" data-val="false"  class="form-control bg-secondary text-light" />
                                 <span asp-validation-for="Ocupacion" class="text-danger"></span>
                             </div>
                             <div class="col-md-4">
                                 <label asp-for="SituacionLaboral" class="form-label">Situación Laboral</label>
-                                <select asp-for="SituacionLaboral" class="form-select bg-secondary text-light">
+                                <select asp-for="SituacionLaboral" data-val="false"  class="form-select bg-secondary text-light">
                                     <option value="">-- Seleccione --</option>
                                     <option value="Relacion Dependencia">Relación de Dependencia</option>
                                     <option value="Autonomo">Autónomo</option>
@@ -215,27 +215,27 @@
                             </div>
                             <div class="col-md-4">
                                 <label asp-for="Cuit" class="form-label">CUIT/CUIL</label>
-                                <input asp-for="Cuit" class="form-control bg-secondary text-light" />
+                                <input asp-for="Cuit" data-val="false"  class="form-control bg-secondary text-light" />
                                 <span asp-validation-for="Cuit" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
                                 <label asp-for="LugarTrabajo" class="form-label">Lugar de Trabajo</label>
-                                <input asp-for="LugarTrabajo" class="form-control bg-secondary text-light" />
+                                <input asp-for="LugarTrabajo" data-val="false"  class="form-control bg-secondary text-light" />
                                 <span asp-validation-for="LugarTrabajo" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
                                 <label asp-for="DireccionTrabajo" class="form-label">Dirección de Trabajo</label>
-                                <input asp-for="DireccionTrabajo" class="form-control bg-secondary text-light" />
+                                <input asp-for="DireccionTrabajo" data-val="false"  class="form-control bg-secondary text-light" />
                                 <span asp-validation-for="DireccionTrabajo" class="text-danger"></span>
                             </div>
                             <div class="col-md-4">
                                 <label asp-for="AntiguedadLaboral" class="form-label">Antigüedad Laboral (años)</label>
-                                <input asp-for="AntiguedadLaboral" type="number" min="0" class="form-control bg-secondary text-light" />
+                                <input asp-for="AntiguedadLaboral" data-val="false"  type="number" min="0" class="form-control bg-secondary text-light" />
                                 <span asp-validation-for="AntiguedadLaboral" class="text-danger"></span>
                             </div>
                             <div class="col-md-4">
                                 <label asp-for="IngresosMensuales" class="form-label">Ingresos Mensuales</label>
-                                <input asp-for="IngresosMensuales" type="number" min="0" step="0.01" class="form-control bg-secondary text-light" />
+                                <input asp-for="IngresosMensuales" data-val="false"  type="number" min="0" step="0.01" class="form-control bg-secondary text-light" />
                                 <span asp-validation-for="IngresosMensuales" class="text-danger"></span>
                             </div>
                             <div class="col-md-12">
@@ -251,19 +251,19 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-check form-switch mb-3">
-                                    <input asp-for="AptoCredito" class="form-check-input" id="aptoCredito" />
+                                    <input asp-for="AptoCredito"  data-val="false"  class="form-check-input" id="aptoCredito" />
                                     <label asp-for="AptoCredito" class="form-check-label">¿Apto para Crédito?</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-check form-switch mb-3 credito-field">
-                                    <input asp-for="RequiereGarante" class="form-check-input" id="requiereGarante" />
+                                    <input asp-for="RequiereGarante" data-val="false"  class="form-check-input" id="requiereGarante" />
                                     <label asp-for="RequiereGarante" class="form-check-label">¿Requiere Garante?</label>
                                 </div>
                             </div>
                             <div class="col-md-4 credito-field">
                                 <label asp-for="LimiteCreditoInicial" class="form-label">Límite de Crédito Inicial</label>
-                                <input asp-for="LimiteCreditoInicial" type="number" step="0.01" min="0"
+                                <input asp-for="LimiteCreditoInicial" data-val="false"  type="number" step="0.01" min="0"
                                        class="form-control bg-secondary text-light" />
                                 <span asp-validation-for="LimiteCreditoInicial" class="text-danger"></span>
                             </div>

@@ -4,14 +4,15 @@
 
     var App = window.App = window.App || {};
 
-    init: function () {
-        // Verifica si exists debug antes de llamarla
-        if (App.debug && typeof App.debug === 'function') {
-            App.debug('Módulo de productos inicializado');
-        } else {
-            console.log('Módulo de productos inicializado');
-        }
-    },
+    App.products = {
+        init: function () {
+            // Verifica si exists debug antes de llamarla
+            if (App.debug && typeof App.debug === 'function') {
+                App.debug('Módulo de productos inicializado');
+            } else {
+                console.log('Módulo de productos inicializado');
+            }
+        },
 
         // Búsqueda de producto por código
         searchByCode: function (url, codeValue, options) {

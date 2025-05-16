@@ -1,19 +1,21 @@
-﻿using Javo2.ViewModels.Shared;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Javo2.ViewModels.Shared;
 
 namespace Javo2.ViewModels.Operaciones.Clientes
 {
-    public class ClientesViewModel : PersonaBaseViewModel, ILocationViewModel
+    public class ClientesViewModel : PersonaBaseViewModel, ILocationViewModel, IValidatableObject
     {
         public int ClienteID { get; set; }
 
-        [Required(ErrorMessage = "El nombre es obligatorio")]
+        [Required(ErrorMessage = "El nombrecliente es obligatorio")]
         [MaxLength(50, ErrorMessage = "El nombre no puede superar los 50 caracteres")]
         public string NombreCliente { get; set; } = string.Empty;
+
         public string RelacionCliente { get; set; } = string.Empty;
+
         [Required(ErrorMessage = "El apellido es obligatorio")]
         [MaxLength(50, ErrorMessage = "El apellido no puede superar los 50 caracteres")]
         public string Apellido { get; set; } = string.Empty;
@@ -57,15 +59,16 @@ namespace Javo2.ViewModels.Operaciones.Clientes
         // Datos personales extendidos
         [DataType(DataType.Date)]
         public DateTime? FechaNacimiento { get; set; }
+
         public string EstadoCivil { get; set; } = string.Empty;
 
-        // Datos del cónyuge
-        public string NombreConyugue { get; set; } = string.Empty;
-        public string ApellidoConyugue { get; set; } = string.Empty;
+        // Datos del cónyuge (ahora opcionales)
+        public string? NombreConyugue { get; set; }
+        public string? ApellidoConyugue { get; set; }
         public int? DniConyugue { get; set; }
-        public string CelularConyugue { get; set; } = string.Empty;
-        public string EmailConyugue { get; set; } = string.Empty;
-        public string TrabajoConyugue { get; set; } = string.Empty;
+        public string? CelularConyugue { get; set; }
+        public string? EmailConyugue { get; set; }
+        public string? TrabajoConyugue { get; set; }
 
         // Datos laborales
         public string Ocupacion { get; set; } = string.Empty;
@@ -103,8 +106,8 @@ namespace Javo2.ViewModels.Operaciones.Clientes
         public int? GaranteID { get; set; }
         public string NombreGarante { get; set; } = string.Empty;
         public GaranteViewModel? Garante { get; set; }
-        public int ClasificacionCredito { get; set; } // Add this property
-        public string TextoClasificacionCredito { get; set; } // Add this property
+        public int ClasificacionCredito { get; set; }
+        public string TextoClasificacionCredito { get; set; } = string.Empty;
         public decimal SaldoInicial { get; set; }
         public decimal SaldoDisponible { get; set; }
         public decimal Saldo { get; set; }
@@ -122,5 +125,38 @@ namespace Javo2.ViewModels.Operaciones.Clientes
 
         // Historial
         public List<HistorialCompraViewModel> HistorialCompras { get; set; } = new();
+
+        // Validación condicional de datos de cónyuge
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            bool requiere = EstadoCivil == "Casado" || EstadoCivil == "Concubinato";
+            if (requiere)
+            {
+                if (string.IsNullOrWhiteSpace(NombreConyugue))
+                    yield return new ValidationResult(
+                        "El nombre del cónyuge es obligatorio.",
+                        new[] { nameof(NombreConyugue) });
+
+                if (string.IsNullOrWhiteSpace(ApellidoConyugue))
+                    yield return new ValidationResult(
+                        "El apellido del cónyuge es obligatorio.",
+                        new[] { nameof(ApellidoConyugue) });
+
+                if (!DniConyugue.HasValue || DniConyugue < 1000000)
+                    yield return new ValidationResult(
+                        "El DNI del cónyuge es obligatorio y debe ser válido.",
+                        new[] { nameof(DniConyugue) });
+
+                if (string.IsNullOrWhiteSpace(CelularConyugue))
+                    yield return new ValidationResult(
+                        "El celular del cónyuge es obligatorio.",
+                        new[] { nameof(CelularConyugue) });
+
+                if (string.IsNullOrWhiteSpace(EmailConyugue))
+                    yield return new ValidationResult(
+                        "El email del cónyuge es obligatorio.",
+                        new[] { nameof(EmailConyugue) });
+            }
+        }
     }
 }
