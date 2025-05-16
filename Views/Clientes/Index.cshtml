@@ -6,16 +6,7 @@
 
 <section class="container-fluid py-3">
     <!-- Encabezado secundario y resumen -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h2 mb-0">@ViewBag.Title</h1>
-        @if (User.HasPermission("clientes.crear"))
-        {
-            <a asp-action="Create" class="btn btn-success btn-sm">
-                <i class="bi bi-plus-circle me-1" aria-hidden="true"></i>
-                <span>Agregar Cliente</span>
-            </a>
-        }
-    </div>
+   
 
     @if (TempData["Success"] != null)
     {
@@ -90,7 +81,18 @@
 
     <!-- Tabla de clientes -->
     <div class="card shadow-sm">
+
         <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h2 mb-0">@ViewBag.Title</h1>
+                @if (User.HasPermission("clientes.crear"))
+                {
+                    <a asp-action="Create" class="btn btn-success btn-sm">
+                        <i class="bi bi-plus-circle me-1" aria-hidden="true"></i>
+                        <span>Agregar Cliente</span>
+                    </a>
+                }
+            </div>
             <div class="table-responsive">
                 <table class="table table-dark table-hover align-middle mb-0">
                     <thead class="bg-secondary text-light">

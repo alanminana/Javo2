@@ -97,12 +97,6 @@ D:\github\Javo2\obj\Debug\net8.0\scopedcss\projectbundle\Javo2.bundle.scp.css
 D:\github\Javo2\obj\Debug\net8.0\staticwebassets.build.json
 D:\github\Javo2\obj\Debug\net8.0\staticwebassets.development.json
 D:\github\Javo2\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-D:\github\Javo2\obj\Debug\net8.0\staticwebassets\msbuild.Javo2.Microsoft.AspNetCore.StaticWebAssets.props
-D:\github\Javo2\obj\Debug\net8.0\staticwebassets\msbuild.Javo2.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
-D:\github\Javo2\obj\Debug\net8.0\staticwebassets\msbuild.build.Javo2.props
-D:\github\Javo2\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.Javo2.props
-D:\github\Javo2\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.Javo2.props
-D:\github\Javo2\obj\Debug\net8.0\staticwebassets.pack.json
 D:\github\Javo2\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 D:\github\Javo2\obj\Debug\net8.0\Javo2.csproj.Up2Date
 D:\github\Javo2\obj\Debug\net8.0\Javo2.dll
@@ -120,3 +114,5 @@ D:\github\Javo2\bin\Debug\net8.0\Data\Backups\clientes_backup_20250504150114.jso
 D:\github\Javo2\bin\Debug\net8.0\Data\comprasProveedores.json
 D:\github\Javo2\bin\Debug\net8.0\Data\Backups\clientes_backup_20250510185037.json
 D:\github\Javo2\bin\Debug\net8.0\Data\Backups\clientes_backup_20250510185102.json
+D:\github\Javo2\obj\Debug\net8.0\scopedcss\Views\Shared\_DireccionPartial.cshtml.rz.scp.css
+D:\github\Javo2\obj\Debug\net8.0\staticwebassets.build.json.cache
