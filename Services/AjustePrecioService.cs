@@ -10,16 +10,16 @@ using System.Threading.Tasks;
 
 namespace Javo2.Services
 {
-    public class AjustePrecioService : IAjustePrecioService
+    public class JsonDataService : IAjustePrecioService
     {
         private readonly IProductoService _productoService;
-        private readonly ILogger<AjustePrecioService> _logger;
+        private readonly ILogger<JsonDataService> _logger;
         private readonly string _jsonFilePath = "Data/ajustesPrecios.json";
         private static List<AjustePrecioHistorico> _historialAjustes = new List<AjustePrecioHistorico>();
         private static int _nextAjusteID = 1;
         private static readonly object _lock = new object();
 
-        public AjustePrecioService(IProductoService productoService, ILogger<AjustePrecioService> logger)
+        public JsonDataService(IProductoService productoService, ILogger<JsonDataService> logger)
         {
             _productoService = productoService;
             _logger = logger;

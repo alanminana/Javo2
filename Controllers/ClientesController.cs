@@ -1,21 +1,24 @@
 ﻿using AutoMapper;
+using Javo2.Controllers.Base;
+using Javo2.Filters;
 using Javo2.IServices;
 using Javo2.Models;
+using Javo2.Services;
 using Javo2.ViewModels.Operaciones.Clientes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System;
-using Javo2.Controllers.Base;
-using Microsoft.AspNetCore.Authorization;
-using Javo2.Services;
 
 namespace Javo2.Controllers
 {
     [Authorize(Policy = "PermisoPolitica")]
+    [TypeFilter(typeof(ClientesExceptionFilter))]
+
     public class ClientesController : BaseController
     {
         private readonly IClienteService _clienteService;
@@ -363,6 +366,12 @@ namespace Javo2.Controllers
                 Value = c.CiudadID.ToString(),
                 Text = c.Nombre
             });
+        }
+
+        private async Task PrepararUbicacionViewModel(ClientesViewModel viewModel)
+        {
+            viewModel.Provincias = await ObtenerProvincias();
+            viewModel.Ciudades = await ObtenerCiudades(viewModel.ProvinciaID);
         }
     }
 }

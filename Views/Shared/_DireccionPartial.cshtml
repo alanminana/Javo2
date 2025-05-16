@@ -1,0 +1,55 @@
+﻿// Archivo: Views/Shared/_DireccionPartial.cshtml
+@model dynamic
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <label asp-for="Calle" class="form-label">Calle *</label>
+        <input asp-for="Calle" class="form-control bg-secondary text-light" required />
+        <span asp-validation-for="Calle" class="text-danger"></span>
+    </div>
+    <div class="col-md-2">
+        <label asp-for="NumeroCalle" class="form-label">Número *</label>
+        <input asp-for="NumeroCalle" class="form-control bg-secondary text-light" required />
+        <span asp-validation-for="NumeroCalle" class="text-danger"></span>
+    </div>
+    <div class="col-md-2">
+        <label asp-for="NumeroPiso" class="form-label">Piso</label>
+        <input asp-for="NumeroPiso" class="form-control bg-secondary text-light" />
+        <span asp-validation-for="NumeroPiso" class="text-danger"></span>
+    </div>
+    <div class="col-md-2">
+        <label asp-for="Dpto" class="form-label">Dpto</label>
+        <input asp-for="Dpto" class="form-control bg-secondary text-light" />
+        <span asp-validation-for="Dpto" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="ProvinciaID" class="form-label">Provincia *</label>
+        <select asp-for="ProvinciaID" class="form-select bg-secondary text-light"
+                id="@(ViewData["ProvinciaSelectId"] ?? "provincias")" required>
+            <option value="">-- Seleccione una provincia --</option>
+            @foreach (var item in Model.Provincias)
+            {
+                <option value="@item.Value">@item.Text</option>
+            }
+        </select>
+        <span asp-validation-for="ProvinciaID" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="CiudadID" class="form-label">Ciudad *</label>
+        <select asp-for="CiudadID" class="form-select bg-secondary text-light"
+                id="@(ViewData["CiudadSelectId"] ?? "ciudades")" required>
+            <option value="">-- Seleccione una ciudad --</option>
+        </select>
+        <span asp-validation-for="CiudadID" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="Localidad" class="form-label">Localidad</label>
+        <input asp-for="Localidad" class="form-control bg-secondary text-light" />
+        <span asp-validation-for="Localidad" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="CodigoPostal" class="form-label">Código Postal</label>
+        <input asp-for="CodigoPostal" class="form-control bg-secondary text-light" />
+        <span asp-validation-for="CodigoPostal" class="text-danger"></span>
+    </div>
+</div>

@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Javo2.ViewModels.Shared;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Javo2.ViewModels.Operaciones.Clientes
 {
-    public class ClientesViewModel
+    public class ClientesViewModel : PersonaBaseViewModel
     {
         public int ClienteID { get; set; }
 

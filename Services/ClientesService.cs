@@ -1,21 +1,24 @@
-﻿using Javo2.IServices;
+﻿using Javo2.Helpers;
+using Javo2.IServices;
 using Javo2.Models;
+using Javo2.Services.Base;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System;
-using Javo2.Helpers;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Javo2.Services
 {
-    public class ClienteService : IClienteService, IClienteSearchService
+    public class ClienteService : JsonDataService<Cliente>, IClienteService, IClienteSearchService
     {
-        private readonly ILogger<ClienteService> _logger;
+
         private readonly IAuditoriaService? _auditoriaService;
         private readonly IGaranteService? _garanteService;
+        private readonly ILogger<ClienteService> _logger;
+    
         private static List<Cliente> _clientes = new();
         private static ReaderWriterLockSlim _lock = new();
         private static int _nextID = 1;

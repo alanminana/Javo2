@@ -1,16 +1,17 @@
 ﻿// Archivo: Services/GaranteService.cs
+using Javo2.Helpers;
 using Javo2.IServices;
 using Javo2.Models;
+using Javo2.Services.Base;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Javo2.Helpers;
 
 namespace Javo2.Services
 {
-    public class GaranteService : IGaranteService
+    public class GaranteService : JsonDataService<Garante>, IGaranteService
     {
         private readonly ILogger<GaranteService> _logger;
         private static List<Garante> _garantes = new();

@@ -13,11 +13,11 @@
         // Configurar manejo de Provincias y Ciudades
         setupProvinciasCiudades: function () {
             $("#provincias").change(function () {
-                var provinciaId = $(this).val();
-                App.clientesController.loadCiudades(provinciaId, 'ciudades');
+                const provinciaId = $(this).val();
+                const ciudadId = $("#ciudades").val();
+                App.clientesController.loadCiudades(provinciaId, 'ciudades', ciudadId);
             });
 
-            // Si ya hay una provincia seleccionada al cargar la página, cargar sus ciudades
             if ($("#provincias").val()) {
                 $("#provincias").trigger("change");
             }
