@@ -49,6 +49,9 @@ namespace Javo2.ViewModels.Operaciones.Clientes
         [Required(ErrorMessage = "El código postal es obligatorio")]
         public string CodigoPostal { get; set; } = string.Empty;
 
+        [Required(ErrorMessage = "La descripción del domicilio es obligatoria")]
+        public string DescripcionDomicilio { get; set; } = string.Empty;
+
         [Required(ErrorMessage = "La provincia es obligatoria")]
         public int ProvinciaID { get; set; }
         public IEnumerable<SelectListItem> Provincias { get; set; } = new List<SelectListItem>();

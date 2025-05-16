@@ -103,7 +103,29 @@ namespace Javo2.Controllers
                     return View(model);
                 }
 
-                var garante = _mapper.Map<Garante>(model);
+                // Mapear solo al modelo Garante, evitando propiedades como TextoClasificacionCredito
+                var garante = new Garante
+                {
+                    Nombre = model.Nombre,
+                    Apellido = model.Apellido,
+                    DNI = model.DNI,
+                    Email = model.Email,
+                    Telefono = model.Telefono,
+                    Celular = model.Celular,
+                    Calle = model.Calle,
+                    NumeroCalle = model.NumeroCalle,
+                    NumeroPiso = model.NumeroPiso,
+                    Dpto = model.Dpto,
+                    Localidad = model.Localidad,
+                    CodigoPostal = model.CodigoPostal,
+                    ProvinciaID = model.ProvinciaID,
+                    CiudadID = model.CiudadID,
+                    LugarTrabajo = model.LugarTrabajo,
+                    IngresosMensuales = model.IngresosMensuales,
+                    RelacionCliente = model.RelacionCliente,
+                    FechaCreacion = DateTime.UtcNow
+                };
+
                 var createdGarante = await _garanteService.CreateGaranteAsync(garante);
 
                 // Asignar garante al cliente
