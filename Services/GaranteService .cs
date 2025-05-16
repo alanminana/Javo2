@@ -20,9 +20,9 @@ namespace Javo2.Services
         private readonly string _jsonFilePath = "Data/garantes.json";
 
         public GaranteService(ILogger<GaranteService> logger)
+            : base(logger, "Data/garantes.json")
         {
             _logger = logger;
-            CargarDesdeJsonAsync().GetAwaiter().GetResult();
         }
 
         private async Task CargarDesdeJsonAsync()

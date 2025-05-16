@@ -40,17 +40,13 @@ namespace Javo2.Services
             new Ciudad { CiudadID = 4, Nombre = "Rosario", ProvinciaID = 3 }
         };
 
-        public ClienteService(
-            ILogger<ClienteService> logger,
-            IAuditoriaService? auditoriaService = null,
-            IGaranteService? garanteService = null)
+        public ClienteService(ILogger<ClienteService> logger, IAuditoriaService? auditoriaService = null, IGaranteService? garanteService = null) : base(logger, "Data/clientes.json")
+
         {
             _logger = logger;
             _auditoriaService = auditoriaService;
             _garanteService = garanteService;
-            InitializeAsync().GetAwaiter().GetResult();
         }
-
         private async Task InitializeAsync()
         {
             Directory.CreateDirectory(_backupDirectory);

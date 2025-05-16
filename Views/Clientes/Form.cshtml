@@ -395,9 +395,8 @@
         @await Html.PartialAsync("_DireccionPartial", Model)
 
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
-        await PrepararUbicacionViewModel(viewModel);
 
-        <script src="~/js/Clientes/Form.js"></script>
+        <script src="~/js/modules/cliente-form.js"></script>
 
     }
 

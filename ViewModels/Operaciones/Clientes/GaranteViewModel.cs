@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Javo2.ViewModels.Operaciones.Clientes
 {
-    public class GaranteViewModel : PersonaBaseViewModel
+    public class GaranteViewModel : PersonaBaseViewModel, ILocationViewModel
     {
         public int GaranteID { get; set; }
 

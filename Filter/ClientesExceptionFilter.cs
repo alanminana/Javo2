@@ -1,5 +1,6 @@
 ﻿// Archivo: Filters/ClientesExceptionFilter.cs
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using System;
@@ -40,20 +41,15 @@ namespace Javo2.Filters
                 // Guardar mensaje en TempData para mostrar en la vista
                 if (context.HttpContext.Request.Method == "POST")
                 {
-                    var controller = context.Controller as Controller;
+                    var controller = context.ActionDescriptor as ControllerActionDescriptor;
                     if (controller != null)
                     {
-                        controller.TempData["Error"] = mensaje;
+                        context.HttpContext.Items["Error"] = mensaje;
                         context.Result = new RedirectToActionResult("Index", "Clientes", null);
                     }
                 }
-                else
-                {
-                    context.Result = new ViewResult { ViewName = "Error" };
-                }
-            }
-
-            context.ExceptionHandled = true;
+                context.ExceptionHandled = true;
         }
+    }
     }
 }

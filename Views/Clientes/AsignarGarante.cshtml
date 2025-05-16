@@ -101,10 +101,9 @@
 @section Scripts {  
     @{  
         @await Html.PartialAsync("_DireccionPartial", Model);  
-        await PrepararUbicacionViewModel(viewModel);  
 
         @* Fix for CS1503: Removed `@await` as `Html.RenderPartialAsync` returns `void` *@  
         @Html.RenderPartialAsync("_ValidationScriptsPartial");  
-        <script src="~/js/Clientes/AsignarGarante.js"></script>  
-    }  
+        <script src="~/js/modules/cliente-form.js"></script>
+    }
 }
