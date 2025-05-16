@@ -3,12 +3,16 @@
   "WorkspaceRootPath": "D:\\github\\Javo2\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\modules\\cliente-form.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\modules\\cliente-form.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\controllers\\clientescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:controllers\\clientescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\profiles\\automapperprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:profiles\\automapperprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\clientes\\vergarante.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\clientes\\vergarante.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\clientes\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\clientes\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\viewmodels\\operaciones\\clientes\\clientesviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -19,16 +23,8 @@
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\clientes\\form.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\controllers\\clientescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:controllers\\clientescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\helpers\\dropdownhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:helpers\\dropdownhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\helpers\\jsonfilehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:helpers\\jsonfilehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\clientes\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\clientes\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\services\\clientesservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -39,8 +35,20 @@
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\clientes\\_clientestable.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\clientes\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\clientes\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\modules\\cliente-form.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\modules\\cliente-form.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\profiles\\automapperprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:profiles\\automapperprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\helpers\\dropdownhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:helpers\\dropdownhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\helpers\\jsonfilehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:helpers\\jsonfilehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\promociones\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -66,7 +74,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -74,46 +82,124 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AutoMapperProfile.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Profiles\\AutoMapperProfile.cs",
-              "RelativeDocumentMoniker": "Profiles\\AutoMapperProfile.cs",
-              "ToolTip": "D:\\github\\Javo2\\Profiles\\AutoMapperProfile.cs",
-              "RelativeToolTip": "Profiles\\AutoMapperProfile.cs",
-              "ViewState": "AgIAAKYAAAAAAAAAAAAnwLcAAABLAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-16T22:51:08.183Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "DropdownHelper.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Helpers\\DropdownHelper.cs",
-              "RelativeDocumentMoniker": "Helpers\\DropdownHelper.cs",
-              "ToolTip": "D:\\github\\Javo2\\Helpers\\DropdownHelper.cs",
-              "RelativeToolTip": "Helpers\\DropdownHelper.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAvwA8AAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-16T22:15:00.467Z",
+              "DocumentIndex": 7,
+              "Title": "_ClientesTable.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Clientes\\_ClientesTable.cshtml",
+              "RelativeDocumentMoniker": "Views\\Clientes\\_ClientesTable.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Clientes\\_ClientesTable.cshtml",
+              "RelativeToolTip": "Views\\Clientes\\_ClientesTable.cshtml",
+              "ViewState": "AgIAAIkAAAAAAAAAAAAAAJQAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-16T22:00:05.709Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 6,
-              "Title": "JsonFileHelper.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Helpers\\JsonFileHelper.cs",
-              "RelativeDocumentMoniker": "Helpers\\JsonFileHelper.cs",
-              "ToolTip": "D:\\github\\Javo2\\Helpers\\JsonFileHelper.cs",
-              "RelativeToolTip": "Helpers\\JsonFileHelper.cs",
-              "ViewState": "AgIAAB4AAAAAAAAAAAAAAFoAAAABAAAAAAAAAA==",
+              "Title": "ClientesService.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Services\\ClientesService.cs",
+              "RelativeDocumentMoniker": "Services\\ClientesService.cs",
+              "ToolTip": "D:\\github\\Javo2\\Services\\ClientesService.cs",
+              "RelativeToolTip": "Services\\ClientesService.cs",
+              "ViewState": "AgIAABoAAAAAAAAAAADwvzAAAABDAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-16T22:09:09.676Z",
+              "WhenOpened": "2025-05-16T22:06:56.715Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 5,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Clientes\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Clientes\\Index.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Clientes\\Index.cshtml",
+              "RelativeToolTip": "Views\\Clientes\\Index.cshtml",
+              "ViewState": "AgIAAG4AAAAAAAAAAAAcwIEAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-16T22:00:02.488Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ClientesController.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\ClientesController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ClientesController.cs",
+              "ToolTip": "D:\\github\\Javo2\\Controllers\\ClientesController.cs",
+              "RelativeToolTip": "Controllers\\ClientesController.cs",
+              "ViewState": "AgIAADEBAAAAAAAAAAAAwDkBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-16T21:19:56.268Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Clientes\\Details.cshtml",
+              "RelativeDocumentMoniker": "Views\\Clientes\\Details.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Clientes\\Details.cshtml",
+              "RelativeToolTip": "Views\\Clientes\\Details.cshtml",
+              "ViewState": "AgIAABkAAAAAAAAAAAAswCcAAABTAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-16T23:07:22.111Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Form.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Clientes\\Form.cshtml",
+              "RelativeDocumentMoniker": "Views\\Clientes\\Form.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Clientes\\Form.cshtml",
+              "RelativeToolTip": "Views\\Clientes\\Form.cshtml",
+              "ViewState": "AgIAACgBAAAAAAAAAAAAAEQBAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-16T21:07:56.397Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "VerGarante.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Clientes\\VerGarante.cshtml",
+              "RelativeDocumentMoniker": "Views\\Clientes\\VerGarante.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Clientes\\VerGarante.cshtml",
+              "RelativeToolTip": "Views\\Clientes\\VerGarante.cshtml",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAowCIAAABKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-16T23:23:28.941Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ClientesViewModel.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\ViewModels\\Operaciones\\Clientes\\ClientesViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModels\\Operaciones\\Clientes\\ClientesViewModel.cs",
+              "ToolTip": "D:\\github\\Javo2\\ViewModels\\Operaciones\\Clientes\\ClientesViewModel.cs",
+              "RelativeToolTip": "ViewModels\\Operaciones\\Clientes\\ClientesViewModel.cs",
+              "ViewState": "AgIAAFAAAAAAAAAAAAA/wGEAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-16T21:11:52.117Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "cliente-form.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\cliente-form.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\cliente-form.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\cliente-form.js",
+              "RelativeToolTip": "wwwroot\\js\\modules\\cliente-form.js",
+              "ViewState": "AgIAABsAAAAAAAAAAAAnwCgAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-16T21:34:10.381Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
               "Title": "PersonaBaseViewModel.cs",
               "DocumentMoniker": "D:\\github\\Javo2\\ViewModels\\Shared\\PersonaBaseViewModel.cs",
               "RelativeDocumentMoniker": "ViewModels\\Shared\\PersonaBaseViewModel.cs",
@@ -121,64 +207,47 @@
               "RelativeToolTip": "ViewModels\\Shared\\PersonaBaseViewModel.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-16T21:59:20.641Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "cliente-form.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\cliente-form.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\cliente-form.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\cliente-form.js",
-              "RelativeToolTip": "wwwroot\\js\\modules\\cliente-form.js",
-              "ViewState": "AgIAABsAAAAAAAAAAAAnwCsAAAAPAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-16T21:34:10.381Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "ClientesViewModel.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\ViewModels\\Operaciones\\Clientes\\ClientesViewModel.cs",
-              "RelativeDocumentMoniker": "ViewModels\\Operaciones\\Clientes\\ClientesViewModel.cs",
-              "ToolTip": "D:\\github\\Javo2\\ViewModels\\Operaciones\\Clientes\\ClientesViewModel.cs",
-              "RelativeToolTip": "ViewModels\\Operaciones\\Clientes\\ClientesViewModel.cs",
-              "ViewState": "AgIAAI0AAAAAAAAAAAAYwJ4AAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-16T21:11:52.117Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "ClientesController.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\ClientesController.cs",
-              "RelativeDocumentMoniker": "Controllers\\ClientesController.cs",
-              "ToolTip": "D:\\github\\Javo2\\Controllers\\ClientesController.cs",
-              "RelativeToolTip": "Controllers\\ClientesController.cs",
-              "ViewState": "AgIAAFoAAAAAAAAAAAAUwGoAAAATAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-16T21:19:56.268Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Form.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Clientes\\Form.cshtml",
-              "RelativeDocumentMoniker": "Views\\Clientes\\Form.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Clientes\\Form.cshtml",
-              "RelativeToolTip": "Views\\Clientes\\Form.cshtml",
-              "ViewState": "AgIAAHoAAAAAAAAAAAAAAIYAAAAzAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-16T21:07:56.397Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-16T21:59:20.641Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 11,
+              "Title": "JsonFileHelper.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Helpers\\JsonFileHelper.cs",
+              "RelativeDocumentMoniker": "Helpers\\JsonFileHelper.cs",
+              "ToolTip": "D:\\github\\Javo2\\Helpers\\JsonFileHelper.cs",
+              "RelativeToolTip": "Helpers\\JsonFileHelper.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAAFoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-16T22:09:09.676Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "DropdownHelper.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Helpers\\DropdownHelper.cs",
+              "RelativeDocumentMoniker": "Helpers\\DropdownHelper.cs",
+              "ToolTip": "D:\\github\\Javo2\\Helpers\\DropdownHelper.cs",
+              "RelativeToolTip": "Helpers\\DropdownHelper.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAvwA8AAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-16T22:15:00.467Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "AutoMapperProfile.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Profiles\\AutoMapperProfile.cs",
+              "RelativeDocumentMoniker": "Profiles\\AutoMapperProfile.cs",
+              "ToolTip": "D:\\github\\Javo2\\Profiles\\AutoMapperProfile.cs",
+              "RelativeToolTip": "Profiles\\AutoMapperProfile.cs",
+              "ViewState": "AgIAAKYAAAAAAAAAAAAnwLcAAABLAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-16T22:51:08.183Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
               "Title": "Delete.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Clientes\\Delete.cshtml",
               "RelativeDocumentMoniker": "Views\\Clientes\\Delete.cshtml",
@@ -186,38 +255,11 @@
               "RelativeToolTip": "Views\\Clientes\\Delete.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAABKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-16T21:59:48.234Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-16T21:59:48.234Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Clientes\\Index.cshtml",
-              "RelativeDocumentMoniker": "Views\\Clientes\\Index.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Clientes\\Index.cshtml",
-              "RelativeToolTip": "Views\\Clientes\\Index.cshtml",
-              "ViewState": "AgIAAF4AAAAAAAAAAAAvwG8AAAA6AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-16T22:00:02.488Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "_ClientesTable.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Clientes\\_ClientesTable.cshtml",
-              "RelativeDocumentMoniker": "Views\\Clientes\\_ClientesTable.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Clientes\\_ClientesTable.cshtml",
-              "RelativeToolTip": "Views\\Clientes\\_ClientesTable.cshtml",
-              "ViewState": "AgIAABMAAAAAAAAAAAAvwB0AAAAjAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-16T22:00:05.709Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 12,
               "Title": "Details.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Promociones\\Details.cshtml",
               "RelativeDocumentMoniker": "Views\\Promociones\\Details.cshtml",
@@ -225,25 +267,11 @@
               "RelativeToolTip": "Views\\Promociones\\Details.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAxAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-16T22:00:09.519Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-16T22:00:09.519Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "ClientesService.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Services\\ClientesService.cs",
-              "RelativeDocumentMoniker": "Services\\ClientesService.cs",
-              "ToolTip": "D:\\github\\Javo2\\Services\\ClientesService.cs",
-              "RelativeToolTip": "Services\\ClientesService.cs",
-              "ViewState": "AgIAAHUBAAAAAAAAAAAYwIMBAABjAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-16T22:06:56.715Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 15,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\github\\Javo2\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",

@@ -46,6 +46,11 @@ namespace Javo2.Services
             _logger = logger;
             _auditoriaService = auditoriaService;
             _garanteService = garanteService;
+            _jsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Data/clientes.json");
+
+
+            InitializeAsync().GetAwaiter().GetResult();
+
         }
         private async Task InitializeAsync()
         {
@@ -503,35 +508,35 @@ namespace Javo2.Services
             {
                 _lock.ExitReadLock();
             }
-
             try
             {
+                // Asegurar que los directorios existen
+                Directory.CreateDirectory(Path.GetDirectoryName(_jsonFilePath));
+                Directory.CreateDirectory(_backupDirectory);
+
                 // Backup automático
                 if (File.Exists(_jsonFilePath))
                 {
                     var backupPath = Path.Combine(_backupDirectory,
                         $"clientes_backup_{DateTime.Now:yyyyMMddHHmmss}.json");
                     File.Copy(_jsonFilePath, backupPath, true);
-
                     // Mantener solo los últimos 10 backups
                     var backupFiles = Directory.GetFiles(_backupDirectory, "clientes_backup_*.json")
                         .OrderByDescending(f => File.GetCreationTime(f))
                         .Skip(10);
-
                     foreach (var file in backupFiles)
                     {
                         try { File.Delete(file); } catch { }
                     }
                 }
-
                 await JsonFileHelper.SaveToJsonFileAsync(_jsonFilePath, snapshot);
                 _logger.LogInformation("Clientes guardados: {Count}", snapshot.Count);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al guardar clientes en JSON");
+                _logger.LogError(ex, "Error al guardar clientes en JSON: {Path}", _jsonFilePath);
                 throw;
             }
         }
     }
-}
+    }

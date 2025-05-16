@@ -129,7 +129,7 @@
                                         @if (User.HasPermission("clientes.ver"))
                                         {
                                             <a asp-action="Details" asp-route-id="@cliente.ClienteID" class="btn btn-sm btn-outline-info" title="Ver detalles">
-                                                <i class="bi bi-eye" aria-hidden="true"></i>
+                                                <i class="bi bi-eye"></i>
                                             </a>
                                         }
                                         @if (User.HasPermission("clientes.eliminar"))

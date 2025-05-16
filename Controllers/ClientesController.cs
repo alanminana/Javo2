@@ -289,22 +289,46 @@ namespace Javo2.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
+            var cliente = await _clienteService.GetClienteByIDAsync(id);
+            if (cliente == null)
+                return NotFound();
+
+            var viewModel = _mapper.Map<ClientesViewModel>(cliente);
+
+            // Cargar datos del garante si existe
+            if (cliente.GaranteID.HasValue)
+            {
+                var garante = await _garanteService.GetGaranteByIdAsync(cliente.GaranteID.Value);
+                if (garante != null)
+                {
+                    viewModel.NombreGarante = $"{garante.Nombre} {garante.Apellido}";
+                    viewModel.Garante = _mapper.Map<GaranteViewModel>(garante);
+                }
+            }
+
+            return View(viewModel);
+        }
+        [HttpGet]
+        [Authorize(Policy = "Permission:clientes.ver")]
+        [Route("Clientes/VerGarante/{id}")]
+
+        public async Task<IActionResult> VerGarante(int id, int? clienteId = null)
+        {
             try
             {
-                var cliente = await _clienteService.GetClienteByIDAsync(id);
-                if (cliente == null)
+                var garante = await _garanteService.GetGaranteByIdAsync(id);
+                if (garante == null)
                     return NotFound();
 
-                var viewModel = _mapper.Map<ClientesViewModel>(cliente);
-                return View(viewModel);
+                ViewBag.ClienteID = clienteId;
+                return View(garante);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error en Details");
+                _logger.LogError(ex, "Error al mostrar detalles del garante");
                 return View("Error");
             }
         }
-
         [HttpGet]
         [Authorize(Policy = "Permission:clientes.eliminar")]
 

@@ -135,7 +135,9 @@
             @if (ViewBag.CurrentPage > 1)
             {
                 <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new { searchTerm = ViewBag.SearchTerm, page = ViewBag.CurrentPage - 1 })">
+                    <a class="page-link"
+                    
+                    on("Index", new { searchTerm = ViewBag.SearchTerm, page = ViewBag.CurrentPage - 1 })">
                         <span aria-hidden="true">&laquo;</span> Anterior
                     </a>
                 </li>

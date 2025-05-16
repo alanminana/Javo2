@@ -1,0 +1,39 @@
+﻿@model Javo2.Models.Garante
+@{
+    ViewData["Title"] = "Detalles del Garante";
+}
+
+<div class="card bg-dark text-light">
+    <div class="card-header">
+        <h3>Información del Garante</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Nombre:</strong> @Model.Nombre</p>
+                <p><strong>Apellido:</strong> @Model.Apellido</p>
+                <p><strong>DNI:</strong> @Model.DNI</p>
+                <p><strong>Email:</strong> @Model.Email</p>
+                <p><strong>Teléfono:</strong> @Model.Telefono</p>
+                <p><strong>Celular:</strong> @Model.Celular</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Domicilio:</strong> @Model.Calle @Model.NumeroCalle</p>
+                <p><strong>Localidad:</strong> @Model.Localidad</p>
+                <p><strong>Lugar de Trabajo:</strong> @Model.LugarTrabajo</p>
+                <p><strong>Ingresos Mensuales:</strong> @Model.IngresosMensuales.ToString("C")</p>
+                <p><strong>Relación con Cliente:</strong> @Model.RelacionCliente</p>
+            </div>
+        </div>
+        <div class="mt-3">
+            @if (ViewBag.ClienteID != null)
+            {
+                <a asp-action="Details" asp-route-id="@ViewBag.ClienteID" class="btn btn-secondary">Volver al Cliente</a>
+            }
+            else
+            {
+                <a asp-action="Index" class="btn btn-secondary">Volver</a>
+            }
+        </div>
+    </div>
+</div>

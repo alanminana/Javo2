@@ -294,7 +294,7 @@
                         <div id="garanteInfo" class="mt-4">
                             <h5 class="border-bottom pb-2">Información del Garante</h5>
 
-                            @if (Model.GaranteID.HasValue && Model.GaranteID.Value > 0)
+@if (Model.GaranteID > 0)
                             {
                                 <div class="alert alert-info">
                                     <strong>Garante asignado:</strong> @Model.NombreGarante

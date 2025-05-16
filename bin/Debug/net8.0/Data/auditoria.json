@@ -574,5 +574,17 @@
     "EsRevertido": false,
     "RollbackUser": "",
     "RollbackFecha": null
+  },
+  {
+    "ID": 49,
+    "FechaHora": "2025-05-16T20:16:40.3384848-03:00",
+    "Usuario": "Sistema",
+    "Entidad": "Cliente",
+    "Accion": "AsignarGarante",
+    "LlavePrimaria": "1",
+    "Detalle": "Garante (ID: 1) asignado al cliente ID: 1",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
   }
 ]

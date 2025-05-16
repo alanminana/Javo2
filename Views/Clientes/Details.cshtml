@@ -34,7 +34,7 @@
                 <div class="col-md-4 text-end">
                     @if (Model.RequiereGarante)
                     {
-                        @if (Model.GaranteID.HasValue)
+                        @if (Model.GaranteID > 0)
                         {
                             <a href="#detalleGarante" class="btn btn-info">
                                 <i class="bi bi-person-badge me-1"></i> Ver Garante
@@ -42,11 +42,29 @@
                         }
                         else
                         {
-                            <a asp-action="AsignarGarante" asp-route-id="@Model.ClienteID" class="btn btn-warning">
-                                <i class="bi bi-person-plus me-1"></i> Asignar Garante
+                            <a asp-action="AsignarGarante" asp-route-id="@Model.ClienteID" class="btn btn-sm btn-outline-primary ms-3" id="cambiarGarante">
+                                <i class="bi bi-pencil"></i> Cambiar Garante
                             </a>
                         }
                     }
+
+                </div>          
+                <div class="col-md-4 text-end">
+                    @if (Model.GaranteID > 0)
+                    {
+                        <div class="alert alert-info">
+                            <strong>Garante asignado:</strong> @Model.NombreGarante
+                            <div class="mt-2">
+                                <a asp-action="AsignarGarante" asp-route-id="@Model.ClienteID" class="btn btn-sm btn-outline-primary me-2" id="cambiarGarante">
+                                    <i class="bi bi-pencil"></i> Cambiar Garante
+                                </a>
+                                <a asp-action="VerGarante" asp-route-id="@Model.GaranteID" asp-route-clienteId="@Model.ClienteID" class="btn btn-sm btn-outline-info me-2">
+                                    <i class="bi bi-eye"></i> Ver Garante
+                                </a>
+                            </div>
+                        </div>
+                    }
+
                 </div>
             </div>
         </div>
