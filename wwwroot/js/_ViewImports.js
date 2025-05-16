@@ -1,7 +1,0 @@
-﻿@using Javo2
-@using Javo2.Models
-@using Javo2.ViewModels
-@using Javo2.Helpers
-@using System.Security.Claims
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@addTagHelper *, Javo2

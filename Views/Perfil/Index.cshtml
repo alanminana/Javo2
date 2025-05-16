@@ -125,3 +125,10 @@
         </div>
     </div>
 </section>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        <script src="~/js/modules/auth.js"></script>
+
+    }
+}

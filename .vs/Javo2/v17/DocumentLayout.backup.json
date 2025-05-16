@@ -3,6 +3,50 @@
   "WorkspaceRootPath": "D:\\github\\Javo2\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\cotizacion\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\cotizacion\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\catalogo\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\catalogo\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\catalogo\\createmarca.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\catalogo\\createmarca.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\catalogo\\createrubro.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\catalogo\\createrubro.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\auth\\olvidecontrase\u00F1a.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\auth\\olvidecontrase\u00F1a.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\ajusteprecios\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\ajusteprecios\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\ajusteprecios\\formselector.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\ajusteprecios\\formselector.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\ajusteprecios\\detailstemporal.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\ajusteprecios\\detailstemporal.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\catalogo\\deleterubro.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\catalogo\\deleterubro.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\catalogo\\deletemarca.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\catalogo\\deletemarca.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\clientes\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\clientes\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
@@ -13,10 +57,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\bundleconfig.json||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:bundleconfig.json||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\proveedores-controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
@@ -315,10 +355,6 @@
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\devoluciongarantia\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\cotizacion\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\cotizacion\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\cotizacion\\detalles.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\cotizacion\\detalles.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
@@ -375,14 +411,6 @@
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\catalogo\\editsubrubros.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\catalogo\\deleterubro.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\catalogo\\deleterubro.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\catalogo\\deletemarca.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\catalogo\\deletemarca.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\catalogo\\_catalogotable.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\catalogo\\_catalogotable.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
@@ -402,11 +430,80 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 8,
           "Children": [
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
+              "Title": "OlvideContrase\u00F1a.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Auth\\OlvideContrase\u00F1a.cshtml",
+              "RelativeDocumentMoniker": "Views\\Auth\\OlvideContrase\u00F1a.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Auth\\OlvideContrase\u00F1a.cshtml",
+              "RelativeToolTip": "Views\\Auth\\OlvideContrase\u00F1a.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-15T16:27:48.347Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\AjustePrecios\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\AjustePrecios\\Index.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\AjustePrecios\\Index.cshtml",
+              "RelativeToolTip": "Views\\AjustePrecios\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-15T16:27:48.273Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "FormSelector.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\AjustePrecios\\FormSelector.cshtml",
+              "RelativeDocumentMoniker": "Views\\AjustePrecios\\FormSelector.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\AjustePrecios\\FormSelector.cshtml",
+              "RelativeToolTip": "Views\\AjustePrecios\\FormSelector.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-15T16:27:48.216Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "DetailsTemporal.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\AjustePrecios\\DetailsTemporal.cshtml",
+              "RelativeDocumentMoniker": "Views\\AjustePrecios\\DetailsTemporal.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\AjustePrecios\\DetailsTemporal.cshtml",
+              "RelativeToolTip": "Views\\AjustePrecios\\DetailsTemporal.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-15T16:27:48.163Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Delete.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Clientes\\Delete.cshtml",
+              "RelativeDocumentMoniker": "Views\\Clientes\\Delete.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Clientes\\Delete.cshtml",
+              "RelativeToolTip": "Views\\Clientes\\Delete.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-15T16:27:47.136Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
               "Title": "_Layout.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
@@ -419,20 +516,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "bundleconfig.json",
-              "DocumentMoniker": "D:\\github\\Javo2\\bundleconfig.json",
-              "RelativeDocumentMoniker": "bundleconfig.json",
-              "ToolTip": "D:\\github\\Javo2\\bundleconfig.json",
-              "RelativeToolTip": "bundleconfig.json",
-              "ViewState": "AgIAAAgAAAAAAAAAAAAUwB0AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-05-13T17:48:32.105Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 13,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\github\\Javo2\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -440,12 +524,63 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAAIgAAAAAAAAAAAAnwJIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T17:45:46.011Z",
+              "WhenOpened": "2025-05-13T17:45:46.011Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Cotizacion\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Cotizacion\\Index.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Cotizacion\\Index.cshtml",
+              "RelativeToolTip": "Views\\Cotizacion\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-13T16:53:42.087Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 3,
+              "Title": "CreateRubro.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Catalogo\\CreateRubro.cshtml",
+              "RelativeDocumentMoniker": "Views\\Catalogo\\CreateRubro.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Catalogo\\CreateRubro.cshtml",
+              "RelativeToolTip": "Views\\Catalogo\\CreateRubro.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-15T16:27:48.396Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CreateMarca.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Catalogo\\CreateMarca.cshtml",
+              "RelativeDocumentMoniker": "Views\\Catalogo\\CreateMarca.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Catalogo\\CreateMarca.cshtml",
+              "RelativeToolTip": "Views\\Catalogo\\CreateMarca.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-15T16:27:48.49Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Catalogo\\Details.cshtml",
+              "RelativeDocumentMoniker": "Views\\Catalogo\\Details.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Catalogo\\Details.cshtml",
+              "RelativeToolTip": "Views\\Catalogo\\Details.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-15T16:27:48.532Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
               "Title": "reportes.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\reportes.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\modules\\reportes.js",
@@ -453,12 +588,11 @@
               "RelativeToolTip": "wwwroot\\js\\modules\\reportes.js",
               "ViewState": "AgIAAIsAAAAAAAAAAAAYwKAAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-13T17:42:07.733Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T17:42:07.733Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 16,
               "Title": "catalogo.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\catalogo.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\modules\\catalogo.js",
@@ -466,12 +600,11 @@
               "RelativeToolTip": "wwwroot\\js\\modules\\catalogo.js",
               "ViewState": "AgIAAEcAAAAAAAAAAAAYwFUAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-13T17:40:29.227Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T17:40:29.227Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 17,
               "Title": "auth.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\auth.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\modules\\auth.js",
@@ -479,12 +612,11 @@
               "RelativeToolTip": "wwwroot\\js\\modules\\auth.js",
               "ViewState": "AgIAAEoAAAAAAAAAAAAYwF8AAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-13T17:40:13.407Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T17:40:13.407Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 19,
               "Title": "usuarios-permisos.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\usuarios-permisos.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\modules\\usuarios-permisos.js",
@@ -492,12 +624,11 @@
               "RelativeToolTip": "wwwroot\\js\\modules\\usuarios-permisos.js",
               "ViewState": "AgIAAAUBAAAAAAAAAAAYwBoBAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-13T17:39:38.618Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T17:39:38.618Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 18,
               "Title": "cliente-form.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\cliente-form.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\modules\\cliente-form.js",
@@ -505,12 +636,11 @@
               "RelativeToolTip": "wwwroot\\js\\modules\\cliente-form.js",
               "ViewState": "AgIAACUAAAAAAAAAAAAYwDoAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-13T17:36:38Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T17:36:38Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 12,
               "Title": "clientes-controller.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\clientes-controller.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\clientes-controller.js",
@@ -518,12 +648,11 @@
               "RelativeToolTip": "wwwroot\\js\\clientes-controller.js",
               "ViewState": "AgIAAB0AAAAAAAAAAAAYwDIAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-13T17:36:10.726Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T17:36:10.726Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 20,
               "Title": "compra-form.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\compra-form.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\modules\\compra-form.js",
@@ -531,12 +660,11 @@
               "RelativeToolTip": "wwwroot\\js\\modules\\compra-form.js",
               "ViewState": "AgIAABIBAAAAAAAAAAAYwCcBAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-13T17:33:58.196Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T17:33:58.196Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 21,
               "Title": "devolucion-form.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\devolucion-form.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\modules\\devolucion-form.js",
@@ -544,12 +672,11 @@
               "RelativeToolTip": "wwwroot\\js\\modules\\devolucion-form.js",
               "ViewState": "AgIAAIwAAAAAAAAAAAAYwKEAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-13T17:37:17.976Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T17:37:17.976Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 14,
               "Title": "proveedores-controller.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\proveedores-controller.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\proveedores-controller.js",
@@ -557,12 +684,11 @@
               "RelativeToolTip": "wwwroot\\js\\proveedores-controller.js",
               "ViewState": "AgIAADsAAAAAAAAAAAAYwFAAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-13T17:32:59.58Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T17:32:59.58Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 24,
               "Title": "proveedor-form.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\proveedor-form.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\modules\\proveedor-form.js",
@@ -570,12 +696,11 @@
               "RelativeToolTip": "wwwroot\\js\\modules\\proveedor-form.js",
               "ViewState": "AgIAAI8AAAAAAAAAAAAYwKQAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-13T17:33:23.236Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T17:33:23.236Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 26,
               "Title": "entrega-productos.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\entrega-productos.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\modules\\entrega-productos.js",
@@ -583,12 +708,11 @@
               "RelativeToolTip": "wwwroot\\js\\modules\\entrega-productos.js",
               "ViewState": "AgIAACUAAAAAAAAAAAAYwDoAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-13T17:31:49.36Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T17:31:49.36Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 23,
               "Title": "cotizacion-form.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\cotizacion-form.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\modules\\cotizacion-form.js",
@@ -596,12 +720,11 @@
               "RelativeToolTip": "wwwroot\\js\\modules\\cotizacion-form.js",
               "ViewState": "AgIAAB8AAAAAAAAAAAAYwDQAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-13T17:31:29.766Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T17:31:29.766Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 28,
               "Title": "venta-form.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\venta-form.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\modules\\venta-form.js",
@@ -609,12 +732,11 @@
               "RelativeToolTip": "wwwroot\\js\\modules\\venta-form.js",
               "ViewState": "AgIAAA8BAAAAAAAAAAAYwCQBAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-13T17:31:06.528Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T17:31:06.528Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 22,
               "Title": "ventas-controller.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\ventas-controller.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\ventas-controller.js",
@@ -622,12 +744,11 @@
               "RelativeToolTip": "wwwroot\\js\\ventas-controller.js",
               "ViewState": "AgIAAHMAAAAAAAAAAAAYwIgAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-13T17:30:05.624Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T17:30:05.624Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 29,
               "Title": "producto-form.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\producto-form.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\modules\\producto-form.js",
@@ -635,12 +756,11 @@
               "RelativeToolTip": "wwwroot\\js\\modules\\producto-form.js",
               "ViewState": "AgIAAKYAAAAAAAAAAAAYwLsAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-13T17:28:02.879Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T17:28:02.879Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 27,
               "Title": "precio-ajuste.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\precio-ajuste.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\modules\\precio-ajuste.js",
@@ -648,12 +768,11 @@
               "RelativeToolTip": "wwwroot\\js\\modules\\precio-ajuste.js",
               "ViewState": "AgIAAPMAAAAAAAAAAAAYwAgBAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-13T17:27:31.445Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T17:27:31.445Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 25,
               "Title": "productos-controller.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\productos-controller.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\productos-controller.js",
@@ -661,12 +780,11 @@
               "RelativeToolTip": "wwwroot\\js\\productos-controller.js",
               "ViewState": "AgIAAGIAAAAAAAAAAAAYwHcAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-13T17:26:20.938Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T17:26:20.938Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 30,
               "Title": "debug.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\debug.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\modules\\debug.js",
@@ -674,12 +792,11 @@
               "RelativeToolTip": "wwwroot\\js\\modules\\debug.js",
               "ViewState": "AgIAAC4AAAAAAAAAAAAYwEMAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-13T17:23:44.445Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T17:23:44.445Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 31,
               "Title": "permissions.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\permissions.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\modules\\permissions.js",
@@ -687,12 +804,11 @@
               "RelativeToolTip": "wwwroot\\js\\modules\\permissions.js",
               "ViewState": "AgIAADAAAAAAAAAAAAAYwEAAAAA9AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-13T17:23:16.707Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T17:23:16.707Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 32,
               "Title": "products.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\products.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\modules\\products.js",
@@ -700,12 +816,11 @@
               "RelativeToolTip": "wwwroot\\js\\modules\\products.js",
               "ViewState": "AgIAAIgAAAAAAAAAAAAYwJ0AAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-13T17:22:54.268Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T17:22:54.268Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 33,
               "Title": "Tables.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\Tables.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\modules\\Tables.js",
@@ -713,12 +828,11 @@
               "RelativeToolTip": "wwwroot\\js\\modules\\Tables.js",
               "ViewState": "AgIAAGcAAAAAAAAAAAAYwHwAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-13T17:22:22.593Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T17:22:22.593Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 34,
               "Title": "Form.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\Form.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\modules\\Form.js",
@@ -726,12 +840,11 @@
               "RelativeToolTip": "wwwroot\\js\\modules\\Form.js",
               "ViewState": "AgIAAF8AAAAAAAAAAAAYwHQAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-13T17:21:48.634Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T17:21:48.634Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 35,
               "Title": "app.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\app.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\utils\\app.js",
@@ -739,16 +852,11 @@
               "RelativeToolTip": "wwwroot\\js\\utils\\app.js",
               "ViewState": "AgIAAI0AAAAAAAAAAAAYwKIAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-13T17:18:06.448Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+              "WhenOpened": "2025-05-13T17:18:06.448Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 36,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Ventas\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Ventas\\Index.cshtml",
@@ -756,12 +864,11 @@
               "RelativeToolTip": "Views\\Ventas\\Index.cshtml",
               "ViewState": "AgIAAIsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-13T17:11:44.52Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T17:11:44.52Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 37,
               "Title": "Form.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Ventas\\Form.cshtml",
               "RelativeDocumentMoniker": "Views\\Ventas\\Form.cshtml",
@@ -773,7 +880,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 38,
               "Title": "EntregaProductos.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Ventas\\EntregaProductos.cshtml",
               "RelativeDocumentMoniker": "Views\\Ventas\\EntregaProductos.cshtml",
@@ -785,7 +892,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 39,
               "Title": "Details.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Ventas\\Details.cshtml",
               "RelativeDocumentMoniker": "Views\\Ventas\\Details.cshtml",
@@ -797,7 +904,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
+              "DocumentIndex": 42,
               "Title": "Delete.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Ventas\\Delete.cshtml",
               "RelativeDocumentMoniker": "Views\\Ventas\\Delete.cshtml",
@@ -809,7 +916,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 41,
               "Title": "Autorizaciones.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Ventas\\Autorizaciones.cshtml",
               "RelativeDocumentMoniker": "Views\\Ventas\\Autorizaciones.cshtml",
@@ -821,7 +928,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
+              "DocumentIndex": 40,
               "Title": "_VentasTable.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Ventas\\_VentasTable.cshtml",
               "RelativeDocumentMoniker": "Views\\Ventas\\_VentasTable.cshtml",
@@ -833,7 +940,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 43,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Usuarios\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Usuarios\\Index.cshtml",
@@ -845,7 +952,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
+              "DocumentIndex": 44,
               "Title": "Form.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Usuarios\\Form.cshtml",
               "RelativeDocumentMoniker": "Views\\Usuarios\\Form.cshtml",
@@ -857,7 +964,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 35,
+              "DocumentIndex": 45,
               "Title": "Filter.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Usuarios\\Filter.cshtml",
               "RelativeDocumentMoniker": "Views\\Usuarios\\Filter.cshtml",
@@ -869,7 +976,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 36,
+              "DocumentIndex": 46,
               "Title": "Details.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Usuarios\\Details.cshtml",
               "RelativeDocumentMoniker": "Views\\Usuarios\\Details.cshtml",
@@ -881,7 +988,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 37,
+              "DocumentIndex": 47,
               "Title": "Delete.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Usuarios\\Delete.cshtml",
               "RelativeDocumentMoniker": "Views\\Usuarios\\Delete.cshtml",
@@ -893,7 +1000,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 38,
+              "DocumentIndex": 48,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\SecurityTools\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\SecurityTools\\Index.cshtml",
@@ -905,7 +1012,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 39,
+              "DocumentIndex": 49,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\SecurityDashboard\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\SecurityDashboard\\Index.cshtml",
@@ -917,7 +1024,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 40,
+              "DocumentIndex": 50,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Roles\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Roles\\Index.cshtml",
@@ -929,7 +1036,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 41,
+              "DocumentIndex": 51,
               "Title": "Form.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Roles\\Form.cshtml",
               "RelativeDocumentMoniker": "Views\\Roles\\Form.cshtml",
@@ -941,7 +1048,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 42,
+              "DocumentIndex": 52,
               "Title": "Details.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Roles\\Details.cshtml",
               "RelativeDocumentMoniker": "Views\\Roles\\Details.cshtml",
@@ -953,7 +1060,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 43,
+              "DocumentIndex": 53,
               "Title": "Delete.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Roles\\Delete.cshtml",
               "RelativeDocumentMoniker": "Views\\Roles\\Delete.cshtml",
@@ -965,7 +1072,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 44,
+              "DocumentIndex": 54,
               "Title": "ReporteStock.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Reportes\\ReporteStock.cshtml",
               "RelativeDocumentMoniker": "Views\\Reportes\\ReporteStock.cshtml",
@@ -977,7 +1084,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 45,
+              "DocumentIndex": 55,
               "Title": "RankingVentas.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Reportes\\RankingVentas.cshtml",
               "RelativeDocumentMoniker": "Views\\Reportes\\RankingVentas.cshtml",
@@ -989,7 +1096,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 46,
+              "DocumentIndex": 56,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Reportes\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Reportes\\Index.cshtml",
@@ -1001,7 +1108,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 47,
+              "DocumentIndex": 57,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Proveedores\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Proveedores\\Index.cshtml",
@@ -1013,7 +1120,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 48,
+              "DocumentIndex": 58,
               "Title": "FormCompra.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Proveedores\\FormCompra.cshtml",
               "RelativeDocumentMoniker": "Views\\Proveedores\\FormCompra.cshtml",
@@ -1025,7 +1132,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 49,
+              "DocumentIndex": 59,
               "Title": "Form.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Proveedores\\Form.cshtml",
               "RelativeDocumentMoniker": "Views\\Proveedores\\Form.cshtml",
@@ -1037,7 +1144,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 50,
+              "DocumentIndex": 60,
               "Title": "EliminarCompra.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Proveedores\\EliminarCompra.cshtml",
               "RelativeDocumentMoniker": "Views\\Proveedores\\EliminarCompra.cshtml",
@@ -1049,7 +1156,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 51,
+              "DocumentIndex": 61,
               "Title": "DetallesCompra.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Proveedores\\DetallesCompra.cshtml",
               "RelativeDocumentMoniker": "Views\\Proveedores\\DetallesCompra.cshtml",
@@ -1061,7 +1168,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 52,
+              "DocumentIndex": 62,
               "Title": "Details.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Proveedores\\Details.cshtml",
               "RelativeDocumentMoniker": "Views\\Proveedores\\Details.cshtml",
@@ -1073,7 +1180,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 53,
+              "DocumentIndex": 63,
               "Title": "Delete.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Proveedores\\Delete.cshtml",
               "RelativeDocumentMoniker": "Views\\Proveedores\\Delete.cshtml",
@@ -1085,7 +1192,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 54,
+              "DocumentIndex": 64,
               "Title": "Compras.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Proveedores\\Compras.cshtml",
               "RelativeDocumentMoniker": "Views\\Proveedores\\Compras.cshtml",
@@ -1097,7 +1204,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 55,
+              "DocumentIndex": 65,
               "Title": "_ProveedoresTable.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Proveedores\\_ProveedoresTable.cshtml",
               "RelativeDocumentMoniker": "Views\\Proveedores\\_ProveedoresTable.cshtml",
@@ -1109,7 +1216,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 56,
+              "DocumentIndex": 66,
               "Title": "_ProveedoresForm.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Proveedores\\_ProveedoresForm.cshtml",
               "RelativeDocumentMoniker": "Views\\Proveedores\\_ProveedoresForm.cshtml",
@@ -1121,7 +1228,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 57,
+              "DocumentIndex": 67,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Promociones\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Promociones\\Index.cshtml",
@@ -1133,7 +1240,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 58,
+              "DocumentIndex": 68,
               "Title": "Form.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Promociones\\Form.cshtml",
               "RelativeDocumentMoniker": "Views\\Promociones\\Form.cshtml",
@@ -1145,7 +1252,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 59,
+              "DocumentIndex": 69,
               "Title": "MovimientosStock.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Productos\\MovimientosStock.cshtml",
               "RelativeDocumentMoniker": "Views\\Productos\\MovimientosStock.cshtml",
@@ -1157,7 +1264,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 60,
+              "DocumentIndex": 70,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Productos\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Productos\\Index.cshtml",
@@ -1169,7 +1276,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 61,
+              "DocumentIndex": 71,
               "Title": "Form.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Productos\\Form.cshtml",
               "RelativeDocumentMoniker": "Views\\Productos\\Form.cshtml",
@@ -1181,7 +1288,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 62,
+              "DocumentIndex": 72,
               "Title": "Details.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Productos\\Details.cshtml",
               "RelativeDocumentMoniker": "Views\\Productos\\Details.cshtml",
@@ -1193,7 +1300,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 63,
+              "DocumentIndex": 73,
               "Title": "Delete.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Productos\\Delete.cshtml",
               "RelativeDocumentMoniker": "Views\\Productos\\Delete.cshtml",
@@ -1205,7 +1312,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 64,
+              "DocumentIndex": 74,
               "Title": "AjusteStock.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Productos\\AjusteStock.cshtml",
               "RelativeDocumentMoniker": "Views\\Productos\\AjusteStock.cshtml",
@@ -1217,7 +1324,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 65,
+              "DocumentIndex": 75,
               "Title": "_ProductosTable.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Productos\\_ProductosTable.cshtml",
               "RelativeDocumentMoniker": "Views\\Productos\\_ProductosTable.cshtml",
@@ -1229,7 +1336,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 66,
+              "DocumentIndex": 76,
               "Title": "_ProductosForm.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Productos\\_ProductosForm.cshtml",
               "RelativeDocumentMoniker": "Views\\Productos\\_ProductosForm.cshtml",
@@ -1241,7 +1348,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 67,
+              "DocumentIndex": 77,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Permisos\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Permisos\\Index.cshtml",
@@ -1253,7 +1360,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 68,
+              "DocumentIndex": 78,
               "Title": "Delete.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Permisos\\Delete.cshtml",
               "RelativeDocumentMoniker": "Views\\Permisos\\Delete.cshtml",
@@ -1265,7 +1372,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 69,
+              "DocumentIndex": 79,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Perfil\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Perfil\\Index.cshtml",
@@ -1277,7 +1384,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 70,
+              "DocumentIndex": 80,
               "Title": "Edit.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Perfil\\Edit.cshtml",
               "RelativeDocumentMoniker": "Views\\Perfil\\Edit.cshtml",
@@ -1289,7 +1396,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 71,
+              "DocumentIndex": 81,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Home\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
@@ -1301,7 +1408,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 72,
+              "DocumentIndex": 82,
               "Title": "Error.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Home\\Error.cshtml",
               "RelativeDocumentMoniker": "Views\\Home\\Error.cshtml",
@@ -1313,7 +1420,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 73,
+              "DocumentIndex": 83,
               "Title": "Diagnostico.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Home\\Diagnostico.cshtml",
               "RelativeDocumentMoniker": "Views\\Home\\Diagnostico.cshtml",
@@ -1325,7 +1432,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 74,
+              "DocumentIndex": 84,
               "Title": "Delete.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\DevolucionGarantia\\Delete.cshtml",
               "RelativeDocumentMoniker": "Views\\DevolucionGarantia\\Delete.cshtml",
@@ -1337,7 +1444,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 75,
+              "DocumentIndex": 85,
               "Title": "Details.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\DevolucionGarantia\\Details.cshtml",
               "RelativeDocumentMoniker": "Views\\DevolucionGarantia\\Details.cshtml",
@@ -1349,7 +1456,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 76,
+              "DocumentIndex": 86,
               "Title": "Form.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\DevolucionGarantia\\Form.cshtml",
               "RelativeDocumentMoniker": "Views\\DevolucionGarantia\\Form.cshtml",
@@ -1361,7 +1468,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 77,
+              "DocumentIndex": 87,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\DevolucionGarantia\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\DevolucionGarantia\\Index.cshtml",
@@ -1373,19 +1480,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 78,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Cotizacion\\Index.cshtml",
-              "RelativeDocumentMoniker": "Views\\Cotizacion\\Index.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Cotizacion\\Index.cshtml",
-              "RelativeToolTip": "Views\\Cotizacion\\Index.cshtml",
-              "ViewState": "AgIAAFsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-13T16:53:42.087Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 79,
+              "DocumentIndex": 88,
               "Title": "Detalles.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Cotizacion\\Detalles.cshtml",
               "RelativeDocumentMoniker": "Views\\Cotizacion\\Detalles.cshtml",
@@ -1397,7 +1492,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 80,
+              "DocumentIndex": 89,
               "Title": "Delete.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Cotizacion\\Delete.cshtml",
               "RelativeDocumentMoniker": "Views\\Cotizacion\\Delete.cshtml",
@@ -1409,7 +1504,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 81,
+              "DocumentIndex": 90,
               "Title": "Create.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Cotizacion\\Create.cshtml",
               "RelativeDocumentMoniker": "Views\\Cotizacion\\Create.cshtml",
@@ -1421,7 +1516,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 82,
+              "DocumentIndex": 91,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\ConfiguracionInicial\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\ConfiguracionInicial\\Index.cshtml",
@@ -1433,7 +1528,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 83,
+              "DocumentIndex": 92,
               "Title": "Seguridad.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Configuracion\\Seguridad.cshtml",
               "RelativeDocumentMoniker": "Views\\Configuracion\\Seguridad.cshtml",
@@ -1445,7 +1540,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 84,
+              "DocumentIndex": 93,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Configuracion\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Configuracion\\Index.cshtml",
@@ -1457,7 +1552,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 85,
+              "DocumentIndex": 94,
               "Title": "Edit.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Configuracion\\Edit.cshtml",
               "RelativeDocumentMoniker": "Views\\Configuracion\\Edit.cshtml",
@@ -1469,7 +1564,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 86,
+              "DocumentIndex": 95,
               "Title": "ConfiguracionCompletada.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Configuracion\\ConfiguracionCompletada.cshtml",
               "RelativeDocumentMoniker": "Views\\Configuracion\\ConfiguracionCompletada.cshtml",
@@ -1481,7 +1576,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 87,
+              "DocumentIndex": 96,
               "Title": "_ConfiguracionTable.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Configuracion\\_ConfiguracionTable.cshtml",
               "RelativeDocumentMoniker": "Views\\Configuracion\\_ConfiguracionTable.cshtml",
@@ -1493,7 +1588,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 88,
+              "DocumentIndex": 97,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Clientes\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Clientes\\Index.cshtml",
@@ -1505,7 +1600,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 89,
+              "DocumentIndex": 98,
               "Title": "Form.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Clientes\\Form.cshtml",
               "RelativeDocumentMoniker": "Views\\Clientes\\Form.cshtml",
@@ -1517,7 +1612,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 90,
+              "DocumentIndex": 99,
               "Title": "AsignarGarante.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Clientes\\AsignarGarante.cshtml",
               "RelativeDocumentMoniker": "Views\\Clientes\\AsignarGarante.cshtml",
@@ -1529,7 +1624,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 91,
+              "DocumentIndex": 100,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Catalogo\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Catalogo\\Index.cshtml",
@@ -1541,7 +1636,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 92,
+              "DocumentIndex": 101,
               "Title": "EditSubRubros.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Catalogo\\EditSubRubros.cshtml",
               "RelativeDocumentMoniker": "Views\\Catalogo\\EditSubRubros.cshtml",
@@ -1553,7 +1648,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 93,
+              "DocumentIndex": 8,
               "Title": "DeleteRubro.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Catalogo\\DeleteRubro.cshtml",
               "RelativeDocumentMoniker": "Views\\Catalogo\\DeleteRubro.cshtml",
@@ -1561,11 +1656,12 @@
               "RelativeToolTip": "Views\\Catalogo\\DeleteRubro.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-13T16:48:02.254Z"
+              "WhenOpened": "2025-05-13T16:48:02.254Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 94,
+              "DocumentIndex": 9,
               "Title": "DeleteMarca.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Catalogo\\DeleteMarca.cshtml",
               "RelativeDocumentMoniker": "Views\\Catalogo\\DeleteMarca.cshtml",
@@ -1573,11 +1669,12 @@
               "RelativeToolTip": "Views\\Catalogo\\DeleteMarca.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-13T16:48:01.08Z"
+              "WhenOpened": "2025-05-13T16:48:01.08Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 95,
+              "DocumentIndex": 102,
               "Title": "_CatalogoTable.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Catalogo\\_CatalogoTable.cshtml",
               "RelativeDocumentMoniker": "Views\\Catalogo\\_CatalogoTable.cshtml",
@@ -1589,7 +1686,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 97,
+              "DocumentIndex": 104,
               "Title": "ResetearContrase\u00F1a.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Auth\\ResetearContrase\u00F1a.cshtml",
               "RelativeDocumentMoniker": "Views\\Auth\\ResetearContrase\u00F1a.cshtml",
@@ -1601,7 +1698,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 96,
+              "DocumentIndex": 103,
               "Title": "CambiarContrase\u00F1a.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Auth\\CambiarContrase\u00F1a.cshtml",
               "RelativeDocumentMoniker": "Views\\Auth\\CambiarContrase\u00F1a.cshtml",
