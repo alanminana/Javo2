@@ -99,6 +99,7 @@ namespace Javo2.ViewModels.Operaciones.Clientes
         public bool RequiereGarante { get; set; } = false;
 
         // Datos de crédito adicionales
+
         public string ScoreCredito { get; set; } = string.Empty;
         public int? VencimientoCuotas { get; set; }
 

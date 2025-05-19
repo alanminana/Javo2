@@ -14,9 +14,7 @@ wwwroot\js\modules\devolucion-form.js
 wwwroot\js\modules\entrega-productos.js
 wwwroot\js\modules\forms.js
 wwwroot\js\modules\permissions.js
-wwwroot\js\modules\precio-ajuste.js
 wwwroot\js\modules\producto-form.js
-wwwroot\js\modules\products.js
 wwwroot\js\modules\proveedor-form.js
 wwwroot\js\modules\reportes.js
 wwwroot\js\modules\Tables.js

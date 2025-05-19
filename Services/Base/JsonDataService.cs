@@ -85,5 +85,40 @@ namespace Javo2.Services.Base
                 throw;
             }
         }
+
+        // Métodos importados desde BaseJsonService
+        protected void CargarDesdeJson()
+        {
+            try
+            {
+                var data = JsonFileHelper.LoadFromJsonFile<List<T>>(_jsonFilePath);
+                lock (_lock)
+                {
+                    _items = data ?? new List<T>();
+                }
+                _logger.LogInformation("Cargados {Count} elementos desde {FilePath}", _items.Count, _jsonFilePath);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cargar datos desde {FilePath}", _jsonFilePath);
+                _items = new List<T>();
+            }
+        }
+
+        protected void GuardarEnJson()
+        {
+            try
+            {
+                lock (_lock)
+                {
+                    JsonFileHelper.SaveToJsonFile(_jsonFilePath, _items);
+                }
+                _logger.LogInformation("Guardados {Count} elementos en {FilePath}", _items.Count, _jsonFilePath);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al guardar datos en {FilePath}", _jsonFilePath);
+            }
+        }
     }
 }

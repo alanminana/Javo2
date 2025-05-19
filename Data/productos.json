@@ -930,5 +930,103 @@
     "DeudaTotal": 0,
     "Estado": 0,
     "StockItem": null
+  },
+  {
+    "ProductoID": 11,
+    "CodigoAlfa": "P011",
+    "CodigoBarra": "123742884",
+    "Nombre": "sdadsa",
+    "Descripcion": "weqw",
+    "PCosto": 213,
+    "PContado": 319.5,
+    "PLista": 217.26,
+    "RubroID": 6,
+    "Rubro": {
+      "ID": 0,
+      "Nombre": "",
+      "SubRubros": []
+    },
+    "SubRubroID": 2,
+    "SubRubro": {
+      "ID": 0,
+      "Nombre": "",
+      "RubroID": 0,
+      "Rubro": {
+        "ID": 0,
+        "Nombre": "",
+        "SubRubros": []
+      }
+    },
+    "MarcaID": 2,
+    "Marca": null,
+    "PorcentajeIva": 21,
+    "FechaMod": "2025-05-16T23:25:27.5239512-03:00",
+    "FechaModPrecio": "2025-05-16T23:25:27.5239588-03:00",
+    "Entregable": false,
+    "NoListar": false,
+    "Proveedor": {
+      "ProveedorID": 0,
+      "Nombre": "",
+      "Direccion": "",
+      "Telefono": "",
+      "Email": "",
+      "CondicionesPago": "",
+      "ProductosAsignados": []
+    },
+    "Usuario": "",
+    "ModificadoPor": "admin",
+    "EstadoComentario": "",
+    "DeudaTotal": 0,
+    "Estado": 0,
+    "StockItem": null
+  },
+  {
+    "ProductoID": 12,
+    "CodigoAlfa": "P012",
+    "CodigoBarra": "226946196",
+    "Nombre": "1231",
+    "Descripcion": "sad",
+    "PCosto": 1111,
+    "PContado": 1666.5,
+    "PLista": 1133.22,
+    "RubroID": 6,
+    "Rubro": {
+      "ID": 0,
+      "Nombre": "",
+      "SubRubros": []
+    },
+    "SubRubroID": 1,
+    "SubRubro": {
+      "ID": 0,
+      "Nombre": "",
+      "RubroID": 0,
+      "Rubro": {
+        "ID": 0,
+        "Nombre": "",
+        "SubRubros": []
+      }
+    },
+    "MarcaID": 3,
+    "Marca": null,
+    "PorcentajeIva": 21,
+    "FechaMod": "2025-05-16T23:25:57.684789-03:00",
+    "FechaModPrecio": "2025-05-16T23:25:57.6847904-03:00",
+    "Entregable": false,
+    "NoListar": false,
+    "Proveedor": {
+      "ProveedorID": 0,
+      "Nombre": "",
+      "Direccion": "",
+      "Telefono": "",
+      "Email": "",
+      "CondicionesPago": "",
+      "ProductosAsignados": []
+    },
+    "Usuario": "",
+    "ModificadoPor": "admin",
+    "EstadoComentario": "",
+    "DeudaTotal": 0,
+    "Estado": 0,
+    "StockItem": null
   }
 ]

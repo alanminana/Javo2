@@ -253,11 +253,14 @@ namespace Javo2.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Permission:clientes.editar")]
-
         public async Task<IActionResult> Edit(int id, ClientesViewModel model)
         {
             try
             {
+                // Añadir logs para verificar los valores recibidos
+                _logger.LogInformation("Edit recibido - ScoreCredito: {0}, VencimientoCuotas: {1}, IngresosMensuales: {2}",
+                    model.ScoreCredito, model.VencimientoCuotas, model.IngresosMensuales);
+
                 if (id != model.ClienteID)
                     return BadRequest();
 
@@ -268,7 +271,13 @@ namespace Javo2.Controllers
                     return View("Form", model);
                 }
 
+                // Asegurarse de que los campos de crédito se mapean correctamente
                 var cliente = _mapper.Map<Cliente>(model);
+
+                // Verificar que los valores están en el objeto cliente
+                _logger.LogInformation("Cliente mapeado - ScoreCredito: {0}, VencimientoCuotas: {1}, IngresosMensuales: {2}",
+                    cliente.ScoreCredito, cliente.VencimientoCuotas, cliente.IngresosMensuales);
+
                 await _clienteService.UpdateClienteAsync(cliente);
                 TempData["Success"] = "Cliente actualizado exitosamente";
 
@@ -311,14 +320,18 @@ namespace Javo2.Controllers
         [HttpGet]
         [Authorize(Policy = "Permission:clientes.ver")]
         [Route("Clientes/VerGarante/{id}")]
-
         public async Task<IActionResult> VerGarante(int id, int? clienteId = null)
         {
+            _logger.LogInformation("VerGarante llamado con id={Id}, clienteId={ClienteId}", id, clienteId);
+
             try
             {
                 var garante = await _garanteService.GetGaranteByIdAsync(id);
                 if (garante == null)
+                {
+                    _logger.LogWarning("Garante con ID {Id} no encontrado", id);
                     return NotFound();
+                }
 
                 ViewBag.ClienteID = clienteId;
                 return View(garante);

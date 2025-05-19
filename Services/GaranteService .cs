@@ -23,17 +23,27 @@ namespace Javo2.Services
             : base(logger, "Data/garantes.json")
         {
             _logger = logger;
+            _jsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Data/garantes.json");
+
+            // Llama a nuestro propio método de inicialización
+            CargarDesdeJsonAsync().GetAwaiter().GetResult();
         }
 
+        // Asegúrate que CargarDesdeJsonAsync() está siendo llamado al inicio
         private async Task CargarDesdeJsonAsync()
         {
             try
             {
+                if (!File.Exists(_jsonFilePath))
+                {
+                    _garantes = new List<Garante>();
+                    return;
+                }
+
                 var data = await JsonFileHelper.LoadFromJsonFileAsync<List<Garante>>(_jsonFilePath);
                 lock (_lock)
                 {
                     _garantes = data ?? new List<Garante>();
-
                     if (_garantes.Any())
                     {
                         _nextID = _garantes.Max(g => g.GaranteID) + 1;
@@ -48,6 +58,7 @@ namespace Javo2.Services
                 _nextID = 1;
             }
         }
+      
 
         private async Task GuardarEnJsonAsync()
         {

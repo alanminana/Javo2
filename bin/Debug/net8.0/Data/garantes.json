@@ -21,5 +21,28 @@
     "IngresosMensuales": 123412,
     "RelacionCliente": "Amistad",
     "FechaCreacion": "2025-05-16T23:16:40.1782287Z"
+  },
+  {
+    "GaranteID": 2,
+    "Nombre": "wqewqe",
+    "Apellido": "sda",
+    "DNI": 12345678,
+    "Email": "123@sd.com",
+    "Telefono": "1231",
+    "Celular": "11111111",
+    "Calle": "avenida siempre viva ",
+    "NumeroCalle": "1",
+    "NumeroPiso": "213",
+    "Dpto": "213",
+    "Localidad": "saddsa",
+    "CodigoPostal": "34",
+    "ProvinciaID": 3,
+    "Provincia": null,
+    "CiudadID": 4,
+    "Ciudad": null,
+    "LugarTrabajo": "2312",
+    "IngresosMensuales": 2331,
+    "RelacionCliente": "Familiar",
+    "FechaCreacion": "2025-05-17T01:27:31.520771Z"
   }
 ]

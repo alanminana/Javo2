@@ -20,7 +20,6 @@ using System.Threading.Tasks;
 namespace Javo2.Controllers
 {
     [Authorize(Policy = "PermisoPolitica")]
-
     public class ProductosController : BaseController
     {
         private readonly IProductoService _productoService;
@@ -30,20 +29,18 @@ namespace Javo2.Controllers
         private readonly IMapper _mapper;
         private readonly IAuditoriaService _auditoriaService;
         private readonly IAjustePrecioService _ajustePrecioService;
-        // Cambiar el campo _logger para que sea readonly y eliminar la asignación redundante en el constructor.
-
-        private readonly ILogger<ProductosController> _logger; // Ya es readonly, no necesita asignación adicional en el constructor.
+        private readonly ILogger<ProductosController> _logger;
 
         public ProductosController(
-     IProductoService productoService,
-     IDropdownService dropdownService,
-     ICatalogoService catalogoService,
-     IStockService stockService,
-     IMapper mapper,
-     IAuditoriaService auditoriaService,
-     IAjustePrecioService ajustePrecioService,  // Añadir esto
-     ILogger<ProductosController> logger
- ) : base(logger)
+            IProductoService productoService,
+            IDropdownService dropdownService,
+            ICatalogoService catalogoService,
+            IStockService stockService,
+            IMapper mapper,
+            IAuditoriaService auditoriaService,
+            IAjustePrecioService ajustePrecioService,
+            ILogger<ProductosController> logger
+        ) : base(logger)
         {
             _productoService = productoService;
             _dropdownService = dropdownService;
@@ -51,13 +48,12 @@ namespace Javo2.Controllers
             _stockService = stockService;
             _mapper = mapper;
             _auditoriaService = auditoriaService;
-            _ajustePrecioService = ajustePrecioService;  // Asignar esto
+            _ajustePrecioService = ajustePrecioService;
             _logger = logger;
         }
 
         // GET: Productos
         [Authorize(Policy = "Permission:productos.ver")]
-
         public async Task<IActionResult> Index()
         {
             try
@@ -76,7 +72,6 @@ namespace Javo2.Controllers
 
         // GET: Productos/Details/5
         [Authorize(Policy = "Permission:productos.ver")]
-
         public async Task<IActionResult> Details(int id)
         {
             try
@@ -94,10 +89,10 @@ namespace Javo2.Controllers
                 return View("Error");
             }
         }
+
         // GET: Productos/Create
         [HttpGet]
         [Authorize(Policy = "Permission:productos.crear")]
-
         public async Task<IActionResult> Create()
         {
             try
@@ -126,14 +121,13 @@ namespace Javo2.Controllers
         // POST: Productos/Create
         [HttpPost]
         [Authorize(Policy = "Permission:productos.crear")]
-
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductosViewModel model)
         {
             model.ModificadoPor = User.Identity?.Name ?? "Sistema";
             ModelState.Remove(nameof(model.ModificadoPor));
-            ModelState.Remove(nameof(model.PContado)); // No validar estos campos
-            ModelState.Remove(nameof(model.PLista));   // ya que se calculan automáticamente
+            ModelState.Remove(nameof(model.PContado));
+            ModelState.Remove(nameof(model.PLista));
 
             if (!ModelState.IsValid)
             {
@@ -142,54 +136,21 @@ namespace Javo2.Controllers
                 return View("Form", model);
             }
 
+            var (isValid, producto) = await ValidateAndPrepareProductoAsync(model);
+            if (!isValid)
+            {
+                await PopulateDropdownsAsync(model);
+                return View("Form", model);
+            }
+
             try
             {
-                var marca = await _catalogoService.GetMarcaByIDAsync(model.SelectedMarcaID);
-                var rubro = await _catalogoService.GetRubroByIDAsync(model.SelectedRubroID);
-                var sub = await _catalogoService.GetSubRubroByIDAsync(model.SelectedSubRubroID);
-
-                if (marca == null || rubro == null || sub == null)
-                {
-                    if (marca == null) ModelState.AddModelError(string.Empty, "Marca inválida.");
-                    if (rubro == null) ModelState.AddModelError(string.Empty, "Rubro inválido.");
-                    if (sub == null) ModelState.AddModelError(string.Empty, "SubRubro inválido.");
-                    await PopulateDropdownsAsync(model);
-                    return View("Form", model);
-                }
-
-                // Solo mapear PCosto, los demás precios se calculan por el servicio
-                var producto = new Producto
-                {
-                    CodigoAlfa = _productoService.GenerarProductoIDAlfa(),
-                    CodigoBarra = _productoService.GenerarCodBarraProducto(),
-                    Nombre = model.Nombre,
-                    Descripcion = model.Descripcion,
-                    PCosto = model.PCosto,
-                    PorcentajeIva = model.PorcentajeIva,
-                    RubroID = rubro.ID,
-                    SubRubroID = sub.ID,
-                    MarcaID = marca.ID,
-                    FechaMod = DateTime.Now,
-                    FechaModPrecio = DateTime.Now,
-                    ModificadoPor = model.ModificadoPor,
-                    Estado = Producto.EstadoProducto.Activo
-                };
-
-                // El servicio aplicará las reglas de precios automáticamente
                 await _productoService.CreateProductoAsync(producto);
 
+                // Manejar stock inicial
                 if (model.StockInicial > 0)
                 {
-                    var stockItem = new StockItem { ProductoID = producto.ProductoID, CantidadDisponible = model.StockInicial };
-                    await _stockService.CreateStockItemAsync(stockItem);
-                    await _stockService.RegistrarMovimientoAsync(new MovimientoStock
-                    {
-                        ProductoID = producto.ProductoID,
-                        Fecha = DateTime.Now,
-                        TipoMovimiento = "Entrada",
-                        Cantidad = model.StockInicial,
-                        Motivo = "Stock inicial"
-                    });
+                    await HandleStockChange(producto.ProductoID, model.StockInicial, "Stock inicial");
                 }
 
                 await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
@@ -214,17 +175,38 @@ namespace Javo2.Controllers
             }
         }
 
+        // GET: Productos/Edit/5
+        [HttpGet]
+        [Authorize(Policy = "Permission:productos.editar")]
+        public async Task<IActionResult> Edit(int id)
+        {
+            try
+            {
+                _logger.LogInformation("ProductosController: Edit GET con ID={ID}", id);
+                var producto = await _productoService.GetProductoByIDAsync(id);
+                if (producto == null) return NotFound();
+
+                var model = _mapper.Map<ProductosViewModel>(producto);
+                await PopulateDropdownsAsync(model);
+                return View("Form", model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en Edit GET de Productos");
+                return View("Error");
+            }
+        }
+
         // POST: Productos/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Permission:productos.editar")]
-
         public async Task<IActionResult> Edit(ProductosViewModel model)
         {
             model.ModificadoPor = User.Identity?.Name ?? "Sistema";
             ModelState.Remove(nameof(model.ModificadoPor));
-            ModelState.Remove(nameof(model.PContado)); // No validar estos campos
-            ModelState.Remove(nameof(model.PLista));   // ya que se calculan automáticamente
+            ModelState.Remove(nameof(model.PContado));
+            ModelState.Remove(nameof(model.PLista));
 
             if (!ModelState.IsValid)
             {
@@ -233,46 +215,21 @@ namespace Javo2.Controllers
                 return View("Form", model);
             }
 
+            var (isValid, producto) = await ValidateAndPrepareProductoAsync(model);
+            if (!isValid)
+            {
+                await PopulateDropdownsAsync(model);
+                return View("Form", model);
+            }
+
             try
             {
-                var existing = await _productoService.GetProductoByIDAsync(model.ProductoID);
-                if (existing == null) return NotFound();
+                await _productoService.UpdateProductoAsync(producto);
 
-                // Solo actualizar los campos que el usuario debe controlar
-                existing.Nombre = model.Nombre;
-                existing.Descripcion = model.Descripcion;
-                existing.PCosto = model.PCosto;  // Solo actualizamos PCosto
-                existing.PorcentajeIva = model.PorcentajeIva;
-                existing.RubroID = model.SelectedRubroID;
-                existing.SubRubroID = model.SelectedSubRubroID;
-                existing.MarcaID = model.SelectedMarcaID;
-                existing.FechaMod = DateTime.Now;
-                existing.ModificadoPor = model.ModificadoPor;
-
-                // El servicio aplicará automáticamente las reglas para actualizar PContado y PLista
-                await _productoService.UpdateProductoAsync(existing);
-
+                // Manejar cambio de stock
                 if (model.StockInicial != 0)
                 {
-                    var stockItem = await _stockService.GetStockItemByProductoIDAsync(model.ProductoID);
-                    if (stockItem == null)
-                    {
-                        stockItem = new StockItem { ProductoID = model.ProductoID, CantidadDisponible = Math.Max(0, model.StockInicial) };
-                        await _stockService.CreateStockItemAsync(stockItem);
-                    }
-                    else
-                    {
-                        stockItem.CantidadDisponible = Math.Max(0, stockItem.CantidadDisponible + model.StockInicial);
-                        await _stockService.UpdateStockItemAsync(stockItem);
-                    }
-                    await _stockService.RegistrarMovimientoAsync(new MovimientoStock
-                    {
-                        ProductoID = model.ProductoID,
-                        Fecha = DateTime.Now,
-                        TipoMovimiento = model.StockInicial > 0 ? "Entrada" : "Salida",
-                        Cantidad = Math.Abs(model.StockInicial),
-                        Motivo = "Ajuste manual"
-                    });
+                    await HandleStockChange(model.ProductoID, model.StockInicial, "Ajuste manual");
                 }
 
                 await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
@@ -299,7 +256,6 @@ namespace Javo2.Controllers
 
         // GET: Productos/Delete/5
         [Authorize(Policy = "Permission:productos.eliminar")]
-
         public async Task<IActionResult> Delete(int id)
         {
             var producto = await _productoService.GetProductoByIDAsync(id);
@@ -312,7 +268,6 @@ namespace Javo2.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Permission:productos.eliminar")]
-
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _productoService.DeleteProductoAsync(id);
@@ -346,7 +301,6 @@ namespace Javo2.Controllers
             }
         }
 
-        // POST: Productos/IncrementarPrecios
         // POST: Productos/IncrementarPrecios
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -405,27 +359,7 @@ namespace Javo2.Controllers
             };
             return View(model);
         }
-        // GET: Productos/Edit/5
-        [HttpGet]
-        [Authorize(Policy = "Permission:productos.editar")]
-        public async Task<IActionResult> Edit(int id)
-        {
-            try
-            {
-                _logger.LogInformation("ProductosController: Edit GET con ID={ID}", id);
-                var producto = await _productoService.GetProductoByIDAsync(id);
-                if (producto == null) return NotFound();
 
-                var model = _mapper.Map<ProductosViewModel>(producto);
-                await PopulateDropdownsAsync(model);
-                return View("Form", model);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error en Edit GET de Productos");
-                return View("Error");
-            }
-        }
         // POST: Productos/AjusteStock/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -491,6 +425,86 @@ namespace Javo2.Controllers
                 Movimientos = _mapper.Map<IEnumerable<MovimientoStockViewModel>>(movs)
             };
             return View(model);
+        }
+
+        // Método común para validar y preparar un producto
+        private async Task<(bool isValid, Producto producto)> ValidateAndPrepareProductoAsync(ProductosViewModel model)
+        {
+            try
+            {
+                var marca = await _catalogoService.GetMarcaByIDAsync(model.SelectedMarcaID);
+                var rubro = await _catalogoService.GetRubroByIDAsync(model.SelectedRubroID);
+                var sub = await _catalogoService.GetSubRubroByIDAsync(model.SelectedSubRubroID);
+
+                if (marca == null || rubro == null || sub == null)
+                {
+                    if (marca == null) ModelState.AddModelError(string.Empty, "Marca inválida.");
+                    if (rubro == null) ModelState.AddModelError(string.Empty, "Rubro inválido.");
+                    if (sub == null) ModelState.AddModelError(string.Empty, "SubRubro inválido.");
+                    return (false, null);
+                }
+
+                // Crear o actualizar producto
+                var producto = model.ProductoID > 0
+                    ? await _productoService.GetProductoByIDAsync(model.ProductoID)
+                    : new Producto
+                    {
+                        CodigoAlfa = _productoService.GenerarProductoIDAlfa(),
+                        CodigoBarra = _productoService.GenerarCodBarraProducto(),
+                    };
+
+                if (producto == null) return (false, null);
+
+                // Actualizar propiedades comunes
+                producto.Nombre = model.Nombre;
+                producto.Descripcion = model.Descripcion;
+                producto.PCosto = model.PCosto;
+                producto.PorcentajeIva = model.PorcentajeIva;
+                producto.RubroID = rubro.ID;
+                producto.SubRubroID = sub.ID;
+                producto.MarcaID = marca.ID;
+                producto.FechaMod = DateTime.Now;
+                producto.ModificadoPor = model.ModificadoPor;
+
+                return (true, producto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al validar y preparar producto");
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return (false, null);
+            }
+        }
+
+        // Método común para manejar stock
+        private async Task HandleStockChange(int productoId, int stockChange, string motivo)
+        {
+            if (stockChange == 0) return;
+
+            var stockItem = await _stockService.GetStockItemByProductoIDAsync(productoId);
+            if (stockItem == null)
+            {
+                stockItem = new StockItem
+                {
+                    ProductoID = productoId,
+                    CantidadDisponible = Math.Max(0, stockChange)
+                };
+                await _stockService.CreateStockItemAsync(stockItem);
+            }
+            else
+            {
+                stockItem.CantidadDisponible = Math.Max(0, stockItem.CantidadDisponible + stockChange);
+                await _stockService.UpdateStockItemAsync(stockItem);
+            }
+
+            await _stockService.RegistrarMovimientoAsync(new MovimientoStock
+            {
+                ProductoID = productoId,
+                Fecha = DateTime.Now,
+                TipoMovimiento = stockChange > 0 ? "Entrada" : "Salida",
+                Cantidad = Math.Abs(stockChange),
+                Motivo = motivo
+            });
         }
 
         // Auxiliar: poblado de dropdowns

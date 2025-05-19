@@ -132,7 +132,6 @@ namespace Javo2
                 .ForMember(dest => dest.EstadoEntrega, opt => opt.Ignore())
                 .ReverseMap();
 
-            // En AutoMapperProfile.cs
             // COTIZACION ↔ CotizacionViewModel
             CreateMap<Cotizacion, CotizacionViewModel>()
                 .ForMember(dest => dest.ProductosPresupuesto, opt => opt.MapFrom(src => src.ProductosPresupuesto))
@@ -146,17 +145,16 @@ namespace Javo2
 
             // DetalleVenta ↔ DetalleVentaViewModel
             CreateMap<DetalleVenta, DetalleVentaViewModel>().ReverseMap();
+
             // COTIZACION ↔ CotizacionListViewModel
             CreateMap<Cotizacion, CotizacionListViewModel>()
                 .ReverseMap();
 
             // CLIENTE ↔ ClientesViewModel
             CreateMap<Cliente, ClientesViewModel>()
-                    .ForMember(dest => dest.NombreCliente, opt => opt.MapFrom(src => src.Nombre))
-
+                .ForMember(dest => dest.NombreCliente, opt => opt.MapFrom(src => src.Nombre))
                 .ForMember(dest => dest.Provincias, opt => opt.Ignore())
-                    .ForMember(dest => dest.Garante, opt => opt.Ignore()) // Ignorar la propiedad Garante
-
+                .ForMember(dest => dest.Garante, opt => opt.Ignore()) // Ignorar la propiedad Garante
                 .ForMember(dest => dest.Ciudades, opt => opt.Ignore())
                 .ForMember(dest => dest.HistorialCompras, opt => opt.MapFrom(src => src.Compras))
                 .ForMember(dest => dest.Verificar, opt => opt.Ignore())
@@ -177,17 +175,22 @@ namespace Javo2
                 .ForMember(dest => dest.DireccionTrabajo, opt => opt.Ignore())
                 .ForMember(dest => dest.Cuit, opt => opt.Ignore())
                 .ForMember(dest => dest.AntiguedadLaboral, opt => opt.Ignore())
-                .ForMember(dest => dest.IngresosMensuales, opt => opt.Ignore())
+                // Eliminados los Ignore para los campos de crédito
                 .ForMember(dest => dest.ReferenciasLaborales, opt => opt.Ignore())
-                .ForMember(dest => dest.ScoreCredito, opt => opt.Ignore())
-                .ForMember(dest => dest.VencimientoCuotas, opt => opt.Ignore())
                 .ForMember(dest => dest.NombreGarante, opt => opt.Ignore())
                 .ReverseMap()
                 .ForMember(dest => dest.Compras, opt => opt.Ignore())
                 .ForMember(dest => dest.ClasificacionCredito, opt => opt.MapFrom(src => src.ClasificacionCredito))
                 .ForMember(dest => dest.TextoClasificacionCredito, opt => opt.MapFrom(src => src.TextoClasificacionCredito))
-                .ForMember(dest => dest.Nombre, opt => opt.MapFrom(src => src.NombreCliente));
+                .ForMember(dest => dest.Nombre, opt => opt.MapFrom(src => src.NombreCliente))
+                .ForMember(dest => dest.ScoreCredito, opt => opt.MapFrom(src => src.ScoreCredito))
+                .ForMember(dest => dest.VencimientoCuotas, opt => opt.MapFrom(src => src.VencimientoCuotas))
+                .ForMember(dest => dest.IngresosMensuales, opt => opt.MapFrom(src => src.IngresosMensuales));
 
+            CreateMap<Garante, GaranteViewModel>()
+                .ForMember(dest => dest.Provincias, opt => opt.Ignore())
+                .ForMember(dest => dest.Ciudades, opt => opt.Ignore())
+                .ReverseMap();
 
             // PROVEEDOR ↔ ProveedoresViewModel
             CreateMap<Proveedor, ProveedoresViewModel>()

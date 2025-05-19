@@ -166,7 +166,12 @@ namespace Javo2.Services
                     existing.AptoCredito = cliente.AptoCredito;
                     existing.RequiereGarante = cliente.RequiereGarante;
                     existing.GaranteID = cliente.GaranteID;
+                    existing.VencimientoCuotas = cliente.VencimientoCuotas;
+                    existing.ScoreCredito = cliente.ScoreCredito;
+                    existing.ClasificacionCredito = cliente.ClasificacionCredito;
 
+                    // Si hay otros campos relacionados con el crédito:
+                    existing.IngresosMensuales = cliente.IngresosMensuales;
                     // Lógica para cuando cambia el estado de crédito o el límite
                     if (cliente.AptoCredito)
                     {

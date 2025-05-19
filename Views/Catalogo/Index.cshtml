@@ -4,13 +4,11 @@
     ViewBag.Title = "Catálogo";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <section class="container-fluid py-3">
     <!-- Encabezado del Catálogo -->
     <div class="d-flex align-items-center mb-4">
         <h1 class="h2 mb-0">@ViewBag.Title</h1>
     </div>
-
     <!-- Resumen del Catálogo -->
     <div class="summary-cards mb-4" role="region" aria-labelledby="catalogSummary">
         <h2 id="catalogSummary" class="visually-hidden">Resumen del Catálogo</h2>
@@ -27,7 +25,6 @@
             <p class="display-6">@Model.Rubros.SelectMany(r => r.SubRubros).Count()</p>
         </div>
     </div>
-
     <!-- Rubros y SubRubros -->
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-dark text-light d-flex justify-content-between align-items-center">
@@ -57,7 +54,6 @@
             </div>
         </div>
     </div>
-
     <!-- Marcas -->
     <div class="card shadow-sm">
         <div class="card-header bg-dark text-light d-flex justify-content-between align-items-center">
@@ -84,12 +80,7 @@
         </div>
     </div>
 </section>
-
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-        <script src="~/js/Catalogo/Index.js"></script>
-
-    }
-
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script src="~/js/modules/catalogo.js" asp-append-version="true"></script>
 }

@@ -53,6 +53,10 @@ namespace Javo2.Models
 
         [Required(ErrorMessage = "La descripción del domicilio es obligatoria.")]
         public string DescripcionDomicilio { get; set; } = string.Empty;
+        public string? ScoreCredito { get; set; }
+        public int? VencimientoCuotas { get; set; }
+        public decimal? IngresosMensuales { get; set; }
+
 
         // Relaciones
         [Required(ErrorMessage = "La provincia es obligatoria.")]

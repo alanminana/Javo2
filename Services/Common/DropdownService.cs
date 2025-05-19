@@ -1,6 +1,9 @@
-﻿using Javo2.IServices;
+﻿// Archivo: Services/Common/DropdownService.cs
+using Javo2.IServices;
 using Javo2.IServices.Common;
 using Javo2.Models;
+using Javo2.ViewModels.Operaciones.Clientes;
+using Javo2.ViewModels.Operaciones.Productos;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using System;
@@ -139,6 +142,41 @@ namespace Javo2.Services.Common
                 _logger.LogError(ex, "Error al obtener productos");
                 return new List<SelectListItem>();
             }
+        }
+
+        // Métodos migrados desde DropdownHelper
+        public async Task PopulateProvinciasAsync(ClientesViewModel model)
+        {
+            var provincias = await GetProvinciasAsync();
+            model.Provincias = provincias.Select(p => new SelectListItem
+            {
+                Value = p.ProvinciaID.ToString(),
+                Text = p.Nombre
+            }).ToList();
+        }
+
+        public async Task PopulateCiudadesAsync(ClientesViewModel model)
+        {
+            if (model.ProvinciaID > 0)
+            {
+                var ciudades = await GetCiudadesByProvinciaIDAsync(model.ProvinciaID);
+                model.Ciudades = ciudades.Select(c => new SelectListItem
+                {
+                    Value = c.CiudadID.ToString(),
+                    Text = c.Nombre
+                }).ToList();
+            }
+            else
+            {
+                model.Ciudades = new List<SelectListItem>();
+            }
+        }
+
+        public async Task PopulateProductDropdownsAsync(ProductosViewModel model)
+        {
+            model.Rubros = await GetRubrosAsync();
+            model.Marcas = await GetMarcasAsync();
+            model.SubRubros = await GetSubRubrosAsync(model.SelectedRubroID);
         }
     }
 }

@@ -98,6 +98,32 @@
           }
         }
       ]
+    },
+    {
+      "ID": 6,
+      "Nombre": "test",
+      "SubRubros": [
+        {
+          "ID": 8,
+          "Nombre": "comes",
+          "RubroID": 6,
+          "Rubro": {
+            "ID": 0,
+            "Nombre": "",
+            "SubRubros": []
+          }
+        },
+        {
+          "ID": 9,
+          "Nombre": "fulanito",
+          "RubroID": 6,
+          "Rubro": {
+            "ID": 0,
+            "Nombre": "",
+            "SubRubros": []
+          }
+        }
+      ]
     }
   ],
   "Marcas": [
@@ -116,9 +142,13 @@
     {
       "ID": 4,
       "Nombre": "das"
+    },
+    {
+      "ID": 5,
+      "Nombre": "marca1"
     }
   ],
-  "NextRubroID": 6,
-  "NextSubRubroID": 8,
-  "NextMarcaID": 5
+  "NextRubroID": 7,
+  "NextSubRubroID": 10,
+  "NextMarcaID": 6
 }

@@ -96,10 +96,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29cRGVsZXRlUnVicm8uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/github/Javo2/Views/Catalogo/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29cRGV0YWlscy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/github/Javo2/Views/Catalogo/EditMarca.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29cRWRpdE1hcmNhLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -116,12 +112,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/github/Javo2/Views/Catalogo/_CatalogoTable.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29cX0NhdGFsb2dvVGFibGUuY3NodG1s
+[D:/github/Javo2/Views/Catalogo/_MarcaForm.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29cX01hcmNhRm9ybS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/github/Javo2/Views/Catalogo/_MarcasTable.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29cX01hcmNhc1RhYmxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/Catalogo/_RubroForm.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29cX1J1YnJvRm9ybS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/github/Javo2/Views/Catalogo/_RubrosTable.cshtml]
@@ -270,10 +270,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/github/Javo2/Views/Productos/MovimientosStock.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdG9zXE1vdmltaWVudG9zU3RvY2suY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/github/Javo2/Views/Productos/_ProductosForm.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdG9zXF9Qcm9kdWN0b3NGb3JtLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/github/Javo2/Views/Productos/_ProductosTable.cshtml]
