@@ -307,11 +307,13 @@
             }
 
             if (controller === "proveedores") {
-                if (action === "create" || action === "edit" && App.proveedorForm) {
-                    App.proveedorForm.init();
-                }
-                if (action === "compra" && App.compraForm) {
+                if ((action === "crearcompra" || action === "editarcompra") && App.compraForm) {
+                    console.log("Inicializando compraForm desde _Layout");
                     App.compraForm.init();
+                }
+
+                if ((action === "create" || action === "edit") && App.proveedorForm) {
+                    App.proveedorForm.init();
                 }
             }
 

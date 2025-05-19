@@ -7,7 +7,6 @@ wwwroot\js\core-bundle.min.js
 wwwroot\js\modules\auth.js
 wwwroot\js\modules\catalogo.js
 wwwroot\js\modules\cliente-form.js
-wwwroot\js\modules\compra-form.js
 wwwroot\js\modules\cotizacion-form.js
 wwwroot\js\modules\debug.js
 wwwroot\js\modules\devolucion-form.js
@@ -81,3 +80,4 @@ wwwroot\lib\jquery\dist\jquery.js
 wwwroot\lib\jquery\dist\jquery.min.js
 wwwroot\lib\jquery\dist\jquery.min.map
 wwwroot\lib\jquery\LICENSE.txt
+wwwroot\js\modules\compra-form.js

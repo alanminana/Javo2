@@ -12,6 +12,7 @@
         },
 
         init: function () {
+            console.log('Inicializando módulo compra-form.js');
             this.setupProductSearch();
             this.setupFormaPago();
         },
@@ -30,70 +31,113 @@
             $('#buscarProducto').on('click', function () {
                 const codigo = $('#productoCodigo').val();
                 if (!codigo) {
-                    App.notify.warning('Ingrese un código para buscar');
+                    if (typeof App.notify !== 'undefined' && App.notify) {
+                        App.notify.warning('Ingrese un código para buscar');
+                    } else {
+                        alert('Ingrese un código para buscar');
+                    }
                     return;
                 }
 
-                App.ajax.post('/Proveedores/BuscarProducto', { codigoProducto: codigo }, function (response) {
-                    if (response.success) {
-                        // Guardar datos del producto
-                        self.productoActual = {
-                            id: response.data.productoID,
-                            nombre: response.data.nombreProducto,
-                            precio: response.data.precioUnitario
-                        };
+                $.ajax({
+                    url: '/Proveedores/BuscarProducto',
+                    type: 'POST',
+                    data: { codigoProducto: codigo },
+                    headers: {
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            // Guardar datos del producto
+                            self.productoActual = {
+                                id: response.data.productoID,
+                                nombre: response.data.nombreProducto,
+                                precio: response.data.precioUnitario
+                            };
 
-                        // Mostrar datos del producto
-                        $('#productoNombre').val(self.productoActual.nombre);
-                        $('#productoPrecio').val(self.productoActual.precio);
-                        $('#productoCantidad').val(1);
-                        $('#productoCantidad').focus();
-                    } else {
+                            // Mostrar datos del producto
+                            $('#productoNombre').val(self.productoActual.nombre);
+                            $('#productoPrecio').val(self.productoActual.precio);
+                            $('#productoCantidad').val(1);
+                            $('#productoCantidad').focus();
+                        } else {
+                            // Mostrar modal de error
+                            $('#productoNoEncontradoModal').modal('show');
+
+                            // Limpiar campos
+                            self.productoActual = { id: 0, nombre: '', precio: 0 };
+                            $('#productoNombre, #productoPrecio').val('');
+                        }
+                    },
+                    error: function () {
+                        console.error('Error en la búsqueda del producto');
                         // Mostrar modal de error
                         $('#productoNoEncontradoModal').modal('show');
-
-                        // Limpiar campos
-                        self.productoActual = { id: 0, nombre: '', precio: 0 };
-                        $('#productoNombre, #productoPrecio').val('');
                     }
                 });
             });
 
-            // Abrir modal de búsqueda avanzada
-            $('#productoNombre').on('click', function () {
-                $('#buscarProductosModal').modal('show');
-                $('#modalSearchTerm').focus();
+            // Búsqueda con Enter
+            $('#productoCodigo').keypress(function (e) {
+                if (e.which === 13) {
+                    $('#buscarProducto').click();
+                    return false;
+                }
             });
 
             // Búsqueda en modal
             $('#modalSearchBtn').on('click', function () {
                 const term = $('#modalSearchTerm').val();
-
-                App.proveedoresController.searchProductsForPurchase(term, function (data) {
-                    // Limpiar resultados anteriores
-                    const tbody = $('#modalResultsTable tbody');
-                    tbody.empty();
-
-                    if (data.length === 0) {
-                        tbody.append('<tr><td colspan="5" class="text-center">No se encontraron productos</td></tr>');
+                if (!term || term.length < 2) {
+                    if (typeof App.notify !== 'undefined' && App.notify) {
+                        App.notify.warning('Ingrese al menos 2 caracteres para buscar');
                     } else {
-                        // Agregar resultados
-                        data.forEach(function (p) {
-                            tbody.append(`
-                                <tr>
-                                    <td>${p.codigo}</td>
-                                    <td>${p.name}</td>
-                                    <td>${p.marca}</td>
-                                    <td>${App.format.currency(p.precio)}</td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-primary select-product"
-                                                data-id="${p.id}" data-name="${p.name}" data-precio="${p.precio}">
-                                            <i class="bi bi-plus-circle"></i> Seleccionar
-                                        </button>
-                                    </td>
-                                </tr>
-                            `);
-                        });
+                        alert('Ingrese al menos 2 caracteres para buscar');
+                    }
+                    return;
+                }
+
+                $.ajax({
+                    url: '/Proveedores/SearchProducts',
+                    type: 'POST',
+                    data: { term: term, forPurchase: true },
+                    headers: {
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (data) {
+                        // Limpiar resultados anteriores
+                        const tbody = $('#modalResultsTable tbody');
+                        tbody.empty();
+
+                        if (!data || data.length === 0) {
+                            tbody.append('<tr><td colspan="5" class="text-center">No se encontraron productos</td></tr>');
+                        } else {
+                            // Agregar resultados
+                            data.forEach(function (p) {
+                                const formattedPrice = new Intl.NumberFormat('es-AR', {
+                                    style: 'currency',
+                                    currency: 'ARS'
+                                }).format(p.precio);
+
+                                tbody.append(`
+                                    <tr>
+                                        <td>${p.codigo}</td>
+                                        <td>${p.name}</td>
+                                        <td>${p.marca}</td>
+                                        <td>${formattedPrice}</td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-sm btn-primary select-product"
+                                                    data-id="${p.id}" data-name="${p.name}" data-precio="${p.precio}">
+                                                <i class="bi bi-plus-circle"></i> Seleccionar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                `);
+                            });
+                        }
+                    },
+                    error: function () {
+                        console.error('Error en la búsqueda de productos');
                     }
                 });
             });
@@ -127,7 +171,11 @@
             // Agregar producto a la tabla
             $('#agregarProducto').on('click', function () {
                 if (self.productoActual.id === 0) {
-                    App.notify.warning('Debe buscar un producto primero');
+                    if (typeof App.notify !== 'undefined' && App.notify) {
+                        App.notify.warning('Debe buscar un producto primero');
+                    } else {
+                        alert('Debe buscar un producto primero');
+                    }
                     return;
                 }
 
@@ -135,12 +183,20 @@
                 const precio = parseFloat($('#productoPrecio').val());
 
                 if (isNaN(cantidad) || cantidad <= 0) {
-                    App.notify.warning('La cantidad debe ser mayor a cero');
+                    if (typeof App.notify !== 'undefined' && App.notify) {
+                        App.notify.warning('La cantidad debe ser mayor a cero');
+                    } else {
+                        alert('La cantidad debe ser mayor a cero');
+                    }
                     return;
                 }
 
                 if (isNaN(precio) || precio <= 0) {
-                    App.notify.warning('El precio debe ser mayor a cero');
+                    if (typeof App.notify !== 'undefined' && App.notify) {
+                        App.notify.warning('El precio debe ser mayor a cero');
+                    } else {
+                        alert('El precio debe ser mayor a cero');
+                    }
                     return;
                 }
 
@@ -165,12 +221,27 @@
 
                     // Actualizar subtotal
                     const subtotal = nuevaCantidad * precio;
-                    $('#productosTable tbody tr').eq(index).find('.subtotal').text(App.format.currency(subtotal));
+                    const subtotalFormatted = new Intl.NumberFormat('es-AR', {
+                        style: 'currency',
+                        currency: 'ARS'
+                    }).format(subtotal);
+
+                    $('#productosTable tbody tr').eq(index).find('.subtotal').text(subtotalFormatted);
                     $('#productosTable tbody tr').eq(index).find('input[name$=".PrecioTotal"]').val(subtotal);
                 } else {
                     // Crear nueva fila
                     const rowCount = $('#productosTable tbody tr').length;
                     const subtotal = cantidad * precio;
+                    const subtotalFormatted = new Intl.NumberFormat('es-AR', {
+                        style: 'currency',
+                        currency: 'ARS'
+                    }).format(subtotal);
+
+                    const precioFormatted = new Intl.NumberFormat('es-AR', {
+                        style: 'currency',
+                        currency: 'ARS'
+                    }).format(precio);
+
                     const newRow = `
                         <tr data-index="${rowCount}">
                             <td>
@@ -182,8 +253,8 @@
                             </td>
                             <td>${self.productoActual.nombre}</td>
                             <td><input type="number" name="ProductosCompra[${rowCount}].Cantidad" value="${cantidad}" min="1" class="form-control form-control-sm bg-dark text-light cantidad" /></td>
-                            <td>${App.format.currency(precio)}</td>
-                            <td><span class="subtotal">${App.format.currency(subtotal)}</span></td>
+                            <td>${precioFormatted}</td>
+                            <td><span class="subtotal">${subtotalFormatted}</span></td>
                             <td class="text-center">
                                 <button type="button" class="btn btn-sm btn-outline-danger eliminar-producto">
                                     <i class="bi bi-trash"></i>
@@ -217,7 +288,12 @@
                 const precio = parseFloat(row.find('input[name$=".PrecioUnitario"]').val());
                 const subtotal = cantidad * precio;
 
-                row.find('.subtotal').text(App.format.currency(subtotal));
+                const subtotalFormatted = new Intl.NumberFormat('es-AR', {
+                    style: 'currency',
+                    currency: 'ARS'
+                }).format(subtotal);
+
+                row.find('.subtotal').text(subtotalFormatted);
                 row.find('input[name$=".PrecioTotal"]').val(subtotal);
 
                 self.updateTotals();
@@ -226,8 +302,11 @@
 
         // Configurar forma de pago
         setupFormaPago: function () {
+            console.log('Inicializando setupFormaPago');
+
             $('#FormaPagoID').change(function () {
                 const formaPagoID = parseInt($(this).val());
+                console.log('Forma de pago seleccionada:', formaPagoID);
 
                 // Ocultar todos los contenedores
                 $('.payment-container').addClass('d-none');
@@ -235,27 +314,34 @@
                 // Mostrar el contenedor correspondiente
                 switch (formaPagoID) {
                     case 2: // Tarjeta de Crédito
+                        console.log('Mostrando contenedor: tarjetaCreditoContainer');
                         $('#tarjetaCreditoContainer').removeClass('d-none');
                         break;
                     case 3: // Tarjeta de Débito
+                        console.log('Mostrando contenedor: tarjetaDebitoContainer');
                         $('#tarjetaDebitoContainer').removeClass('d-none');
                         break;
                     case 4: // Transferencia
+                        console.log('Mostrando contenedor: transferenciaContainer');
                         $('#transferenciaContainer').removeClass('d-none');
                         break;
                     case 5: // Pago Virtual
+                        console.log('Mostrando contenedor: pagoVirtualContainer');
                         $('#pagoVirtualContainer').removeClass('d-none');
                         break;
                     case 6: // Crédito Personal
+                        console.log('Mostrando contenedor: creditoPersonalContainer');
                         $('#creditoPersonalContainer').removeClass('d-none');
                         break;
                     case 7: // Cheque
+                        console.log('Mostrando contenedor: chequeContainer');
                         $('#chequeContainer').removeClass('d-none');
                         break;
                 }
             });
 
             // Ejecutar cambio inicial para mostrar campos si ya hay forma de pago seleccionada
+            console.log('Ejecutando trigger inicial para FormaPagoID');
             $('#FormaPagoID').trigger('change');
         },
 
@@ -274,7 +360,13 @@
             });
 
             $('#totalProductos').text(totalProductos);
-            $('#totalCompra').text(App.format.currency(totalCompra));
+
+            const totalCompraFormatted = new Intl.NumberFormat('es-AR', {
+                style: 'currency',
+                currency: 'ARS'
+            }).format(totalCompra);
+
+            $('#totalCompra').text(totalCompraFormatted);
         },
 
         // Reindexar filas después de eliminar
