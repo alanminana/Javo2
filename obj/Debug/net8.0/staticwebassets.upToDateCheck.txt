@@ -3,12 +3,16 @@ wwwroot\css\login.css
 wwwroot\css\site.css
 wwwroot\favicon.ico
 wwwroot\js\clientes-controller.js
+wwwroot\js\components\permissions.js
+wwwroot\js\components\products.js
+wwwroot\js\components\tables.js
+wwwroot\js\core-bundle.min.js
+wwwroot\js\debug-fix.js
 wwwroot\js\modules\auth.js
 wwwroot\js\modules\catalogo.js
 wwwroot\js\modules\cliente-form.js
 wwwroot\js\modules\compra-form.js
 wwwroot\js\modules\cotizacion-form.js
-wwwroot\js\modules\debug.js
 wwwroot\js\modules\devolucion-form.js
 wwwroot\js\modules\entrega-productos.js
 wwwroot\js\modules\forms.js
@@ -80,4 +84,3 @@ wwwroot\lib\jquery\dist\jquery.js
 wwwroot\lib\jquery\dist\jquery.min.js
 wwwroot\lib\jquery\dist\jquery.min.map
 wwwroot\lib\jquery\LICENSE.txt
-wwwroot\js\core-bundle.min.js

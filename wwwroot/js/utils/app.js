@@ -27,16 +27,17 @@
 
         // Inicialización de la aplicación
         init: function () {
-            if (App.config.debug) {
-                console.log('Inicializando App...');
-            }
-
-            // Garantizar que debug es una función
+            // Garantizar que debug siempre es una función
+            var originalDebug = this.debug;
             this.debug = function (message, data) {
                 if (this.config.debug) {
                     console.log(message, data || '');
                 }
             };
+
+            if (this.config.debug) {
+                console.log('Inicializando App...');
+            }
 
             // Inicializar submódulos
             this.initComponents();

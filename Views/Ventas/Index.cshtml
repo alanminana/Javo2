@@ -1,6 +1,6 @@
-﻿@model IEnumerable<Javo2.ViewModels.Operaciones.Ventas.VentaListViewModel>
+﻿@model Javo2.ViewModels.Operaciones.Ventas.VentasIndexViewModel
 @{
-    ViewBag.Title = "Ventas";
+    ViewBag.Title = "Ventas y Cotizaciones";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -10,135 +10,301 @@
         <h1 class="h2 mb-0">@ViewBag.Title</h1>
     </div>
 
-    <!-- Resumen de Ventas -->
-    <div class="summary-cards mb-4" role="region" aria-label="Resumen de Ventas">
-        <div class="summary-card">
-            <h5>Total Ventas</h5>
-            <p class="display-6">@Model.Count()</p>
-        </div>
-        <div class="summary-card summary-click" onclick="location.href='@Url.Action("EntregaProductos")'" style="cursor:pointer;">
-            <h5>Pendientes Entrega</h5>
-            <p class="display-6">@Model.Count(v => v.Estado == "PendienteDeEntrega")</p>
-            <small>Click para gestionar</small>
-        </div>
-        <div class="summary-card">
-            <h5>Total Facturado</h5>
-            <p class="display-6">@Model.Sum(v => v.PrecioTotal).ToString("C")</p>
-        </div>
-    </div>
+    <!-- Pestañas de navegación -->
+    <ul class="nav nav-tabs mb-4" id="ventasTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="ventas-tab" data-bs-toggle="tab" data-bs-target="#ventas"
+                    type="button" role="tab" aria-controls="ventas" aria-selected="true">
+                <i class="bi bi-cart-fill me-1"></i>Ventas
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="cotizaciones-tab" data-bs-toggle="tab" data-bs-target="#cotizaciones"
+                    type="button" role="tab" aria-controls="cotizaciones" aria-selected="false">
+                <i class="bi bi-receipt me-1"></i>Cotizaciones
+            </button>
+        </li>
+    </ul>
 
-    <!-- Filtros y exportación -->
-    <div class="card mb-4 shadow-sm bg-dark text-light p-3">
-        <div class="row g-3 align-items-end">
-            <div class="col-md-3">
-                <label for="FechaInicio" class="form-label text-light">Desde</label>
-                <input type="date" id="FechaInicio" name="FechaInicio" form="ventasFilterForm" class="form-control bg-secondary text-light" value="@ViewBag.FechaInicio?.ToString("yyyy-MM-dd")" />
-            </div>
-            <div class="col-md-3">
-                <label for="FechaFin" class="form-label text-light">Hasta</label>
-                <input type="date" id="FechaFin" name="FechaFin" form="ventasFilterForm" class="form-control bg-secondary text-light" value="@ViewBag.FechaFin?.ToString("yyyy-MM-dd")" />
-            </div>
-            <div class="col-md-3">
-                <label for="NombreCliente" class="form-label text-light">Cliente</label>
-                <input type="text" id="NombreCliente" name="NombreCliente" form="ventasFilterForm" class="form-control bg-secondary text-light" placeholder="Cliente" value="@ViewBag.NombreCliente" />
-            </div>
-            <div class="col-md-3 d-grid">
-                <button type="submit" form="ventasFilterForm" class="btn btn-primary">
-                    <i class="bi bi-search me-1"></i>Buscar
-                </button>
-            </div>
-            <form id="ventasFilterForm" method="get" asp-action="Index" class="d-none">
-            </form>
-        </div>
-    </div>
-
-    <!-- Tabla con acciones integradas -->
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="card-title mb-0">Listado de Ventas</h5>
-                <div class="btn-group">
-                    <a asp-action="Create" class="btn btn-success btn-sm">
-                        <i class="bi bi-plus-circle me-1" aria-hidden="true"></i> Nueva Venta
-                    </a>
-                    <a asp-controller="Cotizaciones" asp-action="Create" class="btn btn-info btn-sm">
-                        <i class="bi bi-receipt me-1"></i> Nueva Cotización
-                    </a>
-                    <a asp-action="ExportToExcel" class="btn btn-outline-light btn-sm"
-                       asp-route-fechaInicio="@ViewBag.FechaInicio?.ToString("yyyy-MM-dd")"
-                       asp-route-fechaFin="@ViewBag.FechaFin?.ToString("yyyy-MM-dd")"
-                       asp-route-nombreCliente="@ViewBag.NombreCliente"
-                       asp-route-numeroFactura="@ViewBag.NumeroFactura">
-                        <i class="bi bi-file-earmark-excel me-1" aria-hidden="true"></i> Exportar
-                    </a>
-                    @if (Model.Any(v => v.Estado == "PendienteDeEntrega"))
-                    {
-                        <a asp-action="EntregaProductos" class="btn btn-warning btn-sm">
-                            <i class="bi bi-truck me-1"></i> Entregar (@Model.Count(v => v.Estado == "PendienteDeEntrega"))
-                        </a>
-                    }
+    <div class="tab-content">
+        <!-- Tab Ventas -->
+        <div class="tab-pane fade show active" id="ventas" role="tabpanel" aria-labelledby="ventas-tab">
+            <!-- Resumen de Ventas -->
+            <div class="summary-cards mb-4" role="region" aria-label="Resumen de Ventas">
+                <div class="summary-card">
+                    <h5>Total Ventas</h5>
+                    <p class="display-6">@Model.Ventas.Count()</p>
+                </div>
+                <div class="summary-card summary-click" onclick="location.href='@Url.Action("EntregaProductos")'" style="cursor:pointer;">
+                    <h5>Pendientes Entrega</h5>
+                    <p class="display-6">@Model.Ventas.Count(v => v.Estado == "PendienteDeEntrega")</p>
+                    <small>Click para gestionar</small>
+                </div>
+                <div class="summary-card">
+                    <h5>Total Facturado</h5>
+                    <p class="display-6">@Model.Ventas.Sum(v => v.PrecioTotal).ToString("C")</p>
                 </div>
             </div>
-            <div class="table-responsive">
-                <table class="table table-hover table-dark table-striped align-middle mb-0">
-                    <thead class="bg-secondary text-light">
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Factura</th>
-                            <th>Cliente</th>
-                            <th>Total</th>
-                            <th>Estado</th>
-                            <th class="text-center">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var venta in Model)
-                        {
-                            <tr>
-                                <td>@venta.FechaVenta.ToString("dd/MM/yyyy")</td>
-                                <td>@venta.NumeroFactura</td>
-                                <td>@venta.NombreCliente</td>
-                                <td>@venta.PrecioTotal.ToString("C")</td>
-                                <td>
-                                    @switch (venta.Estado)
+
+            <!-- Filtros y exportación -->
+            <div class="card mb-4 shadow-sm bg-dark text-light p-3">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label for="FechaInicio" class="form-label text-light">Desde</label>
+                        <input type="date" id="FechaInicio" name="FechaInicio" form="ventasFilterForm" class="form-control bg-secondary text-light" value="@ViewBag.FechaInicio?.ToString("yyyy-MM-dd")" />
+                    </div>
+                    <div class="col-md-3">
+                        <label for="FechaFin" class="form-label text-light">Hasta</label>
+                        <input type="date" id="FechaFin" name="FechaFin" form="ventasFilterForm" class="form-control bg-secondary text-light" value="@ViewBag.FechaFin?.ToString("yyyy-MM-dd")" />
+                    </div>
+                    <div class="col-md-3">
+                        <label for="NombreCliente" class="form-label text-light">Cliente</label>
+                        <input type="text" id="NombreCliente" name="NombreCliente" form="ventasFilterForm" class="form-control bg-secondary text-light" placeholder="Cliente" value="@ViewBag.NombreCliente" />
+                    </div>
+                    <div class="col-md-3 d-grid">
+                        <button type="submit" form="ventasFilterForm" class="btn btn-primary">
+                            <i class="bi bi-search me-1"></i>Buscar
+                        </button>
+                    </div>
+                    <form id="ventasFilterForm" method="get" asp-action="Index" class="d-none">
+                        <input type="hidden" name="activeTab" value="ventas" />
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tabla con acciones integradas -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">Listado de Ventas</h5>
+                        <div class="btn-group">
+                            <a asp-action="Create" class="btn btn-success btn-sm">
+                                <i class="bi bi-plus-circle me-1" aria-hidden="true"></i> Nueva Venta
+                            </a>
+                            <a asp-controller="Cotizaciones" asp-action="Create" class="btn btn-info btn-sm">
+                                <i class="bi bi-receipt me-1"></i> Nueva Cotización
+                            </a>
+                            <a asp-action="ExportToExcel" class="btn btn-outline-light btn-sm"
+                               asp-route-fechaInicio="@ViewBag.FechaInicio?.ToString("yyyy-MM-dd")"
+                               asp-route-fechaFin="@ViewBag.FechaFin?.ToString("yyyy-MM-dd")"
+                               asp-route-nombreCliente="@ViewBag.NombreCliente"
+                               asp-route-numeroFactura="@ViewBag.NumeroFactura">
+                                <i class="bi bi-file-earmark-excel me-1" aria-hidden="true"></i> Exportar
+                            </a>
+                            @if (Model.Ventas.Any(v => v.Estado == "PendienteDeEntrega"))
+                            {
+                                <a asp-action="EntregaProductos" class="btn btn-warning btn-sm">
+                                    <i class="bi bi-truck me-1"></i> Entregar (@Model.Ventas.Count(v => v.Estado == "PendienteDeEntrega"))
+                                </a>
+                            }
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-dark table-striped align-middle mb-0">
+                            <thead class="bg-secondary text-light">
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Factura</th>
+                                    <th>Cliente</th>
+                                    <th>Total</th>
+                                    <th>Estado</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var venta in Model.Ventas)
+                                {
+                                    <tr>
+                                        <td>@venta.FechaVenta.ToString("dd/MM/yyyy")</td>
+                                        <td>@venta.NumeroFactura</td>
+                                        <td>@venta.NombreCliente</td>
+                                        <td>@venta.PrecioTotal.ToString("C")</td>
+                                        <td>
+                                            @switch (venta.Estado)
+                                            {
+                                                case "Borrador":
+                                                    <span class="badge bg-secondary">Borrador</span>
+                                                    break;
+                                                case "PendienteDeEntrega":
+                                                    <span class="badge bg-info text-dark">Pendiente</span>
+                                                    break;
+                                                case "Autorizada":
+                                                    <span class="badge bg-success">Autorizada</span>
+                                                    break;
+                                                case "Rechazada":
+                                                    <span class="badge bg-danger">Rechazada</span>
+                                                    break;
+                                                case "Completada":
+                                                    <span class="badge bg-primary">Completada</span>
+                                                    break;
+                                                default:
+                                                    <span class="badge bg-secondary">@venta.Estado</span>
+                                                    break;
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="btn-group" role="group" aria-label="Acciones venta">
+                                                <a asp-action="Details" asp-route-id="@venta.VentaID" class="btn btn-sm btn-outline-info" title="Detalles">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Cotizaciones -->
+        <div class="tab-pane fade" id="cotizaciones" role="tabpanel" aria-labelledby="cotizaciones-tab">
+            <!-- Resumen de Cotizaciones -->
+            <div class="summary-cards mb-4">
+                <div class="summary-card">
+                    <h5>Total Cotizaciones</h5>
+                    <p class="display-6">@Model.Cotizaciones.Count()</p>
+                </div>
+                <div class="summary-card">
+                    <h5>Cotizaciones Vigentes</h5>
+                    <p class="display-6">@Model.Cotizaciones.Count(c => c.Vigente)</p>
+                </div>
+                <div class="summary-card">
+                    <h5>Valor Total</h5>
+                    <p class="display-6">@Model.Cotizaciones.Sum(c => c.PrecioTotal).ToString("C")</p>
+                </div>
+            </div>
+
+            <!-- Filtros -->
+            <div class="card mb-4 shadow-sm bg-dark text-light p-3">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label for="FechaInicioCot" class="form-label text-light">Desde</label>
+                        <input type="date" id="FechaInicioCot" name="FechaInicio" form="cotizacionFilterForm" class="form-control bg-secondary text-light" value="@ViewBag.FechaInicioCot?.ToString("yyyy-MM-dd")" />
+                    </div>
+                    <div class="col-md-3">
+                        <label for="FechaFinCot" class="form-label text-light">Hasta</label>
+                        <input type="date" id="FechaFinCot" name="FechaFin" form="cotizacionFilterForm" class="form-control bg-secondary text-light" value="@ViewBag.FechaFinCot?.ToString("yyyy-MM-dd")" />
+                    </div>
+                    <div class="col-md-3">
+                        <label for="NombreClienteCot" class="form-label text-light">Cliente</label>
+                        <input type="text" id="NombreClienteCot" name="NombreCliente" form="cotizacionFilterForm" class="form-control bg-secondary text-light" placeholder="Cliente" value="@ViewBag.NombreClienteCot" />
+                    </div>
+                    <div class="col-md-3 d-grid">
+                        <button type="submit" form="cotizacionFilterForm" class="btn btn-primary">
+                            <i class="bi bi-search me-1"></i>Buscar
+                        </button>
+                    </div>
+                    <form id="cotizacionFilterForm" method="get" asp-controller="Cotizaciones" asp-action="Filter" class="d-none">
+                        <input type="hidden" name="activeTab" value="cotizaciones" />
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tabla de Cotizaciones -->
+            <div class="card shadow-sm bg-dark text-light">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Listado de Cotizaciones</h5>
+                    <a asp-controller="Cotizaciones" asp-action="Create" class="btn btn-success btn-sm">
+                        <i class="bi bi-plus-circle me-1"></i> Nueva Cotización
+                    </a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-dark table-striped mb-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Número</th>
+                                    <th>Cliente</th>
+                                    <th>Productos</th>
+                                    <th>Total</th>
+                                    <th>Vigencia</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Cotizaciones.Any())
+                                {
+                                    @foreach (var item in Model.Cotizaciones)
                                     {
-                                        case "Borrador":
-                                            <span class="badge bg-secondary">Borrador</span>
-                                            break;
-                                        case "PendienteDeEntrega":
-                                            <span class="badge bg-info text-dark">Pendiente</span>
-                                            break;
-                                        case "Autorizada":
-                                            <span class="badge bg-success">Autorizada</span>
-                                            break;
-                                        case "Rechazada":
-                                            <span class="badge bg-danger">Rechazada</span>
-                                            break;
-                                        case "Completada":
-                                            <span class="badge bg-primary">Completada</span>
-                                            break;
-                                        default:
-                                            <span class="badge bg-secondary">@venta.Estado</span>
-                                            break;
+                                        <tr>
+                                            <td>@item.FechaCotizacion.ToString("dd/MM/yyyy")</td>
+                                            <td>@item.NumeroCotizacion</td>
+                                            <td>@item.NombreCliente</td>
+                                            <td>@item.TotalProductos</td>
+                                            <td>@item.PrecioTotal.ToString("C")</td>
+                                            <td>
+                                                @if (item.Vigente)
+                                                {
+                                                    <span class="badge bg-success">Vigente</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-danger">Vencida</span>
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="btn-group">
+                                                    <a asp-controller="Cotizaciones" asp-action="Details" asp-route-id="@item.CotizacionID"
+                                                       class="btn btn-sm btn-outline-info" title="Ver Detalles">
+                                                        <i class="bi bi-eye"></i>
+                                                    </a>
+                                                    <a asp-controller="Cotizaciones" asp-action="ConvertToVenta" asp-route-id="@item.CotizacionID"
+                                                       class="btn btn-sm btn-outline-success" title="Convertir a Venta">
+                                                        <i class="bi bi-cart-check"></i>
+                                                    </a>
+                                                    <a asp-controller="Cotizaciones" asp-action="Delete" asp-route-id="@item.CotizacionID"
+                                                       class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                                        <i class="bi bi-trash"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
                                     }
-                                </td>
-                                <td class="text-center">
-                                    <div class="btn-group" role="group" aria-label="Acciones venta">
-                                        <a asp-action="Details" asp-route-id="@venta.VentaID" class="btn btn-sm btn-outline-info" title="Detalles">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                        @* otras acciones según estado *@
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="7" class="text-center py-3">
+                                            <p class="text-muted mb-0">No hay cotizaciones disponibles</p>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
 @section Scripts {
+    <script>
+        // Mantener la pestaña activa al recargar la página
+        $(document).ready(function() {
+            // Recuperar pestaña activa de la URL o usar el valor por defecto
+            const urlParams = new URLSearchParams(window.location.search);
+            const activeTab = urlParams.get('activeTab') || 'ventas';
+
+            // Activar la pestaña correspondiente
+            if (activeTab === 'cotizaciones') {
+                $('#cotizaciones-tab').tab('show');
+            }
+
+            // Guardar la pestaña activa cuando cambia
+            $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+                const tabId = $(e.target).attr('id');
+                if (tabId === 'cotizaciones-tab') {
+                    history.replaceState(null, null, '?activeTab=cotizaciones');
+                } else {
+                    history.replaceState(null, null, '?activeTab=ventas');
+                }
+            });
+        });
+    </script>
     <script src="~/js/ventas-controller.js" defer></script>
+    <script src="~/js/modules/cotizacion-form.js" defer></script>
 }

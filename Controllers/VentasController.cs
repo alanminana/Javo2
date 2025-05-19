@@ -45,27 +45,37 @@ namespace Javo2.Controllers
         }
 
         // GET: Ventas/Index
+        // GET: Ventas/Index
         [HttpGet]
         [Authorize(Policy = "Permission:ventas.ver")]
-        public async Task<IActionResult> Index(VentaFilterDto filter)
+        public async Task<IActionResult> Index(VentaFilterDto filter, string activeTab = "ventas")
         {
             try
             {
-                _logger.LogInformation("Index GET => Filtro: {@Filter}", filter);
-                var ventas = await _ventaService.GetVentasAsync(filter);
-                var model = _mapper.Map<IEnumerable<VentaListViewModel>>(ventas);
+                _logger.LogInformation("Index GET => Filtro: {@Filter}, Tab: {activeTab}", filter, activeTab);
 
-                // Guardar filtros en ViewBag para la vista
+                var viewModel = new VentasIndexViewModel();
+
+                // Cargar ventas
+                var ventas = await _ventaService.GetVentasAsync(filter);
+                viewModel.Ventas = _mapper.Map<IEnumerable<VentaListViewModel>>(ventas);
+
+                // Cargar cotizaciones
+                var cotizaciones = await _cotizacionService.GetAllCotizacionesAsync();
+                viewModel.Cotizaciones = _mapper.Map<IEnumerable<CotizacionListViewModel>>(cotizaciones);
+
+                // Guardar filtros en ViewBag
                 ViewBag.FechaInicio = filter.FechaInicio;
                 ViewBag.FechaFin = filter.FechaFin;
                 ViewBag.NombreCliente = filter.NombreCliente;
                 ViewBag.NumeroFactura = filter.NumeroFactura;
+                ViewBag.ActiveTab = activeTab;
 
-                return View(model);
+                return View(viewModel);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener la lista de ventas");
+                _logger.LogError(ex, "Error al obtener la lista de ventas y cotizaciones");
                 return View("Error");
             }
         }

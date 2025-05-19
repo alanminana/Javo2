@@ -333,36 +333,34 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <!-- Cheque (FormaPagoID = 7) -->
+                                    <div id="chequeContainer" class="payment-container d-none">
+                                        <div class="row g-2">
+                                            <div class="col-12">
+                                                <label asp-for="NumeroCheque" class="form-label text-light">Número de Cheque</label>
+                                                <input type="text" asp-for="NumeroCheque" class="form-control bg-secondary text-light" />
+                                                <span asp-validation-for="NumeroCheque" class="invalid-feedback d-block"></span>
+                                            </div>
+                                            <div class="col-12 mt-2">
+                                                <label asp-for="BancoID" class="form-label text-light">Banco</label>
+                                                <select asp-for="BancoID" asp-items="Model.Bancos"
+                                                        class="form-select bg-secondary text-light">
+                                                    <option value="">-- Seleccione --</option>
+                                                </select>
+                                                <span asp-validation-for="BancoID" class="invalid-feedback d-block"></span>
+                                            </div>
+                                            <div class="col-12 mt-2">
+                                                <label asp-for="MontoCheque" class="form-label text-light">Monto</label>
+                                                <input type="number" asp-for="MontoCheque" step="0.01" min="0" class="form-control bg-secondary text-light" />
+                                                <span asp-validation-for="MontoCheque" class="invalid-feedback d-block"></span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </fieldset>
 
-                        <!-- Anticipo y Detalles de Pago -->
-                        <fieldset class="mb-4">
-                            <legend class="text-light">Anticipo / Cheques / Crédito</legend>
-                            <div class="row g-3">
-                                <div class="col-md-3">
-                                    <label asp-for="AdelantoDinero" class="form-label text-light">Anticipo</label>
-                                    <input asp-for="AdelantoDinero" type="number" min="0" step="0.01" class="form-control bg-secondary text-light" />
-                                    <span asp-validation-for="AdelantoDinero" class="invalid-feedback d-block"></span>
-                                </div>
-                                <div class="col-md-3">
-                                    <label asp-for="DineroContado" class="form-label text-light">Contado</label>
-                                    <input asp-for="DineroContado" type="number" min="0" step="0.01" class="form-control bg-secondary text-light" />
-                                    <span asp-validation-for="DineroContado" class="invalid-feedback d-block"></span>
-                                </div>
-                                <div class="col-md-3">
-                                    <label asp-for="MontoCheque" class="form-label text-light">Monto Cheque</label>
-                                    <input asp-for="MontoCheque" type="number" min="0" step="0.01" class="form-control bg-secondary text-light" />
-                                    <span asp-validation-for="MontoCheque" class="invalid-feedback d-block"></span>
-                                </div>
-                                <div class="col-md-3">
-                                    <label asp-for="NumeroCheque" class="form-label text-light">N° Cheque</label>
-                                    <input asp-for="NumeroCheque" class="form-control bg-secondary text-light" />
-                                    <span asp-validation-for="NumeroCheque" class="invalid-feedback d-block"></span>
-                                </div>
-                            </div>
-                        </fieldset>
+                      
                     </div>
                 </div>
 

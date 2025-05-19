@@ -277,7 +277,7 @@ namespace Javo2.Controllers
         [HttpGet]
         public async Task<IActionResult> GetSubRubros(int rubroId)
         {
-            _logger.LogInformation("GetSubRubros recibió petición para rubroId: {0}", rubroId);
+            _logger.LogInformation("GetSubRubros recibido para rubroId: {0}", rubroId);
 
             if (rubroId <= 0)
             {
@@ -288,10 +288,7 @@ namespace Javo2.Controllers
             try
             {
                 var items = await _dropdownService.GetSubRubrosAsync(rubroId);
-                _logger.LogInformation("GetSubRubros: Obtenidos {0} subrubros para rubroId {1}: {2}",
-                    items.Count(),
-                    rubroId,
-                    string.Join(", ", items.Select(i => i.Text)));
+                _logger.LogInformation("GetSubRubros: Obtenidos {0} subrubros", items.Count());
                 return Json(items);
             }
             catch (Exception ex)

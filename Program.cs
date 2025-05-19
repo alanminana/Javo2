@@ -1,11 +1,8 @@
-using System;
-using System.IO;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using AutoMapper;
+using FluentAssertions.Common;
 using Javo2;
 using Javo2.Extensions;
+using Javo2.Filters;
 using Javo2.IServices;
 using Javo2.IServices.Authentication;
 using Javo2.IServices.Common;
@@ -14,10 +11,14 @@ using Javo2.Services;
 using Javo2.Services.Authentication;
 using Javo2.Services.Common;
 using Javo2.TagHelpers;
-using Javo2.Filters;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 Console.WriteLine($"CONTENT ROOT = {Directory.GetCurrentDirectory()}");
@@ -61,6 +62,8 @@ builder.Services.AddScoped<IVentaService, VentaService>();
 builder.Services.AddScoped<ICotizacionService, CotizacionService>();
 builder.Services.AddScoped<IConfiguracionService, ConfiguracionService>();
 builder.Services.AddScoped<IGaranteService, GaranteService>();
+builder.Services.AddScoped<IFormCombosService, FormCombosService>();
+
 
 builder.Services.AddScoped<IDevolucionGarantiaService, DevolucionGarantiaService>();
 builder.Services.AddPermissionPolicies();

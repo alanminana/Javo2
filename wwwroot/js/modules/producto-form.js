@@ -11,12 +11,35 @@
             this.setupModalHandlers();
         },
 
-        // Configurar manejadores de Rubro-SubRubro
         setupRubroSubRubroHandlers: function () {
             // Cambio de rubro
             $('#rubroDropdown').change(function () {
                 var rubroId = $(this).val();
-                App.productosController.loadSubRubros(rubroId, 'subRubroDropdown', $('#SelectedSubRubroID').val());
+
+                if (!rubroId) {
+                    $('#subRubroDropdown').empty().append('<option value="">-- Seleccione SubRubro --</option>');
+                    return;
+                }
+
+                // Hacer la llamada AJAX directamente
+                var currentSubRubroId = $('#SelectedSubRubroID').val();
+                $('#subRubroDropdown').prop('disabled', true).empty().append('<option value="">Cargando...</option>');
+
+                $.getJSON('/Productos/GetSubRubros', { rubroId: rubroId }, function (data) {
+                    var dropdown = $('#subRubroDropdown');
+                    dropdown.empty().append('<option value="">-- Seleccione SubRubro --</option>').prop('disabled', false);
+
+                    $.each(data, function (i, item) {
+                        var option = $('<option></option>').val(item.value).text(item.text);
+                        if (currentSubRubroId && item.value == currentSubRubroId) {
+                            option.attr('selected', 'selected');
+                        }
+                        dropdown.append(option);
+                    });
+                }).fail(function () {
+                    $('#subRubroDropdown').prop('disabled', false)
+                        .empty().append('<option value="">Error al cargar subrubros</option>');
+                });
 
                 // Actualizar también el select en el modal de SubRubro
                 $('#rubroID').val(rubroId);

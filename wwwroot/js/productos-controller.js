@@ -81,17 +81,22 @@
             });
         },
 
-        // Cargar SubRubros al seleccionar Rubro
         loadSubRubros: function (rubroId, subRubroDropdownId, currentSubRubroId, url) {
             if (!rubroId) {
                 $(`#${subRubroDropdownId}`).empty().append('<option value="">-- Seleccione SubRubro --</option>');
                 return;
             }
 
-            $.getJSON(url || '/Catalogo/GetSubRubros', { rubroId: rubroId }, function (data) {
+            console.log("Cargando subrubros para rubroId:", rubroId);
+
+            // Deshabilitar dropdown mientras carga
+            $(`#${subRubroDropdownId}`).prop('disabled', true).empty().append('<option value="">Cargando...</option>');
+
+            $.getJSON('/Productos/GetSubRubros', { rubroId: rubroId }, function (data) {
+                console.log("SubRubros recibidos:", data);
+
                 const subRubroSelect = $(`#${subRubroDropdownId}`);
-                subRubroSelect.empty();
-                subRubroSelect.append('<option value="">-- Seleccione SubRubro --</option>');
+                subRubroSelect.empty().append('<option value="">-- Seleccione SubRubro --</option>').prop('disabled', false);
 
                 $.each(data, function (index, item) {
                     const option = $('<option></option>').val(item.value).text(item.text);
@@ -100,8 +105,17 @@
                     }
                     subRubroSelect.append(option);
                 });
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                console.error("Error al cargar subrubros:", textStatus, errorThrown);
+                $(`#${subRubroDropdownId}`).prop('disabled', false).empty()
+                    .append('<option value="">-- Error al cargar subrubros --</option>');
+
+                // Mostrar notificación de error si disponible
+                if (typeof App.notify !== 'undefined') {
+                    App.notify.error("Error al cargar subrubros: " + errorThrown);
+                }
             });
-        },
+        },  // COMA AÑADIDA AQUÍ
 
         // Ajuste de precios por porcentaje
         calculateAdjustedPrices: function (productos, porcentaje, esAumento) {
