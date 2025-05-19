@@ -259,7 +259,6 @@
     <script src="~/js/modules/permissions.js" asp-append-version="true"></script>
     <script src="~/js/modules/forms.js" asp-append-version="true"></script>
     <script src="~/js/modules/tables.js" asp-append-version="true"></script>
-    <script src="~/js/modules/products.js" asp-append-version="true"></script>
 
     <!-- Controladores -->
     <script src="~/js/productos-controller.js" asp-append-version="true"></script>
@@ -269,7 +268,6 @@
 
     <!-- Módulos específicos -->
     <script src="~/js/modules/producto-form.js" asp-append-version="true"></script>
-    <script src="~/js/modules/precio-ajuste.js" asp-append-version="true"></script>
     <script src="~/js/modules/venta-form.js" asp-append-version="true"></script>
     <script src="~/js/modules/cotizacion-form.js" asp-append-version="true"></script>
     <script src="~/js/modules/entrega-productos.js" asp-append-version="true"></script>
@@ -285,10 +283,9 @@
     <!-- Inicialización -->
     <script>
         // Configuración de la aplicación
-        $(document).ready(function() {
-            // Inicializar core
-            App.config.debug = @(ViewBag.DebugMode ?? false ? "true" : "false");
-
+           $(document).ready(function() {
+        // Guardamos el flag sin sobreescribir la función original
+        App.config.debugMode = @(ViewBag.DebugMode ?? false ? "true" : "false");    
             // Inicializar módulos básicos según la página actual
             const controller = document.body.dataset.controller?.toLowerCase();
             const action = document.body.dataset.action?.toLowerCase();

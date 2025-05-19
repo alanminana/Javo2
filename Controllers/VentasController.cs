@@ -1,6 +1,7 @@
 ﻿// Controllers/VentasController.cs
 using AutoMapper;
 using Javo2.Controllers.Base;
+using Javo2.Helpers;
 using Javo2.IServices;
 using Javo2.Models;
 using Javo2.ViewModels.Operaciones.Ventas;
@@ -68,52 +69,8 @@ namespace Javo2.Controllers
                 return View("Error");
             }
         }
-        // En VentasController.cs, actualiza el método CreateFromCotizacion
-        [HttpGet]
-        [Authorize(Policy = "Permission:ventas.crear")]
-        public async Task<IActionResult> CreateFromCotizacion(int id)
-        {
-            try
-            {
-                var cotizacion = await _cotizacionService.GetCotizacionByIDAsync(id);
-                if (cotizacion == null)
-                    return NotFound();
 
-                // Utilizar el mapeo para convertir la cotización en formulario de venta
-                var ventaViewModel = _mapper.Map<VentaFormViewModel>(cotizacion);
-
-                // Obtener número de factura nuevo
-                ventaViewModel.NumeroFactura = await _ventaService.GenerarNumeroFacturaAsync();
-
-                // Asignar usuario actual
-                ventaViewModel.Usuario = User.Identity?.Name ?? "Desconocido";
-                ventaViewModel.Vendedor = User.Identity?.Name ?? "Desconocido";
-
-                // Asignar manualmente los datos faltantes
-                ventaViewModel.NombreCliente = cotizacion.NombreCliente;
-                ventaViewModel.DniCliente = cotizacion.DniCliente;
-                ventaViewModel.TelefonoCliente = cotizacion.TelefonoCliente;
-
-                // Usar valores por defecto para los campos faltantes
-                ventaViewModel.DomicilioCliente = string.Empty;
-                ventaViewModel.LocalidadCliente = string.Empty;
-                ventaViewModel.CelularCliente = string.Empty;
-
-                // Observaciones relacionadas con la cotización
-                ventaViewModel.Observaciones = cotizacion.Observaciones;
-                ventaViewModel.Condiciones = $"Generado desde cotización #{cotizacion.CotizacionID} - {cotizacion.NumeroCotizacion}";
-
-                // Cargar combos para el formulario
-                await CargarCombosAsync(ventaViewModel);
-
-                return View("Form", ventaViewModel);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al crear venta desde cotización");
-                return View("Error");
-            }
-        }
+        // GET: Ventas/ConvertirCotizacionAVenta/{id}
         [HttpGet]
         [Authorize(Policy = "Permission:ventas.crear")]
         public async Task<IActionResult> ConvertirCotizacionAVenta(int id)
@@ -124,7 +81,7 @@ namespace Javo2.Controllers
                 if (cotizacion == null)
                     return NotFound();
 
-                // Crear VentaFormViewModel directamente sin mapeo automático
+                // Crear VentaFormViewModel a partir de la cotización
                 var ventaViewModel = new VentaFormViewModel
                 {
                     FechaVenta = DateTime.Today,
@@ -155,68 +112,39 @@ namespace Javo2.Controllers
             }
         }
 
-        // GET: Ventas/CreateFromCotizacion
+        // GET: Ventas/Create
         [HttpGet]
         [Authorize(Policy = "Permission:ventas.crear")]
-        public async Task<IActionResult> CreateFromCotizacion()
+        public async Task<IActionResult> Create()
         {
             try
             {
-                // Obtener ID de cotización de TempData
-                if (!TempData.ContainsKey("CotizacionID") || !(TempData["CotizacionID"] is int cotizacionID))
-                {
-                    return RedirectToAction(nameof(Create));
-                }
+                _logger.LogInformation("Create GET");
 
-                // Obtener cotización
-                var cotizacion = await _cotizacionService.GetCotizacionByIDAsync(cotizacionID);
-                if (cotizacion == null)
-                {
-                    return RedirectToAction(nameof(Create));
-                }
-
-                // Crear venta a partir de cotización
-                var viewModel = new VentaFormViewModel
+                // Initialize new view model
+                var model = new VentaFormViewModel
                 {
                     FechaVenta = DateTime.Today,
                     NumeroFactura = await _ventaService.GenerarNumeroFacturaAsync(),
                     Usuario = User.Identity?.Name ?? "Desconocido",
                     Vendedor = User.Identity?.Name ?? "Desconocido",
-
-                    // Datos del cliente de la cotización
-                    NombreCliente = cotizacion.NombreCliente,
-                    DniCliente = cotizacion.DniCliente,
-                    TelefonoCliente = cotizacion.TelefonoCliente,
-                    DomicilioCliente = cotizacion.DomicilioCliente,
-                    LocalidadCliente = cotizacion.LocalidadCliente,
-                    CelularCliente = cotizacion.CelularCliente,
-
-                    // Productos de la cotización
-                    ProductosPresupuesto = _mapper.Map<List<DetalleVentaViewModel>>(cotizacion.ProductosPresupuesto),
-
-                    // Estado inicial
-                    Estado = EstadoVenta.Borrador.ToString(),
-
-                    // Observaciones relacionadas con la cotización
-                    Observaciones = cotizacion.Observaciones,
-                    Condiciones = $"Generado desde cotización #{cotizacion.VentaID} - {cotizacion.NumeroFactura}"
+                    ProductosPresupuesto = new List<DetalleVentaViewModel>(),
+                    Estado = EstadoVenta.Borrador.ToString()
                 };
 
-                // Cargar combos y otros datos necesarios
-                await CargarCombosAsync(viewModel);
+                // Load form combos
+                await CargarCombosAsync(model);
 
-                // Establecer algunos valores por defecto
-                viewModel.FormaPagoID = 1; // Contado por defecto
-
-                return View("Form", viewModel);
+                return View("Form", model);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear venta desde cotización");
+                _logger.LogError(ex, "Error al inicializar formulario de venta");
                 return View("Error");
             }
         }
 
+        // POST: Ventas/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Permission:ventas.crear")]
@@ -226,25 +154,25 @@ namespace Javo2.Controllers
             {
                 _logger.LogInformation("Create POST => Finalizar={Finalizar}, Model={@Model}", Finalizar, model);
 
-                // Validar forma de pago primero para limpiar campos no necesarios
-                ValidarFormaPago(model);
+                // Validar forma de pago utilizando el nuevo PaymentValidator
+                if (!PaymentValidator.ValidatePaymentMethod(model, ModelState))
+                {
+                    await CargarCombosAsync(model);
+                    return View("Form", model);
+                }
+
+                // Establecer valores por defecto
                 if (string.IsNullOrEmpty(model.Observaciones))
                     model.Observaciones = "Sin observaciones";
 
                 if (string.IsNullOrEmpty(model.Condiciones))
                     model.Condiciones = "Condiciones estándar";
+
                 // Validaciones
                 if (!ModelState.IsValid)
                 {
                     // Registrar errores para depuración
-                    foreach (var state in ModelState)
-                    {
-                        foreach (var error in state.Value.Errors)
-                        {
-                            _logger.LogError("ModelState Error en {Field}: {Error}", state.Key, error.ErrorMessage);
-                        }
-                    }
-
+                    LogModelStateErrors();
                     await CargarCombosAsync(model);
                     return View("Form", model);
                 }
@@ -337,6 +265,13 @@ namespace Javo2.Controllers
             {
                 _logger.LogInformation("Edit POST => VentaID={ID}", model.VentaID);
 
+                // Validar forma de pago utilizando el nuevo PaymentValidator
+                if (!PaymentValidator.ValidatePaymentMethod(model, ModelState))
+                {
+                    await CargarCombosAsync(model);
+                    return View("Form", model);
+                }
+
                 // Validaciones
                 if (!ModelState.IsValid)
                 {
@@ -407,34 +342,41 @@ namespace Javo2.Controllers
         {
             try
             {
-                var cotizacion = await _cotizacionService.GetCotizacionByIDAsync(id);
-                if (cotizacion == null)
+                var venta = await _ventaService.GetVentaByIDAsync(id);
+                if (venta == null)
                     return NotFound();
 
-                return View("~/Views/Cotizacion/Detalles.cshtml", cotizacion);
+                return View(venta);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener detalles de cotización");
+                _logger.LogError(ex, "Error al obtener detalles de venta");
                 return View("Error");
             }
-        }// Agrega también un método Delete
+        }
+
         [HttpGet]
         [Authorize(Policy = "Permission:ventas.eliminar")]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                var cotizacion = await _cotizacionService.GetCotizacionByIDAsync(id);
-                if (cotizacion == null)
+                var venta = await _ventaService.GetVentaByIDAsync(id);
+                if (venta == null)
                     return NotFound();
 
-                var viewModel = _mapper.Map<CotizacionListViewModel>(cotizacion);
-                return View("~/Views/Cotizacion/Delete.cshtml", viewModel);
+                if (venta.Estado != EstadoVenta.Borrador && venta.Estado != EstadoVenta.Rechazada)
+                {
+                    TempData["Error"] = "Solo se pueden eliminar ventas en estado Borrador o Rechazada.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                var viewModel = _mapper.Map<VentaListViewModel>(venta);
+                return View(viewModel);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al cargar cotización para eliminar");
+                _logger.LogError(ex, "Error al cargar venta para eliminar");
                 return View("Error");
             }
         }
@@ -446,33 +388,24 @@ namespace Javo2.Controllers
         {
             try
             {
-                await _cotizacionService.DeleteCotizacionAsync(id);
-                TempData["Success"] = "Cotización eliminada exitosamente";
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al eliminar cotización");
-                TempData["Error"] = "Error al eliminar la cotización";
-                return RedirectToAction(nameof(Index));
-            }
-        }
+                var venta = await _ventaService.GetVentaByIDAsync(id);
+                if (venta == null)
+                    return NotFound();
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Policy = "Permission:ventas.eliminar")]
-        public async Task<IActionResult> DeleteCotizacionConfirmed(int id)
-        {
-            try
-            {
-                await _cotizacionService.DeleteCotizacionAsync(id);
-                TempData["Success"] = "Cotización eliminada exitosamente";
+                if (venta.Estado != EstadoVenta.Borrador && venta.Estado != EstadoVenta.Rechazada)
+                {
+                    TempData["Error"] = "Solo se pueden eliminar ventas en estado Borrador o Rechazada.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                await _ventaService.DeleteVentaAsync(id);
+                TempData["Success"] = "Venta eliminada exitosamente";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar cotización");
-                TempData["Error"] = "Error al eliminar la cotización";
+                _logger.LogError(ex, "Error al eliminar venta");
+                TempData["Error"] = "Error al eliminar la venta";
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -480,7 +413,6 @@ namespace Javo2.Controllers
         // GET: Ventas/Autorizaciones
         [HttpGet]
         [Authorize(Policy = "Permission:ventas.autorizar")]
-
         public async Task<IActionResult> Autorizaciones()
         {
             try
@@ -505,29 +437,23 @@ namespace Javo2.Controllers
             try
             {
                 _logger.LogInformation("Autorizar POST => VentaID={ID}", id);
-                var venta = await _ventaService.GetVentaByIDAsync(id);
-                if (venta == null || venta.Estado != EstadoVenta.PendienteDeAutorizacion)
-                    return Json(new { success = false, message = "Venta no disponible para autorizar." });
-
                 await _ventaService.AutorizarVentaAsync(id, User.Identity?.Name ?? "Desconocido");
-
-                // Registrar en auditoría
-                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
-                {
-                    FechaHora = DateTime.Now,
-                    Usuario = User.Identity?.Name ?? "Desconocido",
-                    Entidad = "Venta",
-                    Accion = "Autorizar",
-                    LlavePrimaria = id.ToString(),
-                    Detalle = $"Venta autorizada: Cliente={venta.NombreCliente}, Total={venta.PrecioTotal}"
-                });
-
                 return Json(new { success = true, message = "Venta autorizada correctamente." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                _logger.LogWarning(ex, "Venta no encontrada al intentar autorizar ID: {ID}", id);
+                return Json(new { success = false, message = "Venta no encontrada." });
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogWarning(ex, "Estado incorrecto al intentar autorizar venta ID: {ID}", id);
+                return Json(new { success = false, message = ex.Message });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al autorizar venta ID: {ID}", id);
-                return Json(new { success = false, message = ex.Message });
+                return Json(new { success = false, message = "Error al procesar la solicitud." });
             }
         }
 
@@ -540,29 +466,41 @@ namespace Javo2.Controllers
             try
             {
                 _logger.LogInformation("Rechazar POST => VentaID={ID}", id);
-                var venta = await _ventaService.GetVentaByIDAsync(id);
-                if (venta == null || venta.Estado != EstadoVenta.PendienteDeAutorizacion)
-                    return Json(new { success = false, message = "Venta no disponible para rechazar." });
-
                 await _ventaService.RechazarVentaAsync(id, User.Identity?.Name ?? "Desconocido");
-
-                // Registrar en auditoría
-                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
-                {
-                    FechaHora = DateTime.Now,
-                    Usuario = User.Identity?.Name ?? "Desconocido",
-                    Entidad = "Venta",
-                    Accion = "Rechazar",
-                    LlavePrimaria = id.ToString(),
-                    Detalle = $"Venta rechazada: Cliente={venta.NombreCliente}, Total={venta.PrecioTotal}"
-                });
-
                 return Json(new { success = true, message = "Venta rechazada correctamente." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                _logger.LogWarning(ex, "Venta no encontrada al intentar rechazar ID: {ID}", id);
+                return Json(new { success = false, message = "Venta no encontrada." });
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogWarning(ex, "Estado incorrecto al intentar rechazar venta ID: {ID}", id);
+                return Json(new { success = false, message = ex.Message });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al rechazar venta ID: {ID}", id);
-                return Json(new { success = false, message = ex.Message });
+                return Json(new { success = false, message = "Error al procesar la solicitud." });
+            }
+        }
+
+        // GET: Ventas/EntregaProductos
+        [HttpGet]
+        [Authorize(Policy = "Permission:ventas.entregaProductos")]
+        public async Task<IActionResult> EntregaProductos()
+        {
+            try
+            {
+                var ventas = await _ventaService.GetVentasPendientesDeEntregaAsync();
+                var model = _mapper.Map<IEnumerable<VentaListViewModel>>(ventas);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cargar ventas pendientes de entrega");
+                return View("Error");
             }
         }
 
@@ -575,29 +513,23 @@ namespace Javo2.Controllers
             try
             {
                 _logger.LogInformation("MarcarEntregada POST => VentaID={ID}", id);
-                var venta = await _ventaService.GetVentaByIDAsync(id);
-                if (venta == null || venta.Estado != EstadoVenta.PendienteDeEntrega)
-                    return Json(new { success = false, message = "Venta no disponible para entrega." });
-
                 await _ventaService.MarcarVentaComoEntregadaAsync(id, User.Identity?.Name ?? "Desconocido");
-
-                // Registrar en auditoría
-                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
-                {
-                    FechaHora = DateTime.Now,
-                    Usuario = User.Identity?.Name ?? "Desconocido",
-                    Entidad = "Venta",
-                    Accion = "MarcarEntregada",
-                    LlavePrimaria = id.ToString(),
-                    Detalle = $"Venta marcada como entregada: Cliente={venta.NombreCliente}, Total={venta.PrecioTotal}"
-                });
-
                 return Json(new { success = true, message = "Venta marcada como entregada correctamente." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                _logger.LogWarning(ex, "Venta no encontrada al marcar como entregada ID: {ID}", id);
+                return Json(new { success = false, message = "Venta no encontrada." });
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogWarning(ex, "Estado incorrecto al marcar venta como entregada ID: {ID}", id);
+                return Json(new { success = false, message = ex.Message });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al marcar venta como entregada ID: {ID}", id);
-                return Json(new { success = false, message = ex.Message });
+                return Json(new { success = false, message = "Error al procesar la solicitud." });
             }
         }
 
@@ -627,24 +559,6 @@ namespace Javo2.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al reimprimir venta ID: {ID}", id);
-                return View("Error");
-            }
-        }
-
-        // GET: Ventas/EntregaProductos
-        [HttpGet]
-        [Authorize(Policy = "Permission:ventas.entregaProductos")]
-        public async Task<IActionResult> EntregaProductos()
-        {
-            try
-            {
-                var ventas = await _ventaService.GetVentasPendientesDeEntregaAsync();
-                var model = _mapper.Map<IEnumerable<VentaListViewModel>>(ventas);
-                return View(model);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al cargar ventas pendientes de entrega");
                 return View("Error");
             }
         }
@@ -730,72 +644,6 @@ namespace Javo2.Controllers
             }
         }
 
-        // GET: Ventas/Create
-        [HttpGet]
-        [Authorize(Policy = "Permission:ventas.crear")]
-        public async Task<IActionResult> Create()
-        {
-            try
-            {
-                _logger.LogInformation("Create GET");
-
-                // Initialize new view model
-                var model = new VentaFormViewModel
-                {
-                    FechaVenta = DateTime.Today,
-                    NumeroFactura = await _ventaService.GenerarNumeroFacturaAsync(),
-                    Usuario = User.Identity?.Name ?? "Desconocido",
-                    Vendedor = User.Identity?.Name ?? "Desconocido",
-                    ProductosPresupuesto = new List<DetalleVentaViewModel>(),
-                    Estado = EstadoVenta.Borrador.ToString()
-                };
-
-                // Load form combos
-                await CargarCombosAsync(model);
-
-                return View("Form", model);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al inicializar formulario de venta");
-                return View("Error");
-            }
-        }
-
-        // GET: Ventas/GetFormasPagoOptions
-        [HttpGet]
-        public async Task<IActionResult> GetFormasPagoOptions()
-        {
-            try
-            {
-                var formasPago = await _ventaService.GetFormasPagoAsync();
-                var result = formasPago.Select(fp => new { value = fp.FormaPagoID, text = fp.Nombre });
-                return Json(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al obtener formas de pago");
-                return Json(new object[0]);
-            }
-        }
-
-        // GET: Ventas/GetBancosOptions
-        [HttpGet]
-        public async Task<IActionResult> GetBancosOptions()
-        {
-            try
-            {
-                var bancos = await _ventaService.GetBancosAsync();
-                var result = bancos.Select(b => new { value = b.BancoID, text = b.Nombre });
-                return Json(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al obtener bancos");
-                return Json(new object[0]);
-            }
-        }
-
         #endregion
 
         #region Métodos Auxiliares
@@ -808,74 +656,6 @@ namespace Javo2.Controllers
             model.CuotasOptions = _ventaService.GetCuotasSelectList();
             model.EntidadesElectronicas = _ventaService.GetEntidadesElectronicasSelectList();
             model.PlanesFinanciamiento = _ventaService.GetPlanesFinanciamientoSelectList();
-        }
-
-        private bool ValidarFormaPago(VentaFormViewModel model)
-        {
-            bool isValid = true;
-
-            // Solo validar campos específicos según la forma de pago seleccionada
-            switch (model.FormaPagoID)
-            {
-                case 2: // Tarjeta de Crédito
-                        if (string.IsNullOrEmpty(model.TipoTarjeta))
-                    {
-                        ModelState.AddModelError(nameof(model.TipoTarjeta),
-                            "Debe seleccionar un tipo de tarjeta para pagos con tarjeta de crédito.");
-                        isValid = false;
-                    }
-                    if (!model.Cuotas.HasValue || model.Cuotas.Value <= 0)
-                    {
-                        ModelState.AddModelError(nameof(model.Cuotas),
-                            "Debe especificar el número de cuotas.");
-                        isValid = false;
-                    }
-                    // Limpiar validaciones de otros métodos de pago
-                    ModelState.Remove(nameof(model.EntidadElectronica));
-                    ModelState.Remove(nameof(model.PlanFinanciamiento));
-                    break;
-
-                case 5: // Pago Virtual
-                    if (string.IsNullOrEmpty(model.EntidadElectronica))
-                    {
-                        ModelState.AddModelError(nameof(model.EntidadElectronica),
-                            "Debe seleccionar una entidad electrónica para pagos virtuales.");
-                        isValid = false;
-                    }
-                    // Limpiar validaciones de otros métodos de pago
-                    ModelState.Remove(nameof(model.TipoTarjeta));
-                    ModelState.Remove(nameof(model.Cuotas));
-                    ModelState.Remove(nameof(model.PlanFinanciamiento));
-                    break;
-
-                case 6: // Crédito Personal
-                    if (string.IsNullOrEmpty(model.PlanFinanciamiento))
-                    {
-                        ModelState.AddModelError(nameof(model.PlanFinanciamiento),
-                            "Debe seleccionar un plan de financiamiento para crédito personal.");
-                        isValid = false;
-                    }
-                    if (!model.Cuotas.HasValue || model.Cuotas.Value <= 0)
-                    {
-                        ModelState.AddModelError(nameof(model.Cuotas),
-                            "Debe especificar el número de cuotas para crédito personal.");
-                        isValid = false;
-                    }
-                    // Limpiar validaciones de otros métodos de pago
-                    ModelState.Remove(nameof(model.TipoTarjeta));
-                    ModelState.Remove(nameof(model.EntidadElectronica));
-                    break;
-
-                default: // Para otros métodos de pago (Contado, Débito, Transferencia)
-                         // Limpiar todas las validaciones específicas
-                    ModelState.Remove(nameof(model.TipoTarjeta));
-                    ModelState.Remove(nameof(model.Cuotas));
-                    ModelState.Remove(nameof(model.EntidadElectronica));
-                    ModelState.Remove(nameof(model.PlanFinanciamiento));
-                    break;
-            }
-
-            return isValid;
         }
 
         #endregion

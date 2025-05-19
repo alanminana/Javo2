@@ -49,6 +49,6 @@ namespace Javo2.IServices
         IEnumerable<SelectListItem> GetPlanesFinanciamientoSelectList();
 
         // Alias
-        Task<Venta?> GetVentaByIdAsync(int id);
+   
     }
 }

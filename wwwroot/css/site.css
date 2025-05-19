@@ -199,7 +199,7 @@ body, .table, .form-control, .form-select, .input-group-text,
     }
 
     .table:not(.table-dark) tbody td {
-        color: var(--light-text);
+        color: black;
         border-color: var(--border-color);
     }
 

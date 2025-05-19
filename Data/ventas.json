@@ -238,5 +238,53 @@
     "Estado": 1,
     "CuotasPagas": [],
     "EstadosEntregaProductos": []
+  },
+  {
+    "VentaID": 6,
+    "FechaVenta": "2025-05-19T15:24:47.0044006-03:00",
+    "NumeroFactura": "FAC-20250519-0006",
+    "Usuario": "admin",
+    "Vendedor": "admin",
+    "DniCliente": 0,
+    "NombreCliente": null,
+    "TelefonoCliente": null,
+    "DomicilioCliente": null,
+    "LocalidadCliente": null,
+    "CelularCliente": null,
+    "LimiteCreditoCliente": 0.00,
+    "SaldoCliente": 0,
+    "SaldoDisponibleCliente": 0.00,
+    "FormaPagoID": 1,
+    "PromocionesAplicadas": [],
+    "BancoID": null,
+    "TipoTarjeta": null,
+    "Cuotas": null,
+    "EntidadElectronica": null,
+    "PlanFinanciamiento": null,
+    "Observaciones": "Sin observaciones",
+    "Condiciones": "Condiciones est\u00E1ndar",
+    "Credito": 0,
+    "ProductosPresupuesto": [
+      {
+        "ProductoID": 1,
+        "CodigoAlfa": "P001",
+        "CodigoBarra": "392733305",
+        "NombreProducto": "Producto Inicial",
+        "Marca": "Marca A",
+        "Cantidad": 1,
+        "PrecioUnitario": 20496,
+        "PrecioTotal": 20496,
+        "PrecioLista": 13937
+      }
+    ],
+    "PrecioTotal": 20496,
+    "TotalProductos": 1,
+    "AdelantoDinero": 12,
+    "DineroContado": 12,
+    "MontoCheque": 12,
+    "NumeroCheque": "12",
+    "Estado": 1,
+    "CuotasPagas": [],
+    "EstadosEntregaProductos": []
   }
 ]

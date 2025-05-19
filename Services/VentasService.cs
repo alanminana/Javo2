@@ -245,6 +245,36 @@ namespace Javo2.Services
                 throw;
             }
         }
+        // Agregar este método general para cambio de estado
+        private async Task<Venta> CambiarEstadoVentaAsync(int ventaId, EstadoVenta nuevoEstado, string accion, string usuario)
+        {
+            _logger.LogInformation("CambiarEstadoVentaAsync => VentaID={ID}, NuevoEstado={Estado}, Usuario={Usuario}",
+                ventaId, nuevoEstado, usuario);
+
+            var venta = await GetVentaByIDAsync(ventaId);
+            if (venta == null)
+                throw new KeyNotFoundException($"Venta {ventaId} no encontrada");
+
+            EstadoVenta estadoAnterior = venta.Estado;
+            venta.Estado = nuevoEstado;
+            venta.Usuario = usuario;
+
+            await UpdateVentaAsync(venta);
+
+            // Registrar en auditoría
+            await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+            {
+                FechaHora = DateTime.Now,
+                Usuario = usuario,
+                Entidad = "Venta",
+                Accion = accion,
+                LlavePrimaria = ventaId.ToString(),
+                Detalle = $"Venta {accion.ToLower()}: Cliente={venta.NombreCliente}, Total={venta.PrecioTotal}, " +
+                          $"Estado anterior={estadoAnterior}, Estado nuevo={nuevoEstado}"
+            });
+
+            return venta;
+        }
 
         public async Task AutorizarVentaAsync(int ventaId, string usuario)
         {
@@ -252,37 +282,16 @@ namespace Javo2.Services
 
             var venta = await GetVentaByIDAsync(ventaId);
             if (venta == null)
-            {
                 throw new KeyNotFoundException($"Venta {ventaId} no encontrada");
-            }
 
             if (venta.Estado != EstadoVenta.PendienteDeAutorizacion)
-            {
                 throw new InvalidOperationException($"La venta {ventaId} no está pendiente de autorización");
-            }
 
-            // Cambiar estado a Autorizada
-            venta.Estado = EstadoVenta.Autorizada;
+            // Primero autorizar la venta
+            await CambiarEstadoVentaAsync(ventaId, EstadoVenta.Autorizada, "Autorizar", usuario);
 
-            // Registrar quién autorizó
-            venta.Usuario = usuario;
-
-            await UpdateVentaAsync(venta);
-
-            // Registrar auditoría
-            await _auditoriaService?.RegistrarCambioAsync(new AuditoriaRegistro
-            {
-                FechaHora = DateTime.Now,
-                Usuario = usuario,
-                Entidad = "Venta",
-                Accion = "Autorizar",
-                LlavePrimaria = ventaId.ToString(),
-                Detalle = $"Venta autorizada: {venta.NumeroFactura}"
-            });
-
-            // Después de autorizar, cambiar a PendienteDeEntrega
-            venta.Estado = EstadoVenta.PendienteDeEntrega;
-            await UpdateVentaAsync(venta);
+            // Luego cambiar a pendiente de entrega
+            await CambiarEstadoVentaAsync(ventaId, EstadoVenta.PendienteDeEntrega, "Actualizar", usuario);
         }
 
         public async Task RechazarVentaAsync(int ventaId, string usuario)
@@ -291,30 +300,12 @@ namespace Javo2.Services
 
             var venta = await GetVentaByIDAsync(ventaId);
             if (venta == null)
-            {
                 throw new KeyNotFoundException($"Venta {ventaId} no encontrada");
-            }
 
             if (venta.Estado != EstadoVenta.PendienteDeAutorizacion)
-            {
                 throw new InvalidOperationException($"La venta {ventaId} no está pendiente de autorización");
-            }
 
-            venta.Estado = EstadoVenta.Rechazada;
-            venta.Usuario = usuario;
-
-            await UpdateVentaAsync(venta);
-
-            // Registrar auditoría
-            await _auditoriaService?.RegistrarCambioAsync(new AuditoriaRegistro
-            {
-                FechaHora = DateTime.Now,
-                Usuario = usuario,
-                Entidad = "Venta",
-                Accion = "Rechazar",
-                LlavePrimaria = ventaId.ToString(),
-                Detalle = $"Venta rechazada: {venta.NumeroFactura}"
-            });
+            await CambiarEstadoVentaAsync(ventaId, EstadoVenta.Rechazada, "Rechazar", usuario);
         }
 
         public async Task MarcarVentaComoEntregadaAsync(int ventaId, string usuario)
@@ -323,14 +314,10 @@ namespace Javo2.Services
 
             var venta = await GetVentaByIDAsync(ventaId);
             if (venta == null)
-            {
                 throw new KeyNotFoundException($"Venta {ventaId} no encontrada");
-            }
 
             if (venta.Estado != EstadoVenta.PendienteDeEntrega)
-            {
                 throw new InvalidOperationException($"La venta {ventaId} no está pendiente de entrega");
-            }
 
             // Actualizar stock
             foreach (var detalle in venta.ProductosPresupuesto)
@@ -348,24 +335,14 @@ namespace Javo2.Services
                 }
             }
 
-            // Cambiar estado a Completada
-            venta.Estado = EstadoVenta.Completada;
-            venta.Usuario = usuario;
-
-            await UpdateVentaAsync(venta);
-
-            // Registrar auditoría
-            await _auditoriaService?.RegistrarCambioAsync(new AuditoriaRegistro
-            {
-                FechaHora = DateTime.Now,
-                Usuario = usuario,
-                Entidad = "Venta",
-                Accion = "Entregar",
-                LlavePrimaria = ventaId.ToString(),
-                Detalle = $"Venta entregada: {venta.NumeroFactura} - Stock actualizado"
-            });
+            await CambiarEstadoVentaAsync(ventaId, EstadoVenta.Completada, "Entregar", usuario);
         }
 
+        public async Task UpdateEstadoVentaAsync(int id, EstadoVenta estado)
+        {
+            await CambiarEstadoVentaAsync(id, estado, "UpdateEstado", "Sistema");
+        }
+       
      
 
       
@@ -693,53 +670,7 @@ namespace Javo2.Services
             }
         }
 
-        public async Task UpdateEstadoVentaAsync(int id, EstadoVenta estado)
-        {
-            try
-            {
-                Venta? venta;
-                EstadoVenta estadoAnterior;
-
-                lock (_lock)
-                {
-                    venta = _ventas.FirstOrDefault(v => v.VentaID == id);
-                    if (venta != null)
-                    {
-                        estadoAnterior = venta.Estado;
-                        venta.Estado = estado;
-
-                        _logger.LogInformation("Estado de venta actualizado => ID: {ID}, Estado anterior: {EstadoAnterior}, Estado nuevo: {Estado}",
-                            id, estadoAnterior, estado);
-                    }
-                    else
-                    {
-                        throw new KeyNotFoundException($"Venta con ID {id} no encontrada.");
-                    }
-                }
-
-                await GuardarEnJsonAsync();
-
-                // Gestionar stock según el cambio de estado
-                await GestionarStockPorCambioEstado(venta, estadoAnterior, estado);
-
-                // Registrar en auditoría
-                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
-                {
-                    FechaHora = DateTime.Now,
-                    Usuario = "Sistema",
-                    Entidad = "Venta",
-                    Accion = "UpdateEstado",
-                    LlavePrimaria = id.ToString(),
-                    Detalle = $"Estado actualizado de {estadoAnterior} a {estado}"
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al actualizar estado de venta ID: {ID}", id);
-                throw;
-            }
-        }
-
+     
         #endregion
 
         #region Alias Methods
