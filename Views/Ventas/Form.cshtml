@@ -223,11 +223,119 @@
                     <!-- Pestaña: Forma de Pago -->
                     <div class="tab-pane fade" id="pagos" role="tabpanel" aria-labelledby="pagos-tab">
                         <!-- Forma de Pago -->
-                        @{
-                            ViewData["PrefijoFormaPago"] = "";
-                            ViewData["ReadOnly"] = false;
-                        }
-                        @await Html.PartialAsync("_FormaPago", Model)
+                        <fieldset class="mb-4">
+                            <legend class="text-light">Forma de Pago</legend>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label asp-for="FormaPagoID" class="form-label text-light">Método</label>
+                                    <select asp-for="FormaPagoID" class="form-select bg-secondary text-light" id="FormaPagoID">
+                                        <option value="">-- Seleccione --</option>
+                                        @foreach (var fp in Model.FormasPago)
+                                        {
+                                            <option value="@fp.Value">@fp.Text</option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="FormaPagoID" class="invalid-feedback d-block"></span>
+                                </div>
+
+                                <!-- Contenedores condicionales para cada forma de pago -->
+                                <div class="col-md-6">
+                                    <!-- Tarjeta de Crédito (FormaPagoID = 2) -->
+                                    <div id="tarjetaCreditoContainer" class="payment-container d-none">
+                                        <div class="row g-2">
+                                            <div class="col-12">
+                                                <label asp-for="TipoTarjeta" class="form-label text-light">Tipo de Tarjeta</label>
+                                                <select asp-for="TipoTarjeta" asp-items="Model.TipoTarjetaOptions"
+                                                        class="form-select bg-secondary text-light">
+                                                    <option value="">-- Seleccione --</option>
+                                                </select>
+                                                <span asp-validation-for="TipoTarjeta" class="invalid-feedback d-block"></span>
+                                            </div>
+                                            <div class="col-12 mt-2">
+                                                <label asp-for="Cuotas" class="form-label text-light">Cuotas</label>
+                                                <select asp-for="Cuotas" asp-items="Model.CuotasOptions"
+                                                        class="form-select bg-secondary text-light">
+                                                    <option value="">-- Seleccione --</option>
+                                                </select>
+                                                <span asp-validation-for="Cuotas" class="invalid-feedback d-block"></span>
+                                            </div>
+                                            <div class="col-12 mt-2">
+                                                <label asp-for="BancoID" class="form-label text-light">Banco</label>
+                                                <select asp-for="BancoID" asp-items="Model.Bancos"
+                                                        class="form-select bg-secondary text-light">
+                                                    <option value="">-- Seleccione --</option>
+                                                </select>
+                                                <span asp-validation-for="BancoID" class="invalid-feedback d-block"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Tarjeta de Débito (FormaPagoID = 3) -->
+                                    <div id="tarjetaDebitoContainer" class="payment-container d-none">
+                                        <div class="row g-2">
+                                            <div class="col-12">
+                                                <label asp-for="BancoID" class="form-label text-light">Banco</label>
+                                                <select asp-for="BancoID" asp-items="Model.Bancos"
+                                                        class="form-select bg-secondary text-light">
+                                                    <option value="">-- Seleccione --</option>
+                                                </select>
+                                                <span asp-validation-for="BancoID" class="invalid-feedback d-block"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Transferencia (FormaPagoID = 4) -->
+                                    <div id="transferenciaContainer" class="payment-container d-none">
+                                        <div class="row g-2">
+                                            <div class="col-12">
+                                                <label asp-for="BancoID" class="form-label text-light">Banco</label>
+                                                <select asp-for="BancoID" asp-items="Model.Bancos"
+                                                        class="form-select bg-secondary text-light">
+                                                    <option value="">-- Seleccione --</option>
+                                                </select>
+                                                <span asp-validation-for="BancoID" class="invalid-feedback d-block"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Pago Virtual (FormaPagoID = 5) -->
+                                    <div id="pagoVirtualContainer" class="payment-container d-none">
+                                        <div class="row g-2">
+                                            <div class="col-12">
+                                                <label asp-for="EntidadElectronica" class="form-label text-light">Entidad Electrónica</label>
+                                                <select asp-for="EntidadElectronica" asp-items="Model.EntidadesElectronicas"
+                                                        class="form-select bg-secondary text-light">
+                                                    <option value="">-- Seleccione --</option>
+                                                </select>
+                                                <span asp-validation-for="EntidadElectronica" class="invalid-feedback d-block"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Crédito Personal (FormaPagoID = 6) -->
+                                    <div id="creditoPersonalContainer" class="payment-container d-none">
+                                        <div class="row g-2">
+                                            <div class="col-12">
+                                                <label asp-for="PlanFinanciamiento" class="form-label text-light">Plan de Financiamiento</label>
+                                                <select asp-for="PlanFinanciamiento" asp-items="Model.PlanesFinanciamiento"
+                                                        class="form-select bg-secondary text-light">
+                                                    <option value="">-- Seleccione --</option>
+                                                </select>
+                                                <span asp-validation-for="PlanFinanciamiento" class="invalid-feedback d-block"></span>
+                                            </div>
+                                            <div class="col-12 mt-2">
+                                                <label asp-for="Cuotas" class="form-label text-light">Cuotas</label>
+                                                <select asp-for="Cuotas" asp-items="Model.CuotasOptions"
+                                                        class="form-select bg-secondary text-light">
+                                                    <option value="">-- Seleccione --</option>
+                                                </select>
+                                                <span asp-validation-for="Cuotas" class="invalid-feedback d-block"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
 
                         <!-- Anticipo y Detalles de Pago -->
                         <fieldset class="mb-4">
