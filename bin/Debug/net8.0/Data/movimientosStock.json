@@ -22,5 +22,21 @@
     "TipoMovimiento": "Entrada",
     "Cantidad": 21,
     "Motivo": "Stock inicial"
+  },
+  {
+    "MovimientoStockID": 4,
+    "ProductoID": 11,
+    "Fecha": "2025-05-17T02:25:27.6112545Z",
+    "TipoMovimiento": "Entrada",
+    "Cantidad": 22,
+    "Motivo": "Stock inicial"
+  },
+  {
+    "MovimientoStockID": 5,
+    "ProductoID": 12,
+    "Fecha": "2025-05-17T02:25:57.721542Z",
+    "TipoMovimiento": "Entrada",
+    "Cantidad": 22,
+    "Motivo": "Stock inicial"
   }
 ]

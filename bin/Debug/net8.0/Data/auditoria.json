@@ -706,5 +706,29 @@
     "EsRevertido": false,
     "RollbackUser": "",
     "RollbackFecha": null
+  },
+  {
+    "ID": 60,
+    "FechaHora": "2025-05-16T23:25:27.6380087-03:00",
+    "Usuario": "admin",
+    "Entidad": "Producto",
+    "Accion": "Create",
+    "LlavePrimaria": "11",
+    "Detalle": "sdadsa",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
+  },
+  {
+    "ID": 61,
+    "FechaHora": "2025-05-16T23:25:57.7443824-03:00",
+    "Usuario": "admin",
+    "Entidad": "Producto",
+    "Accion": "Create",
+    "LlavePrimaria": "12",
+    "Detalle": "1231",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
   }
 ]

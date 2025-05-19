@@ -3,36 +3,88 @@
   "WorkspaceRootPath": "D:\\github\\Javo2\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\filter\\permissionauthorizationfilter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:filter\\permissionauthorizationfilter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\shared\\_formapago.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\shared\\_formapago.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\proveedores\\formcompra.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\proveedores\\formcompra.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\ventas\\form.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\ventas\\form.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\modules\\venta-form.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\modules\\venta-form.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\modules\\payment-method-handler.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\modules\\payment-method-handler.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\iservices\\iproveedorservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:iservices\\iproveedorservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\services\\proveedorservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:services\\proveedorservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\services\\common\\dropdownservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:services\\common\\dropdownservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\productos\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\productos\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\iservices\\common\\idropdownservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:iservices\\common\\idropdownservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\services\\base\\jsondataservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:services\\base\\jsondataservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\controllers\\proveedorescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:controllers\\proveedorescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\services\\productoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:services\\productoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\proveedores\\form.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\proveedores\\form.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\controllers\\productoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:controllers\\productoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\proveedores-controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\proveedores-controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\productos-controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\productos-controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\modules\\proveedor-form.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\modules\\proveedor-form.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\proveedores\\_proveedoresform.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\proveedores\\_proveedoresform.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\proveedores\\_proveedorestable.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\proveedores\\_proveedorestable.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\proveedores\\compras.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\proveedores\\compras.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\proveedores\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\proveedores\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\proveedores\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\proveedores\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\proveedores\\detallescompra.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\proveedores\\detallescompra.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\proveedores\\eliminarcompra.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\proveedores\\eliminarcompra.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\proveedores\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\proveedores\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -42,7 +94,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -50,100 +102,257 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Productos\\Index.cshtml",
-              "RelativeDocumentMoniker": "Views\\Productos\\Index.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Productos\\Index.cshtml",
-              "RelativeToolTip": "Views\\Productos\\Index.cshtml",
-              "ViewState": "AgIAAMwAAAAAAAAAAAAAANwAAAABAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "Form.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Ventas\\Form.cshtml",
+              "RelativeDocumentMoniker": "Views\\Ventas\\Form.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Ventas\\Form.cshtml",
+              "RelativeToolTip": "Views\\Ventas\\Form.cshtml",
+              "ViewState": "AgIAAM8AAAAAAAAAAAAUwOUAAABFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-17T02:14:23.959Z"
+              "WhenOpened": "2025-05-19T16:33:25.528Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "PermissionAuthorizationFilter.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Filter\\PermissionAuthorizationFilter.cs",
-              "RelativeDocumentMoniker": "Filter\\PermissionAuthorizationFilter.cs",
-              "ToolTip": "D:\\github\\Javo2\\Filter\\PermissionAuthorizationFilter.cs",
-              "RelativeToolTip": "Filter\\PermissionAuthorizationFilter.cs",
-              "ViewState": "AgIAAGwAAAAAAAAAAAAwwIMAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-17T02:12:56.34Z",
+              "DocumentIndex": 1,
+              "Title": "FormCompra.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Proveedores\\FormCompra.cshtml",
+              "RelativeDocumentMoniker": "Views\\Proveedores\\FormCompra.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Proveedores\\FormCompra.cshtml",
+              "RelativeToolTip": "Views\\Proveedores\\FormCompra.cshtml",
+              "ViewState": "AgIAANsAAAAAAAAAAAAUwAYBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-19T15:54:22.924Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
+              "Title": "venta-form.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\venta-form.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\venta-form.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\venta-form.js",
+              "RelativeToolTip": "wwwroot\\js\\modules\\venta-form.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-19T16:33:12.158Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "payment-method-handler.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\payment-method-handler.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\payment-method-handler.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\payment-method-handler.js",
+              "RelativeToolTip": "wwwroot\\js\\modules\\payment-method-handler.js",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAUwDcAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-19T16:32:25.105Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "_FormaPago.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Shared\\_FormaPago.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_FormaPago.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Shared\\_FormaPago.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_FormaPago.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-19T16:32:00.86Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "IProveedorService.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\IServices\\IProveedorService.cs",
+              "RelativeDocumentMoniker": "IServices\\IProveedorService.cs",
+              "ToolTip": "D:\\github\\Javo2\\IServices\\IProveedorService.cs",
+              "RelativeToolTip": "IServices\\IProveedorService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-19T16:20:14.56Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "DropdownService.cs",
               "DocumentMoniker": "D:\\github\\Javo2\\Services\\Common\\DropdownService.cs",
               "RelativeDocumentMoniker": "Services\\Common\\DropdownService.cs",
               "ToolTip": "D:\\github\\Javo2\\Services\\Common\\DropdownService.cs",
               "RelativeToolTip": "Services\\Common\\DropdownService.cs",
-              "ViewState": "AgIAAJgAAAAAAAAAAAAwwLUAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAPUAAAAAAAAAAAAcwBIBAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-17T02:11:40.252Z"
+              "WhenOpened": "2025-05-19T16:15:27.292Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "JsonDataService.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Services\\Base\\JsonDataService.cs",
-              "RelativeDocumentMoniker": "Services\\Base\\JsonDataService.cs",
-              "ToolTip": "D:\\github\\Javo2\\Services\\Base\\JsonDataService.cs",
-              "RelativeToolTip": "Services\\Base\\JsonDataService.cs",
-              "ViewState": "AgIAAFAAAAAAAAAAAAAswGYAAABeAAAAAAAAAA==",
+              "DocumentIndex": 8,
+              "Title": "IDropdownService.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\IServices\\Common\\IDropdownService.cs",
+              "RelativeDocumentMoniker": "IServices\\Common\\IDropdownService.cs",
+              "ToolTip": "D:\\github\\Javo2\\IServices\\Common\\IDropdownService.cs",
+              "RelativeToolTip": "IServices\\Common\\IDropdownService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-17T02:10:51.101Z"
+              "WhenOpened": "2025-05-19T16:14:56.034Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "ProductoService.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Services\\ProductoService.cs",
-              "RelativeDocumentMoniker": "Services\\ProductoService.cs",
-              "ToolTip": "D:\\github\\Javo2\\Services\\ProductoService.cs",
-              "RelativeToolTip": "Services\\ProductoService.cs",
-              "ViewState": "AgIAAOoBAAAAAAAAAAAswBUCAAABAAAAAAAAAA==",
+              "DocumentIndex": 9,
+              "Title": "ProveedoresController.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\ProveedoresController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ProveedoresController.cs",
+              "ToolTip": "D:\\github\\Javo2\\Controllers\\ProveedoresController.cs",
+              "RelativeToolTip": "Controllers\\ProveedoresController.cs",
+              "ViewState": "AgIAAGECAAAAAAAAAAAUwIgCAABAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-17T02:10:29.07Z"
+              "WhenOpened": "2025-05-19T15:55:06.186Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "proveedores-controller.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\proveedores-controller.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\proveedores-controller.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\proveedores-controller.js",
+              "RelativeToolTip": "wwwroot\\js\\proveedores-controller.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-19T15:54:58.236Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "proveedor-form.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\proveedor-form.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\proveedor-form.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\proveedor-form.js",
+              "RelativeToolTip": "wwwroot\\js\\modules\\proveedor-form.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-19T15:54:54.19Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 6,
-              "Title": "ProductosController.cs",
-              "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\ProductosController.cs",
-              "RelativeDocumentMoniker": "Controllers\\ProductosController.cs",
-              "ToolTip": "D:\\github\\Javo2\\Controllers\\ProductosController.cs",
-              "RelativeToolTip": "Controllers\\ProductosController.cs",
-              "ViewState": "AgIAAPIBAAAAAAAAAAAqwBkCAAABAAAAAAAAAA==",
+              "Title": "ProveedorService.cs",
+              "DocumentMoniker": "D:\\github\\Javo2\\Services\\ProveedorService.cs",
+              "RelativeDocumentMoniker": "Services\\ProveedorService.cs",
+              "ToolTip": "D:\\github\\Javo2\\Services\\ProveedorService.cs",
+              "RelativeToolTip": "Services\\ProveedorService.cs",
+              "ViewState": "AgIAAOEBAAAAAAAAAAAUwAwCAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-17T02:07:44.627Z"
+              "WhenOpened": "2025-05-19T15:54:43.041Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "_Layout.cshtml",
-              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Shared\\_Layout.cshtml",
-              "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
-              "ToolTip": "D:\\github\\Javo2\\Views\\Shared\\_Layout.cshtml",
-              "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
-              "ViewState": "AgIAAAwBAAAAAAAAAAAswF4BAAAHAAAAAAAAAA==",
+              "DocumentIndex": 10,
+              "Title": "Form.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Proveedores\\Form.cshtml",
+              "RelativeDocumentMoniker": "Views\\Proveedores\\Form.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Proveedores\\Form.cshtml",
+              "RelativeToolTip": "Views\\Proveedores\\Form.cshtml",
+              "ViewState": "AgIAABcAAAAAAAAAAAAmwC4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-17T02:01:46.196Z"
+              "WhenOpened": "2025-05-19T15:54:23.727Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "productos-controller.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\productos-controller.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\productos-controller.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\productos-controller.js",
-              "RelativeToolTip": "wwwroot\\js\\productos-controller.js",
-              "ViewState": "AgIAALABAAAAAAAAAAAqwNcBAAATAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-17T02:04:14.734Z"
+              "DocumentIndex": 13,
+              "Title": "_ProveedoresForm.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Proveedores\\_ProveedoresForm.cshtml",
+              "RelativeDocumentMoniker": "Views\\Proveedores\\_ProveedoresForm.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Proveedores\\_ProveedoresForm.cshtml",
+              "RelativeToolTip": "Views\\Proveedores\\_ProveedoresForm.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-19T15:54:30.876Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "_ProveedoresTable.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Proveedores\\_ProveedoresTable.cshtml",
+              "RelativeDocumentMoniker": "Views\\Proveedores\\_ProveedoresTable.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Proveedores\\_ProveedoresTable.cshtml",
+              "RelativeToolTip": "Views\\Proveedores\\_ProveedoresTable.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-19T15:54:28.746Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "Compras.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Proveedores\\Compras.cshtml",
+              "RelativeDocumentMoniker": "Views\\Proveedores\\Compras.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Proveedores\\Compras.cshtml",
+              "RelativeToolTip": "Views\\Proveedores\\Compras.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-19T15:54:27.865Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Delete.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Proveedores\\Delete.cshtml",
+              "RelativeDocumentMoniker": "Views\\Proveedores\\Delete.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Proveedores\\Delete.cshtml",
+              "RelativeToolTip": "Views\\Proveedores\\Delete.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-19T15:54:27.078Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Proveedores\\Details.cshtml",
+              "RelativeDocumentMoniker": "Views\\Proveedores\\Details.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Proveedores\\Details.cshtml",
+              "RelativeToolTip": "Views\\Proveedores\\Details.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-19T15:54:26.013Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "DetallesCompra.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Proveedores\\DetallesCompra.cshtml",
+              "RelativeDocumentMoniker": "Views\\Proveedores\\DetallesCompra.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Proveedores\\DetallesCompra.cshtml",
+              "RelativeToolTip": "Views\\Proveedores\\DetallesCompra.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-19T15:54:25.222Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "EliminarCompra.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Proveedores\\EliminarCompra.cshtml",
+              "RelativeDocumentMoniker": "Views\\Proveedores\\EliminarCompra.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Proveedores\\EliminarCompra.cshtml",
+              "RelativeToolTip": "Views\\Proveedores\\EliminarCompra.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-19T15:54:24.515Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Proveedores\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Proveedores\\Index.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Proveedores\\Index.cshtml",
+              "RelativeToolTip": "Views\\Proveedores\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-19T15:54:22.233Z"
             }
           ]
         }

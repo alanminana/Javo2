@@ -18,17 +18,20 @@ namespace Javo2.Services.Common
         private readonly IProductoService _productoService;
         private readonly ICatalogoService _catalogoService;
         private readonly IProvinciaService _provinciaService;
+        private readonly IProveedorService _proveedorService;
         private readonly ILogger<DropdownService> _logger;
 
         public DropdownService(
             IProductoService productoService,
             ICatalogoService catalogoService,
             IProvinciaService provinciaService,
+            IProveedorService proveedorService,
             ILogger<DropdownService> logger)
         {
             _productoService = productoService;
             _catalogoService = catalogoService;
             _provinciaService = provinciaService;
+            _proveedorService = proveedorService;
             _logger = logger;
         }
 
@@ -140,6 +143,96 @@ namespace Javo2.Services.Common
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener productos");
+                return new List<SelectListItem>();
+            }
+        }
+
+        // Nuevos métodos para gestión de Proveedores y Compras
+        public Task<List<SelectListItem>> GetFormasPagoAsync()
+        {
+            var formasPago = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "1", Text = "Contado" },
+                new SelectListItem { Value = "2", Text = "Tarjeta de Crédito" },
+                new SelectListItem { Value = "3", Text = "Tarjeta de Débito" },
+                new SelectListItem { Value = "4", Text = "Transferencia" },
+                new SelectListItem { Value = "5", Text = "Pago Virtual" },
+                new SelectListItem { Value = "6", Text = "Crédito Personal" },
+                new SelectListItem { Value = "7", Text = "Cheque" }
+            };
+
+            return Task.FromResult(formasPago);
+        }
+
+        public Task<List<SelectListItem>> GetBancosAsync()
+        {
+            var bancos = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "1", Text = "Banco Nación" },
+                new SelectListItem { Value = "2", Text = "Banco Provincia" },
+                new SelectListItem { Value = "3", Text = "Banco Santander" },
+                new SelectListItem { Value = "4", Text = "Banco Galicia" },
+                new SelectListItem { Value = "5", Text = "BBVA" },
+                new SelectListItem { Value = "6", Text = "HSBC" }
+            };
+
+            return Task.FromResult(bancos);
+        }
+
+        public Task<List<SelectListItem>> GetTiposTarjetaAsync()
+        {
+            var tiposTarjeta = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "Visa", Text = "Visa" },
+                new SelectListItem { Value = "MasterCard", Text = "MasterCard" },
+                new SelectListItem { Value = "American Express", Text = "American Express" },
+                new SelectListItem { Value = "Naranja", Text = "Naranja" }
+            };
+
+            return Task.FromResult(tiposTarjeta);
+        }
+
+        public Task<List<SelectListItem>> GetCuotasAsync()
+        {
+            var cuotas = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "1", Text = "1 cuota" },
+                new SelectListItem { Value = "3", Text = "3 cuotas" },
+                new SelectListItem { Value = "6", Text = "6 cuotas" },
+                new SelectListItem { Value = "12", Text = "12 cuotas" }
+            };
+
+            return Task.FromResult(cuotas);
+        }
+
+        public Task<List<SelectListItem>> GetEntidadesElectronicasAsync()
+        {
+            var entidades = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "MercadoPago", Text = "MercadoPago" },
+                new SelectListItem { Value = "Todo Pago", Text = "Todo Pago" },
+                new SelectListItem { Value = "PayPal", Text = "PayPal" }
+            };
+
+            return Task.FromResult(entidades);
+        }
+
+        public async Task<List<SelectListItem>> GetProveedoresAsync()
+        {
+            try
+            {
+                var proveedores = await _proveedorService.GetProveedoresAsync();
+                var result = proveedores.Select(p => new SelectListItem
+                {
+                    Value = p.ProveedorID.ToString(),
+                    Text = p.Nombre
+                }).ToList();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener lista de proveedores");
                 return new List<SelectListItem>();
             }
         }

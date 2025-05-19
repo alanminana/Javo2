@@ -278,7 +278,6 @@ namespace Javo2.Controllers
                 return View("Error");
             }
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Permission:proveedores.crear")]
@@ -286,31 +285,11 @@ namespace Javo2.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    LogModelStateErrors();
-                    await CargarOpcionesParaCompraAsync(model);
+                var (isValid, compra) = await PrepararCompraAsync(model);
+                if (!isValid)
                     return View("FormCompra", model);
-                }
 
-                // Validar que haya productos
-                if (model.ProductosCompra == null || !model.ProductosCompra.Any())
-                {
-                    ModelState.AddModelError("", "Debe agregar al menos un producto a la compra");
-                    await CargarOpcionesParaCompraAsync(model);
-                    return View("FormCompra", model);
-                }
-
-                // Convertir ViewModel a modelo
-                var compra = _mapper.Map<CompraProveedor>(model);
-                compra.TotalProductos = compra.ProductosCompra.Sum(p => p.Cantidad);
-                compra.PrecioTotal = compra.ProductosCompra.Sum(p => p.PrecioTotal);
-                compra.Usuario = User.Identity?.Name ?? "Desconocido";
-                compra.Estado = Enum.Parse<EstadoCompra>(model.Estado);
-
-                // Crear compra
                 await _proveedorService.CreateCompraAsync(compra);
-
                 TempData["Success"] = "Compra creada exitosamente.";
                 return RedirectToAction(nameof(Compras));
             }
@@ -548,67 +527,40 @@ namespace Javo2.Controllers
                 return Json(new { success = false, message = "Error al buscar el producto." });
             }
         }
-
-        #endregion
         [HttpPost]
-        [Authorize(Policy = "Permission:proveedores.editar")]
-        public async Task<IActionResult> SearchProductsForPurchase(string term)
+        [Authorize(Policy = "Permission:proveedores.ver")]
+        public async Task<IActionResult> SearchProducts(string term, bool forPurchase = false)
         {
             try
             {
                 if (string.IsNullOrEmpty(term) || term.Length < 2)
                     return Json(new List<object>());
 
-                // Buscar productos que coincidan con el término
                 var productos = await _productoService.GetAllProductosAsync();
-                var filteredProducts = productos
-                    .Where(p =>
-                        p.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase) ||
-                        p.CodigoAlfa.Contains(term, StringComparison.OrdinalIgnoreCase) ||
-                        p.CodigoBarra.Contains(term, StringComparison.OrdinalIgnoreCase) ||
-                        (p.Marca != null && p.Marca.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase)))
-                    .Take(20)
-                    .Select(p => new
-                    {
+                var query = productos.Where(p =>
+                    p.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                    p.CodigoAlfa.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                    p.CodigoBarra.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                    (p.Marca != null && p.Marca.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase)));
+
+                if (forPurchase)
+                {
+                    return Json(query.Take(20).Select(p => new {
                         id = p.ProductoID,
                         name = p.Nombre,
                         codigo = p.CodigoAlfa,
                         marca = p.Marca?.Nombre ?? "Sin marca",
                         precio = p.PCosto
-                    });
-
-                return Json(filteredProducts);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al buscar productos para compra");
-                return Json(new List<object>());
-            }
-        }
-        #region Métodos de ayuda
-
-        // Cambiar de [HttpPost] a [HttpGet]
-        [HttpGet]
-        public async Task<IActionResult> SearchProducts(string term)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(term) || term.Length < 2)
-                    return Json(new List<object>());
-
-                var productos = await _productoService.GetAllProductosAsync();
-                var filteredProducts = productos
-                    .Where(p => p.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase) ||
-                                p.CodigoAlfa.Contains(term, StringComparison.OrdinalIgnoreCase) ||
-                                p.CodigoBarra.Contains(term, StringComparison.OrdinalIgnoreCase))
-                    .Take(10)
-                    .Select(p => new
-                    {
+                    }));
+                }
+                else
+                {
+                    return Json(query.Take(10).Select(p => new {
                         label = p.Nombre,
-                        value = p.ProductoID
-                    });
-
-                return Json(filteredProducts);
+                        value = p.ProductoID,
+                        marca = p.Marca?.Nombre ?? "Sin marca"
+                    }));
+                }
             }
             catch (Exception ex)
             {
@@ -616,6 +568,33 @@ namespace Javo2.Controllers
                 return Json(new List<object>());
             }
         }
+
+        // Método común para validar y preparar compras
+        private async Task<(bool isValid, CompraProveedor compra)> PrepararCompraAsync(CompraProveedorViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                LogModelStateErrors();
+                await CargarOpcionesParaCompraAsync(model);
+                return (false, null);
+            }
+
+            if (model.ProductosCompra == null || !model.ProductosCompra.Any())
+            {
+                ModelState.AddModelError("", "Debe agregar al menos un producto a la compra");
+                await CargarOpcionesParaCompraAsync(model);
+                return (false, null);
+            }
+
+            var compra = _mapper.Map<CompraProveedor>(model);
+            compra.TotalProductos = compra.ProductosCompra.Sum(p => p.Cantidad);
+            compra.PrecioTotal = compra.ProductosCompra.Sum(p => p.PrecioTotal);
+            compra.Usuario = User.Identity?.Name ?? "Desconocido";
+            compra.Estado = Enum.Parse<EstadoCompra>(model.Estado);
+
+            return (true, compra);
+        }
+
 
         // Método auxiliar para cargar opciones de compra
         private async Task CargarOpcionesParaCompraAsync(CompraProveedorViewModel model)

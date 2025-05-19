@@ -1,4 +1,5 @@
-﻿// Services/ProveedorService.cs
+﻿// Archivo: Services/ProveedorService.cs
+using Javo2.Helpers;
 using Javo2.IServices;
 using Javo2.Models;
 using Microsoft.Extensions.Logging;
@@ -6,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Javo2.Helpers;
 
 namespace Javo2.Services
 {
@@ -212,6 +212,8 @@ namespace Javo2.Services
         {
             try
             {
+                ValidarCompra(compra);
+
                 lock (_lock)
                 {
                     compra.CompraID = _nextCompraID++;
@@ -245,6 +247,8 @@ namespace Javo2.Services
         {
             try
             {
+                ValidarCompra(compra);
+
                 EstadoCompra estadoAnterior;
                 lock (_lock)
                 {
@@ -414,6 +418,34 @@ namespace Javo2.Services
             {
                 _logger.LogError(ex, "Error al cancelar compra");
                 throw;
+            }
+        }
+
+        // Método de validación para compras
+        private void ValidarCompra(CompraProveedor compra)
+        {
+            if (compra == null)
+                throw new ArgumentNullException(nameof(compra), "La compra no puede ser nula");
+
+            if (string.IsNullOrWhiteSpace(compra.NumeroFactura))
+                throw new ArgumentException("El número de factura es obligatorio");
+
+            if (compra.ProveedorID <= 0)
+                throw new ArgumentException("Debe especificar un proveedor válido");
+
+            if (compra.ProductosCompra == null || !compra.ProductosCompra.Any())
+                throw new ArgumentException("La compra debe tener al menos un producto");
+
+            foreach (var detalle in compra.ProductosCompra)
+            {
+                if (detalle.ProductoID <= 0)
+                    throw new ArgumentException($"Producto inválido en detalle: {detalle.ProductoID}");
+
+                if (detalle.Cantidad <= 0)
+                    throw new ArgumentException($"La cantidad debe ser mayor a cero para el producto {detalle.ProductoID}");
+
+                if (detalle.PrecioUnitario <= 0)
+                    throw new ArgumentException($"El precio unitario debe ser mayor a cero para el producto {detalle.ProductoID}");
             }
         }
 
