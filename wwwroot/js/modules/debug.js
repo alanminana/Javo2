@@ -2,12 +2,16 @@
 (function (window, $) {
     'use strict';
 
-    // Asegurar que App.config.debug sea siempre función antes de que core-bundle lo invoque
+    // Asegurar que App.debug sea siempre función antes de que core-bundle lo invoque
     window.App = window.App || {};
     window.App.config = window.App.config || {};
-    if (typeof window.App.config.debug !== 'function') {
-        window.App.config.debug = function (message, data) {
-            // Stub: no hace nada hasta inicializar el verdadero debug
+
+    // Asignar una función debug temporal al namespace App
+    if (typeof window.App.debug !== 'function') {
+        window.App.debug = function (message, data) {
+            if (window.App.config && window.App.config.debug) {
+                console.log('[DEBUG] ' + message, data || '');
+            }
         };
     }
 
@@ -32,8 +36,10 @@
             }
 
             // Refuerza que App.config.debug use nuestro logger interno
-            App.config.debug = function (message, data) {
-                App.debug.log(message, data);
+            App.debug = function (message, data) {
+                if (App.config && App.config.debug) {
+                    console.log('[DEBUG] ' + message, data || '');
+                }
             };
         },
 

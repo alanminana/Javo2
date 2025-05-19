@@ -31,6 +31,13 @@
                 console.log('Inicializando App...');
             }
 
+            // Garantizar que debug es una función
+            this.debug = function (message, data) {
+                if (this.config.debug) {
+                    console.log(message, data || '');
+                }
+            };
+
             // Inicializar submódulos
             this.initComponents();
 

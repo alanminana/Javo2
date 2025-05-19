@@ -245,11 +245,18 @@
             &copy; @DateTime.Now.Year - Javo2 - <a asp-controller="Home" asp-action="Privacy" class="text-white text-decoration-none">Privacidad</a>
         </div>
     </footer>
-
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" crossorigin="anonymous"></script>
+
+    <script>
+        // Añadir antes de cargar core-bundle.min.js
+        window.App = window.App || {};
+        window.App.debug = function(message, data) {
+            console.log(message, data || '');
+        };
+    </script>
+
 
 
     <!-- Core Framework -->
