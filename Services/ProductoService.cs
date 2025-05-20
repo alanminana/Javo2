@@ -20,10 +20,11 @@ namespace Javo2.Services
         private readonly IPromocionesService _promocionesService;
         private readonly string _jsonFilePath = "Data/productos.json";
 
-        private static List<Producto> _productos = new();
-        private static int _nextProductoID = 1;
+        private List<Producto> _productos = new();
+        private int _nextProductoID = 1;
         private static readonly object _lock = new();
         private readonly string _serviceId;
+        public string ServiceId => _serviceId;
 
         public ProductoService(
             ILogger<ProductoService> logger,
