@@ -3,10 +3,11 @@ using AutoMapper;
 using Javo2.Models;
 using Javo2.ViewModels.Operaciones.Catalogo;
 using Javo2.ViewModels.Operaciones.Clientes;
+using Javo2.ViewModels.Operaciones.DevolucionGarantia;
 using Javo2.ViewModels.Operaciones.Productos;
+using Javo2.ViewModels.Operaciones.Promociones;
 using Javo2.ViewModels.Operaciones.Proveedores;
 using Javo2.ViewModels.Operaciones.Stock;
-using Javo2.ViewModels.Operaciones.Promociones;
 using Javo2.ViewModels.Operaciones.Ventas;
 using System;
 
@@ -67,7 +68,9 @@ namespace Javo2
                 .ForMember(dest => dest.CuotasPagas, opt => opt.MapFrom(src => new List<Cuota>()))
                 .ForMember(dest => dest.EstadosEntregaProductos, opt => opt.MapFrom(src => new List<EstadoEntregaProducto>()))
                 .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => EstadoVenta.Borrador));
-
+            CreateMap<DevolucionGarantia, DevolucionGarantiaListViewModel>()
+    .ForMember(dest => dest.CantidadProductos, opt => opt.MapFrom(src => src.Items.Sum(i => i.Cantidad)))
+    .ReverseMap();
 
             // COTIZACION ↔ VentaFormViewModel mapping
             CreateMap<Cotizacion, VentaFormViewModel>()

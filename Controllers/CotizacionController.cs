@@ -206,10 +206,9 @@ namespace Javo2.Controllers
         {
             try
             {
-                // Try by specific code first
+                // Igual lógica que en VentasController
                 var producto = await _productoService.GetProductoByCodigoAsync(codigoProducto);
 
-                // If not found, try by name or general term
                 if (producto == null)
                 {
                     var productos = await _productoService.GetProductosByTermAsync(codigoProducto);
@@ -225,8 +224,8 @@ namespace Javo2.Controllers
                     data = new
                     {
                         productoID = producto.ProductoID,
-                        codigoBarra = producto.CodigoBarra,
                         codigoAlfa = producto.CodigoAlfa,
+                        codigoBarra = producto.CodigoBarra,
                         nombreProducto = producto.Nombre,
                         marca = producto.Marca?.Nombre ?? "",
                         precioUnitario = producto.PContado,

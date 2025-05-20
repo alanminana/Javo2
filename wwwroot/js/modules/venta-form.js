@@ -44,14 +44,14 @@
 
             // Buscar producto
             $('#buscarProducto').on('click', function () {
-                const codigo = $('#productoCodigo').val();
-                if (!codigo) {
-                    App.notify.warning('Ingrese un código para buscar');
+                const termino = $('#productoCodigo').val();
+                if (!termino) {
+                    App.notify.warning('Ingrese un código o nombre para buscar');
                     return;
                 }
 
-                App.ajax.post('/Ventas/BuscarProducto', { codigoProducto: codigo }, function (response) {
-                    if (response.success) {
+                App.ajax.post('/Ventas/BuscarProducto', { codigoProducto: termino }, function (response) {
+          if (response.success) {
                         // Guardar datos del producto
                         self.productoActual = {
                             id: response.data.productoID,

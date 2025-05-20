@@ -42,21 +42,20 @@
         setupProductSearch: function () {
             const self = this;
 
-            // Búsqueda de producto por código
             document.getElementById('buscarProducto').addEventListener('click', function () {
-                const codigo = $('#productoCodigo').val();
-                if (!codigo) {
-                    App.notify.warning('Ingrese un código para buscar');
-                    return;
-                }
+            const termino = $('#productoCodigo').val();
+            if (!termino) {
+                App.notify.warning('Ingrese un código o nombre para buscar');
+                return;
+            }
 
-                $.ajax({
-                    url: '/Cotizaciones/BuscarProducto',
-                    type: 'POST',
-                    data: { codigoProducto: codigo },
-                    headers: {
-                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
-                    },
+            $.ajax({
+                url: '/Cotizaciones/BuscarProducto',
+                type: 'POST',
+                data: { codigoProducto: termino },
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                },
                     success: function (response) {
                         if (response.success) {
                             // Guardar datos del producto

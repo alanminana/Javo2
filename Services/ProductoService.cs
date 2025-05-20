@@ -391,8 +391,10 @@ namespace Javo2.Services
             lock (_lock)
             {
                 var producto = _productos.FirstOrDefault(p =>
-                    (p.CodigoBarra != null && p.CodigoBarra == codigo) ||
-                    (p.CodigoAlfa != null && p.CodigoAlfa == codigo));
+                    (p.CodigoBarra != null && p.CodigoBarra.Equals(codigo, StringComparison.OrdinalIgnoreCase)) ||
+                    (p.CodigoAlfa != null && p.CodigoAlfa.Equals(codigo, StringComparison.OrdinalIgnoreCase)) ||
+                    (p.Nombre != null && p.Nombre.Contains(codigo, StringComparison.OrdinalIgnoreCase)));
+
                 return Task.FromResult(producto);
             }
         }

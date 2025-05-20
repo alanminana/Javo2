@@ -13,22 +13,31 @@
     <!-- Pestañas de navegación -->
     <ul class="nav nav-tabs mb-4" id="ventasTabs" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="ventas-tab" data-bs-toggle="tab" data-bs-target="#ventas"
-                    type="button" role="tab" aria-controls="ventas" aria-selected="true">
+            <button class="nav-link @(ViewBag.ActiveTab == "ventas" ? "active" : "")" id="ventas-tab"
+                    data-bs-toggle="tab" data-bs-target="#ventas" type="button" role="tab"
+                    aria-controls="ventas" aria-selected="@(ViewBag.ActiveTab == "ventas")">
                 <i class="bi bi-cart-fill me-1"></i>Ventas
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="cotizaciones-tab" data-bs-toggle="tab" data-bs-target="#cotizaciones"
-                    type="button" role="tab" aria-controls="cotizaciones" aria-selected="false">
+            <button class="nav-link @(ViewBag.ActiveTab == "cotizaciones" ? "active" : "")" id="cotizaciones-tab"
+                    data-bs-toggle="tab" data-bs-target="#cotizaciones" type="button" role="tab"
+                    aria-controls="cotizaciones" aria-selected="@(ViewBag.ActiveTab == "cotizaciones")">
                 <i class="bi bi-receipt me-1"></i>Cotizaciones
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(ViewBag.ActiveTab == "devoluciones" ? "active" : "")" id="devoluciones-tab"
+                    data-bs-toggle="tab" data-bs-target="#devoluciones" type="button" role="tab"
+                    aria-controls="devoluciones" aria-selected="@(ViewBag.ActiveTab == "devoluciones")">
+                <i class="bi bi-arrow-counterclockwise me-1"></i>Devoluciones
             </button>
         </li>
     </ul>
 
     <div class="tab-content">
         <!-- Tab Ventas -->
-        <div class="tab-pane fade show active" id="ventas" role="tabpanel" aria-labelledby="ventas-tab">
+        <div class="tab-pane fade @(ViewBag.ActiveTab == "ventas" ? "show active" : "")" id="ventas" role="tabpanel" aria-labelledby="ventas-tab">
             <!-- Resumen de Ventas -->
             <div class="summary-cards mb-4" role="region" aria-label="Resumen de Ventas">
                 <div class="summary-card">
@@ -159,7 +168,7 @@
         </div>
 
         <!-- Tab Cotizaciones -->
-        <div class="tab-pane fade" id="cotizaciones" role="tabpanel" aria-labelledby="cotizaciones-tab">
+        <div class="tab-pane fade @(ViewBag.ActiveTab == "cotizaciones" ? "show active" : "")" id="cotizaciones" role="tabpanel" aria-labelledby="cotizaciones-tab">
             <!-- Resumen de Cotizaciones -->
             <div class="summary-cards mb-4">
                 <div class="summary-card">
@@ -278,6 +287,135 @@
                 </div>
             </div>
         </div>
+
+        <!-- Tab Devoluciones -->
+        <div class="tab-pane fade @(ViewBag.ActiveTab == "devoluciones" ? "show active" : "")" id="devoluciones" role="tabpanel" aria-labelledby="devoluciones-tab">
+            <!-- Resumen de Devoluciones -->
+            <div class="summary-cards mb-4" role="region" aria-label="Resumen de Devoluciones">
+                <div class="summary-card">
+                    <h5>Total Casos</h5>
+                    <p class="display-6">@Model.Devoluciones.Count()</p>
+                </div>
+                <div class="summary-card">
+                    <h5>Pendientes</h5>
+                    <p class="display-6">@Model.Devoluciones.Count(d => d.Estado == Javo2.Models.EstadoCaso.Pendiente)</p>
+                </div>
+                <div class="summary-card">
+                    <h5>En Proceso</h5>
+                    <p class="display-6">@Model.Devoluciones.Count(d => d.Estado == Javo2.Models.EstadoCaso.EnProceso)</p>
+                </div>
+                <div class="summary-card">
+                    <h5>Completados</h5>
+                    <p class="display-6">@Model.Devoluciones.Count(d => d.Estado == Javo2.Models.EstadoCaso.Completado)</p>
+                </div>
+            </div>
+
+            <!-- Tabla de devoluciones -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-light d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Listado de Devoluciones y Garantías</h5>
+                    <a asp-controller="DevolucionGarantia" asp-action="Create" class="btn btn-success btn-sm">
+                        <i class="bi bi-plus-circle me-1"></i> Registrar Nuevo Caso
+                    </a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover table-striped align-middle mb-0">
+                            <thead class="bg-secondary text-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tipo</th>
+                                    <th>Cliente</th>
+                                    <th>Factura</th>
+                                    <th>Fecha</th>
+                                    <th>Estado</th>
+                                    <th>Productos</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Devoluciones.Any())
+                                {
+                                    @foreach (var item in Model.Devoluciones)
+                                    {
+                                        <tr>
+                                            <td>@item.DevolucionGarantiaID</td>
+                                            <td>
+                                                @switch (item.TipoCaso)
+                                                {
+                                                    case Javo2.Models.TipoCaso.Devolucion:
+                                                        <span class="badge bg-info">Devolución</span>
+                                                        break;
+                                                    case Javo2.Models.TipoCaso.Cambio:
+                                                        <span class="badge bg-primary">Cambio</span>
+                                                        break;
+                                                    case Javo2.Models.TipoCaso.Garantia:
+                                                        <span class="badge bg-warning text-dark">Garantía</span>
+                                                        break;
+                                                    case Javo2.Models.TipoCaso.Reparacion:
+                                                        <span class="badge bg-secondary">Reparación</span>
+                                                        break;
+                                                }
+                                            </td>
+                                            <td>@item.NombreCliente</td>
+                                            <td>@item.NumeroFactura</td>
+                                            <td>@item.FechaSolicitud.ToString("dd/MM/yyyy")</td>
+                                            <td>
+                                                @switch (item.Estado)
+                                                {
+                                                    case Javo2.Models.EstadoCaso.Pendiente:
+                                                        <span class="badge bg-warning text-dark">Pendiente</span>
+                                                        break;
+                                                    case Javo2.Models.EstadoCaso.EnProceso:
+                                                        <span class="badge bg-primary">En Proceso</span>
+                                                        break;
+                                                    case Javo2.Models.EstadoCaso.Completado:
+                                                        <span class="badge bg-success">Completado</span>
+                                                        break;
+                                                    case Javo2.Models.EstadoCaso.Rechazado:
+                                                        <span class="badge bg-danger">Rechazado</span>
+                                                        break;
+                                                }
+                                            </td>
+                                            <td>@item.CantidadProductos</td>
+                                            <td class="text-center">
+                                                <div class="btn-group" role="group">
+                                                    <a asp-controller="DevolucionGarantia" asp-action="Details" asp-route-id="@item.DevolucionGarantiaID"
+                                                       class="btn btn-sm btn-outline-info" title="Ver detalles">
+                                                        <i class="bi bi-eye"></i>
+                                                    </a>
+                                                    @if (item.Estado == Javo2.Models.EstadoCaso.Pendiente)
+                                                    {
+                                                        <a asp-controller="DevolucionGarantia" asp-action="Edit" asp-route-id="@item.DevolucionGarantiaID"
+                                                           class="btn btn-sm btn-outline-warning" title="Editar">
+                                                            <i class="bi bi-pencil-square"></i>
+                                                        </a>
+                                                    }
+                                                    @if (item.Estado == Javo2.Models.EstadoCaso.EnProceso &&
+                                                                                                item.TipoCaso == Javo2.Models.TipoCaso.Garantia)
+                                                    {
+                                                        <a asp-controller="DevolucionGarantia" asp-action="CompletarGarantia" asp-route-id="@item.DevolucionGarantiaID"
+                                                           class="btn btn-sm btn-outline-success" title="Completar Garantía">
+                                                            <i class="bi bi-check-circle"></i>
+                                                        </a>
+                                                    }
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="8" class="text-center">No hay registros para mostrar</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -292,13 +430,17 @@
             // Activar la pestaña correspondiente
             if (activeTab === 'cotizaciones') {
                 $('#cotizaciones-tab').tab('show');
+            } else if (activeTab === 'devoluciones') {
+                $('#devoluciones-tab').tab('show');
             }
 
             // Guardar la pestaña activa cuando cambia
-            $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+            $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
                 const tabId = $(e.target).attr('id');
                 if (tabId === 'cotizaciones-tab') {
                     history.replaceState(null, null, '?activeTab=cotizaciones');
+                } else if (tabId === 'devoluciones-tab') {
+                    history.replaceState(null, null, '?activeTab=devoluciones');
                 } else {
                     history.replaceState(null, null, '?activeTab=ventas');
                 }
@@ -307,4 +449,5 @@
     </script>
     <script src="~/js/ventas-controller.js" defer></script>
     <script src="~/js/modules/cotizacion-form.js" defer></script>
+    <script src="~/js/modules/devolucion-form.js" defer></script>
 }

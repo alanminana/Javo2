@@ -4,6 +4,7 @@ using Javo2.Controllers.Base;
 using Javo2.Helpers;
 using Javo2.IServices;
 using Javo2.Models;
+using Javo2.ViewModels.Operaciones.DevolucionGarantia;
 using Javo2.ViewModels.Operaciones.Ventas;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,7 @@ namespace Javo2.Controllers
         private readonly IClienteService _clienteService;
         private readonly IProductoService _productoService;
         private readonly IAuditoriaService _auditoriaService;
+        private readonly IDevolucionGarantiaService _devolucionService;
 
         public VentasController(
             IVentaService ventaService,
@@ -33,7 +35,8 @@ namespace Javo2.Controllers
             ILogger<VentasController> logger,
             IClienteService clienteService,
             IProductoService productoService,
-            IAuditoriaService auditoriaService
+            IAuditoriaService auditoriaService,
+            IDevolucionGarantiaService devolucionService
         ) : base(logger)
         {
             _ventaService = ventaService;
@@ -42,18 +45,15 @@ namespace Javo2.Controllers
             _clienteService = clienteService;
             _productoService = productoService;
             _auditoriaService = auditoriaService;
+            _devolucionService = devolucionService; // Inicializar el servicio
+
         }
 
         // GET: Ventas/Index
-        // GET: Ventas/Index
-        [HttpGet]
-        [Authorize(Policy = "Permission:ventas.ver")]
         public async Task<IActionResult> Index(VentaFilterDto filter, string activeTab = "ventas")
         {
             try
             {
-                _logger.LogInformation("Index GET => Filtro: {@Filter}, Tab: {activeTab}", filter, activeTab);
-
                 var viewModel = new VentasIndexViewModel();
 
                 // Cargar ventas
@@ -64,11 +64,10 @@ namespace Javo2.Controllers
                 var cotizaciones = await _cotizacionService.GetAllCotizacionesAsync();
                 viewModel.Cotizaciones = _mapper.Map<IEnumerable<CotizacionListViewModel>>(cotizaciones);
 
-                // Guardar filtros en ViewBag
-                ViewBag.FechaInicio = filter.FechaInicio;
-                ViewBag.FechaFin = filter.FechaFin;
-                ViewBag.NombreCliente = filter.NombreCliente;
-                ViewBag.NumeroFactura = filter.NumeroFactura;
+                // Cargar devoluciones
+                var devoluciones = await _devolucionService.GetAllAsync(); // Añadir esta línea
+                viewModel.Devoluciones = _mapper.Map<IEnumerable<DevolucionGarantiaListViewModel>>(devoluciones); // Añadir esta línea
+
                 ViewBag.ActiveTab = activeTab;
 
                 return View(viewModel);
@@ -618,8 +617,16 @@ namespace Javo2.Controllers
         {
             try
             {
-                _logger.LogInformation("BuscarProducto => Código={Codigo}", codigoProducto);
+                _logger.LogInformation("BuscarProducto => Código/Nombre={Codigo}", codigoProducto);
                 var producto = await _productoService.GetProductoByCodigoAsync(codigoProducto);
+
+                // Si no se encontró por código, buscar por nombre
+                if (producto == null)
+                {
+                    var productos = await _productoService.GetProductosByTermAsync(codigoProducto);
+                    producto = productos.FirstOrDefault();
+                }
+
                 if (producto == null)
                     return Json(new { success = false, message = "Producto no encontrado." });
 
