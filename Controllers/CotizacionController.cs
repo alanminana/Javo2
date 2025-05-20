@@ -201,41 +201,40 @@ namespace Javo2.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "Permission:ventas.ver")]
         public async Task<IActionResult> BuscarProducto(string codigoProducto)
         {
+            if (string.IsNullOrEmpty(codigoProducto))
+            {
+                return Json(new { success = false, message = "Código vacío" });
+            }
+
             try
             {
-                // Igual lógica que en VentasController
                 var producto = await _productoService.GetProductoByCodigoAsync(codigoProducto);
 
-                if (producto == null)
+                if (producto != null)
                 {
-                    var productos = await _productoService.GetProductosByTermAsync(codigoProducto);
-                    producto = productos.FirstOrDefault();
+                    return Json(new
+                    {
+                        success = true,
+                        data = new
+                        {
+                            productoID = producto.ProductoID,
+                            codigoAlfa = producto.CodigoAlfa,
+                            codigoBarra = producto.CodigoBarra,
+                            nombreProducto = producto.Nombre,
+                            marca = producto.Marca?.Nombre,
+                            precioUnitario = producto.PContado,
+                            precioLista = producto.PLista
+                        }
+                    });
                 }
 
-                if (producto == null)
-                    return Json(new { success = false, message = "Producto no encontrado" });
-
-                return Json(new
-                {
-                    success = true,
-                    data = new
-                    {
-                        productoID = producto.ProductoID,
-                        codigoAlfa = producto.CodigoAlfa,
-                        codigoBarra = producto.CodigoBarra,
-                        nombreProducto = producto.Nombre,
-                        marca = producto.Marca?.Nombre ?? "",
-                        precioUnitario = producto.PContado,
-                        precioLista = producto.PLista
-                    }
-                });
+                return Json(new { success = false, message = "Producto no encontrado" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al buscar producto");
+                _logger.LogError(ex, "Error al buscar producto: {CodigoProducto}", codigoProducto);
                 return Json(new { success = false, message = "Error al buscar producto" });
             }
         }
