@@ -3,7 +3,7 @@ using System;
 
 namespace Javo2.Models
 {
-    public enum EstadoCuota
+    public enum EstadoCuotaMensual
     {
         Pendiente,
         Pagada,

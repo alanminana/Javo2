@@ -1,6 +1,8 @@
 ﻿// File: Models/Ventas.cs
+using DocumentFormat.OpenXml.Bibliography;
 using System;
 using System.Collections.Generic;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Javo2.Models
 {
@@ -115,7 +117,6 @@ namespace Javo2.Models
         public decimal ImporteCuota { get; set; }
         public DateTime? FechaPago { get; set; }
         public decimal ImportePagado { get; set; }
-        public EstadoCuota EstadoCuota { get; set; }
 
         public int ClienteID { get; set; }
         public int? GaranteID { get; set; }
@@ -130,13 +131,19 @@ namespace Javo2.Models
         public DateTime? FechaModificacion { get; set; }
         public string ModificadoPor { get; set; } = string.Empty;
         public string Comentarios { get; set; } = string.Empty;
-        public bool Pagada => EstadoCuota == EstadoCuota.Pagada || EstadoCuota == EstadoCuota.PagadaPorGarante;
+        public bool Pagada => EstadoCuota == EstadoCuota.Pagada;
+
+        public EstadoCuota EstadoCuota { get; set; }
+
     }
 
     public enum EstadoCuota
     {
         Pendiente,
         Pagada,
-        Vencida
+        Vencida,
+        EnMora,           // Añadido
+        AsignadaGarante,  // Añadido
+        PagadaPorGarante  // Añadido
     }
 }

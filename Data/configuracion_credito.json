@@ -1,0 +1,22 @@
+{
+  "ConfiguracionCreditoID": 0,
+  "Nombre": "Configuraci\u00F3n Inicial",
+  "Descripcion": null,
+  "Activo": true,
+  "PorcentajeRecargoBase": 10,
+  "RecargoScoreA": 5,
+  "RecargoScoreB": 10,
+  "RecargoScoreC": 15,
+  "RecargoScoreD": 20,
+  "PorcentajeMoraDiaria": 0.1,
+  "PorcentajeMoraMensual": 3,
+  "PlazoMaximoScoreA": 24,
+  "PlazoMaximoScoreB": 19,
+  "PlazoMaximoScoreC": 12,
+  "PlazoMaximoScoreD": 6,
+  "DiasGracia": 5,
+  "DiasTraspasarGarante": 30,
+  "FechaCreacion": "2025-05-20T13:00:13.5519571-03:00",
+  "FechaModificacion": "2025-05-20T13:00:13.5808567-03:00",
+  "ModificadoPor": "admin"
+}
