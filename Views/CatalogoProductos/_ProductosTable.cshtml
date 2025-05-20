@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Javo2.ViewModels.Operaciones.Productos.ProductosViewModel>
+@foreach (var producto in Model)
+{
+    <tr>
+        <td>
+            <div class="form-check">
+                <input type="checkbox" name="ProductoIDs" value="@producto.ProductoID" class="form-check-input" id="prod-@producto.ProductoID" />
+                <label class="form-check-label" for="prod-@producto.ProductoID"></label>
+            </div>
+        </td>
+        <td>@producto.Nombre</td>
+        <td>@producto.PCosto.ToString("C")</td>
+        <td>@producto.PContado.ToString("C")</td>
+        <td>@producto.PLista.ToString("C")</td>
+        <td>
+            <span class="badge @(producto.CantidadDisponible > 0 ? "bg-success" : "bg-danger")">
+                @producto.CantidadDisponible
+            </span>
+        </td>
+        <td class="text-center">
+            <div class="btn-group" role="group">
+                @Html.ActionButtons(producto.ProductoID, "Productos")
+                @if (User.HasPermission("productos.editar"))
+                {
+                    <a asp-action="AjusteStock" asp-controller="Productos" asp-route-id="@producto.ProductoID" class="btn btn-sm btn-outline-primary" title="Ajustar Stock">
+                        <i class="bi bi-gear"></i>
+                    </a>
+                    <a asp-action="MovimientosStock" asp-controller="Productos" asp-route-id="@producto.ProductoID" class="btn btn-sm btn-outline-success" title="Ver Movimientos de Stock">
+                        <i class="bi bi-list-ol"></i>
+                    </a>
+                }
+            </div>
+        </td>
+    </tr>
+}

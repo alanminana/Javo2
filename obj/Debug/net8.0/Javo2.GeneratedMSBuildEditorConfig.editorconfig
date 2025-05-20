@@ -80,6 +80,58 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxUb2tlbkludmFsaWRvLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/github/Javo2/Views/CatalogoProductos/CreateMarca.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcQ3JlYXRlTWFyY2EuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/CatalogoProductos/CreateRubro.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcQ3JlYXRlUnVicm8uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/CatalogoProductos/DeleteMarca.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcRGVsZXRlTWFyY2EuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/CatalogoProductos/DeleteRubro.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcRGVsZXRlUnVicm8uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/CatalogoProductos/EditMarca.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcRWRpdE1hcmNhLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/CatalogoProductos/EditRubro.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcRWRpdFJ1YnJvLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/CatalogoProductos/EditSubRubros.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcRWRpdFN1YlJ1YnJvcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/CatalogoProductos/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/CatalogoProductos/_MarcaForm.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcX01hcmNhRm9ybS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/CatalogoProductos/_MarcasTable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcX01hcmNhc1RhYmxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/CatalogoProductos/_ProductosTable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcX1Byb2R1Y3Rvc1RhYmxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/CatalogoProductos/_RubroForm.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcX1J1YnJvRm9ybS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/CatalogoProductos/_RubrosTable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcX1J1YnJvc1RhYmxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/github/Javo2/Views/Catalogo/CreateMarca.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29cQ3JlYXRlTWFyY2EuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 

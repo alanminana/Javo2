@@ -1,0 +1,46 @@
+﻿@model Javo2.ViewModels.Operaciones.Catalogo.MarcaViewModel
+@{
+    ViewBag.Title = "Agregar Marca";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="container-fluid py-3">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-light">
+                    <h2 class="h5 mb-0">@ViewBag.Title</h2>
+                </div>
+                <div class="card-body">
+                    <form asp-action="CreateMarca" method="post" novalidate>
+                        @Html.AntiForgeryToken()
+
+                        <!-- Nombre de Marca -->
+                        <div class="mb-4">
+                            <label asp-for="Nombre" class="form-label text-light"></label>
+                            <input asp-for="Nombre" class="form-control bg-secondary text-light" />
+                            <span asp-validation-for="Nombre" class="invalid-feedback d-block"></span>
+                        </div>
+
+                        <!-- Acciones del formulario -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-success me-2">
+                                <i class="bi bi-plus-circle me-1" aria-hidden="true"></i>
+                                <span>Agregar</span>
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>
+                                <span>Volver al Listado</span>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script src="~/js/modules/catalogo.js" asp-append-version="true"></script>
+}
