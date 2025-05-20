@@ -83,6 +83,10 @@ namespace Javo2.Models
         public decimal SaldoPendiente { get; set; }
         public bool CreditoCancelado { get; set; } = false;
         public DateTime? FechaCancelacion { get; set; }
+        public decimal TotalCapitalPagado { get; set; } = 0;
+        public decimal TotalInteresPagado { get; set; } = 0;
+        public decimal TotalPagado => TotalCapitalPagado + TotalInteresPagado;
+        public decimal PorcentajePagado => TotalSinRecargo > 0 ? (TotalCapitalPagado / TotalSinRecargo) * 100 : 0;
     }
 
     public class PromocionAplicada

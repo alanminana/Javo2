@@ -754,5 +754,17 @@
     "EsRevertido": false,
     "RollbackUser": "",
     "RollbackFecha": null
+  },
+  {
+    "ID": 64,
+    "FechaHora": "2025-05-20T13:00:13.6008775-03:00",
+    "Usuario": "admin",
+    "Entidad": "ConfiguracionCredito",
+    "Accion": "Update",
+    "LlavePrimaria": "0",
+    "Detalle": "Configuraci\u00F3n de cr\u00E9dito actualizada: Configuraci\u00F3n Inicial",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
   }
 ]

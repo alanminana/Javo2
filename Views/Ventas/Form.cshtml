@@ -313,6 +313,7 @@
                                     </div>
 
                                     <!-- Crédito Personal (FormaPagoID = 6) -->
+                                    <!-- Crédito Personal (FormaPagoID = 6) -->
                                     <div id="creditoPersonalContainer" class="payment-container d-none">
                                         <div class="row g-2">
                                             <div class="col-12">
@@ -331,6 +332,44 @@
                                                 </select>
                                                 <span asp-validation-for="Cuotas" class="invalid-feedback d-block"></span>
                                             </div>
+
+                                            <!-- Verificación de saldo disponible -->
+                                            @if (Model.LimiteCreditoCliente > 0)
+                                            {
+                                                <div class="col-12 mt-3">
+                                                    <div class="card bg-secondary">
+                                                        <div class="card-body">
+                                                            <h6>Información de Crédito</h6>
+                                                            <p>Límite de Crédito: @Model.LimiteCreditoCliente.ToString("C")</p>
+                                                            <p>Saldo Disponible: @Model.SaldoDisponibleCliente.ToString("C")</p>
+
+                                                            @if (Model.PrecioTotal > Model.SaldoDisponibleCliente)
+                                                            {
+                                                                <div class="alert alert-danger mb-0">
+                                                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                                                    El cliente no tiene saldo disponible suficiente para esta compra.
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="alert alert-success mb-0">
+                                                                    <i class="bi bi-check-circle-fill me-2"></i>
+                                                                    Saldo disponible suficiente para esta compra.
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="col-12 mt-3">
+                                                    <div class="alert alert-warning">
+                                                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                                        Este cliente no tiene configurado un límite de crédito.
+                                                    </div>
+                                                </div>
+                                            }
                                         </div>
                                     </div>
                                     <!-- Cheque (FormaPagoID = 7) -->

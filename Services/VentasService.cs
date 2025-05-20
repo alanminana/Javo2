@@ -676,7 +676,6 @@ namespace Javo2.Services
                 throw;
             }
         }
-        // Nuevo método para procesar venta a crédito
         public async Task<Venta> CrearVentaCreditoAsync(Venta venta, int numeroCuotas, DateTime primerVencimiento)
         {
             // Validar que el cliente pueda acceder a crédito
@@ -686,11 +685,29 @@ namespace Javo2.Services
                 throw new InvalidOperationException("El cliente no es apto para crédito");
             }
 
+            // Validar límite de crédito disponible
+            if (cliente.SaldoDisponible < venta.PrecioTotal)
+            {
+                throw new InvalidOperationException($"El cliente no tiene suficiente saldo disponible. Disponible: {cliente.SaldoDisponible:C}, Requerido: {venta.PrecioTotal:C}");
+            }
+
+            // Verificar si requiere garante
+            if (cliente.RequiereGarante && !cliente.GaranteID.HasValue)
+            {
+                throw new InvalidOperationException("El cliente requiere un garante para acceder a crédito");
+            }
+
             // Validar que el cliente califique para este crédito
             bool califica = await _creditoService.ClienteCalificaPorCreditoAsync(cliente.ClienteID, venta.PrecioTotal, numeroCuotas);
             if (!califica)
             {
                 throw new InvalidOperationException("El cliente no califica para este crédito");
+            }
+
+            // Verificar que sea Forma de Pago = Crédito Personal
+            if (venta.FormaPagoID != 6) // 6 = Crédito Personal
+            {
+                venta.FormaPagoID = 6; // Forzar como crédito personal
             }
 
             // Calcular recargo
@@ -708,6 +725,11 @@ namespace Javo2.Services
             venta.EsCredito = true;
             venta.EstadoCredito = "Activo";
             venta.SaldoPendiente = venta.PrecioTotal;
+
+            // Actualizar saldo disponible del cliente
+            cliente.DeudaTotal += venta.TotalSinRecargo; // Solo se descuenta el capital, no los intereses
+            cliente.SaldoDisponible = cliente.LimiteCreditoInicial - cliente.DeudaTotal;
+            await _clienteService.UpdateClienteAsync(cliente);
 
             // Guardar la venta primero
             await CreateVentaAsync(venta);
