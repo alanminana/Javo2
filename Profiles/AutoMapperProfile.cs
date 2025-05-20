@@ -131,9 +131,11 @@ namespace Javo2
 
             // VENTA ↔ VentaListViewModel
             CreateMap<Venta, VentaListViewModel>()
-                .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.Estado.ToString()))
-                .ForMember(dest => dest.EstadoEntrega, opt => opt.Ignore())
-                .ReverseMap();
+             .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.Estado.ToString()))
+             .ForMember(dest => dest.EstadoEntrega, opt => opt.Ignore())
+             .ForMember(dest => dest.EsCredito, opt => opt.MapFrom(src => src.EsCredito))
+             .ForMember(dest => dest.EstadoCredito, opt => opt.MapFrom(src => src.EstadoCredito))
+             .ReverseMap();
 
             // COTIZACION ↔ CotizacionViewModel
             CreateMap<Cotizacion, CotizacionViewModel>()

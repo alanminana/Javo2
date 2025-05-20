@@ -20,5 +20,8 @@ namespace Javo2.ViewModels.Operaciones.Ventas
         public string TelefonoCliente { get; set; } = string.Empty;
         public string LocalidadCliente { get; set; } = string.Empty;
         public string CelularCliente { get; set; } = string.Empty;
+        public bool EsCredito { get; set; } = false;
+        public string EstadoCredito { get; set; } = "Sin iniciar";
+
     }
 }

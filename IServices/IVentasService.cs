@@ -49,6 +49,8 @@ namespace Javo2.IServices
         IEnumerable<SelectListItem> GetPlanesFinanciamientoSelectList();
 
         // Alias
-   
+        // Añadir a IServices/IVentaService.cs
+        Task<Venta> CrearVentaCreditoAsync(Venta venta, int numeroCuotas, DateTime primerVencimiento);
+        Task<bool> ProcesarPagoCuotaAsync(int ventaId, int cuotaId, decimal monto, string formaPago, string referencia);
     }
 }

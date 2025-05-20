@@ -16,6 +16,8 @@ namespace Javo2.Services
         private readonly ILogger<VentaService> _logger;
         private readonly IAuditoriaService _auditoriaService;
         private readonly IStockService _stockService;
+        private readonly ICreditoService _creditoService;
+        private readonly IClienteService _clienteService;
 
         private static List<Venta> _ventas = new List<Venta>();
         private static int _nextVentaID = 1;
@@ -25,11 +27,16 @@ namespace Javo2.Services
         public VentaService(
             ILogger<VentaService> logger,
             IAuditoriaService auditoriaService,
-            IStockService stockService)
+            IStockService stockService,
+            ICreditoService creditoService,
+            IClienteService clienteService) // Agregar IClienteService al constructor
         {
             _logger = logger;
             _auditoriaService = auditoriaService;
             _stockService = stockService;
+            _creditoService = creditoService;
+            _clienteService = clienteService; // Inicializar _clienteService
+
             CargarDesdeJsonAsync().GetAwaiter().GetResult();
         }
 
@@ -669,8 +676,84 @@ namespace Javo2.Services
                 throw;
             }
         }
+        // Nuevo método para procesar venta a crédito
+        public async Task<Venta> CrearVentaCreditoAsync(Venta venta, int numeroCuotas, DateTime primerVencimiento)
+        {
+            // Validar que el cliente pueda acceder a crédito
+            var cliente = await _clienteService.GetClienteByIDAsync(venta.DniCliente);
+            if (cliente == null || !cliente.AptoCredito)
+            {
+                throw new InvalidOperationException("El cliente no es apto para crédito");
+            }
 
-     
+            // Validar que el cliente califique para este crédito
+            bool califica = await _creditoService.ClienteCalificaPorCreditoAsync(cliente.ClienteID, venta.PrecioTotal, numeroCuotas);
+            if (!califica)
+            {
+                throw new InvalidOperationException("El cliente no califica para este crédito");
+            }
+
+            // Calcular recargo
+            decimal porcentajeRecargo = await _creditoService.CalcularRecargoAsync(cliente.ScoreCredito, venta.PrecioTotal, numeroCuotas);
+
+            // Guardar datos originales sin recargo
+            venta.TotalSinRecargo = venta.PrecioTotal;
+            venta.PorcentajeRecargo = porcentajeRecargo;
+
+            // Aplicar recargo
+            decimal montoRecargo = venta.TotalSinRecargo * (porcentajeRecargo / 100);
+            venta.PrecioTotal += montoRecargo;
+
+            // Marcar como crédito
+            venta.EsCredito = true;
+            venta.EstadoCredito = "Activo";
+            venta.SaldoPendiente = venta.PrecioTotal;
+
+            // Guardar la venta primero
+            await CreateVentaAsync(venta);
+
+            // Generar cuotas
+            var cuotas = await _creditoService.GenerarCuotasAsync(venta, numeroCuotas, primerVencimiento);
+            venta.CuotasPagas = cuotas;
+
+            // Actualizar venta con cuotas
+            await UpdateVentaAsync(venta);
+
+            return venta;
+        }
+
+        // Método para procesar pago
+        public async Task<bool> ProcesarPagoCuotaAsync(int ventaId, int cuotaId, decimal monto, string formaPago, string referencia)
+        {
+            var venta = await GetVentaByIDAsync(ventaId);
+            if (venta == null)
+            {
+                throw new KeyNotFoundException($"Venta con ID {ventaId} no encontrada");
+            }
+
+            // Procesamiento de pago delegado al servicio de crédito
+            bool pagoProcesado = await _creditoService.RegistrarPagoCuotaAsync(cuotaId, monto, formaPago, referencia, "Sistema");
+
+            if (pagoProcesado)
+            {
+                // Actualizar saldo pendiente
+                venta.SaldoPendiente -= monto;
+
+                // Verificar si todas las cuotas están pagas
+                bool todasPagas = venta.CuotasPagas.All(c => c.EstadoCuota == EstadoCuota.Pagada);
+                if (todasPagas)
+                {
+                    venta.EstadoCredito = "Cancelado";
+                    venta.CreditoCancelado = true;
+                    venta.FechaCancelacion = DateTime.Now;
+                }
+
+                await UpdateVentaAsync(venta);
+            }
+
+            return pagoProcesado;
+        }
+
         #endregion
 
         #region Alias Methods

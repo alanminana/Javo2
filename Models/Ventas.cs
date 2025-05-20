@@ -70,6 +70,17 @@ namespace Javo2.Models
 
         // Estados de entrega por producto (opcional, si se usa)
         public List<EstadoEntregaProducto> EstadosEntregaProductos { get; set; } = new List<EstadoEntregaProducto>();
+
+        // Agregar nuevas propiedades
+        public bool EsCredito { get; set; } = false;
+        public decimal TotalSinRecargo { get; set; }
+        public decimal PorcentajeRecargo { get; set; } = 0;
+        // Ya existe: public decimal PrecioTotal { get; set; }
+        public decimal MontoRecargo => PrecioTotal - TotalSinRecargo;
+        public string EstadoCredito { get; set; } = "Sin iniciar";
+        public decimal SaldoPendiente { get; set; }
+        public bool CreditoCancelado { get; set; } = false;
+        public DateTime? FechaCancelacion { get; set; }
     }
 
     public class PromocionAplicada
@@ -105,6 +116,21 @@ namespace Javo2.Models
         public DateTime? FechaPago { get; set; }
         public decimal ImportePagado { get; set; }
         public EstadoCuota EstadoCuota { get; set; }
+
+        public int ClienteID { get; set; }
+        public int? GaranteID { get; set; }
+        public decimal MontoCapital { get; set; }
+        public decimal MontoInteres { get; set; }
+        public int? DiasAtraso { get; set; }
+        public decimal? MontoMora { get; set; }
+        public decimal? MontoTotalConMora => ImporteCuota + (MontoMora ?? 0);
+        public string FormaPago { get; set; } = string.Empty;
+        public string ReferenciaPago { get; set; } = string.Empty;
+        public DateTime FechaCreacion { get; set; } = DateTime.Now;
+        public DateTime? FechaModificacion { get; set; }
+        public string ModificadoPor { get; set; } = string.Empty;
+        public string Comentarios { get; set; } = string.Empty;
+        public bool Pagada => EstadoCuota == EstadoCuota.Pagada || EstadoCuota == EstadoCuota.PagadaPorGarante;
     }
 
     public enum EstadoCuota

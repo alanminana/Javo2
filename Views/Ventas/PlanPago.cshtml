@@ -1,0 +1,135 @@
+﻿@model Javo2.Models.Venta
+@{
+    ViewData["Title"] = "Plan de Pago";
+}
+
+<div class="card bg-dark text-light">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h3>Plan de Pago - Venta #@Model.VentaID</h3>
+        <a asp-action="Details" asp-route-id="@Model.VentaID" class="btn btn-outline-light">
+            <i class="bi bi-arrow-left"></i> Volver a la Venta
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h4>Información de Venta</h4>
+                <dl class="row">
+                    <dt class="col-sm-4">Factura</dt>
+                    <dd class="col-sm-8">@Model.NumeroFactura</dd>
+
+                    <dt class="col-sm-4">Fecha</dt>
+                    <dd class="col-sm-8">@Model.FechaVenta.ToString("dd/MM/yyyy")</dd>
+
+                    <dt class="col-sm-4">Cliente</dt>
+                    <dd class="col-sm-8">@Model.NombreCliente</dd>
+
+                    <dt class="col-sm-4">Total Sin Recargo</dt>
+                    <dd class="col-sm-8">@Model.TotalSinRecargo.ToString("C")</dd>
+
+                    <dt class="col-sm-4">Recargo (@Model.PorcentajeRecargo%)</dt>
+                    <dd class="col-sm-8">@((Model.PrecioTotal - Model.TotalSinRecargo).ToString("C"))</dd>
+
+                    <dt class="col-sm-4">Total con Recargo</dt>
+                    <dd class="col-sm-8">@Model.PrecioTotal.ToString("C")</dd>
+
+                    <dt class="col-sm-4">Saldo Pendiente</dt>
+                    <dd class="col-sm-8">@Model.SaldoPendiente.ToString("C")</dd>
+
+                    <dt class="col-sm-4">Estado</dt>
+                    <dd class="col-sm-8">
+                        @if (Model.EstadoCredito == "Cancelado")
+                        {
+                            <span class="badge bg-success">@Model.EstadoCredito</span>
+                        }
+                        else if (Model.EstadoCredito == "Activo")
+                        {
+                            <span class="badge bg-primary">@Model.EstadoCredito</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">@Model.EstadoCredito</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+        <h4>Detalle de Cuotas</h4>
+        <div class="table-responsive">
+            <table class="table table-dark table-striped">
+                <thead>
+                    <tr>
+                        <th>Cuota</th>
+                        <th>Vencimiento</th>
+                        <th>Capital</th>
+                        <th>Interés</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                        <th>Pago</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var cuota in Model.CuotasPagas.OrderBy(c => c.NumeroCuota))
+                    {
+                        <tr>
+                            <td>@cuota.NumeroCuota</td>
+                            <td>@cuota.FechaVencimiento.ToString("dd/MM/yyyy")</td>
+                            <td>@cuota.MontoCapital.ToString("C")</td>
+                            <td>@cuota.MontoInteres.ToString("C")</td>
+                            <td>@cuota.ImporteCuota.ToString("C")</td>
+                            <td>
+                                @switch (cuota.EstadoCuota)
+                                {
+                                    case EstadoCuota.Pagada:
+                                        <span class="badge bg-success">Pagada</span>
+                                        break;
+                                    case EstadoCuota.Vencida:
+                                        <span class="badge bg-danger">Vencida</span>
+                                        break;
+                                    case EstadoCuota.EnMora:
+                                        <span class="badge bg-warning text-dark">En Mora</span>
+                                        break;
+                                    case EstadoCuota.AsignadaGarante:
+                                        <span class="badge bg-info">Asignada a Garante</span>
+                                        break;
+                                    case EstadoCuota.PagadaPorGarante:
+                                        <span class="badge bg-primary">Pagada por Garante</span>
+                                        break;
+                                    default:
+                                        <span class="badge bg-secondary">Pendiente</span>
+                                        break;
+                                }
+                            </td>
+                            <td>
+                                @if (cuota.Pagada)
+                                {
+                                    <span>@cuota.FechaPago?.ToString("dd/MM/yyyy")</span>
+                                }
+                                else
+                                {
+                                    <span>-</span>
+                                }
+                            </td>
+                            <td>
+                                @if (!cuota.Pagada)
+                                {
+                                    <a asp-action="RegistrarPago" asp-route-id="@Model.VentaID" asp-route-cuotaId="@cuota.CuotaID" class="btn btn-sm btn-success">
+                                        <i class="bi bi-cash"></i> Pagar
+                                    </a>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" disabled>
+                                        <i class="bi bi-check-circle"></i> Pagada
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -248,6 +248,30 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ290aXphY2lvblxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/github/Javo2/Views/Credito/CalcularCuotas.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3JlZGl0b1xDYWxjdWxhckN1b3Rhcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/Credito/Configuracion.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3JlZGl0b1xDb25maWd1cmFjaW9uLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/Credito/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3JlZGl0b1xEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/Credito/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3JlZGl0b1xEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/Credito/Form.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3JlZGl0b1xGb3JtLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/Credito/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3JlZGl0b1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/github/Javo2/Views/DevolucionGarantia/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGV2b2x1Y2lvbkdhcmFudGlhXERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -470,6 +494,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/github/Javo2/Views/Ventas/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVudGFzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/Ventas/PlanPago.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVudGFzXFBsYW5QYWdvLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/github/Javo2/Views/Ventas/RegistrarPago.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVudGFzXFJlZ2lzdHJhclBhZ28uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/github/Javo2/Views/Ventas/_VentasTable.cshtml]

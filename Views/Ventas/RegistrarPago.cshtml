@@ -1,0 +1,87 @@
+﻿@model Javo2.ViewModels.Operaciones.Ventas.PagoCuotaViewModel
+@{
+    ViewData["Title"] = "Registrar Pago";
+}
+
+<div class="card bg-dark text-light">
+    <div class="card-header">
+        <h3>Registrar Pago - Cuota #@Model.NumeroCuota</h3>
+    </div>
+    <div class="card-body">
+        <form asp-action="RegistrarPago" method="post">
+            <input type="hidden" asp-for="VentaID" />
+            <input type="hidden" asp-for="CuotaID" />
+            <input type="hidden" asp-for="NumeroCuota" />
+            <input type="hidden" asp-for="MontoCuota" />
+            <input type="hidden" asp-for="FechaVencimiento" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-5">Cuota</dt>
+                        <dd class="col-sm-7">@Model.NumeroCuota</dd>
+
+                        <dt class="col-sm-5">Fecha Vencimiento</dt>
+                        <dd class="col-sm-7">@Model.FechaVencimiento.ToString("dd/MM/yyyy")</dd>
+
+                        <dt class="col-sm-5">Importe Cuota</dt>
+                        <dd class="col-sm-7">@Model.MontoCuota.ToString("C")</dd>
+
+                        @if (Model.DiasAtraso.HasValue && Model.DiasAtraso.Value > 0)
+                        {
+                            <dt class="col-sm-5">Días de Atraso</dt>
+                            <dd class="col-sm-7">@Model.DiasAtraso.Value</dd>
+
+                            <dt class="col-sm-5">Interés por Mora</dt>
+                            <dd class="col-sm-7">@Model.MontoMora?.ToString("C")</dd>
+                        }
+
+                        <dt class="col-sm-5">Importe a Pagar</dt>
+                        <dd class="col-sm-7">@Model.MontoTotal.ToString("C")</dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="FechaPago" class="form-label">Fecha de Pago</label>
+                        <input asp-for="FechaPago" type="date" class="form-control bg-secondary text-light" />
+                        <span asp-validation-for="FechaPago" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="MontoTotal" class="form-label">Monto a Pagar</label>
+                        <input asp-for="MontoTotal" type="number" step="0.01" min="0" class="form-control bg-secondary text-light" />
+                        <span asp-validation-for="MontoTotal" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="FormaPago" class="form-label">Forma de Pago</label>
+                        <select asp-for="FormaPago" class="form-select bg-secondary text-light">
+                            <option value="">-- Seleccione --</option>
+                            <option value="Efectivo">Efectivo</option>
+                            <option value="Transferencia">Transferencia</option>
+                            <option value="Débito">Tarjeta de Débito</option>
+                            <option value="Crédito">Tarjeta de Crédito</option>
+                            <option value="Pago Electrónico">Pago Electrónico</option>
+                        </select>
+                        <span asp-validation-for="FormaPago" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Referencia" class="form-label">Referencia (opcional)</label>
+                        <input asp-for="Referencia" class="form-control bg-secondary text-light" />
+                        <span asp-validation-for="Referencia" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-cash"></i> Registrar Pago
+                </button>
+                <a asp-action="PlanPago" asp-route-id="@Model.VentaID" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>

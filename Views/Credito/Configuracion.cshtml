@@ -1,0 +1,149 @@
+﻿@model Javo2.Models.ConfiguracionCredito
+@{
+    ViewData["Title"] = "Configuración de Crédito";
+}
+
+<div class="card bg-dark text-light">
+    <div class="card-header">
+        <h3>@ViewData["Title"]</h3>
+    </div>
+    <div class="card-body">
+        <form asp-action="Configuracion" method="post">
+            <input type="hidden" asp-for="ConfiguracionCreditoID" />
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Nombre" class="form-label">Nombre</label>
+                        <input asp-for="Nombre" class="form-control bg-secondary text-light" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Descripcion" class="form-label">Descripción</label>
+                        <input asp-for="Descripcion" class="form-control bg-secondary text-light" />
+                        <span asp-validation-for="Descripcion" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <h4 class="mt-4">Porcentajes de Recargo</h4>
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="PorcentajeRecargoBase" class="form-label">Recargo Base (%)</label>
+                        <input asp-for="PorcentajeRecargoBase" type="number" step="0.01" class="form-control bg-secondary text-light" />
+                        <span asp-validation-for="PorcentajeRecargoBase" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="RecargoScoreA" class="form-label">Recargo Score A (%)</label>
+                        <input asp-for="RecargoScoreA" type="number" step="0.01" class="form-control bg-secondary text-light" />
+                        <span asp-validation-for="RecargoScoreA" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="RecargoScoreB" class="form-label">Recargo Score B (%)</label>
+                        <input asp-for="RecargoScoreB" type="number" step="0.01" class="form-control bg-secondary text-light" />
+                        <span asp-validation-for="RecargoScoreB" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="RecargoScoreC" class="form-label">Recargo Score C (%)</label>
+                        <input asp-for="RecargoScoreC" type="number" step="0.01" class="form-control bg-secondary text-light" />
+                        <span asp-validation-for="RecargoScoreC" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="RecargoScoreD" class="form-label">Recargo Score D (%)</label>
+                        <input asp-for="RecargoScoreD" type="number" step="0.01" class="form-control bg-secondary text-light" />
+                        <span asp-validation-for="RecargoScoreD" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <h4 class="mt-4">Configuración de Mora</h4>
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="PorcentajeMoraDiaria" class="form-label">Mora Diaria (%)</label>
+                        <input asp-for="PorcentajeMoraDiaria" type="number" step="0.01" class="form-control bg-secondary text-light" />
+                        <span asp-validation-for="PorcentajeMoraDiaria" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="PorcentajeMoraMensual" class="form-label">Mora Mensual (%)</label>
+                        <input asp-for="PorcentajeMoraMensual" type="number" step="0.01" class="form-control bg-secondary text-light" />
+                        <span asp-validation-for="PorcentajeMoraMensual" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="DiasGracia" class="form-label">Días de Gracia</label>
+                        <input asp-for="DiasGracia" type="number" class="form-control bg-secondary text-light" />
+                        <span asp-validation-for="DiasGracia" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="DiasTraspasarGarante" class="form-label">Días para Garante</label>
+                        <input asp-for="DiasTraspasarGarante" type="number" class="form-control bg-secondary text-light" />
+                        <span asp-validation-for="DiasTraspasarGarante" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <h4 class="mt-4">Plazos Máximos (meses)</h4>
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="PlazoMaximoScoreA" class="form-label">Plazo Score A</label>
+                        <input asp-for="PlazoMaximoScoreA" type="number" class="form-control bg-secondary text-light" />
+                        <span asp-validation-for="PlazoMaximoScoreA" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="PlazoMaximoScoreB" class="form-label">Plazo Score B</label>
+                        <input asp-for="PlazoMaximoScoreB" type="number" class="form-control bg-secondary text-light" />
+                        <span asp-validation-for="PlazoMaximoScoreB" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="PlazoMaximoScoreC" class="form-label">Plazo Score C</label>
+                        <input asp-for="PlazoMaximoScoreC" type="number" class="form-control bg-secondary text-light" />
+                        <span asp-validation-for="PlazoMaximoScoreC" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="PlazoMaximoScoreD" class="form-label">Plazo Score D</label>
+                        <input asp-for="PlazoMaximoScoreD" type="number" class="form-control bg-secondary text-light" />
+                        <span asp-validation-for="PlazoMaximoScoreD" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mt-4">
+                <div class="form-check form-switch">
+                    <input asp-for="Activo" class="form-check-input" />
+                    <label asp-for="Activo" class="form-check-label">Configuración Activa</label>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>

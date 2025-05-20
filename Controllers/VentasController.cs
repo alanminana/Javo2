@@ -27,6 +27,8 @@ namespace Javo2.Controllers
         private readonly IProductoService _productoService;
         private readonly IAuditoriaService _auditoriaService;
         private readonly IDevolucionGarantiaService _devolucionService;
+        private readonly ICreditoService _creditoService;
+
 
         public VentasController(
             IVentaService ventaService,
@@ -36,7 +38,7 @@ namespace Javo2.Controllers
             IClienteService clienteService,
             IProductoService productoService,
             IAuditoriaService auditoriaService,
-            IDevolucionGarantiaService devolucionService
+            IDevolucionGarantiaService devolucionService, ICreditoService creditoService
         ) : base(logger)
         {
             _ventaService = ventaService;
@@ -46,6 +48,8 @@ namespace Javo2.Controllers
             _productoService = productoService;
             _auditoriaService = auditoriaService;
             _devolucionService = devolucionService; // Inicializar el servicio
+            _creditoService = creditoService;
+
 
         }
 
@@ -674,5 +678,206 @@ namespace Javo2.Controllers
         }
 
         #endregion
+    // GET: Ventas/CalcularCuotas/5
+    [HttpGet]
+        [Authorize(Policy = "Permission:ventas.crear")]
+        public async Task<IActionResult> CalcularCuotas(int id)
+        {
+            var venta = await _ventaService.GetVentaByIDAsync(id);
+            if (venta == null)
+                return NotFound();
+
+            // Verificar que la venta esté en estado autorizada
+            if (venta.Estado != EstadoVenta.Autorizada)
+            {
+                TempData["Error"] = "Solo se pueden calcular cuotas para ventas autorizadas";
+                return RedirectToAction(nameof(Details), new { id });
+            }
+
+            // Verificar si el cliente califica para crédito
+            var cliente = await _clienteService.GetClienteByIDAsync(venta.DniCliente);
+            if (cliente == null || !cliente.AptoCredito)
+            {
+                TempData["Error"] = "El cliente no es apto para crédito";
+                return RedirectToAction(nameof(Details), new { id });
+            }
+
+            // Crear view model
+            var viewModel = new VentaCreditoViewModel
+            {
+                VentaID = venta.VentaID,
+                NumeroFactura = venta.NumeroFactura,
+                FechaVenta = venta.FechaVenta,
+                ClienteNombre = venta.NombreCliente,
+                MontoTotal = venta.PrecioTotal,
+                FechaVencimiento = DateTime.Now.AddDays(30),
+                NumeroCuotas = 3, // Valor por defecto
+                ScoreCliente = cliente.ScoreCredito,
+                RequiereGarante = cliente.RequiereGarante,
+                TieneGarante = cliente.GaranteID.HasValue
+            };
+
+            // Obtener plazos disponibles según calificación del cliente
+            var criterio = await _creditoService.GetCriterioByScoreAsync(cliente.ScoreCredito);
+            if (criterio != null)
+            {
+                viewModel.PlazoMaximo = criterio.PlazoMaximo;
+                viewModel.PlazosDisponibles = Enumerable.Range(1, criterio.PlazoMaximo)
+                    .Select(p => new SelectListItem
+                    {
+                        Value = p.ToString(),
+                        Text = $"{p} {(p == 1 ? "cuota" : "cuotas")}"
+                    });
+            }
+
+            return View(viewModel);
+        }
+
+        // POST: Ventas/CalcularCuotas
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:ventas.crear")]
+        public async Task<IActionResult> CalcularCuotas(VentaCreditoViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                // Recargar plazos disponibles
+                var cliente = await _clienteService.GetClienteByIDAsync(model.ClienteID);
+                var criterio = await _creditoService.GetCriterioByScoreAsync(cliente?.ScoreCredito);
+                if (criterio != null)
+                {
+                    model.PlazoMaximo = criterio.PlazoMaximo;
+                    model.PlazosDisponibles = Enumerable.Range(1, criterio.PlazoMaximo)
+                        .Select(p => new SelectListItem
+                        {
+                            Value = p.ToString(),
+                            Text = $"{p} {(p == 1 ? "cuota" : "cuotas")}"
+                        });
+                }
+                return View(model);
+            }
+
+            try
+            {
+                // Obtener venta
+                var venta = await _ventaService.GetVentaByIDAsync(model.VentaID);
+                if (venta == null)
+                    return NotFound();
+
+                // Crear venta a crédito
+                venta = await _ventaService.CrearVentaCreditoAsync(venta, model.NumeroCuotas, model.FechaVencimiento);
+
+                TempData["Success"] = $"Venta procesada a crédito en {model.NumeroCuotas} cuotas";
+                return RedirectToAction(nameof(Details), new { id = venta.VentaID });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(model);
+            }
+        }
+
+        // GET: Ventas/PlanPago/5
+        [HttpGet]
+        [Authorize(Policy = "Permission:ventas.ver")]
+        public async Task<IActionResult> PlanPago(int id)
+        {
+            var venta = await _ventaService.GetVentaByIDAsync(id);
+            if (venta == null)
+                return NotFound();
+
+            if (!venta.EsCredito)
+            {
+                TempData["Error"] = "Esta venta no fue realizada a crédito";
+                return RedirectToAction(nameof(Details), new { id });
+            }
+
+            return View(venta);
+        }
+
+        // GET: Ventas/RegistrarPago/5
+        [HttpGet]
+        [Authorize(Policy = "Permission:ventas.editar")]
+        public async Task<IActionResult> RegistrarPago(int id, int cuotaId)
+        {
+            var venta = await _ventaService.GetVentaByIDAsync(id);
+            if (venta == null)
+                return NotFound();
+
+            var cuota = venta.CuotasPagas.FirstOrDefault(c => c.CuotaID == cuotaId);
+            if (cuota == null)
+                return NotFound();
+
+            if (cuota.Pagada)
+            {
+                TempData["Error"] = "Esta cuota ya fue pagada";
+                return RedirectToAction(nameof(PlanPago), new { id });
+            }
+
+            var viewModel = new PagoCuotaViewModel
+            {
+                VentaID = venta.VentaID,
+                CuotaID = cuota.CuotaID,
+                NumeroCuota = cuota.NumeroCuota,
+                FechaVencimiento = cuota.FechaVencimiento,
+                MontoCuota = cuota.ImporteCuota,
+                FechaPago = DateTime.Now,
+                FormaPago = "Efectivo"
+            };
+
+            // Calcular mora si aplica
+            if (DateTime.Now > cuota.FechaVencimiento)
+            {
+                int diasAtraso = (int)(DateTime.Now - cuota.FechaVencimiento).TotalDays;
+                decimal montoMora = await _creditoService.CalcularInteresDeAtrasoAsync(diasAtraso, cuota.ImporteCuota);
+                viewModel.DiasAtraso = diasAtraso;
+                viewModel.MontoMora = montoMora;
+                viewModel.MontoTotal = cuota.ImporteCuota + montoMora;
+            }
+            else
+            {
+                viewModel.MontoTotal = cuota.ImporteCuota;
+            }
+
+            return View(viewModel);
+        }
+
+        // POST: Ventas/RegistrarPago
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:ventas.editar")]
+        public async Task<IActionResult> RegistrarPago(PagoCuotaViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
+            {
+                bool resultado = await _ventaService.ProcesarPagoCuotaAsync(
+                    model.VentaID,
+                    model.CuotaID,
+                    model.MontoTotal,
+                    model.FormaPago,
+                    model.Referencia);
+
+                if (resultado)
+                {
+                    TempData["Success"] = $"Pago de cuota {model.NumeroCuota} registrado correctamente";
+                    return RedirectToAction(nameof(PlanPago), new { id = model.VentaID });
+                }
+                else
+                {
+                    ModelState.AddModelError("", "No se pudo procesar el pago");
+                    return View(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(model);
+            }
+        }
     }
 }

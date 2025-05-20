@@ -64,6 +64,7 @@ builder.Services.AddScoped<IConfiguracionService, ConfiguracionService>();
 builder.Services.AddScoped<IGaranteService, GaranteService>();
 builder.Services.AddScoped<IFormCombosService, FormCombosService>();
 
+builder.Services.AddScoped<ICreditoService, CreditoService>();
 
 builder.Services.AddScoped<IDevolucionGarantiaService, DevolucionGarantiaService>();
 builder.Services.AddPermissionPolicies();
