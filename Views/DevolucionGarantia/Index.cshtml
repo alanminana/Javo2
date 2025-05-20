@@ -8,9 +8,6 @@
     <!-- Encabezado con estadísticas -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h2 mb-0">@ViewBag.Title</h1>
-        <a asp-action="Create" class="btn btn-success">
-            <i class="bi bi-plus-circle me-1"></i> Registrar Nuevo Caso
-        </a>
     </div>
 
     <!-- Tarjetas de resumen -->
@@ -58,6 +55,12 @@
 
     <!-- Tabla de devoluciones, cambios y garantías -->
     <div class="card shadow-sm">
+        <div class="card-header bg-dark text-light d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Listado de Devoluciones y Garantías</h5>
+            <a asp-action="Create" class="btn btn-success btn-sm">
+                <i class="bi bi-plus-circle me-1"></i> Registrar Nuevo Caso
+            </a>
+        </div>
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-dark table-hover table-striped align-middle mb-0">

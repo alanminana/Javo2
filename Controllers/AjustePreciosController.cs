@@ -262,6 +262,11 @@ namespace Javo2.Controllers
                     await CargarProductosFormularioTemporal(model);
                     return View(model);
                 }
+                if (!model.FechaInicio.HasValue || !model.FechaFin.HasValue)
+                {
+                    ModelState.AddModelError("", "Las fechas de inicio y fin son requeridas");
+                    return View(model);
+                }
 
                 // Redondear fechas a minutos para evitar problemas con segundos/milisegundos
                 var fechaInicio = new DateTime(

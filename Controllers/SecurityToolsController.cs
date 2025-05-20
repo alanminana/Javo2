@@ -37,12 +37,13 @@ namespace Javo2.Controllers
         {
             try
             {
-                var seeder = new PermissionSeeder(
-                    _permisoService,
-                    _rolService,
-                    _logger as ILogger<PermissionSeeder> ??
-                        (ILogger<PermissionSeeder>)HttpContext.RequestServices.GetService(typeof(ILogger<PermissionSeeder>)));
+                // Obtener las dependencias del contenedor
+                var permisoService = HttpContext.RequestServices.GetRequiredService<IPermisoService>();
+                var rolService = HttpContext.RequestServices.GetRequiredService<IRolService>();
+                var loggerFactory = HttpContext.RequestServices.GetRequiredService<ILoggerFactory>();
+                var permissionLogger = loggerFactory.CreateLogger<PermissionSeeder>();
 
+                var seeder = new PermissionSeeder(permisoService, rolService, permissionLogger);
                 await seeder.SeedAsync();
 
                 TempData["Success"] = "Permisos recargados correctamente";

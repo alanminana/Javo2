@@ -21,7 +21,7 @@ namespace Javo2.Controllers
     [Authorize]
     public class ProveedoresController : BaseController
     {
-        private readonly ILogger<ProveedoresController> _logger;
+        private readonly new ILogger<ProveedoresController> _logger;
         private readonly IProveedorService _proveedorService;
         private readonly IProductoService _productoService;
         private readonly IMapper _mapper;
@@ -286,7 +286,7 @@ namespace Javo2.Controllers
             try
             {
                 var (isValid, compra) = await PrepararCompraAsync(model);
-                if (!isValid)
+                if (!isValid || compra == null)
                     return View("FormCompra", model);
 
                 await _proveedorService.CreateCompraAsync(compra);
@@ -570,7 +570,7 @@ namespace Javo2.Controllers
         }
 
         // Método común para validar y preparar compras
-        private async Task<(bool isValid, CompraProveedor compra)> PrepararCompraAsync(CompraProveedorViewModel model)
+        private async Task<(bool isValid, CompraProveedor? compra)> PrepararCompraAsync(CompraProveedorViewModel model)
         {
             if (!ModelState.IsValid)
             {

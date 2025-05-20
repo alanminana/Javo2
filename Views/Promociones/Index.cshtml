@@ -1,47 +1,78 @@
 ﻿@model IEnumerable<Javo2.ViewModels.Operaciones.Promociones.PromocionViewModel>
-
 @{
     ViewBag.Title = "Promociones";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Promociones</h2>
-
-<a asp-action="Create" class="btn btn-success mb-3">
-    <i class="bi bi-plus-circle me-2"></i> Crear Promoción
-</a>
-
-<div class="card p-3">
-    <div class="table-responsive">
-        <table class="table table-dark table-striped">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Porcentaje</th>
-                    <th>Tipo</th>
-                    <th>Activa</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var promo in Model)
-                {
-                    <tr>
-                        <td>@promo.Nombre</td>
-                        <td>@promo.Porcentaje @((promo.EsAumento ? "% Aumento" : "% Descuento"))</td>
-                        <td>@(promo.EsAumento ? "Aumento" : "Descuento")</td>
-                        <td>@(promo.Activa ? "Sí" : "No")</td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@promo.PromocionID" class="btn btn-sm btn-warning me-1">
-                                <i class="bi bi-pencil-square"></i> Editar
-                            </a>
-                            <a asp-action="Delete" asp-route-id="@promo.PromocionID" class="btn btn-sm btn-danger">
-                                <i class="bi bi-trash"></i> Eliminar
-                            </a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+<section class="container-fluid py-3">
+    <!-- Encabezado con acciones -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">@ViewBag.Title</h1>
+        
     </div>
-</div>
+
+    <!-- Tabla de Promociones -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-light d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Listado de Promociones</h5>
+            <a asp-action="Create" class="btn btn-success btn-sm">
+                <i class="bi bi-plus-circle me-1"></i> Crear Promoción
+            </a>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-dark table-striped mb-0">
+                    <thead class="bg-secondary text-light">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Porcentaje</th>
+                            <th>Tipo</th>
+                            <th>Estado</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var promo in Model)
+                        {
+                            <tr>
+                                <td>@promo.Nombre</td>
+                                <td>@promo.Porcentaje%</td>
+                                <td>
+                                    <span class="badge @(promo.EsAumento ? "bg-danger" : "bg-success")">
+                                        @(promo.EsAumento ? "Aumento" : "Descuento")
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge @(promo.Activa ? "bg-success" : "bg-secondary")">
+                                        @(promo.Activa ? "Activa" : "Inactiva")
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group">
+                                        <a asp-action="Edit" asp-route-id="@promo.PromocionID" class="btn btn-sm btn-outline-primary" title="Editar">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        <a asp-action="Details" asp-route-id="@promo.PromocionID" class="btn btn-sm btn-outline-info" title="Detalles">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@promo.PromocionID" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center py-3">
+                                    <p class="text-muted mb-0">No hay promociones disponibles</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

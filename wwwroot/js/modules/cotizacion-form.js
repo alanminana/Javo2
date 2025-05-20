@@ -17,6 +17,7 @@
         },
 
         init: function () {
+            console.log('Inicializando módulo cotizacionForm');
             this.setupClienteSearch();
             this.setupProductSearch();
             this.setupFormaPago();
@@ -25,7 +26,7 @@
 
         // Copiar los métodos necesarios de ventaForm
         setupClienteSearch: function () {
-            $('#buscarCliente').on('click', function () {
+            document.getElementById('buscarCliente').addEventListener('click', function () {
                 const dni = $('#DniCliente').val();
                 App.ventasController.buscarClientePorDNI(dni);
             });
@@ -33,7 +34,7 @@
             $('#DniCliente').on('keypress', function (e) {
                 if (e.which === 13) {
                     e.preventDefault();
-                    $('#buscarCliente').click();
+                    document.getElementById('buscarCliente').click();
                 }
             });
         },
@@ -42,7 +43,7 @@
             const self = this;
 
             // Búsqueda de producto por código
-            $('#buscarProducto').on('click', function () {
+            document.getElementById('buscarProducto').addEventListener('click', function () {
                 const codigo = $('#productoCodigo').val();
                 if (!codigo) {
                     App.notify.warning('Ingrese un código para buscar');
@@ -73,7 +74,7 @@
                             $('#productoNombre').val(self.productoActual.nombre);
                             $('#productoPrecio').val(self.productoActual.precio);
                             $('#productoCantidad').val(1);
-                            $('#productoCantidad').focus();
+                            document.getElementById('productoCantidad').focus();
                         } else {
                             // Mostrar modal de error
                             $('#productoNoEncontradoModal').modal('show');
@@ -91,7 +92,7 @@
             });
 
             // Agregar producto a la tabla
-            $('#agregarProducto').on('click', function () {
+            document.getElementById('agregarProducto').addEventListener('click', function () {
                 if (self.productoActual.id === 0) {
                     App.notify.warning('Debe buscar un producto primero');
                     return;
@@ -171,7 +172,7 @@
             $('#productoCodigo').on('keypress', function (e) {
                 if (e.which === 13) {
                     e.preventDefault();
-                    $('#buscarProducto').click();
+                    document.getElementById('buscarProducto').click();
                 }
             });
 
@@ -196,53 +197,88 @@
         },
 
         setupFormaPago: function () {
-            $('#FormaPagoID').change(function () {
-                const formaPagoID = parseInt($(this).val());
+            console.log('Inicializando setupFormaPago');
+
+            // Verificar que el elemento existe
+            const formaPagoElement = document.getElementById('FormaPagoID');
+            if (!formaPagoElement) {
+                console.error('Elemento FormaPagoID no encontrado');
+                return;
+            }
+
+            console.log('Valor actual:', formaPagoElement.value);
+            console.log('Opciones disponibles:', formaPagoElement.options.length);
+
+            // Verificar contenedores
+            const paymentContainers = document.querySelectorAll('.payment-container');
+            console.log('Contenedores de pago encontrados:', paymentContainers.length);
+            paymentContainers.forEach(function (container) {
+                console.log('Contenedor:', container.id);
+            });
+
+            formaPagoElement.addEventListener('change', function () {
+                const formaPagoID = parseInt(this.value);
                 console.log('Forma de pago seleccionada:', formaPagoID);
 
                 // Ocultar todos los contenedores
-                $('.payment-container').addClass('d-none');
+                document.querySelectorAll('.payment-container').forEach(function (container) {
+                    container.classList.add('d-none');
+                });
+                console.log('Contenedores ocultados');
 
-                // Mostrar el contenedor correspondiente según ID
+                // Mostrar el contenedor correspondiente
                 switch (formaPagoID) {
                     case 2: // Tarjeta de Crédito
-                        $('#tarjetaCreditoContainer').removeClass('d-none');
+                        console.log('Mostrando contenedor de tarjeta de crédito');
+                        document.getElementById('tarjetaCreditoContainer')?.classList.remove('d-none');
                         break;
                     case 3: // Tarjeta de Débito
-                        $('#tarjetaDebitoContainer').removeClass('d-none');
+                        console.log('Mostrando contenedor de tarjeta de débito');
+                        document.getElementById('tarjetaDebitoContainer')?.classList.remove('d-none');
                         break;
                     case 4: // Transferencia
-                        $('#transferenciaContainer').removeClass('d-none');
+                        console.log('Mostrando contenedor de transferencia');
+                        document.getElementById('transferenciaContainer')?.classList.remove('d-none');
                         break;
                     case 5: // Pago Virtual
-                        $('#pagoVirtualContainer').removeClass('d-none');
+                        console.log('Mostrando contenedor de pago virtual');
+                        document.getElementById('pagoVirtualContainer')?.classList.remove('d-none');
                         break;
                     case 6: // Crédito Personal
-                        $('#creditoPersonalContainer').removeClass('d-none');
+                        console.log('Mostrando contenedor de crédito personal');
+                        document.getElementById('creditoPersonalContainer')?.classList.remove('d-none');
                         break;
                     case 7: // Cheque
-                        $('#chequeContainer').removeClass('d-none');
+                        console.log('Mostrando contenedor de cheque');
+                        document.getElementById('chequeContainer')?.classList.remove('d-none');
                         break;
+                    default:
+                        console.log('Forma de pago no reconocida:', formaPagoID);
                 }
             });
 
-            // Ejecutar cambio inicial
-            $('#FormaPagoID').trigger('change');
+            // Ejecutar cambio inicial para inicializar correctamente
+            console.log('Disparando evento change inicial');
+            const event = new Event('change');
+            formaPagoElement.dispatchEvent(event);
         },
 
         // Funciones específicas para cotizaciones
         setupCotizacionActions: function () {
             // Funcionalidad para convertir cotización a venta
-            $('#convertirAVenta').click(function (e) {
-                e.preventDefault();
+            const convertirButton = document.getElementById('convertirAVenta');
+            if (convertirButton) {
+                convertirButton.addEventListener('click', function (e) {
+                    e.preventDefault();
 
-                if (!confirm('¿Está seguro que desea convertir esta cotización en una venta?')) {
-                    return;
-                }
+                    if (!confirm('¿Está seguro que desea convertir esta cotización en una venta?')) {
+                        return;
+                    }
 
-                const cotizacionId = $(this).data('id');
-                $('#convertirForm').submit();
-            });
+                    const cotizacionId = this.getAttribute('data-id');
+                    document.getElementById('convertirForm')?.submit();
+                });
+            }
         },
 
         // Actualizar totales
@@ -288,5 +324,11 @@
             });
         }
     };
+
+    // Auto-inicializar cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log("Document ready: Inicializando cotizacionForm");
+        App.cotizacionForm.init();
+    });
 
 })(window, jQuery);

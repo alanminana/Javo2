@@ -203,7 +203,7 @@ namespace Javo2.Controllers
                 venta.Vendedor = User.Identity?.Name ?? "Desconocido";
 
                 // Definir estado según finalizar
-                bool finalizar = !string.IsNullOrEmpty(Finalizar) && Finalizar.ToLower() == "true";
+                bool finalizar = !string.IsNullOrEmpty(Finalizar) && Finalizar.Equals("true", StringComparison.OrdinalIgnoreCase);
                 venta.Estado = finalizar ? EstadoVenta.PendienteDeAutorizacion : EstadoVenta.Borrador;
 
                 // Crear venta
@@ -291,7 +291,7 @@ namespace Javo2.Controllers
                 }
 
                 // Validar que haya productos
-                if (model.ProductosPresupuesto == null || !model.ProductosPresupuesto.Any())
+                if (model.ProductosPresupuesto == null || model.ProductosPresupuesto.Count == 0)
                 {
                     ModelState.AddModelError("", "Debe agregar al menos un producto a la venta");
                     await CargarCombosAsync(model);
@@ -582,8 +582,7 @@ namespace Javo2.Controllers
             try
             {
                 _logger.LogInformation("BuscarClientePorDNI => DNI={Dni}", dni);
-                var cliente = await _clienteService.GetClienteByDNIAsync(dni);
-                if (cliente == null)
+                if (await _clienteService.GetClienteByDNIAsync(dni) is not { } cliente)
                     return Json(new { success = false, message = "Cliente no encontrado con ese DNI." });
 
                 // Determinar si el cliente puede usar crédito
@@ -654,11 +653,7 @@ namespace Javo2.Controllers
             }
         }
 
-        #endregion
-
-        #region Métodos Auxiliares
-
-        private async Task CargarCombosAsync(VentaFormViewModel model)
+        private Task CargarCombosAsync(VentaFormViewModel model)
         {
             model.FormasPago = _ventaService.GetFormasPagoSelectList();
             model.Bancos = _ventaService.GetBancosSelectList();
@@ -666,6 +661,9 @@ namespace Javo2.Controllers
             model.CuotasOptions = _ventaService.GetCuotasSelectList();
             model.EntidadesElectronicas = _ventaService.GetEntidadesElectronicasSelectList();
             model.PlanesFinanciamiento = _ventaService.GetPlanesFinanciamientoSelectList();
+
+            // Return a completed task since no asynchronous operations are performed
+            return Task.CompletedTask;
         }
 
         #endregion

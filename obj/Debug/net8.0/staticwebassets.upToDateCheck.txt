@@ -1,6 +1,7 @@
 wwwroot\css\layout.css
 wwwroot\css\login.css
 wwwroot\css\site.css
+wwwroot\css\site.min.css
 wwwroot\favicon.ico
 wwwroot\js\clientes-controller.js
 wwwroot\js\components\permissions.js
