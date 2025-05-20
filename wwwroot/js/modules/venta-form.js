@@ -25,13 +25,13 @@
 
         // Configurar búsqueda de cliente
         setupClienteSearch: function () {
-            $('#buscarCliente').on('click', function () {
+            $('#buscarCliente').off('click').on('click', function () {
                 const dni = $('#DniCliente').val();
                 App.ventasController.buscarClientePorDNI(dni);
             });
 
             // Buscar al presionar Enter en DNI
-            $('#DniCliente').on('keypress', function (e) {
+            $('#DniCliente').off('keypress').on('keypress', function (e) {
                 if (e.which === 13) {
                     e.preventDefault();
                     $('#buscarCliente').click();
@@ -43,9 +43,11 @@
         // Configurar búsqueda de producto
         setupProductSearch: function () {
             const self = this;
+            console.log("DEPURACIÓN: Configurando búsqueda de producto " + new Date().toISOString());
 
             // Buscar producto
-            $('#buscarProducto').on('click', function (e) {
+            $('#buscarProducto').off('click').on('click', function (e) {
+                console.log("DEPURACIÓN: Click en buscar producto " + new Date().toISOString());
                 e.preventDefault();
                 const termino = $('#productoCodigo').val();
                 if (!termino) {
@@ -95,7 +97,7 @@
             });
 
             // Buscar al presionar Enter - PREVENIR SUBMIT DEL FORMULARIO
-            $('#productoCodigo').on('keypress', function (e) {
+            $('#productoCodigo').off('keypress').on('keypress', function (e) {
                 if (e.which === 13) {
                     e.preventDefault();
                     $('#buscarProducto').click();
@@ -104,7 +106,7 @@
             });
 
             // Agregar producto a la tabla
-            $('#agregarProducto').on('click', function (e) {
+            $('#agregarProducto').off('click').on('click', function (e) {
                 e.preventDefault();
                 if (self.productoActual.id === 0) {
                     App.notify.warning('Debe buscar un producto primero');
@@ -149,29 +151,29 @@
                     const rowCount = $('#productosTable tbody tr').length;
 
                     const newRow = `
-                       <tr data-index="${rowCount}">
-                           <td>
-                               <input type="hidden" name="ProductosPresupuesto[${rowCount}].ProductoID" value="${self.productoActual.id}" />
-                               <input type="hidden" name="ProductosPresupuesto[${rowCount}].CodigoAlfa" value="${self.productoActual.codigoAlfa}" />
-                               <input type="hidden" name="ProductosPresupuesto[${rowCount}].CodigoBarra" value="${self.productoActual.codigoBarra}" />
-                               <input type="hidden" name="ProductosPresupuesto[${rowCount}].Marca" value="${self.productoActual.marca}" />
-                               <input type="hidden" name="ProductosPresupuesto[${rowCount}].NombreProducto" value="${self.productoActual.nombre}" />
-                               <input type="hidden" name="ProductosPresupuesto[${rowCount}].PrecioUnitario" value="${precio.toFixed(2)}" />
-                               <input type="hidden" name="ProductosPresupuesto[${rowCount}].PrecioTotal" value="${subtotal.toFixed(2)}" />
-                               <input type="hidden" name="ProductosPresupuesto[${rowCount}].PrecioLista" value="${(self.productoActual.precioLista || 0).toFixed(2)}" />
-                               ${self.productoActual.codigoAlfa || self.productoActual.codigoBarra}
-                           </td>
-                           <td>${self.productoActual.nombre}</td>
-                           <td><input type="number" name="ProductosPresupuesto[${rowCount}].Cantidad" value="${cantidad}" min="1" class="form-control form-control-sm bg-dark text-light cantidad" /></td>
-                           <td>${App.format.currency(precio)}</td>
-                           <td><span class="subtotal">${App.format.currency(subtotal)}</span></td>
-                           <td class="text-center">
-                               <button type="button" class="btn btn-sm btn-outline-danger eliminar-producto">
-                                   <i class="bi bi-trash"></i>
-                               </button>
-                           </td>
-                       </tr>
-                   `;
+                      <tr data-index="${rowCount}">
+                          <td>
+                              <input type="hidden" name="ProductosPresupuesto[${rowCount}].ProductoID" value="${self.productoActual.id}" />
+                              <input type="hidden" name="ProductosPresupuesto[${rowCount}].CodigoAlfa" value="${self.productoActual.codigoAlfa}" />
+                              <input type="hidden" name="ProductosPresupuesto[${rowCount}].CodigoBarra" value="${self.productoActual.codigoBarra}" />
+                              <input type="hidden" name="ProductosPresupuesto[${rowCount}].Marca" value="${self.productoActual.marca}" />
+                              <input type="hidden" name="ProductosPresupuesto[${rowCount}].NombreProducto" value="${self.productoActual.nombre}" />
+                              <input type="hidden" name="ProductosPresupuesto[${rowCount}].PrecioUnitario" value="${precio.toFixed(2)}" />
+                              <input type="hidden" name="ProductosPresupuesto[${rowCount}].PrecioTotal" value="${subtotal.toFixed(2)}" />
+                              <input type="hidden" name="ProductosPresupuesto[${rowCount}].PrecioLista" value="${(self.productoActual.precioLista || 0).toFixed(2)}" />
+                              ${self.productoActual.codigoAlfa || self.productoActual.codigoBarra}
+                          </td>
+                          <td>${self.productoActual.nombre}</td>
+                          <td><input type="number" name="ProductosPresupuesto[${rowCount}].Cantidad" value="${cantidad}" min="1" class="form-control form-control-sm bg-dark text-light cantidad" /></td>
+                          <td>${App.format.currency(precio)}</td>
+                          <td><span class="subtotal">${App.format.currency(subtotal)}</span></td>
+                          <td class="text-center">
+                              <button type="button" class="btn btn-sm btn-outline-danger eliminar-producto">
+                                  <i class="bi bi-trash"></i>
+                              </button>
+                          </td>
+                      </tr>
+                  `;
 
                     $('#productosTable tbody').append(newRow);
                 }
@@ -185,14 +187,14 @@
             });
 
             // Eliminar producto
-            $(document).on('click', '.eliminar-producto', function () {
+            $(document).off('click', '.eliminar-producto').on('click', '.eliminar-producto', function () {
                 $(this).closest('tr').remove();
                 self.updateTotals();
                 self.reindexRows();
             });
 
             // Actualizar totales al cambiar cantidad
-            $(document).on('change', '.cantidad', function () {
+            $(document).off('change', '.cantidad').on('change', '.cantidad', function () {
                 const row = $(this).closest('tr');
                 const cantidad = parseInt($(this).val()) || 0;
                 const precio = parseFloat(row.find('input[name$=".PrecioUnitario"]').val()) || 0;
@@ -207,7 +209,7 @@
 
         // Configurar forma de pago
         setupFormaPago: function () {
-            $('#FormaPagoID').change(function () {
+            $('#FormaPagoID').off('change').on('change', function () {
                 const formaPagoID = parseInt($(this).val());
 
                 // Ocultar todos los contenedores
@@ -243,7 +245,7 @@
         // Configurar crédito personal
         setupCreditoPersonal: function () {
             // Mostrar porcentaje de recargo según cuotas
-            $('#Cuotas').on('change', function () {
+            $('#Cuotas').off('change').on('change', function () {
                 const cuotas = $(this).val();
                 if (cuotas) {
                     // Mostrar información de recargo
@@ -271,7 +273,7 @@
         // Configurar opciones de cotización
         setupCotizacion: function () {
             // Crear cotización en lugar de venta
-            $('#crearCotizacion').click(function (e) {
+            $('#crearCotizacion').off('click').on('click', function (e) {
                 e.preventDefault();
 
                 // Validar que haya cliente y productos

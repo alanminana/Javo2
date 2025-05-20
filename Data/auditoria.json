@@ -766,5 +766,17 @@
     "EsRevertido": false,
     "RollbackUser": "",
     "RollbackFecha": null
+  },
+  {
+    "ID": 65,
+    "FechaHora": "2025-05-20T17:30:15.1676119-03:00",
+    "Usuario": "admin",
+    "Entidad": "Producto",
+    "Accion": "Create",
+    "LlavePrimaria": "2",
+    "Detalle": "1234",
+    "EsRevertido": false,
+    "RollbackUser": "",
+    "RollbackFecha": null
   }
 ]

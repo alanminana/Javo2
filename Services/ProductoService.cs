@@ -23,6 +23,7 @@ namespace Javo2.Services
         private static List<Producto> _productos = new();
         private static int _nextProductoID = 1;
         private static readonly object _lock = new();
+        private readonly string _serviceId;
 
         public ProductoService(
             ILogger<ProductoService> logger,
@@ -32,7 +33,10 @@ namespace Javo2.Services
             IConfiguracionService configuracionService
         )
         {
+            _serviceId = Guid.NewGuid().ToString();
             _logger = logger;
+
+            _logger.LogWarning("DEPURACIÓN: ProductoService creado - ID: {ID}", _serviceId);
             _catalogoService = catalogoService;
             _stockService = stockService;
             _promocionesService = promocionesService;
@@ -384,16 +388,29 @@ namespace Javo2.Services
 
             await GuardarEnJsonAsync();
         }
-
         public Task<Producto?> GetProductoByCodigoAsync(string codigo)
         {
-            _logger.LogInformation("GetProductoByCodigoAsync: {Codigo}", codigo);
+            _logger.LogWarning("DEPURACIÓN: GetProductoByCodigoAsync - ServiceID: {SvcID}, Código: {Codigo}",
+        _serviceId, codigo);
+
+            if (string.IsNullOrEmpty(codigo))
+                return Task.FromResult<Producto?>(null);
+
+            codigo = codigo.Trim().ToLower();
+
             lock (_lock)
             {
+                // Primero buscar por código exacto
                 var producto = _productos.FirstOrDefault(p =>
-                    (p.CodigoBarra != null && p.CodigoBarra.Equals(codigo, StringComparison.OrdinalIgnoreCase)) ||
-                    (p.CodigoAlfa != null && p.CodigoAlfa.Equals(codigo, StringComparison.OrdinalIgnoreCase)) ||
-                    (p.Nombre != null && p.Nombre.Contains(codigo, StringComparison.OrdinalIgnoreCase)));
+                    (p.CodigoAlfa != null && p.CodigoAlfa.ToLower() == codigo) ||
+                    (p.CodigoBarra != null && p.CodigoBarra.ToLower() == codigo));
+
+                // Solo si no se encuentra por código, intentar buscar por nombre
+                if (producto == null)
+                {
+                    producto = _productos.FirstOrDefault(p =>
+                        p.Nombre != null && p.Nombre.ToLower().Contains(codigo));
+                }
 
                 return Task.FromResult(producto);
             }

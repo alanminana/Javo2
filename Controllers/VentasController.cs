@@ -28,19 +28,22 @@ namespace Javo2.Controllers
         private readonly IAuditoriaService _auditoriaService;
         private readonly IDevolucionGarantiaService _devolucionService;
         private readonly ICreditoService _creditoService;
+        private readonly string _controllerId;
 
 
         public VentasController(
             IVentaService ventaService,
             ICotizacionService cotizacionService,
             IMapper mapper,
-            ILogger<VentasController> logger,
+              ILogger<VentasController> logger,
             IClienteService clienteService,
             IProductoService productoService,
             IAuditoriaService auditoriaService,
             IDevolucionGarantiaService devolucionService, ICreditoService creditoService
         ) : base(logger)
         {
+            _controllerId = Guid.NewGuid().ToString();
+            _logger.LogWarning("DEPURACIÓN: VentasController creado - ID: {ID}", _controllerId);
             _ventaService = ventaService;
             _cotizacionService = cotizacionService;
             _mapper = mapper;
@@ -615,22 +618,19 @@ namespace Javo2.Controllers
             }
         }
 
-        [HttpPost]
         public async Task<IActionResult> BuscarProducto(string codigoProducto)
         {
             try
             {
+                _logger.LogWarning("DEPURACIÓN: BuscarProducto llamado - ControllerID: {CtrlID}, Código: {Codigo}",
+    _controllerId, codigoProducto);
                 var producto = await _productoService.GetProductoByCodigoAsync(codigoProducto);
-                if (producto == null)
-                {
-                    var productos = await _productoService.GetProductosByTermAsync(codigoProducto);
-                    producto = productos.FirstOrDefault();
-                }
+
+                _logger.LogWarning("DEPURACIÓN: Producto encontrado: {EncontradoSiNo}", producto != null ? "Sí" : "No");
 
                 if (producto == null)
                     return Json(new { success = false, message = "Producto no encontrado." });
 
-                // Asegurar que los valores decimales se manejan correctamente
                 return Json(new
                 {
                     success = true,
