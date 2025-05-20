@@ -1,4 +1,4 @@
-﻿// venta-form.js - Módulo para formulario de ventas
+﻿// venta-form.js - Módulo optimizado para formulario de ventas
 (function (window, $) {
     'use strict';
 
@@ -20,6 +20,7 @@
             this.setupProductSearch();
             this.setupFormaPago();
             this.setupCotizacion();
+            this.setupCreditoPersonal();
         },
 
         // Configurar búsqueda de cliente
@@ -34,6 +35,7 @@
                 if (e.which === 13) {
                     e.preventDefault();
                     $('#buscarCliente').click();
+                    return false;
                 }
             });
         },
@@ -43,52 +45,67 @@
             const self = this;
 
             // Buscar producto
-            $('#buscarProducto').on('click', function () {
+            $('#buscarProducto').on('click', function (e) {
+                e.preventDefault();
                 const termino = $('#productoCodigo').val();
                 if (!termino) {
                     App.notify.warning('Ingrese un código o nombre para buscar');
                     return;
                 }
 
-                App.ajax.post('/Ventas/BuscarProducto', { codigoProducto: termino }, function (response) {
-          if (response.success) {
-                        // Guardar datos del producto
-                        self.productoActual = {
-                            id: response.data.productoID,
-                            codigoAlfa: response.data.codigoAlfa,
-                            codigoBarra: response.data.codigoBarra,
-                            nombre: response.data.nombreProducto,
-                            marca: response.data.marca,
-                            precio: response.data.precioUnitario,
-                            precioLista: response.data.precioLista
-                        };
+                $.ajax({
+                    url: '/Ventas/BuscarProducto',
+                    type: 'POST',
+                    data: { codigoProducto: termino },
+                    headers: {
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            // Guardar datos del producto con valores seguros
+                            self.productoActual = {
+                                id: response.data.productoID,
+                                codigoAlfa: response.data.codigoAlfa,
+                                codigoBarra: response.data.codigoBarra,
+                                nombre: response.data.nombreProducto,
+                                marca: response.data.marca,
+                                precio: parseFloat(response.data.precioUnitario),
+                                precioLista: parseFloat(response.data.precioLista)
+                            };
 
-                        // Mostrar datos del producto
-                        $('#productoNombre').val(self.productoActual.nombre);
-                        $('#productoPrecio').val(self.productoActual.precio);
-                        $('#productoCantidad').val(1);
-                        $('#productoCantidad').focus();
-                    } else {
-                        // Mostrar modal de error
-                        $('#productoNoEncontradoModal').modal('show');
+                            // Mostrar datos del producto
+                            $('#productoNombre').val(self.productoActual.nombre);
+                            $('#productoPrecio').val(self.productoActual.precio.toFixed(2));
+                            $('#productoCantidad').val(1);
+                            $('#productoCantidad').focus();
+                        } else {
+                            // Mostrar modal de error
+                            $('#productoNoEncontradoModal').modal('show');
 
-                        // Limpiar campos
+                            // Limpiar campos
+                            self.productoActual = { id: 0, nombre: '', precio: 0, precioLista: 0 };
+                            $('#productoNombre, #productoPrecio').val('');
+                        }
+                    },
+                    error: function () {
+                        App.notify.error('Error al buscar el producto');
                         self.productoActual = { id: 0, nombre: '', precio: 0, precioLista: 0 };
-                        $('#productoNombre, #productoPrecio').val('');
                     }
                 });
             });
 
-            // Buscar al presionar Enter
+            // Buscar al presionar Enter - PREVENIR SUBMIT DEL FORMULARIO
             $('#productoCodigo').on('keypress', function (e) {
                 if (e.which === 13) {
                     e.preventDefault();
                     $('#buscarProducto').click();
+                    return false;
                 }
             });
 
             // Agregar producto a la tabla
-            $('#agregarProducto').on('click', function () {
+            $('#agregarProducto').on('click', function (e) {
+                e.preventDefault();
                 if (self.productoActual.id === 0) {
                     App.notify.warning('Debe buscar un producto primero');
                     return;
@@ -113,6 +130,10 @@
                     }
                 });
 
+                // Asegurar que el precio es un número
+                const precio = self.productoActual.precio || 0;
+                const subtotal = cantidad * precio;
+
                 if (existe) {
                     // Actualizar cantidad
                     const cantidadActual = parseInt($('#productosTable tbody tr').eq(index).find('.cantidad').val());
@@ -120,38 +141,37 @@
                     $('#productosTable tbody tr').eq(index).find('.cantidad').val(nuevaCantidad);
 
                     // Actualizar subtotal
-                    const subtotal = nuevaCantidad * self.productoActual.precio;
-                    $('#productosTable tbody tr').eq(index).find('.subtotal').text(App.format.currency(subtotal));
-                    $('#productosTable tbody tr').eq(index).find('input[name$=".PrecioTotal"]').val(subtotal);
+                    const nuevoSubtotal = nuevaCantidad * precio;
+                    $('#productosTable tbody tr').eq(index).find('.subtotal').text(App.format.currency(nuevoSubtotal));
+                    $('#productosTable tbody tr').eq(index).find('input[name$=".PrecioTotal"]').val(nuevoSubtotal.toFixed(2));
                 } else {
-                    // Crear nueva fila
+                    // Crear nueva fila con valores correctamente formateados
                     const rowCount = $('#productosTable tbody tr').length;
-                    const subtotal = cantidad * self.productoActual.precio;
 
                     const newRow = `
-                        <tr data-index="${rowCount}">
-                            <td>
-                                <input type="hidden" name="ProductosPresupuesto[${rowCount}].ProductoID" value="${self.productoActual.id}" />
-                                <input type="hidden" name="ProductosPresupuesto[${rowCount}].CodigoAlfa" value="${self.productoActual.codigoAlfa}" />
-                                <input type="hidden" name="ProductosPresupuesto[${rowCount}].CodigoBarra" value="${self.productoActual.codigoBarra}" />
-                                <input type="hidden" name="ProductosPresupuesto[${rowCount}].Marca" value="${self.productoActual.marca}" />
-                                <input type="hidden" name="ProductosPresupuesto[${rowCount}].NombreProducto" value="${self.productoActual.nombre}" />
-                                <input type="hidden" name="ProductosPresupuesto[${rowCount}].PrecioUnitario" value="${self.productoActual.precio}" />
-                                <input type="hidden" name="ProductosPresupuesto[${rowCount}].PrecioTotal" value="${subtotal}" />
-                                <input type="hidden" name="ProductosPresupuesto[${rowCount}].PrecioLista" value="${self.productoActual.precioLista}" />
-                                ${self.productoActual.codigoAlfa || self.productoActual.codigoBarra}
-                            </td>
-                            <td>${self.productoActual.nombre}</td>
-                            <td><input type="number" name="ProductosPresupuesto[${rowCount}].Cantidad" value="${cantidad}" min="1" class="form-control form-control-sm bg-dark text-light cantidad" /></td>
-                            <td>${App.format.currency(self.productoActual.precio)}</td>
-                            <td><span class="subtotal">${App.format.currency(subtotal)}</span></td>
-                            <td class="text-center">
-                                <button type="button" class="btn btn-sm btn-outline-danger eliminar-producto">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `;
+                       <tr data-index="${rowCount}">
+                           <td>
+                               <input type="hidden" name="ProductosPresupuesto[${rowCount}].ProductoID" value="${self.productoActual.id}" />
+                               <input type="hidden" name="ProductosPresupuesto[${rowCount}].CodigoAlfa" value="${self.productoActual.codigoAlfa}" />
+                               <input type="hidden" name="ProductosPresupuesto[${rowCount}].CodigoBarra" value="${self.productoActual.codigoBarra}" />
+                               <input type="hidden" name="ProductosPresupuesto[${rowCount}].Marca" value="${self.productoActual.marca}" />
+                               <input type="hidden" name="ProductosPresupuesto[${rowCount}].NombreProducto" value="${self.productoActual.nombre}" />
+                               <input type="hidden" name="ProductosPresupuesto[${rowCount}].PrecioUnitario" value="${precio.toFixed(2)}" />
+                               <input type="hidden" name="ProductosPresupuesto[${rowCount}].PrecioTotal" value="${subtotal.toFixed(2)}" />
+                               <input type="hidden" name="ProductosPresupuesto[${rowCount}].PrecioLista" value="${(self.productoActual.precioLista || 0).toFixed(2)}" />
+                               ${self.productoActual.codigoAlfa || self.productoActual.codigoBarra}
+                           </td>
+                           <td>${self.productoActual.nombre}</td>
+                           <td><input type="number" name="ProductosPresupuesto[${rowCount}].Cantidad" value="${cantidad}" min="1" class="form-control form-control-sm bg-dark text-light cantidad" /></td>
+                           <td>${App.format.currency(precio)}</td>
+                           <td><span class="subtotal">${App.format.currency(subtotal)}</span></td>
+                           <td class="text-center">
+                               <button type="button" class="btn btn-sm btn-outline-danger eliminar-producto">
+                                   <i class="bi bi-trash"></i>
+                               </button>
+                           </td>
+                       </tr>
+                   `;
 
                     $('#productosTable tbody').append(newRow);
                 }
@@ -174,12 +194,12 @@
             // Actualizar totales al cambiar cantidad
             $(document).on('change', '.cantidad', function () {
                 const row = $(this).closest('tr');
-                const cantidad = parseInt($(this).val());
-                const precio = parseFloat(row.find('input[name$=".PrecioUnitario"]').val());
+                const cantidad = parseInt($(this).val()) || 0;
+                const precio = parseFloat(row.find('input[name$=".PrecioUnitario"]').val()) || 0;
                 const subtotal = cantidad * precio;
 
                 row.find('.subtotal').text(App.format.currency(subtotal));
-                row.find('input[name$=".PrecioTotal"]').val(subtotal);
+                row.find('input[name$=".PrecioTotal"]').val(subtotal.toFixed(2));
 
                 self.updateTotals();
             });
@@ -218,6 +238,34 @@
 
             // Ejecutar cambio inicial
             $('#FormaPagoID').trigger('change');
+        },
+
+        // Configurar crédito personal
+        setupCreditoPersonal: function () {
+            // Mostrar porcentaje de recargo según cuotas
+            $('#Cuotas').on('change', function () {
+                const cuotas = $(this).val();
+                if (cuotas) {
+                    // Mostrar información de recargo
+                    $('#infoRecargo').removeClass('d-none');
+
+                    // Calcular porcentaje basado en número de cuotas
+                    let porcentaje = 0;
+                    if (cuotas <= 3) {
+                        porcentaje = 10;
+                    } else if (cuotas <= 6) {
+                        porcentaje = 15;
+                    } else if (cuotas <= 12) {
+                        porcentaje = 20;
+                    } else {
+                        porcentaje = 25;
+                    }
+
+                    $('#porcentajeRecargo').text(porcentaje);
+                } else {
+                    $('#infoRecargo').addClass('d-none');
+                }
+            });
         },
 
         // Configurar opciones de cotización
@@ -260,17 +308,19 @@
                 totalVenta += subtotal;
 
                 // Actualizar campo oculto con el total correcto
-                $(this).find('input[name$=".PrecioTotal"]').val(subtotal);
+                $(this).find('input[name$=".PrecioTotal"]').val(subtotal.toFixed(2));
             });
 
             $('#totalProductos').text(totalProductos);
             $('#totalVenta').text(App.format.currency(totalVenta));
 
-            // Actualizar el total del viewmodel
+            // Eliminar la entrada anterior y añadir una nueva actualizada
+            $('input[name="PrecioTotal"]').remove();
+
             $('<input>').attr({
                 type: 'hidden',
                 name: 'PrecioTotal',
-                value: totalVenta
+                value: totalVenta.toFixed(2)
             }).appendTo('#ventaForm');
         },
 

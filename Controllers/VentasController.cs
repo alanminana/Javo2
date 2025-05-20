@@ -616,15 +616,11 @@ namespace Javo2.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "Permission:ventas.ver")]
         public async Task<IActionResult> BuscarProducto(string codigoProducto)
         {
             try
             {
-                _logger.LogInformation("BuscarProducto => Código/Nombre={Codigo}", codigoProducto);
                 var producto = await _productoService.GetProductoByCodigoAsync(codigoProducto);
-
-                // Si no se encontró por código, buscar por nombre
                 if (producto == null)
                 {
                     var productos = await _productoService.GetProductosByTermAsync(codigoProducto);
@@ -634,10 +630,7 @@ namespace Javo2.Controllers
                 if (producto == null)
                     return Json(new { success = false, message = "Producto no encontrado." });
 
-                // Obtener stock disponible
-                var stockItem = producto.StockItem;
-                bool hayStock = stockItem != null && stockItem.CantidadDisponible > 0;
-
+                // Asegurar que los valores decimales se manejan correctamente
                 return Json(new
                 {
                     success = true,
@@ -649,11 +642,8 @@ namespace Javo2.Controllers
                         nombreProducto = producto.Nombre,
                         marca = producto.Marca?.Nombre ?? "",
                         cantidad = 1,
-                        precioUnitario = producto.PContado,
-                        precioLista = producto.PLista,
-                        precioTotal = producto.PContado,
-                        stockDisponible = stockItem?.CantidadDisponible ?? 0,
-                        hayStock = hayStock
+                        precioUnitario = Math.Round(producto.PContado, 2),
+                        precioLista = Math.Round(producto.PLista, 2)
                     }
                 });
             }

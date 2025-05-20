@@ -313,46 +313,41 @@
                                     </div>
 
                                     <!-- Crédito Personal (FormaPagoID = 6) -->
-                                    <!-- Crédito Personal (FormaPagoID = 6) -->
                                     <div id="creditoPersonalContainer" class="payment-container d-none">
                                         <div class="row g-2">
-                                            <div class="col-12">
-                                                <label asp-for="PlanFinanciamiento" class="form-label text-light">Plan de Financiamiento</label>
-                                                <select asp-for="PlanFinanciamiento" asp-items="Model.PlanesFinanciamiento"
-                                                        class="form-select bg-secondary text-light">
-                                                    <option value="">-- Seleccione --</option>
-                                                </select>
-                                                <span asp-validation-for="PlanFinanciamiento" class="invalid-feedback d-block"></span>
-                                            </div>
                                             <div class="col-12 mt-2">
                                                 <label asp-for="Cuotas" class="form-label text-light">Cuotas</label>
                                                 <select asp-for="Cuotas" asp-items="Model.CuotasOptions"
-                                                        class="form-select bg-secondary text-light">
+                                                        class="form-select bg-secondary text-light" id="selectCuotas">
                                                     <option value="">-- Seleccione --</option>
                                                 </select>
                                                 <span asp-validation-for="Cuotas" class="invalid-feedback d-block"></span>
+                                                <!-- Mostrar porcentaje de recargo -->
+                                                <div id="infoRecargo" class="mt-1 text-info small d-none">
+                                                    Recargo aplicado: <span id="porcentajeRecargo">0</span>%
+                                                </div>
                                             </div>
 
                                             <!-- Verificación de saldo disponible -->
                                             @if (Model.LimiteCreditoCliente > 0)
                                             {
                                                 <div class="col-12 mt-3">
-                                                    <div class="card bg-secondary">
+                                                    <div class="card bg-dark border border-secondary">
                                                         <div class="card-body">
-                                                            <h6>Información de Crédito</h6>
-                                                            <p>Límite de Crédito: @Model.LimiteCreditoCliente.ToString("C")</p>
-                                                            <p>Saldo Disponible: @Model.SaldoDisponibleCliente.ToString("C")</p>
+                                                            <h6 class="text-light">Información de Crédito</h6>
+                                                            <p class="text-light">Límite de Crédito: @Model.LimiteCreditoCliente.ToString("C")</p>
+                                                            <p class="text-light">Saldo Disponible: @Model.SaldoDisponibleCliente.ToString("C")</p>
 
                                                             @if (Model.PrecioTotal > Model.SaldoDisponibleCliente)
                                                             {
-                                                                <div class="alert alert-danger mb-0">
+                                                                <div class="alert alert-danger">
                                                                     <i class="bi bi-exclamation-triangle-fill me-2"></i>
                                                                     El cliente no tiene saldo disponible suficiente para esta compra.
                                                                 </div>
                                                             }
                                                             else
                                                             {
-                                                                <div class="alert alert-success mb-0">
+                                                                <div class="alert alert-success">
                                                                     <i class="bi bi-check-circle-fill me-2"></i>
                                                                     Saldo disponible suficiente para esta compra.
                                                                 </div>
@@ -408,9 +403,7 @@
                     <a asp-action="Index" class="btn btn-outline-light">
                         <i class="bi bi-arrow-left me-1"></i> Volver al listado
                     </a>
-                    <button type="button" id="crearCotizacion" class="btn btn-info">
-                        <i class="bi bi-receipt me-1"></i> Crear Cotización
-                    </button>
+                    
                     <button type="submit" name="Finalizar" value="false" class="btn btn-outline-light">
                         <i class="bi bi-save me-1"></i> Guardar Borrador
                     </button>
@@ -441,11 +434,7 @@
     </div>
 </div>
 
-<!-- Form para crear cotización -->
-<form id="cotizacionForm" asp-controller="Cotizaciones" asp-action="Create" method="post" class="d-none">
-    @Html.AntiForgeryToken()
-    <input type="hidden" id="cotizacionData" name="cotizacionData" />
-</form>
+
 
 @section Scripts {
     @{
