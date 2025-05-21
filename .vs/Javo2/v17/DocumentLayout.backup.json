@@ -3,24 +3,40 @@
   "WorkspaceRootPath": "D:\\github\\Javo2\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\src\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\src\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\modules\\transaction-form.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\modules\\transaction-form.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\utils\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\utils\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\controllers\\reportes.controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\controllers\\reportes.controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\src\\vendor.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\src\\vendor.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\core\\app-init.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\core\\app-init.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\src\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\src\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\utils\\format.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\utils\\format.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\core\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\core\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\utils\\event-handler.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\utils\\event-handler.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\utils\\ajax-helper.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\utils\\ajax-helper.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\core\\app-init.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\core\\app-init.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\utils\\permission-handler.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
@@ -31,32 +47,20 @@
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\utils\\response-handler.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\utils\\webpack.config.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\utils\\webpack.config.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\src\\webpack.config.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\src\\webpack.config.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\utils\\ajax-helper.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\utils\\ajax-helper.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\controllers\\venta.controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\controllers\\venta.controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\components\\reportes.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\components\\reportes.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\controllers\\usuario-permiso.controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\controllers\\usuario-permiso.controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\components\\venta.controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\components\\venta.controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\components\\usuario-permiso.controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\components\\usuario-permiso.controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\components\\proveedor.controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\components\\proveedor.controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\components\\transaction-form.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\components\\transaction-form.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\controllers\\proveedor.controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\controllers\\proveedor.controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\utils\\notification.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
@@ -67,20 +71,16 @@
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\utils\\validation.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\utils\\format.js.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\utils\\format.js.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\modules\\catalogo-producto.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\modules\\catalogo-producto.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\components\\catalogo-producto.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\components\\catalogo-producto.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\controllers\\cliente.controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\controllers\\cliente.controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\components\\cliente.controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\components\\cliente.controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\components\\producto.controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\components\\producto.controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\controllers\\producto.controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\controllers\\producto.controller.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     }
   ],
   "DocumentGroupContainers": [
@@ -90,11 +90,15 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 5,
           "Children": [
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "app.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\src\\app.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\src\\app.js",
@@ -107,72 +111,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "vendor.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\src\\vendor.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\src\\vendor.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\src\\vendor.js",
-              "RelativeToolTip": "wwwroot\\js\\src\\vendor.js",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAASAAAAAAAAAA==",
+              "DocumentIndex": 11,
+              "Title": "webpack.config.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\src\\webpack.config.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\src\\webpack.config.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\src\\webpack.config.js",
+              "RelativeToolTip": "wwwroot\\js\\src\\webpack.config.js",
+              "ViewState": "AgIAABsAAAAAAAAAAAAAADMAAAACAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-20T23:35:32.942Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "app.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\app.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\utils\\app.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\utils\\app.js",
-              "RelativeToolTip": "wwwroot\\js\\utils\\app.js",
-              "ViewState": "AgIAAEsAAAAAAAAAAAAAAGIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-20T23:32:48.196Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "permission-handler.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\permission-handler.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\utils\\permission-handler.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\utils\\permission-handler.js",
-              "RelativeToolTip": "wwwroot\\js\\utils\\permission-handler.js",
-              "ViewState": "AgIAAE0AAAAAAAAAAAAAAGUAAAATAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-20T23:30:35.837Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-20T23:29:45.264Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 6,
-              "Title": "response-handler.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\response-handler.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\utils\\response-handler.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\utils\\response-handler.js",
-              "RelativeToolTip": "wwwroot\\js\\utils\\response-handler.js",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAABMAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-20T23:30:13.393Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "webpack.config.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\webpack.config.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\utils\\webpack.config.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\utils\\webpack.config.js",
-              "RelativeToolTip": "wwwroot\\js\\utils\\webpack.config.js",
-              "ViewState": "AgIAABsAAAAAAAAAAAAAADMAAAACAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-20T23:29:45.264Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
               "Title": "event-handler.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\event-handler.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\utils\\event-handler.js",
@@ -185,12 +136,12 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "reportes.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\components\\reportes.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\components\\reportes.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\components\\reportes.js",
-              "RelativeToolTip": "wwwroot\\js\\components\\reportes.js",
+              "DocumentIndex": 1,
+              "Title": "reportes.controller.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\controllers\\reportes.controller.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\controllers\\reportes.controller.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\controllers\\reportes.controller.js",
+              "RelativeToolTip": "wwwroot\\js\\controllers\\reportes.controller.js",
               "ViewState": "AgIAAC8BAAAAAAAAAAAAAEcBAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
               "WhenOpened": "2025-05-20T23:26:31.008Z",
@@ -198,46 +149,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "usuario-permiso.controller.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\components\\usuario-permiso.controller.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\components\\usuario-permiso.controller.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\components\\usuario-permiso.controller.js",
-              "RelativeToolTip": "wwwroot\\js\\components\\usuario-permiso.controller.js",
-              "ViewState": "AgIAABABAAAAAAAAAAAAACgBAAATAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "transaction-form.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\transaction-form.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\transaction-form.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\transaction-form.js",
+              "RelativeToolTip": "wwwroot\\js\\modules\\transaction-form.js",
+              "ViewState": "AgIAAHsBAAAAAAAAAAAAAI0BAABCAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-20T23:25:16.89Z",
+              "WhenOpened": "2025-05-20T23:06:58.313Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "app-init.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\core\\app-init.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\core\\app-init.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\core\\app-init.js",
-              "RelativeToolTip": "wwwroot\\js\\core\\app-init.js",
-              "ViewState": "AgIAAIoAAAAAAAAAAAAAAJwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-20T23:23:51.057Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "notification.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\notification.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\utils\\notification.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\utils\\notification.js",
-              "RelativeToolTip": "wwwroot\\js\\utils\\notification.js",
-              "ViewState": "AgIAAHAAAAAAAAAAAAAAAIEAAAAGAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-20T23:22:55.978Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 7,
               "Title": "ajax-helper.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\ajax-helper.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\utils\\ajax-helper.js",
@@ -250,25 +175,25 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "validation.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\validation.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\utils\\validation.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\utils\\validation.js",
-              "RelativeToolTip": "wwwroot\\js\\utils\\validation.js",
-              "ViewState": "AgIAAEsAAAAAAAAAAAAAAFgAAAAxAAAAAAAAAA==",
+              "DocumentIndex": 5,
+              "Title": "app.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\core\\app.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\core\\app.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\core\\app.js",
+              "RelativeToolTip": "wwwroot\\js\\core\\app.js",
+              "ViewState": "AgIAAEsAAAAAAAAAAAAAAGIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-20T23:21:41.761Z",
+              "WhenOpened": "2025-05-20T23:32:48.196Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "format.js.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\format.js.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\utils\\format.js.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\utils\\format.js.js",
-              "RelativeToolTip": "wwwroot\\js\\utils\\format.js.js",
+              "DocumentIndex": 4,
+              "Title": "format.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\format.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\utils\\format.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\utils\\format.js",
+              "RelativeToolTip": "wwwroot\\js\\utils\\format.js",
               "ViewState": "AgIAACsAAAAAAAAAAAAAAEMAAAALAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
               "WhenOpened": "2025-05-20T23:20:38.308Z",
@@ -276,85 +201,148 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "transaction-form.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\components\\transaction-form.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\components\\transaction-form.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\components\\transaction-form.js",
-              "RelativeToolTip": "wwwroot\\js\\components\\transaction-form.js",
-              "ViewState": "AgIAAHsBAAAAAAAAAAAAAJMBAAATAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "vendor.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\src\\vendor.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\src\\vendor.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\src\\vendor.js",
+              "RelativeToolTip": "wwwroot\\js\\src\\vendor.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-20T23:06:58.313Z",
+              "WhenOpened": "2025-05-20T23:35:32.942Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 10,
+              "Title": "response-handler.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\response-handler.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\utils\\response-handler.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\utils\\response-handler.js",
+              "RelativeToolTip": "wwwroot\\js\\utils\\response-handler.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAABMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-20T23:30:13.393Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "permission-handler.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\permission-handler.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\utils\\permission-handler.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\utils\\permission-handler.js",
+              "RelativeToolTip": "wwwroot\\js\\utils\\permission-handler.js",
+              "ViewState": "AgIAAE0AAAAAAAAAAAAAAGUAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-20T23:30:35.837Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "usuario-permiso.controller.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\controllers\\usuario-permiso.controller.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\controllers\\usuario-permiso.controller.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\controllers\\usuario-permiso.controller.js",
+              "RelativeToolTip": "wwwroot\\js\\controllers\\usuario-permiso.controller.js",
+              "ViewState": "AgIAABABAAAAAAAAAAAAACgBAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-20T23:25:16.89Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "app-init.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\core\\app-init.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\core\\app-init.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\core\\app-init.js",
+              "RelativeToolTip": "wwwroot\\js\\core\\app-init.js",
+              "ViewState": "AgIAAIoAAAAAAAAAAAAAAJwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-20T23:23:51.057Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "notification.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\notification.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\utils\\notification.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\utils\\notification.js",
+              "RelativeToolTip": "wwwroot\\js\\utils\\notification.js",
+              "ViewState": "AgIAAHAAAAAAAAAAAAAAAIEAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-20T23:22:55.978Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "validation.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\validation.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\utils\\validation.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\utils\\validation.js",
+              "RelativeToolTip": "wwwroot\\js\\utils\\validation.js",
+              "ViewState": "AgIAAEsAAAAAAAAAAAAAAFgAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-20T23:21:41.761Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
               "Title": "venta.controller.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\components\\venta.controller.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\components\\venta.controller.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\components\\venta.controller.js",
-              "RelativeToolTip": "wwwroot\\js\\components\\venta.controller.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\controllers\\venta.controller.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\controllers\\venta.controller.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\controllers\\venta.controller.js",
+              "RelativeToolTip": "wwwroot\\js\\controllers\\venta.controller.js",
               "ViewState": "AgIAAD8BAAAAAAAAAAAAAFcBAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-20T23:14:42.642Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-20T23:14:42.642Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 17,
               "Title": "catalogo-producto.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\components\\catalogo-producto.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\components\\catalogo-producto.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\components\\catalogo-producto.js",
-              "RelativeToolTip": "wwwroot\\js\\components\\catalogo-producto.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\catalogo-producto.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\catalogo-producto.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\catalogo-producto.js",
+              "RelativeToolTip": "wwwroot\\js\\modules\\catalogo-producto.js",
               "ViewState": "AgIAABgBAAAAAAAAAAAAADABAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-20T23:15:45.561Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-20T23:15:45.561Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 14,
               "Title": "proveedor.controller.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\components\\proveedor.controller.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\components\\proveedor.controller.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\components\\proveedor.controller.js",
-              "RelativeToolTip": "wwwroot\\js\\components\\proveedor.controller.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\controllers\\proveedor.controller.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\controllers\\proveedor.controller.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\controllers\\proveedor.controller.js",
+              "RelativeToolTip": "wwwroot\\js\\controllers\\proveedor.controller.js",
               "ViewState": "AgIAACICAAAAAAAAAAAAADoCAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-20T23:11:47.874Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-20T23:11:47.874Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 18,
               "Title": "cliente.controller.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\components\\cliente.controller.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\components\\cliente.controller.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\components\\cliente.controller.js",
-              "RelativeToolTip": "wwwroot\\js\\components\\cliente.controller.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\controllers\\cliente.controller.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\controllers\\cliente.controller.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\controllers\\cliente.controller.js",
+              "RelativeToolTip": "wwwroot\\js\\controllers\\cliente.controller.js",
               "ViewState": "AgIAAIwAAAAAAAAAAAAAAKQAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-20T23:13:10.749Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-20T23:13:10.749Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 19,
               "Title": "producto.controller.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\components\\producto.controller.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\components\\producto.controller.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\components\\producto.controller.js",
-              "RelativeToolTip": "wwwroot\\js\\components\\producto.controller.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\controllers\\producto.controller.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\controllers\\producto.controller.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\controllers\\producto.controller.js",
+              "RelativeToolTip": "wwwroot\\js\\controllers\\producto.controller.js",
               "ViewState": "AgIAAMoCAAAAAAAAAAAAAOICAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-20T23:08:10.57Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+              "WhenOpened": "2025-05-20T23:08:10.57Z"
             }
           ]
         }

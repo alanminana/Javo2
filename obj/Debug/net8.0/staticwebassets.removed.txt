@@ -12,6 +12,7 @@ D:\github\Javo2\wwwroot\js\modules\forms.js
 D:\github\Javo2\wwwroot\js\modules\permissions.js
 D:\github\Javo2\wwwroot\js\modules\producto-form.js
 D:\github\Javo2\wwwroot\js\modules\proveedor-form.js
+D:\github\Javo2\wwwroot\js\modules\Tables.js
 D:\github\Javo2\wwwroot\js\modules\usuarios-permisos.js
 D:\github\Javo2\wwwroot\js\modules\cotizacion-form.js
 D:\github\Javo2\wwwroot\js\modules\venta-form.js
