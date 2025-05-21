@@ -1,50 +1,119 @@
-﻿using Javo2.IServices;
+﻿// Controllers/Catalog/AjustePreciosController.cs
+using AutoMapper;
+using Javo2.IServices;
 using Javo2.Models;
+using Javo2.Services;
 using Javo2.ViewModels.Operaciones.Productos;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Javo2.Controllers
+namespace Javo2.Controllers.Catalog
 {
     [Authorize]
-    public class AjustePreciosController : Controller
+    public class AjustePreciosController : ProductosBaseController
     {
         private readonly IAjustePrecioService _ajustePrecioService;
-        private readonly IProductoService _productoService;
-        private readonly IAuditoriaService _auditoriaService;
-        private readonly IMapper _mapper;
-        private readonly ILogger<AjustePreciosController> _logger;
 
         public AjustePreciosController(
-            IAjustePrecioService ajustePrecioService,
             IProductoService productoService,
+            IProductSearchService productSearchService,
+            ICatalogoService catalogoService,
             IAuditoriaService auditoriaService,
+            IAjustePrecioService ajustePrecioService,
             IMapper mapper,
             ILogger<AjustePreciosController> logger)
+            : base(productoService, productSearchService, catalogoService, auditoriaService, mapper, logger)
         {
             _ajustePrecioService = ajustePrecioService;
-            _productoService = productoService;
-            _auditoriaService = auditoriaService;
-            _mapper = mapper;
-            _logger = logger;
         }
+
+        #region Historial de Ajustes
 
         // GET: AjustePrecios/Index
         [HttpGet]
         [Authorize(Policy = "Permission:productos.ajustarprecios")]
         public async Task<IActionResult> Index()
         {
-            var historial = await _ajustePrecioService.ObtenerHistorialAjustesAsync();
-            var viewModel = _mapper.Map<List<AjustePrecioHistoricoViewModel>>(historial);
-            return View(viewModel);
+            try
+            {
+                var historial = await _ajustePrecioService.ObtenerHistorialAjustesAsync();
+                var viewModel = _mapper.Map<List<AjustePrecioHistoricoViewModel>>(historial);
+                return View(viewModel);
+            }
+            catch (Exception ex)
+            {
+                LogError(ex, "Error al cargar historial de ajustes de precios");
+                return View("Error");
+            }
+        }
+
+        // GET: AjustePrecios/Details/5
+        [HttpGet]
+        [Authorize(Policy = "Permission:productos.ajustarprecios")]
+        public async Task<IActionResult> Details(int id)
+        {
+            try
+            {
+                var ajuste = await _ajustePrecioService.ObtenerAjusteHistoricoAsync(id);
+                if (ajuste == null)
+                {
+                    return NotFound();
+                }
+
+                var viewModel = _mapper.Map<AjustePrecioHistoricoViewModel>(ajuste);
+                return View(viewModel);
+            }
+            catch (Exception ex)
+            {
+                LogError(ex, "Error al cargar detalles de ajuste de precios");
+                return View("Error");
+            }
+        }
+
+        // POST: AjustePrecios/Revert/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:productos.ajustarprecios")]
+        public async Task<IActionResult> Revert(int id)
+        {
+            try
+            {
+                await _ajustePrecioService.RevertirAjusteAsync(id, User.Identity?.Name ?? "Sistema");
+
+                await RegistrarAuditoriaAsync(
+                    "AjustePrecio",
+                    "RevertirAjuste",
+                    id.ToString(),
+                    "Reversión manual de ajuste de precios"
+                );
+
+                SetSuccessMessage("Ajuste de precios revertido correctamente.");
+                return RedirectToAction(nameof(Details), new { id });
+            }
+            catch (Exception ex)
+            {
+                LogError(ex, "Error al revertir ajuste de precios");
+                SetErrorMessage($"Error: {ex.Message}");
+                return RedirectToAction(nameof(Details), new { id });
+            }
+        }
+
+        #endregion
+
+        #region Ajustes Permanentes
+
+        // GET: AjustePrecios/FormSelector
+        [HttpGet]
+        [Authorize(Policy = "Permission:productos.ajustarprecios")]
+        public IActionResult FormSelector()
+        {
+            return View();
         }
 
         // GET: AjustePrecios/Form
@@ -52,20 +121,28 @@ namespace Javo2.Controllers
         [Authorize(Policy = "Permission:productos.ajustarprecios")]
         public async Task<IActionResult> Form()
         {
-            var productos = await _productoService.GetAllProductosAsync();
-            var viewModel = new AjustePrecioFormViewModel
+            try
             {
-                Productos = productos.Select(p => new ProductoAjusteViewModel
+                var productos = await _productoService.GetAllProductosAsync();
+                var viewModel = new AjustePrecioFormViewModel
                 {
-                    ProductoID = p.ProductoID,
-                    Nombre = p.Nombre,
-                    PCosto = p.PCosto,
-                    PContado = p.PContado,
-                    PLista = p.PLista,
-                    Seleccionado = false
-                }).ToList()
-            };
-            return View(viewModel);
+                    Productos = productos.Select(p => new ProductoAjusteViewModel
+                    {
+                        ProductoID = p.ProductoID,
+                        Nombre = p.Nombre,
+                        PCosto = p.PCosto,
+                        PContado = p.PContado,
+                        PLista = p.PLista,
+                        Seleccionado = false
+                    }).ToList()
+                };
+                return View(viewModel);
+            }
+            catch (Exception ex)
+            {
+                LogError(ex, "Error al cargar formulario de ajuste de precios");
+                return View("Error");
+            }
         }
 
         // POST: AjustePrecios/Form
@@ -96,7 +173,7 @@ namespace Javo2.Controllers
                     model.EsAumento,
                     model.Descripcion);
 
-                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                await RegistrarAuditoriaAsync(new AuditoriaRegistro
                 {
                     FechaHora = DateTime.Now,
                     Usuario = User.Identity?.Name ?? "Sistema",
@@ -106,112 +183,43 @@ namespace Javo2.Controllers
                     Detalle = $"Ajuste permanente {(model.EsAumento ? "aumento" : "descuento")} del {model.Porcentaje}%"
                 });
 
-                TempData["Success"] = "Ajuste de precios aplicado correctamente.";
+                SetSuccessMessage("Ajuste de precios aplicado correctamente.");
                 return RedirectToAction(nameof(Details), new { id = ajusteID });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al aplicar ajuste de precios");
+                LogError(ex, "Error al aplicar ajuste de precios");
                 ModelState.AddModelError("", $"Error: {ex.Message}");
                 return View(model);
             }
         }
 
-        // GET: AjustePrecios/Details/5
-        [HttpGet]
-        [Authorize(Policy = "Permission:productos.ajustarprecios")]
-        public async Task<IActionResult> Details(int id)
-        {
-            var ajuste = await _ajustePrecioService.ObtenerAjusteHistoricoAsync(id);
-            if (ajuste == null)
-            {
-                return NotFound();
-            }
+        #endregion
 
-            var viewModel = _mapper.Map<AjustePrecioHistoricoViewModel>(ajuste);
-            return View(viewModel);
-        }
-
-        // POST: AjustePrecios/Revert/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Policy = "Permission:productos.ajustarprecios")]
-        public async Task<IActionResult> Revert(int id)
-        {
-            try
-            {
-                await _ajustePrecioService.RevertirAjusteAsync(id, User.Identity?.Name ?? "Sistema");
-
-                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
-                {
-                    FechaHora = DateTime.Now,
-                    Usuario = User.Identity?.Name ?? "Sistema",
-                    Entidad = "AjustePrecio",
-                    Accion = "RevertirAjuste",
-                    LlavePrimaria = id.ToString(),
-                    Detalle = $"Reversión manual de ajuste de precios"
-                });
-
-                TempData["Success"] = "Ajuste de precios revertido correctamente.";
-                return RedirectToAction(nameof(Details), new { id });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al revertir ajuste de precios");
-                TempData["Error"] = $"Error: {ex.Message}";
-                return RedirectToAction(nameof(Details), new { id });
-            }
-        }
-
-        [HttpGet]
-        [Authorize(Policy = "Permission:productos.ajustarprecios")]
-        public IActionResult FormSelector()
-        {
-            return View();
-        }
+        #region Ajustes Temporales
 
         // GET: AjustePrecios/FormTemporal
         [HttpGet]
         [Authorize(Policy = "Permission:productos.ajustarprecios")]
         public async Task<IActionResult> FormTemporal()
         {
-            var viewModel = new AjusteTemporalFormViewModel
+            try
             {
-                FechaInicio = DateTime.Now.AddHours(1).Date.AddHours(DateTime.Now.Hour + 1),
-                FechaFin = DateTime.Now.AddDays(7).Date.AddHours(DateTime.Now.Hour + 1),
-                EsAumento = false, // Por defecto es descuento para ajustes temporales
-            };
+                var viewModel = new AjusteTemporalFormViewModel
+                {
+                    FechaInicio = DateTime.Now.AddHours(1).Date.AddHours(DateTime.Now.Hour + 1),
+                    FechaFin = DateTime.Now.AddDays(7).Date.AddHours(DateTime.Now.Hour + 1),
+                    EsAumento = false, // Por defecto es descuento para ajustes temporales
+                };
 
-            await CargarProductosFormularioTemporal(viewModel);
-            return View(viewModel);
-        }
-
-        // Método auxiliar para cargar productos y opciones de ajustes temporales
-        private async Task CargarProductosFormularioTemporal(AjusteTemporalFormViewModel model)
-        {
-            var productos = await _productoService.GetAllProductosAsync();
-            model.Productos = productos.Select(p => new ProductoAjusteViewModel
+                await CargarProductosFormularioTemporal(viewModel);
+                return View(viewModel);
+            }
+            catch (Exception ex)
             {
-                ProductoID = p.ProductoID,
-                Nombre = p.Nombre,
-                PCosto = p.PCosto,
-                PContado = p.PContado,
-                PLista = p.PLista,
-                Seleccionado = model.Productos?.FirstOrDefault(m => m.ProductoID == p.ProductoID)?.Seleccionado ?? false
-            }).ToList();
-
-            model.TiposDeAjuste = new List<SelectListItem>
-            {
-                new SelectListItem { Value = "Promoción", Text = "Promoción" },
-                new SelectListItem { Value = "Hot Sale", Text = "Hot Sale" },
-                new SelectListItem { Value = "Oferta Especial", Text = "Oferta Especial" },
-                new SelectListItem { Value = "Liquidación", Text = "Liquidación" },
-                new SelectListItem { Value = "Descuento Temporal", Text = "Descuento Temporal" },
-                new SelectListItem { Value = "Black Friday", Text = "Black Friday" },
-                new SelectListItem { Value = "Cyber Monday", Text = "Cyber Monday" },
-                new SelectListItem { Value = "Navidad", Text = "Navidad" },
-                new SelectListItem { Value = "Aniversario", Text = "Aniversario" }
-            };
+                LogError(ex, "Error al cargar formulario de ajuste temporal");
+                return View("Error");
+            }
         }
 
         // POST: AjustePrecios/FormTemporal
@@ -262,6 +270,7 @@ namespace Javo2.Controllers
                     await CargarProductosFormularioTemporal(model);
                     return View(model);
                 }
+
                 if (!model.FechaInicio.HasValue || !model.FechaFin.HasValue)
                 {
                     ModelState.AddModelError("", "Las fechas de inicio y fin son requeridas");
@@ -298,7 +307,7 @@ namespace Javo2.Controllers
                     model.Descripcion ?? $"Ajuste temporal {(model.EsAumento ? "aumento" : "descuento")} del {model.Porcentaje}%"
                 );
 
-                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                await RegistrarAuditoriaAsync(new AuditoriaRegistro
                 {
                     FechaHora = DateTime.Now,
                     Usuario = User.Identity?.Name ?? "Sistema",
@@ -308,12 +317,12 @@ namespace Javo2.Controllers
                     Detalle = $"Ajuste temporal {model.TipoAjuste}, {(model.EsAumento ? "aumento" : "descuento")} del {model.Porcentaje}%, Vigencia: {fechaInicio:dd/MM/yyyy HH:mm} - {fechaFin:dd/MM/yyyy HH:mm}"
                 });
 
-                TempData["Success"] = $"Ajuste temporal creado correctamente. Se aplicará el {fechaInicio:dd/MM/yyyy HH:mm} y finalizará el {fechaFin:dd/MM/yyyy HH:mm}";
+                SetSuccessMessage($"Ajuste temporal creado correctamente. Se aplicará el {fechaInicio:dd/MM/yyyy HH:mm} y finalizará el {fechaFin:dd/MM/yyyy HH:mm}");
                 return RedirectToAction("DetailsTemporal", new { id = ajusteID });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear ajuste temporal: {Message}", ex.Message);
+                LogError(ex, "Error al crear ajuste temporal: {Message}", ex.Message);
                 ModelState.AddModelError("", $"Ocurrió un error al crear el ajuste temporal: {ex.Message}");
                 await CargarProductosFormularioTemporal(model);
                 return View(model);
@@ -325,19 +334,27 @@ namespace Javo2.Controllers
         [Authorize(Policy = "Permission:productos.ajustarprecios")]
         public async Task<IActionResult> DetailsTemporal(int id)
         {
-            var ajuste = await _ajustePrecioService.ObtenerAjusteHistoricoAsync(id);
-            if (ajuste == null)
+            try
             {
-                return NotFound();
-            }
+                var ajuste = await _ajustePrecioService.ObtenerAjusteHistoricoAsync(id);
+                if (ajuste == null)
+                {
+                    return NotFound();
+                }
 
-            if (!ajuste.EsTemporal)
+                if (!ajuste.EsTemporal)
+                {
+                    return RedirectToAction("Details", new { id });
+                }
+
+                var viewModel = _mapper.Map<AjusteTemporalViewModel>(ajuste);
+                return View(viewModel);
+            }
+            catch (Exception ex)
             {
-                return RedirectToAction("Details", new { id });
+                LogError(ex, "Error al cargar detalles de ajuste temporal");
+                return View("Error");
             }
-
-            var viewModel = _mapper.Map<AjusteTemporalViewModel>(ajuste);
-            return View(viewModel);
         }
 
         // GET: AjustePrecios/IndexTemporales
@@ -345,18 +362,26 @@ namespace Javo2.Controllers
         [Authorize(Policy = "Permission:productos.ajustarprecios")]
         public async Task<IActionResult> IndexTemporales()
         {
-            var activos = await _ajustePrecioService.ObtenerAjustesTemporalesPorEstadoAsync(EstadoAjusteTemporal.Activo);
-            var programados = await _ajustePrecioService.ObtenerAjustesTemporalesPorEstadoAsync(EstadoAjusteTemporal.Programado);
-            var finalizados = await _ajustePrecioService.ObtenerAjustesTemporalesPorEstadoAsync(EstadoAjusteTemporal.Finalizado);
-
-            var viewModel = new AjustesTemporalesIndexViewModel
+            try
             {
-                AjustesActivos = _mapper.Map<List<AjusteTemporalViewModel>>(activos),
-                AjustesProgramados = _mapper.Map<List<AjusteTemporalViewModel>>(programados),
-                AjustesFinalizados = _mapper.Map<List<AjusteTemporalViewModel>>(finalizados)
-            };
+                var activos = await _ajustePrecioService.ObtenerAjustesTemporalesPorEstadoAsync(EstadoAjusteTemporal.Activo);
+                var programados = await _ajustePrecioService.ObtenerAjustesTemporalesPorEstadoAsync(EstadoAjusteTemporal.Programado);
+                var finalizados = await _ajustePrecioService.ObtenerAjustesTemporalesPorEstadoAsync(EstadoAjusteTemporal.Finalizado);
 
-            return View(viewModel);
+                var viewModel = new AjustesTemporalesIndexViewModel
+                {
+                    AjustesActivos = _mapper.Map<List<AjusteTemporalViewModel>>(activos),
+                    AjustesProgramados = _mapper.Map<List<AjusteTemporalViewModel>>(programados),
+                    AjustesFinalizados = _mapper.Map<List<AjusteTemporalViewModel>>(finalizados)
+                };
+
+                return View(viewModel);
+            }
+            catch (Exception ex)
+            {
+                LogError(ex, "Error al cargar lista de ajustes temporales");
+                return View("Error");
+            }
         }
 
         // POST: AjustePrecios/ActivarTemporal/5
@@ -369,7 +394,7 @@ namespace Javo2.Controllers
             {
                 await _ajustePrecioService.ActivarAjusteTemporalAsync(id);
 
-                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                await RegistrarAuditoriaAsync(new AuditoriaRegistro
                 {
                     FechaHora = DateTime.Now,
                     Usuario = User.Identity?.Name ?? "Sistema",
@@ -379,13 +404,13 @@ namespace Javo2.Controllers
                     Detalle = "Activación manual de ajuste temporal"
                 });
 
-                TempData["Success"] = "Ajuste temporal activado con éxito.";
+                SetSuccessMessage("Ajuste temporal activado con éxito.");
                 return RedirectToAction("DetailsTemporal", new { id });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al activar ajuste temporal.");
-                TempData["Error"] = "Ocurrió un error al activar el ajuste temporal: " + ex.Message;
+                LogError(ex, "Error al activar ajuste temporal.");
+                SetErrorMessage("Ocurrió un error al activar el ajuste temporal: " + ex.Message);
                 return RedirectToAction("DetailsTemporal", new { id });
             }
         }
@@ -400,7 +425,7 @@ namespace Javo2.Controllers
             {
                 await _ajustePrecioService.FinalizarAjusteTemporalAsync(id, User.Identity?.Name ?? "Sistema");
 
-                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                await RegistrarAuditoriaAsync(new AuditoriaRegistro
                 {
                     FechaHora = DateTime.Now,
                     Usuario = User.Identity?.Name ?? "Sistema",
@@ -410,16 +435,20 @@ namespace Javo2.Controllers
                     Detalle = "Finalización manual de ajuste temporal"
                 });
 
-                TempData["Success"] = "Ajuste temporal finalizado con éxito.";
+                SetSuccessMessage("Ajuste temporal finalizado con éxito.");
                 return RedirectToAction("DetailsTemporal", new { id });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al finalizar ajuste temporal.");
-                TempData["Error"] = "Ocurrió un error al finalizar el ajuste temporal: " + ex.Message;
+                LogError(ex, "Error al finalizar ajuste temporal.");
+                SetErrorMessage("Ocurrió un error al finalizar el ajuste temporal: " + ex.Message);
                 return RedirectToAction("DetailsTemporal", new { id });
             }
         }
+
+        #endregion
+
+        #region Simulación de Ajustes
 
         // AJAX: AjustePrecios/SimularAjusteTemporal
         [HttpPost]
@@ -465,9 +494,8 @@ namespace Javo2.Controllers
                     0
                 );
 
-                return Json(new
+                return JsonSuccess(null, new
                 {
-                    success = true,
                     productos = resultado,
                     fechaInicio = fechaInicio.ToString("dd/MM/yyyy HH:mm"),
                     fechaFin = fechaFin.ToString("dd/MM/yyyy HH:mm"),
@@ -477,8 +505,8 @@ namespace Javo2.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al simular ajuste temporal: {Message}", ex.Message);
-                return Json(new { success = false, message = ex.Message });
+                LogError(ex, "Error al simular ajuste temporal: {Message}", ex.Message);
+                return JsonError(ex.Message);
             }
         }
 
@@ -507,19 +535,53 @@ namespace Javo2.Controllers
                     listaNuevo = Math.Round(p.PLista * factor, 2)
                 }).ToList();
 
-                return Json(new
-                {
-                    success = true,
-                    productos = resultado
-                });
+                return JsonSuccess(null, new { productos = resultado });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al simular ajuste permanente: {Message}", ex.Message);
-                return Json(new { success = false, message = ex.Message });
+                LogError(ex, "Error al simular ajuste permanente: {Message}", ex.Message);
+                return JsonError(ex.Message);
             }
         }
-    }
 
-    
+        #endregion
+
+        #region Métodos Auxiliares
+
+        // Método común para registrar auditoría
+        private async Task RegistrarAuditoriaAsync(AuditoriaRegistro registro)
+        {
+            await _auditoriaService.RegistrarCambioAsync(registro);
+        }
+
+        // Método para cargar datos del formulario temporal
+        private async Task CargarProductosFormularioTemporal(AjusteTemporalFormViewModel model)
+        {
+            var productos = await _productoService.GetAllProductosAsync();
+            model.Productos = productos.Select(p => new ProductoAjusteViewModel
+            {
+                ProductoID = p.ProductoID,
+                Nombre = p.Nombre,
+                PCosto = p.PCosto,
+                PContado = p.PContado,
+                PLista = p.PLista,
+                Seleccionado = model.Productos?.FirstOrDefault(m => m.ProductoID == p.ProductoID)?.Seleccionado ?? false
+            }).ToList();
+
+            model.TiposDeAjuste = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "Promoción", Text = "Promoción" },
+                new SelectListItem { Value = "Hot Sale", Text = "Hot Sale" },
+                new SelectListItem { Value = "Oferta Especial", Text = "Oferta Especial" },
+                new SelectListItem { Value = "Liquidación", Text = "Liquidación" },
+                new SelectListItem { Value = "Descuento Temporal", Text = "Descuento Temporal" },
+                new SelectListItem { Value = "Black Friday", Text = "Black Friday" },
+                new SelectListItem { Value = "Cyber Monday", Text = "Cyber Monday" },
+                new SelectListItem { Value = "Navidad", Text = "Navidad" },
+                new SelectListItem { Value = "Aniversario", Text = "Aniversario" }
+            };
+        }
+
+        #endregion
+    }
 }

@@ -27,4 +27,8 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controllers\NewFolder - Copia %282%29\" />
+    <Folder Include="Controllers\NewFolder - Copia\" />
+  </ItemGroup>
 </Project>

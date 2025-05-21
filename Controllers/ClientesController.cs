@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace Javo2.Controllers.Clientes
 {
     [Authorize(Policy = "PermisoPolitica")]
-    [TypeFilter(typeof(ClientesExceptionFilter))]
+    [TypeFilter(typeof(BusinessException))]
     public class ClientesController : BaseController
     {
         private readonly IClienteService _clienteService;

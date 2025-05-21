@@ -12,16 +12,16 @@ using System;
 namespace Javo2.Controllers
 {
     [Authorize]  // Fuerza que el usuario esté autenticado
-    public class ReportesController : Controller
+    public class ProductosBaseController : Controller
     {
         private readonly IVentaService _ventaService;
         private readonly IProductoService _productoService;
-        private readonly ILogger<ReportesController> _logger;
+        private readonly ILogger<ProductosBaseController> _logger;
 
-        public ReportesController(
+        public ProductosBaseController(
             IVentaService ventaService,
             IProductoService productoService,
-            ILogger<ReportesController> logger)
+            ILogger<ProductosBaseController> logger)
         {
             _ventaService = ventaService;
             _productoService = productoService;

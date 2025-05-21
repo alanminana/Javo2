@@ -7,11 +7,11 @@ using System;
 
 namespace Javo2.Filters
 {
-    public class ClientesExceptionFilter : IExceptionFilter
+    public class BusinessException : IExceptionFilter
     {
-        private readonly ILogger<ClientesExceptionFilter> _logger;
+        private readonly ILogger<BusinessException> _logger;
 
-        public ClientesExceptionFilter(ILogger<ClientesExceptionFilter> logger)
+        public BusinessException(ILogger<BusinessException> logger)
         {
             _logger = logger;
         }
