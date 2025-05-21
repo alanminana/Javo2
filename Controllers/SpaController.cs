@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using System.Text.Json;
 
-namespace Javo2
+namespace Javo2.Controllers
 {
     [Authorize]
     public class SpaController : Controller

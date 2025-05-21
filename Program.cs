@@ -12,6 +12,7 @@ using Javo2.Services.Common;
 using Javo2.TagHelpers;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -84,6 +85,12 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<AutoMapperProfile>();
 });
 
+// Añadir soporte SPA para Vue.js
+builder.Services.AddSpaStaticFiles(configuration =>
+{
+    configuration.RootPath = "wwwroot/vue/dist";
+});
+
 var app = builder.Build();
 
 // Validación de configuración AutoMapper
@@ -136,6 +143,8 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+// Agregar middleware SPA
+app.UseSpaStaticFiles();
 app.UseRouting();
 
 app.UseAuthenticationConfig();
@@ -167,5 +176,18 @@ using (var scope = app.Services.CreateScope())
         logger.LogError(ex, "Error al sembrar permisos");
     }
 }
+
+// Configuración SPA
+app.UseSpa(spa =>
+{
+    spa.Options.SourcePath = "wwwroot/vue";
+
+    // Si estás en desarrollo y quieres usar el servidor de desarrollo de Vue.js
+    if (app.Environment.IsDevelopment())
+    {
+        // Opcional: si tienes configurado npm run serve para Vue
+        // spa.UseProxyToSpaDevelopmentServer("http://localhost:8080");
+    }
+});
 
 app.Run();
