@@ -4,7 +4,6 @@ using Javo2.Controllers.Base;
 using Javo2.Helpers;
 using Javo2.IServices;
 using Javo2.Models;
-using Javo2.Services;
 using Javo2.ViewModels.Operaciones.DevolucionGarantia;
 using Javo2.ViewModels.Operaciones.Ventas;
 using Microsoft.AspNetCore.Authorization;
@@ -46,7 +45,6 @@ namespace Javo2.Controllers
             _controllerId = Guid.NewGuid().ToString();
             _logger.LogWarning("DEPURACIÓN: VentasController creado - ID: {ID}", _controllerId);
             _ventaService = ventaService;
-       
             _cotizacionService = cotizacionService;
             _mapper = mapper;
             _clienteService = clienteService;
@@ -619,12 +617,9 @@ namespace Javo2.Controllers
                 return Json(new { success = false, message = "Error al buscar el cliente." });
             }
         }
-        private static int _contadorBusquedas = 0;
 
         public async Task<IActionResult> BuscarProducto(string codigoProducto)
         {
-            int contador = Interlocked.Increment(ref _contadorBusquedas);
-            _logger.LogWarning("DEPURACIÓN: BuscarProducto - Contador: {Contador}", contador);
             try
             {
                 _logger.LogWarning("DEPURACIÓN: BuscarProducto llamado - ControllerID: {CtrlID}, Código: {Codigo}",

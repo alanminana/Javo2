@@ -1,4 +1,5 @@
 using AutoMapper;
+using FluentAssertions.Common;
 using Javo2;
 using Javo2.Extensions;
 using Javo2.Filters;
@@ -14,12 +15,12 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 var builder = WebApplication.CreateBuilder(args);
-
 Console.WriteLine($"CONTENT ROOT = {Directory.GetCurrentDirectory()}");
 Console.WriteLine($"WEB ROOT     = {builder.Environment.WebRootPath}");
 
@@ -29,26 +30,26 @@ builder.Logging.AddConfiguration(builder.Configuration.GetSection("Logging"));
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
-// Configuración de MVC con filtros
+// Registrar servicios
 builder.Services.AddControllersWithViews(options =>
 {
+    // elimina el [Required] automático en reference types no-nullable
     options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
-    // ELIMINAR ESTA LÍNEA QUE CAUSA DUPLICACIÓN
-    // options.Filters.Add<PermissionSeeder>();
-});
-
+}); 
 builder.Services.AddHttpContextAccessor();
 
-// Servicios básicos
+// Primero registrar servicios básicos
 builder.Services.AddScoped<IEmailService, EmailService>();
 
-// Autenticación y políticas
-builder.Services.AddAuthenticationServices();
-builder.Services.AddAuthenticationPolicies();
-builder.Services.AddPermissionPolicies();
-
-// Servicios de dominio - todos como Scoped para evitar problemas de dependencias
+// Configurar autenticación y servicios relacionados
+builder.Services.AddAuthenticationServices();  // Registra servicios de autenticación
+builder.Services.AddAuthenticationPolicies();  // Registra políticas de permisos
 builder.Services.AddScoped<IAjustePrecioService, JsonDataService>();
+builder.Services.AddScoped<IProductoService, ProductoService>();
+
+builder.Services.AddHostedService<AjustesTemporalesBackgroundService>();
+
+// Servicios de la aplicación
 builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<IProveedorService, ProveedorService>();
 builder.Services.AddScoped<ICatalogoService, CatalogoService>();
@@ -62,31 +63,41 @@ builder.Services.AddScoped<ICotizacionService, CotizacionService>();
 builder.Services.AddScoped<IConfiguracionService, ConfiguracionService>();
 builder.Services.AddScoped<IGaranteService, GaranteService>();
 builder.Services.AddScoped<IFormCombosService, FormCombosService>();
+
 builder.Services.AddScoped<ICreditoService, CreditoService>();
+
 builder.Services.AddScoped<IDevolucionGarantiaService, DevolucionGarantiaService>();
+builder.Services.AddPermissionPolicies();
+// Agregar en Program.cs (en la sección de registro de servicios)
+
+// Servicio de garantes
+builder.Services.AddScoped<IGaranteService, GaranteService>();
+
+// Asegurarse de que el servicio de cotizaciones esté registrado
+builder.Services.AddScoped<ICotizacionService, CotizacionService>();
+
+// Servicio de búsqueda de cliente
+builder.Services.AddScoped<IClienteSearchService>(sp =>
+    sp.GetRequiredService<IClienteService>() as IClienteSearchService
+    ?? throw new InvalidOperationException("ClienteService must implement IClienteSearchService"));
+
 builder.Services.AddScoped<IDropdownService, DropdownService>();
 
-// Servicio de búsqueda de cliente (interface compartida)
-builder.Services.AddScoped<IClienteSearchService>(sp =>
-   sp.GetRequiredService<IClienteService>() as IClienteSearchService
-   ?? throw new InvalidOperationException("ClienteService must implement IClienteSearchService"));
-
-// TagHelpers y filtros
+// Registrar TagHelpers y Filters
 builder.Services.AddScoped<PermissionTagHelper>();
 builder.Services.AddScoped<PermissionSeeder>();
-
-// Background service
-builder.Services.AddHostedService<AjustesTemporalesBackgroundService>();
-
-// AutoMapper
-builder.Services.AddAutoMapper(cfg =>
+builder.Services.AddMvc(options =>
 {
-    cfg.AddProfile<AutoMapperProfile>();
+    options.Filters.Add<PermissionSeeder>();
 });
 
+// AutoMapper - Forma mejorada
+builder.Services.AddAutoMapper(cfg => {
+    cfg.AddProfile<AutoMapperProfile>();
+});
 var app = builder.Build();
 
-// Validación de configuración AutoMapper
+// Validación de configuración AutoMapper mejorada
 try
 {
     var mapper = app.Services.GetService<IMapper>();
@@ -101,6 +112,7 @@ try
         {
             Console.WriteLine("⚠️ Advertencia: Configuración incompleta de AutoMapper");
             Console.WriteLine(ex.Message);
+
             if (ex.Errors != null)
             {
                 foreach (var failure in ex.Errors)
@@ -138,14 +150,15 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
+// Autenticación y autorización (antes de endpoints)
 app.UseAuthenticationConfig();
 
-// Rutas
+// Definir rutas
 app.MapControllerRoute(
-   name: "default",
-   pattern: "{controller=Home}/{action=Index}/{id?}");
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// Middleware de autenticación personalizada
+// Middleware de autenticación personalizado
 app.UseMiddleware<AuthenticationMiddleware>();
 
 // Sembrar permisos al inicio

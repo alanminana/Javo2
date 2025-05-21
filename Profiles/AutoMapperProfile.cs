@@ -148,7 +148,13 @@ namespace Javo2
             // COTIZACION ↔ CotizacionListViewModel
             CreateMap<Cotizacion, CotizacionListViewModel>().ReverseMap();
 
-       
+            // DetalleVenta ↔ DetalleVentaViewModel
+            CreateMap<DetalleVenta, DetalleVentaViewModel>().ReverseMap();
+
+            // COTIZACION ↔ CotizacionListViewModel
+            CreateMap<Cotizacion, CotizacionListViewModel>()
+                .ReverseMap();
+
             // CLIENTE ↔ ClientesViewModel
             CreateMap<Cliente, ClientesViewModel>()
                 .ForMember(dest => dest.NombreCliente, opt => opt.MapFrom(src => src.Nombre))
