@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System;
 using System.Linq;
 
-namespace Javo2.Controllers
+namespace Javo2.Controllers.Reports
 {
     [Authorize]  // Fuerza que el usuario esté autenticado
     public class AuditoriaController : Controller

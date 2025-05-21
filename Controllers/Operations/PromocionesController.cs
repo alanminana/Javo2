@@ -11,7 +11,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Javo2.Controllers
+namespace Javo2.Controllers.Operations
 {
     [Authorize]  // Fuerza que el usuario esté autenticado
     public class PromocionesController : BaseController

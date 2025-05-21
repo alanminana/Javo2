@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Javo2.IServices.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Javo2.Controllers
+namespace Javo2.Controllers.Operations
 {
     [Authorize]
     public class ProveedoresController : BaseController
@@ -541,7 +541,7 @@ namespace Javo2.Controllers
                     p.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase) ||
                     p.CodigoAlfa.Contains(term, StringComparison.OrdinalIgnoreCase) ||
                     p.CodigoBarra.Contains(term, StringComparison.OrdinalIgnoreCase) ||
-                    (p.Marca != null && p.Marca.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase)));
+                    p.Marca != null && p.Marca.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase));
 
                 if (forPurchase)
                 {

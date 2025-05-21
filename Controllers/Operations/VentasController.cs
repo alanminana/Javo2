@@ -16,7 +16,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Javo2.Controllers.Sales
+namespace Javo2.Controllers.Operations
 {
     [Authorize]  // Fuerza que el usuario esté autenticado
     public class VentasController : BaseController
@@ -1063,7 +1063,7 @@ namespace Javo2.Controllers.Sales
                         celular = cliente.Celular,
                         limiteCredito = cliente.LimiteCreditoInicial,
                         saldo = cliente.Saldo,
-                        saldoDisponible = saldoDisponible,
+                        saldoDisponible,
                         aptoCredito = cliente.AptoCredito,
                         email = cliente.Email
                     }

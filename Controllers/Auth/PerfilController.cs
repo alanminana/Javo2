@@ -9,7 +9,7 @@ using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Javo2.Controllers
+namespace Javo2.Controllers.Auth
 {
     [Authorize]  // Fuerza autenticación
     public class PerfilController : BaseController

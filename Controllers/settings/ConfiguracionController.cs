@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Javo2.Controllers.Admin
+namespace Javo2.Controllers.settings
 {
     [Authorize]
     public class ConfiguracionController : BaseController
@@ -269,10 +269,10 @@ namespace Javo2.Controllers.Admin
                     {
                         username = usuario.NombreUsuario,
                         nombre = $"{usuario.Nombre} {usuario.Apellido}",
-                        roles = roles,
+                        roles,
                         tieneRolAdmin = roles.Any(r => r.Equals("Administrador", StringComparison.OrdinalIgnoreCase)),
                         permisos = permisosLista,
-                        tienePermisoDashboard = tienePermisoDashboard
+                        tienePermisoDashboard
                     }
                 });
             }

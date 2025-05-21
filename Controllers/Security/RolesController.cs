@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Javo2.Controllers.Authentication
+namespace Javo2.Controllers.Security
 {
     [Authorize(Policy = "PermisoPolitica")]
     public class RolesController : BaseController

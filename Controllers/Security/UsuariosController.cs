@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Javo2.Controllers
+namespace Javo2.Controllers.Security
 {
     [Authorize]  // Fuerza que el usuario esté autenticado
     public class UsuariosController : BaseController

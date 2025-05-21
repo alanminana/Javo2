@@ -14,7 +14,7 @@ using AutoMapper;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Javo2.Controllers
+namespace Javo2.Controllers.Operations
 {
     public class DevolucionGarantiaController : BaseController
     {
@@ -129,7 +129,7 @@ namespace Javo2.Controllers
                     numeroFactura = venta.NumeroFactura,
                     cliente = venta.NombreCliente,
                     fecha = venta.FechaVenta.ToString("dd/MM/yyyy"),
-                    items = items
+                    items
                 });
             }
             catch (Exception ex)

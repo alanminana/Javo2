@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Javo2.Controllers.Clientes
+namespace Javo2.Controllers.Client
 {
     [Authorize(Policy = "PermisoPolitica")]
     [TypeFilter(typeof(BusinessException))]
