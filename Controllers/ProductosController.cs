@@ -1,11 +1,14 @@
-﻿// Archivo: Controllers/ProductosController.cs
+﻿// Controllers/Catalog/ProductosController.cs
 using AutoMapper;
 using Javo2.Controllers.Base;
 using Javo2.DTOs;
+using Javo2.Helpers;
 using Javo2.IServices;
 using Javo2.IServices.Common;
 using Javo2.Models;
 using Javo2.Services;
+using Javo2.ViewModels;
+using Javo2.ViewModels.Operaciones.Catalogo;
 using Javo2.ViewModels.Operaciones.Productos;
 using Javo2.ViewModels.Operaciones.Stock;
 using Microsoft.AspNetCore.Authorization;
@@ -17,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Javo2.Controllers
+namespace Javo2.Controllers.Catalog
 {
     [Authorize(Policy = "PermisoPolitica")]
     public class ProductosController : BaseController
@@ -29,7 +32,6 @@ namespace Javo2.Controllers
         private readonly IMapper _mapper;
         private readonly IAuditoriaService _auditoriaService;
         private readonly IAjustePrecioService _ajustePrecioService;
-        private readonly ILogger<ProductosController> _logger;
 
         public ProductosController(
             IProductoService productoService,
@@ -49,8 +51,9 @@ namespace Javo2.Controllers
             _mapper = mapper;
             _auditoriaService = auditoriaService;
             _ajustePrecioService = ajustePrecioService;
-            _logger = logger;
         }
+
+        #region Productos
 
         // GET: Productos
         [Authorize(Policy = "Permission:productos.ver")]
@@ -274,73 +277,151 @@ namespace Javo2.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        #endregion
+
+        #region Catálogo de Productos
+
+        // GET: Productos/Catalogo
+        [Authorize(Policy = "Permission:productos.ver")]
+        public async Task<IActionResult> Catalogo()
+        {
+            try
+            {
+                _logger.LogInformation("ProductosController: Catalogo GET");
+                var productos = await _productoService.GetAllProductosAsync();
+                var rubros = await _catalogoService.GetRubrosAsync();
+                var marcas = await _catalogoService.GetMarcasAsync();
+
+                // Cargar totales de stock para rubros y marcas
+                var (rubrosStock, marcasStock) = await _productoService.GetRubrosMarcasStockAsync();
+
+                var model = new CatalogoProductosViewModel
+                {
+                    Productos = _mapper.Map<IEnumerable<ProductosViewModel>>(productos),
+                    Rubros = _mapper.Map<IEnumerable<RubroViewModel>>(rubros),
+                    Marcas = _mapper.Map<IEnumerable<MarcaViewModel>>(marcas)
+                };
+
+                // Asignar totales de stock a los ViewModels
+                foreach (var rubroVm in model.Rubros)
+                {
+                    rubroVm.TotalStock = rubrosStock.TryGetValue(rubroVm.ID, out int totalRubroStock)
+                        ? totalRubroStock : 0;
+                }
+
+                foreach (var marcaVm in model.Marcas)
+                {
+                    marcaVm.TotalStock = marcasStock.TryGetValue(marcaVm.ID, out int totalMarcaStock)
+                        ? totalMarcaStock : 0;
+                }
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en Catalogo de Productos");
+                return View("Error");
+            }
+        }
+
+        // GET: Productos/FilterProductos
         [HttpGet]
-        public async Task<IActionResult> GetSubRubros(int rubroId)
+        [Authorize(Policy = "Permission:productos.ver")]
+        public async Task<IActionResult> FilterProductos(string filterType, string filterValue)
         {
-            _logger.LogInformation("GetSubRubros recibido para rubroId: {0}", rubroId);
-
-            if (rubroId <= 0)
-            {
-                _logger.LogWarning("GetSubRubros: rubroId inválido: {0}", rubroId);
-                return Json(new List<SelectListItem>());
-            }
-
             try
             {
-                var items = await _dropdownService.GetSubRubrosAsync(rubroId);
-                _logger.LogInformation("GetSubRubros: Obtenidos {0} subrubros", items.Count());
-                return Json(items);
+                var filters = new ProductoFilterDto();
+
+                switch (filterType)
+                {
+                    case "Nombre":
+                        filters.Nombre = filterValue;
+                        break;
+                    case "Codigo":
+                        filters.Codigo = filterValue;
+                        break;
+                    case "Rubro":
+                        filters.Rubro = filterValue;
+                        break;
+                    case "SubRubro":
+                        filters.SubRubro = filterValue;
+                        break;
+                    case "Marca":
+                        filters.Marca = filterValue;
+                        break;
+                }
+
+                var productos = await _productoService.FilterProductosAsync(filters);
+                var productosVM = _mapper.Map<IEnumerable<ProductosViewModel>>(productos);
+
+                // Usar la ruta completa a la vista parcial existente
+                return PartialView("~/Views/Productos/_ProductosTable.cshtml", productosVM);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error obteniendo subrubros para rubroId {0}", rubroId);
-                return Json(new List<SelectListItem>());
+                _logger.LogError(ex, "Error en FilterProductos");
+                return Json(new { error = "Error al filtrar productos" });
             }
         }
 
-        // POST: Productos/IncrementarPrecios
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> IncrementarPrecios(string ProductoIDs, decimal porcentaje, bool isAumento, string descripcion = "")
+        // GET: Productos/FilterRubros
+        [HttpGet]
+        [Authorize(Policy = "Permission:catalogo.ver")]
+        public async Task<IActionResult> FilterRubros(string term)
         {
-            if (string.IsNullOrEmpty(ProductoIDs))
-                return Json(new { success = false, message = "Seleccione productos." });
-
-            var ids = ProductoIDs.Split(',').Select(int.Parse).ToList();
-
             try
             {
-                // Usar IAjustePrecioService en lugar de IProductoService
-                var ajusteId = await _ajustePrecioService.AjustarPreciosAsync(
-                    ids,
-                    porcentaje,
-                    isAumento,
-                    descripcion ?? "Ajuste rápido desde listado de productos"
-                );
+                // Estrategia 1: Intentar pasar el término directamente si existe sobrecarga
+                var rubros = await _catalogoService.GetRubrosAsync();
 
-                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                // Filtrado manual si la API no lo soporta directamente
+                if (!string.IsNullOrEmpty(term))
                 {
-                    FechaHora = DateTime.Now,
-                    Usuario = User.Identity?.Name ?? "Sistema",
-                    Entidad = "Producto",
-                    Accion = "UpdatePrices",
-                    LlavePrimaria = string.Join(',', ids),
-                    Detalle = $"{(isAumento ? "Aumento" : "Descuento")} {porcentaje}%"
-                });
+                    term = term.ToLower();
+                    rubros = rubros.Where(r => r.Nombre.ToLower().Contains(term)).ToList();
+                }
 
-                return Json(new
-                {
-                    success = true,
-                    message = $"Ajuste de precios aplicado correctamente a {ids.Count} productos.",
-                    ajusteId = ajusteId
-                });
+                var rubrosVm = _mapper.Map<IEnumerable<RubroViewModel>>(rubros);
+                return PartialView("~/Views/Catalogo/_RubrosTable.cshtml", rubrosVm);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al aplicar ajuste rápido de precios");
-                return Json(new { success = false, message = $"Error: {ex.Message}" });
+                _logger.LogError(ex, "Error en FilterRubros");
+                return Json(new { error = "Error al filtrar rubros" });
             }
         }
+
+        // GET: Productos/FilterMarcas
+        [HttpGet]
+        [Authorize(Policy = "Permission:catalogo.ver")]
+        public async Task<IActionResult> FilterMarcas(string term)
+        {
+            try
+            {
+                // Estrategia 1: Intentar pasar el término directamente si existe sobrecarga
+                var marcas = await _catalogoService.GetMarcasAsync();
+
+                // Filtrado manual si la API no lo soporta directamente
+                if (!string.IsNullOrEmpty(term))
+                {
+                    term = term.ToLower();
+                    marcas = marcas.Where(m => m.Nombre.ToLower().Contains(term)).ToList();
+                }
+
+                var marcasVm = _mapper.Map<IEnumerable<MarcaViewModel>>(marcas);
+                return PartialView("~/Views/Catalogo/_MarcasTable.cshtml", marcasVm);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en FilterMarcas");
+                return Json(new { error = "Error al filtrar marcas" });
+            }
+        }
+
+        #endregion
+
+        #region Operaciones de Stock
 
         // GET: Productos/AjusteStock/5
         [HttpGet]
@@ -385,6 +466,102 @@ namespace Javo2.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: Productos/MovimientosStock/5
+        [HttpGet]
+        public async Task<IActionResult> MovimientosStock(int id)
+        {
+            var prod = await _productoService.GetProductoByIDAsync(id);
+            if (prod == null) return NotFound();
+            var item = await _stockService.GetStockItemByProductoIDAsync(id);
+            var movs = await _stockService.GetMovimientosByProductoIDAsync(id);
+            var model = new StockItemViewModel
+            {
+                StockItemID = item?.StockItemID ?? 0,
+                ProductoID = id,
+                NombreProducto = prod.Nombre,
+                CantidadDisponible = item?.CantidadDisponible ?? 0,
+                Movimientos = _mapper.Map<IEnumerable<MovimientoStockViewModel>>(movs)
+            };
+            return View(model);
+        }
+
+        #endregion
+
+        #region Ajuste de Precios
+
+        // POST: Productos/IncrementarPrecios
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission:productos.ajustarprecios")]
+        public async Task<IActionResult> IncrementarPrecios(string ProductoIDs, decimal porcentaje, bool isAumento, string descripcion = "")
+        {
+            if (string.IsNullOrEmpty(ProductoIDs))
+                return Json(new { success = false, message = "Seleccione productos." });
+
+            var ids = ProductoIDs.Split(',').Select(int.Parse).ToList();
+
+            try
+            {
+                // Usar IAjustePrecioService en lugar de IProductoService
+                var ajusteId = await _ajustePrecioService.AjustarPreciosAsync(
+                    ids,
+                    porcentaje,
+                    isAumento,
+                    descripcion ?? "Ajuste rápido desde listado de productos"
+                );
+
+                await _auditoriaService.RegistrarCambioAsync(new AuditoriaRegistro
+                {
+                    FechaHora = DateTime.Now,
+                    Usuario = User.Identity?.Name ?? "Sistema",
+                    Entidad = "Producto",
+                    Accion = "UpdatePrices",
+                    LlavePrimaria = string.Join(',', ids),
+                    Detalle = $"{(isAumento ? "Aumento" : "Descuento")} {porcentaje}%"
+                });
+
+                return Json(new
+                {
+                    success = true,
+                    message = $"Ajuste de precios aplicado correctamente a {ids.Count} productos.",
+                    ajusteId = ajusteId
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al aplicar ajuste rápido de precios");
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
+            }
+        }
+
+        #endregion
+
+        #region Utilidades y métodos de apoyo
+
+        [HttpGet]
+        public async Task<IActionResult> GetSubRubros(int rubroId)
+        {
+            _logger.LogInformation("GetSubRubros recibido para rubroId: {0}", rubroId);
+
+            if (rubroId <= 0)
+            {
+                _logger.LogWarning("GetSubRubros: rubroId inválido: {0}", rubroId);
+                return Json(new List<SelectListItem>());
+            }
+
+            try
+            {
+                var items = await _dropdownService.GetSubRubrosAsync(rubroId);
+                _logger.LogInformation("GetSubRubros: Obtenidos {0} subrubros", items.Count());
+                return Json(items);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error obteniendo subrubros para rubroId {0}", rubroId);
+                return Json(new List<SelectListItem>());
+            }
+        }
+
         // GET: Productos/Filter
         [HttpGet]
         public async Task<IActionResult> Filter(ProductoFilterDtoViewModel filters)
@@ -403,25 +580,6 @@ namespace Javo2.Controllers
             var productos = await _productoService.FilterProductosAsync(dto);
             var model = _mapper.Map<List<ProductosViewModel>>(productos);
             return PartialView("_ProductosTable", model);
-        }
-
-        // GET: Productos/MovimientosStock/5
-        [HttpGet]
-        public async Task<IActionResult> MovimientosStock(int id)
-        {
-            var prod = await _productoService.GetProductoByIDAsync(id);
-            if (prod == null) return NotFound();
-            var item = await _stockService.GetStockItemByProductoIDAsync(id);
-            var movs = await _stockService.GetMovimientosByProductoIDAsync(id);
-            var model = new StockItemViewModel
-            {
-                StockItemID = item?.StockItemID ?? 0,
-                ProductoID = id,
-                NombreProducto = prod.Nombre,
-                CantidadDisponible = item?.CantidadDisponible ?? 0,
-                Movimientos = _mapper.Map<IEnumerable<MovimientoStockViewModel>>(movs)
-            };
-            return View(model);
         }
 
         // Método común para validar y preparar un producto
@@ -531,5 +689,6 @@ namespace Javo2.Controllers
                 model.SubRubros = new List<SelectListItem>();
             }
         }
+        #endregion
     }
 }

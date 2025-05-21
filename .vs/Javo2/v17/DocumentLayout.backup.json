@@ -3,6 +3,9 @@
   "WorkspaceRootPath": "D:\\github\\Javo2\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\xh4ac\\.nuget\\packages\\buildbundlerminifier\\3.2.449\\build\\BuildBundlerMinifier.targets||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\modules\\core-bundle.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\modules\\core-bundle.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
@@ -99,105 +102,12 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "core-bundle.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\core-bundle.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\core-bundle.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\core-bundle.js",
-              "RelativeToolTip": "wwwroot\\js\\modules\\core-bundle.js",
-              "ViewState": "AgIAAEsAAAAAAAAAAAAAAFcAAAAkAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-21T05:52:29.429Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "auth.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\auth.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\auth.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\auth.js",
-              "RelativeToolTip": "wwwroot\\js\\modules\\auth.js",
-              "ViewState": "AgIAAL4CAAAAAAAAAAAAANYCAAATAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-21T05:32:36.558Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "proveedores-controller.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\proveedores-controller.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\proveedores-controller.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\proveedores-controller.js",
-              "RelativeToolTip": "wwwroot\\js\\modules\\proveedores-controller.js",
-              "ViewState": "AgIAAHUCAAAAAAAAAAAAAI0CAAATAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-21T05:28:05.023Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "reportes.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\reportes.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\reportes.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\reportes.js",
-              "RelativeToolTip": "wwwroot\\js\\modules\\reportes.js",
-              "ViewState": "AgIAAJEBAAAAAAAAAAAAAKkBAAATAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-21T05:27:11.173Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "forms.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\forms.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\forms.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\forms.js",
-              "RelativeToolTip": "wwwroot\\js\\modules\\forms.js",
-              "ViewState": "AgIAAKkAAAAAAAAAAAAAAHYAAABsAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-21T05:25:58.246Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "clientes-controller.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\clientes-controller.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\clientes-controller.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\clientes-controller.js",
-              "RelativeToolTip": "wwwroot\\js\\modules\\clientes-controller.js",
-              "ViewState": "AgIAAOEAAAAAAAAAAAAAAPkAAAATAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-21T05:25:33.625Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "venta-core.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\venta-core.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\venta-core.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\venta-core.js",
-              "RelativeToolTip": "wwwroot\\js\\modules\\venta-core.js",
-              "ViewState": "AgIAAAcDAAAAAAAAAAAAAB8DAAATAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-21T05:19:40.751Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "products.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\products.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\products.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\products.js",
-              "RelativeToolTip": "wwwroot\\js\\modules\\products.js",
-              "ViewState": "AgIAALACAAAAAAAAAAAAAMECAAAmAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-21T05:07:09.43Z",
+              "Title": "BuildBundlerMinifier.targets",
+              "DocumentMoniker": "C:\\Users\\xh4ac\\.nuget\\packages\\buildbundlerminifier\\3.2.449\\build\\BuildBundlerMinifier.targets",
+              "ToolTip": "C:\\Users\\xh4ac\\.nuget\\packages\\buildbundlerminifier\\3.2.449\\build\\BuildBundlerMinifier.targets",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
+              "WhenOpened": "2025-05-21T06:09:32.838Z",
               "EditorCaption": ""
             },
             {
@@ -206,7 +116,104 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 1,
+              "Title": "core-bundle.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\core-bundle.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\core-bundle.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\core-bundle.js",
+              "RelativeToolTip": "wwwroot\\js\\modules\\core-bundle.js",
+              "ViewState": "AgIAABECAAAAAAAAAAAhwB4CAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-21T05:52:29.429Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "auth.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\auth.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\auth.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\auth.js",
+              "RelativeToolTip": "wwwroot\\js\\modules\\auth.js",
+              "ViewState": "AgIAAL4CAAAAAAAAAAAAANYCAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-21T05:32:36.558Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "proveedores-controller.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\proveedores-controller.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\proveedores-controller.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\proveedores-controller.js",
+              "RelativeToolTip": "wwwroot\\js\\modules\\proveedores-controller.js",
+              "ViewState": "AgIAAHUCAAAAAAAAAAAAAI0CAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-21T05:28:05.023Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "reportes.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\reportes.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\reportes.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\reportes.js",
+              "RelativeToolTip": "wwwroot\\js\\modules\\reportes.js",
+              "ViewState": "AgIAAJEBAAAAAAAAAAAAAKkBAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-21T05:27:11.173Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "forms.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\forms.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\forms.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\forms.js",
+              "RelativeToolTip": "wwwroot\\js\\modules\\forms.js",
+              "ViewState": "AgIAAKkAAAAAAAAAAAAAAHYAAABsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-21T05:25:58.246Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "clientes-controller.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\clientes-controller.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\clientes-controller.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\clientes-controller.js",
+              "RelativeToolTip": "wwwroot\\js\\modules\\clientes-controller.js",
+              "ViewState": "AgIAAOEAAAAAAAAAAAAAAPkAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-21T05:25:33.625Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "venta-core.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\venta-core.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\venta-core.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\venta-core.js",
+              "RelativeToolTip": "wwwroot\\js\\modules\\venta-core.js",
+              "ViewState": "AgIAAAcDAAAAAAAAAAAAAB8DAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-21T05:19:40.751Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "products.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\products.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\products.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\products.js",
+              "RelativeToolTip": "wwwroot\\js\\modules\\products.js",
+              "ViewState": "AgIAALACAAAAAAAAAAAAAMECAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-21T05:07:09.43Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
               "Title": "productos.json",
               "DocumentMoniker": "D:\\github\\Javo2\\Data\\productos.json",
               "RelativeDocumentMoniker": "Data\\productos.json",
@@ -218,7 +225,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "ProductoService.cs",
               "DocumentMoniker": "D:\\github\\Javo2\\Services\\ProductoService.cs",
               "RelativeDocumentMoniker": "Services\\ProductoService.cs",
@@ -226,12 +233,11 @@
               "RelativeToolTip": "Services\\ProductoService.cs",
               "ViewState": "AgIAAHkBAAAAAAAAAAAowIkBAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-20T20:02:24.402Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-20T20:02:24.402Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 17,
               "Title": "ClientesService.cs",
               "DocumentMoniker": "D:\\github\\Javo2\\Services\\ClientesService.cs",
               "RelativeDocumentMoniker": "Services\\ClientesService.cs",
@@ -243,7 +249,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 16,
               "Title": "VentasService.cs",
               "DocumentMoniker": "D:\\github\\Javo2\\Services\\VentasService.cs",
               "RelativeDocumentMoniker": "Services\\VentasService.cs",
@@ -255,7 +261,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 18,
               "Title": "Clientes.cs",
               "DocumentMoniker": "D:\\github\\Javo2\\Models\\Clientes.cs",
               "RelativeDocumentMoniker": "Models\\Clientes.cs",
@@ -267,7 +273,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 19,
               "Title": "ClientesController.cs",
               "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\ClientesController.cs",
               "RelativeDocumentMoniker": "Controllers\\ClientesController.cs",
@@ -279,7 +285,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "VentasController.cs",
               "DocumentMoniker": "D:\\github\\Javo2\\Controllers\\VentasController.cs",
               "RelativeDocumentMoniker": "Controllers\\VentasController.cs",
@@ -291,7 +297,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Ventas\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Ventas\\Index.cshtml",
@@ -303,7 +309,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "Form.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Ventas\\Form.cshtml",
               "RelativeDocumentMoniker": "Views\\Ventas\\Form.cshtml",
@@ -315,7 +321,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "RegistrarPago.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Ventas\\RegistrarPago.cshtml",
               "RelativeDocumentMoniker": "Views\\Ventas\\RegistrarPago.cshtml",
@@ -327,7 +333,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 20,
               "Title": "PlanPago.cshtml",
               "DocumentMoniker": "D:\\github\\Javo2\\Views\\Ventas\\PlanPago.cshtml",
               "RelativeDocumentMoniker": "Views\\Ventas\\PlanPago.cshtml",
@@ -339,7 +345,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 21,
               "Title": "CuotaMensual.cs",
               "DocumentMoniker": "D:\\github\\Javo2\\Models\\CuotaMensual.cs",
               "RelativeDocumentMoniker": "Models\\CuotaMensual.cs",
@@ -351,7 +357,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 15,
               "Title": "Ventas.cs",
               "DocumentMoniker": "D:\\github\\Javo2\\Models\\Ventas.cs",
               "RelativeDocumentMoniker": "Models\\Ventas.cs",

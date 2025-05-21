@@ -1,5 +1,6 @@
-﻿// Controllers/Authentication/PermisosController.cs
+﻿// Controllers/Security/SecurityController.cs
 using Javo2.Controllers.Base;
+using Javo2.Data.Seeders;
 using Javo2.IServices.Authentication;
 using Javo2.Models.Authentication;
 using Javo2.ViewModels.Authentication;
@@ -7,27 +8,248 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Javo2.Controllers.Authentication
+namespace Javo2.Controllers.Security
 {
-    [AllowAnonymous] // Esto permite acceder sin verificar permisos
-    public class PermisoEmergenciaController : BaseController
+    public class SecurityController : BaseController
     {
         private readonly IPermisoService _permisoService;
         private readonly IRolService _rolService;
+        private readonly IUsuarioService _usuarioService;
 
-        public PermisoEmergenciaController(
+        public SecurityController(
             IPermisoService permisoService,
             IRolService rolService,
-            ILogger<PermisoEmergenciaController> logger) : base(logger)
+            IUsuarioService usuarioService,
+            ILogger<SecurityController> logger) : base(logger)
         {
             _permisoService = permisoService;
             _rolService = rolService;
+            _usuarioService = usuarioService;
         }
 
-        // GET: /PermisoEmergencia/FixAdmin
+        #region Herramientas de Seguridad
+
+        [Authorize(Roles = "Administrador")]
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "Administrador")]
+        public async Task<IActionResult> RecargarPermisos()
+        {
+            try
+            {
+                // Obtener las dependencias del contenedor
+                var permisoService = HttpContext.RequestServices.GetRequiredService<IPermisoService>();
+                var rolService = HttpContext.RequestServices.GetRequiredService<IRolService>();
+                var loggerFactory = HttpContext.RequestServices.GetRequiredService<ILoggerFactory>();
+                var permissionLogger = loggerFactory.CreateLogger<PermissionSeeder>();
+
+                var seeder = new PermissionSeeder(permisoService, rolService, permissionLogger);
+                await seeder.SeedAsync();
+
+                TempData["Success"] = "Permisos recargados correctamente";
+                return RedirectToAction("Index", "SecurityDashboard");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al recargar permisos");
+                TempData["Error"] = "Error al recargar permisos: " + ex.Message;
+                return RedirectToAction("Index", "SecurityDashboard");
+            }
+        }
+
+        [Authorize(Roles = "Administrador")]
+        public IActionResult CerrarSesiones()
+        {
+            // Implementación futura para cerrar sesiones activas
+            TempData["Info"] = "Función no implementada todavía";
+            return RedirectToAction("Index", "SecurityDashboard");
+        }
+
+        #endregion
+
+        #region Reparación de Permisos
+
+        [AllowAnonymous]
+        public async Task<IActionResult> FixAdminPermissions()
+        {
+            try
+            {
+                var resultados = new List<string>();
+                // 1. Encontrar el rol Administrador
+                var roles = await _rolService.GetAllRolesAsync();
+                var rolAdmin = roles.FirstOrDefault(r => r.Nombre.Equals("Administrador", StringComparison.OrdinalIgnoreCase));
+
+                if (rolAdmin == null)
+                {
+                    return Content("Error: No se encontró el rol Administrador");
+                }
+
+                resultados.Add($"Rol Administrador encontrado con ID: {rolAdmin.RolID}");
+
+                // 2. Obtener todos los permisos disponibles
+                var permisos = await _permisoService.GetAllPermisosAsync();
+                resultados.Add($"Encontrados {permisos.Count()} permisos en total");
+
+                // 3. Obtener permisos actuales del administrador
+                var permisosAdmin = rolAdmin.Permisos?.Select(p => p.PermisoID).ToList() ?? new List<int>();
+                resultados.Add($"El administrador tiene actualmente {permisosAdmin.Count} permisos asignados");
+
+                // 4. Encontrar permisos faltantes
+                var permisosFaltantes = permisos
+                    .Where(p => !permisosAdmin.Contains(p.PermisoID))
+                    .ToList();
+
+                resultados.Add($"Permisos faltantes: {permisosFaltantes.Count}");
+
+                // 5. Asignar todos los permisos faltantes
+                foreach (var permiso in permisosFaltantes)
+                {
+                    await _rolService.AsignarPermisoAsync(rolAdmin.RolID, permiso.PermisoID);
+                    resultados.Add($"Asignado permiso: {permiso.Codigo} ({permiso.Nombre})");
+                }
+
+                // 6. Verificar el permiso específico de autorización de ventas
+                var permisoAutorizarVentas = permisos.FirstOrDefault(p => p.Codigo == "ventas.autorizar");
+                if (permisoAutorizarVentas != null)
+                {
+                    if (!permisosAdmin.Contains(permisoAutorizarVentas.PermisoID))
+                    {
+                        await _rolService.AsignarPermisoAsync(rolAdmin.RolID, permisoAutorizarVentas.PermisoID);
+                        resultados.Add($"Asignado explícitamente el permiso crítico: ventas.autorizar");
+                    }
+                    else
+                    {
+                        resultados.Add("El permiso ventas.autorizar ya estaba asignado");
+                    }
+                }
+                else
+                {
+                    // Crear el permiso si no existe
+                    permisoAutorizarVentas = new Permiso
+                    {
+                        Codigo = "ventas.autorizar",
+                        Nombre = "Autorizar ventas",
+                        Grupo = "Ventas",
+                        Descripcion = "Permite autorizar ventas pendientes",
+                        Activo = true,
+                        EsSistema = true
+                    };
+
+                    await _permisoService.CreatePermisoAsync(permisoAutorizarVentas);
+
+                    // Obtener el ID del permiso recién creado
+                    permisoAutorizarVentas = await _permisoService.GetPermisoByCodigo("ventas.autorizar");
+
+                    // Asignar al rol Administrador
+                    await _rolService.AsignarPermisoAsync(rolAdmin.RolID, permisoAutorizarVentas.PermisoID);
+                    resultados.Add("Creado y asignado el permiso ventas.autorizar");
+                }
+
+                // 7. Verificar el permiso específico de rechazo de ventas
+                var permisoRechazarVentas = permisos.FirstOrDefault(p => p.Codigo == "ventas.rechazar");
+                if (permisoRechazarVentas != null)
+                {
+                    if (!permisosAdmin.Contains(permisoRechazarVentas.PermisoID))
+                    {
+                        await _rolService.AsignarPermisoAsync(rolAdmin.RolID, permisoRechazarVentas.PermisoID);
+                        resultados.Add($"Asignado explícitamente el permiso crítico: ventas.rechazar");
+                    }
+                    else
+                    {
+                        resultados.Add("El permiso ventas.rechazar ya estaba asignado");
+                    }
+                }
+                else
+                {
+                    // Crear el permiso si no existe
+                    permisoRechazarVentas = new Permiso
+                    {
+                        Codigo = "ventas.rechazar",
+                        Nombre = "Rechazar ventas",
+                        Grupo = "Ventas",
+                        Descripcion = "Permite rechazar ventas pendientes",
+                        Activo = true,
+                        EsSistema = true
+                    };
+
+                    await _permisoService.CreatePermisoAsync(permisoRechazarVentas);
+
+                    // Obtener el ID del permiso recién creado
+                    permisoRechazarVentas = await _permisoService.GetPermisoByCodigo("ventas.rechazar");
+
+                    // Asignar al rol Administrador
+                    await _rolService.AsignarPermisoAsync(rolAdmin.RolID, permisoRechazarVentas.PermisoID);
+                    resultados.Add("Creado y asignado el permiso ventas.rechazar");
+                }
+
+                // 8. Verificar el permiso específico de securitydashboard.ver
+                var permisoSecurityDashboard = permisos.FirstOrDefault(p => p.Codigo == "securitydashboard.ver");
+                if (permisoSecurityDashboard != null)
+                {
+                    if (!permisosAdmin.Contains(permisoSecurityDashboard.PermisoID))
+                    {
+                        await _rolService.AsignarPermisoAsync(rolAdmin.RolID, permisoSecurityDashboard.PermisoID);
+                        resultados.Add($"Asignado explícitamente el permiso: securitydashboard.ver");
+                    }
+                    else
+                    {
+                        resultados.Add("El permiso securitydashboard.ver ya estaba asignado");
+                    }
+                }
+                else
+                {
+                    var nuevoPermiso = new Permiso
+                    {
+                        Codigo = "securitydashboard.ver",
+                        Nombre = "Ver Dashboard de Seguridad",
+                        Grupo = "Seguridad",
+                        Descripcion = "Permite ver el panel de control de seguridad",
+                        Activo = true,
+                        EsSistema = true
+                    };
+
+                    await _permisoService.CreatePermisoAsync(nuevoPermiso);
+                    permisoSecurityDashboard = await _permisoService.GetPermisoByCodigo("securitydashboard.ver");
+
+                    if (permisoSecurityDashboard != null)
+                    {
+                        await _rolService.AsignarPermisoAsync(rolAdmin.RolID, permisoSecurityDashboard.PermisoID);
+                        resultados.Add("Creado y asignado el permiso securitydashboard.ver");
+                    }
+                }
+
+                // 9. Verificar usuario admin
+                var usuarioAdmin = await _usuarioService.GetUsuarioByNombreUsuarioAsync("admin");
+                if (usuarioAdmin != null)
+                {
+                    resultados.Add($"Encontrado usuario admin con ID: {usuarioAdmin.UsuarioID}");
+                    resultados.Add("IMPORTANTE: Es necesario cerrar sesión y volver a iniciar para aplicar los cambios de permisos");
+                }
+                else
+                {
+                    resultados.Add("No se encontró un usuario con nombre 'admin'");
+                }
+
+                return Content("<h1>Resultados de la reparación de permisos</h1><ul>" +
+                    string.Join("", resultados.Select(r => $"<li>{r}</li>")) +
+                    "</ul><p><strong>IMPORTANTE:</strong> Es necesario cerrar sesión y volver a iniciar para aplicar los cambios de permisos</p>",
+                    "text/html");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al reparar permisos de administrador");
+                return Content($"Error: {ex.Message}<br/>{ex.StackTrace}");
+            }
+        }
+
+        [AllowAnonymous]
         public async Task<IActionResult> FixAdmin()
         {
             try
@@ -85,7 +307,10 @@ namespace Javo2.Controllers.Authentication
             }
         }
 
-        // GET: Permisos
+        #endregion
+
+        #region Gestión de Permisos
+
         [HttpGet]
         [Authorize(Policy = "Permission:permisos.ver")]
         public async Task<IActionResult> Index()
@@ -107,7 +332,6 @@ namespace Javo2.Controllers.Authentication
             }
         }
 
-        // GET: Permisos/Details/5
         [HttpGet]
         [Authorize(Policy = "Permission:permisos.ver")]
         public async Task<IActionResult> Details(int id)
@@ -125,7 +349,6 @@ namespace Javo2.Controllers.Authentication
             }
         }
 
-        // GET: Permisos/Create
         [HttpGet]
         [Authorize(Policy = "Permission:permisos.crear")]
         public IActionResult Create()
@@ -142,7 +365,6 @@ namespace Javo2.Controllers.Authentication
             }
         }
 
-        // POST: Permisos/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Permission:permisos.crear")]
@@ -178,7 +400,6 @@ namespace Javo2.Controllers.Authentication
             }
         }
 
-        // GET: Permisos/Edit/5
         [HttpGet]
         [Authorize(Policy = "Permission:permisos.editar")]
         public async Task<IActionResult> Edit(int id)
@@ -201,7 +422,6 @@ namespace Javo2.Controllers.Authentication
             }
         }
 
-        // POST: Permisos/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Permission:permisos.editar")]
@@ -248,7 +468,6 @@ namespace Javo2.Controllers.Authentication
             }
         }
 
-        // GET: Permisos/Delete/5
         [HttpGet]
         [Authorize(Policy = "Permission:permisos.eliminar")]
         public async Task<IActionResult> Delete(int id)
@@ -271,7 +490,6 @@ namespace Javo2.Controllers.Authentication
             }
         }
 
-        // POST: Permisos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Permission:permisos.eliminar")]
@@ -305,7 +523,6 @@ namespace Javo2.Controllers.Authentication
             }
         }
 
-        // POST: Permisos/ToggleEstado/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Permission:permisos.editar")]
@@ -336,5 +553,7 @@ namespace Javo2.Controllers.Authentication
                 return Json(new { success = false, message = "Error al cambiar estado del permiso: " + ex.Message });
             }
         }
+
+        #endregion
     }
 }

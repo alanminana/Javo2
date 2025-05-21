@@ -452,12 +452,37 @@
         }
     };
 
+    // INICIALIZACIÓN DE MÓDULOS Y COMPONENTES
+    App.initComponents = function () {
+        App.debug.log('Inicializando componentes disponibles...');
+
+        // Inicializar componentes principales si están disponibles
+        if (App.forms) App.forms.init();
+        if (App.tables) App.tables.init();
+        if (App.products) App.products.init();
+        if (App.permissions) App.permissions.init();
+
+        // Inicializar componentes de negocio
+        if (App.auth) App.auth.init();
+        if (App.ventaCore) App.ventaCore.init();
+        if (App.clientesController) App.clientesController.init();
+        if (App.proveedoresController) App.proveedoresController.init();
+        if (App.reportes) App.reportes.init();
+
+        // Inicializar componentes UI adicionales
+        if (App.catalogo) App.catalogo.init();
+        if (App.configuracion) App.configuracion.init();
+    };
+
     // INICIALIZACIÓN
     App.init = function () {
         App.debug.log('Inicializando App Core...');
 
         // Configurar manejadores globales
         this.setupGlobalHandlers();
+
+        // Inicializar componentes según disponibilidad
+        this.initComponents();
 
         // Emitir evento que indica que el core está listo
         $(document).trigger('app:ready');
@@ -514,9 +539,7 @@
         }
     };
 
-    // Inicializar cuando el DOM esté listo
-    $(document).ready(function () {
+    document.addEventListener('DOMContentLoaded', function () {
         App.init();
     });
-
 })(window, jQuery);
