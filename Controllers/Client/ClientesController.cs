@@ -18,7 +18,7 @@ namespace Javo2.Controllers.Client
 {
     [Authorize(Policy = "PermisoPolitica")]
     [TypeFilter(typeof(BusinessException))]
-    public class ClientesController : BaseController
+    public class ClientesController : ValidationBaseController
     {
         private readonly IClienteService _clienteService;
         private readonly IGaranteService _garanteService;
@@ -94,13 +94,10 @@ namespace Javo2.Controllers.Client
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    LogModelStateErrors();
-                    model.Provincias = await ObtenerProvincias();
-                    model.Ciudades = await ObtenerCiudades(model.ProvinciaID);
-                    return View("Form", model);
-                }
+                if (!await ValidateModelAndHandleErrorsAsync(model, "Form", async m => {
+                    m.Provincias = await ObtenerProvincias();
+                    m.Ciudades = await ObtenerCiudades(m.ProvinciaID);
+                })) return View("Form", model);
 
                 var cliente = _mapper.Map<Cliente>(model);
                 await _clienteService.CreateClienteAsync(cliente);

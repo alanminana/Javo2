@@ -1,8 +1,11 @@
 ﻿// Controllers/Catalog/ProductosController.cs
 using AutoMapper;
+using Javo2.Controllers.Base;
 using Javo2.DTOs;
 using Javo2.IServices;
 using Javo2.Models;
+using Javo2.Services.Catalog;
+using Javo2.Services.Reporting;
 using Javo2.ViewModels.Operaciones.Catalogo;
 using Javo2.ViewModels.Operaciones.Productos;
 using Javo2.ViewModels.Operaciones.Stock;
@@ -17,26 +20,36 @@ using System.Threading.Tasks;
 namespace Javo2.Controllers.Catalog
 {
     [Authorize(Policy = "PermisoPolitica")]
-    public class ProductosController : CatalogBaseController
+    public class ProductosController : ValidationBaseController
     {
         private readonly IStockService _stockService;
         private readonly IAjustePrecioService _ajustePrecioService;
-
+        private readonly IProductoService _productoService;
+        private readonly IProductSearchService _productSearchService;
+        private readonly ICatalogoService _catalogoService;
+        private readonly IStockService _stockService;
+        private readonly IAuditoriaService _auditoriaService;
+        private readonly IAjustePrecioService _ajustePrecioService;
+        private readonly IMapper _mapper;
         public ProductosController(
-            IProductoService productoService,
-            IProductSearchService productSearchService,
-            ICatalogoService catalogoService,
-            IStockService stockService,
-            IAuditoriaService auditoriaService,
-            IAjustePrecioService ajustePrecioService,
-            IMapper mapper,
-            ILogger<ProductosController> logger
-        ) : base(productoService, catalogoService, productSearchService, auditoriaService, mapper, logger)
+         IProductoService productoService,
+         IProductSearchService productSearchService,
+         ICatalogoService catalogoService,
+         IStockService stockService,
+         IAuditoriaService auditoriaService,
+         IAjustePrecioService ajustePrecioService,
+         IMapper mapper,
+         ILogger<ProductosController> logger
+     ) : base(logger)
         {
+            _productoService = productoService;
+            _productSearchService = productSearchService;
+            _catalogoService = catalogoService;
             _stockService = stockService;
+            _auditoriaService = auditoriaService;
             _ajustePrecioService = ajustePrecioService;
+            _mapper = mapper;
         }
-
         #region Listado y Búsqueda de Productos
 
         // GET: Productos
