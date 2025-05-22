@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Javo2.Services
+namespace Javo2.Services.System
 {
     public class ConfiguracionService : IConfiguracionService
     {

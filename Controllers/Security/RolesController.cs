@@ -1,4 +1,4 @@
-﻿using Javo2.Controllers.Base;
+﻿// Controllers/Security/RolesController.cs
 using Javo2.IServices.Authentication;
 using Javo2.Models.Authentication;
 using Javo2.ViewModels.Authentication;
@@ -13,19 +13,16 @@ using System.Threading.Tasks;
 namespace Javo2.Controllers.Security
 {
     [Authorize(Policy = "PermisoPolitica")]
-    public class RolesController : BaseController
+    public class RolesController : SecurityBaseController
     {
-        private readonly IRolService _rolService;
-        private readonly IPermisoService _permisoService;
-
         public RolesController(
+            IUsuarioService usuarioService,
             IRolService rolService,
             IPermisoService permisoService,
+            IPermissionManagerService permissionManager,
             ILogger<RolesController> logger)
-            : base(logger)
+            : base(usuarioService, rolService, permisoService, permissionManager, logger)
         {
-            _rolService = rolService;
-            _permisoService = permisoService;
         }
 
         // GET: Roles
@@ -39,7 +36,7 @@ namespace Javo2.Controllers.Security
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener la lista de roles");
+                LogError(ex, "Error al obtener la lista de roles");
                 return View("Error");
             }
         }
@@ -69,17 +66,13 @@ namespace Javo2.Controllers.Security
                     }
                 }
 
-                var model = new RolDetailsViewModel
-                {
-                    Rol = rol,
-                    Permisos = permisos
-                };
-
+                // Usar método común para crear ViewModel
+                var model = CrearRolDetailsViewModel(rol, permisos);
                 return View(model);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener detalles del rol");
+                LogError(ex, "Error al obtener detalles del rol");
                 return View("Error");
             }
         }
@@ -90,30 +83,15 @@ namespace Javo2.Controllers.Security
         {
             try
             {
-                // Agregar log para depuración
-                _logger.LogInformation("Iniciando creación de rol - GET");
+                LogInfo("Iniciando creación de rol - GET");
 
-                var allPermisos = await _permisoService.GetAllPermisosAsync();
-                var permisosActivos = allPermisos.Where(p => p.Activo).ToList();
-
-                // Agrupar permisos por grupo
-                var gruposPermisos = permisosActivos
-                    .GroupBy(p => p.Grupo ?? "General")
-                    .ToDictionary(g => g.Key, g => g.ToList());
-
-                var model = new RolFormViewModel
-                {
-                    Rol = new Rol { EsSistema = false },
-                    GruposPermisos = gruposPermisos,
-                    PermisosSeleccionados = new List<int>(),
-                    EsEdicion = false
-                };
-
+                // Usar método común para preparar formulario
+                var model = await PrepararFormularioRolAsync();
                 return View("Form", model);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al preparar formulario de creación de rol");
+                LogError(ex, "Error al preparar formulario de creación de rol");
                 return View("Error");
             }
         }
@@ -126,83 +104,55 @@ namespace Javo2.Controllers.Security
         {
             try
             {
-                // Agregar logs para depuración
-                _logger.LogInformation("Iniciando creación de rol - POST");
-                _logger.LogInformation("Nombre del rol: {Nombre}", model.Rol?.Nombre);
-                _logger.LogInformation("Permisos seleccionados: {Count}", PermisosSeleccionados?.Count ?? 0);
+                LogInfo("Iniciando creación de rol - POST");
+                LogInfo("Nombre del rol: {Nombre}", model.Rol?.Nombre);
+                LogInfo("Permisos seleccionados: {Count}", PermisosSeleccionados?.Count ?? 0);
 
-                if (PermisosSeleccionados != null && PermisosSeleccionados.Any())
-                {
-                    _logger.LogInformation("Permisos seleccionados IDs: {IDs}", string.Join(", ", PermisosSeleccionados));
-                }
-                else
-                {
-                    _logger.LogWarning("No se seleccionaron permisos o la lista es nula");
-                }
-
-                // Ignorar la validación del ModelState para las propiedades del ViewModel
-                // y validar manualmente lo que necesitamos
                 if (string.IsNullOrWhiteSpace(model.Rol?.Nombre))
                 {
                     ModelState.AddModelError("Rol.Nombre", "El nombre del rol es obligatorio");
-                    _logger.LogWarning("Error de validación: El nombre del rol es obligatorio");
+                    LogWarning("Error de validación: El nombre del rol es obligatorio");
 
-                    var allPermisos = await _permisoService.GetAllPermisosAsync();
-                    var permisosActivos = allPermisos.Where(p => p.Activo).ToList();
-                    var gruposPermisos = permisosActivos
-                        .GroupBy(p => p.Grupo ?? "General")
-                        .ToDictionary(g => g.Key, g => g.ToList());
-
-                    model.GruposPermisos = gruposPermisos;
+                    // Recargar formulario usando método común
+                    model = await PrepararFormularioRolAsync(model.Rol);
                     model.PermisosSeleccionados = PermisosSeleccionados ?? new List<int>();
                     return View("Form", model);
                 }
 
-                _logger.LogInformation("Creando rol en la base de datos");
+                LogInfo("Creando rol en la base de datos");
 
                 // Crear rol
                 var rol = new Rol
                 {
                     Nombre = model.Rol.Nombre,
                     Descripcion = model.Rol.Descripcion,
-                    EsSistema = false // Los roles creados manualmente nunca son del sistema
-                    // No necesitamos inicializar Permisos ya que la propiedad
-                    // está diseñada para nunca devolver null
+                    EsSistema = false
                 };
 
                 var rolID = await _rolService.CreateRolAsync(rol);
-                _logger.LogInformation("Rol creado con ID: {RolID}", rolID);
+                LogInfo("Rol creado con ID: {RolID}", rolID);
 
-                // Asignar permisos
+                // Usar método común para asignar permisos
                 if (PermisosSeleccionados != null && PermisosSeleccionados.Any())
                 {
-                    _logger.LogInformation("Asignando {Count} permisos al rol", PermisosSeleccionados.Count);
-                    foreach (var permisoID in PermisosSeleccionados)
-                    {
-                        _logger.LogInformation("Asignando permiso ID: {PermisoID} al rol {RolID}", permisoID, rolID);
-                        await _rolService.AsignarPermisoAsync(rolID, permisoID);
-                    }
+                    LogInfo("Asignando {Count} permisos al rol", PermisosSeleccionados.Count);
+                    await ProcesarAsignacionPermisosRolAsync(rolID, PermisosSeleccionados);
                 }
                 else
                 {
-                    _logger.LogWarning("No se seleccionaron permisos para el rol");
+                    LogWarning("No se seleccionaron permisos para el rol");
                 }
 
-                TempData["Success"] = "Rol creado correctamente";
+                SetSuccessMessage("Rol creado correctamente");
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear rol: {Message}", ex.Message);
+                LogError(ex, "Error al crear rol: {Message}", ex.Message);
                 ModelState.AddModelError(string.Empty, "Error al crear rol: " + ex.Message);
 
-                var allPermisos = await _permisoService.GetAllPermisosAsync();
-                var permisosActivos = allPermisos.Where(p => p.Activo).ToList();
-                var gruposPermisos = permisosActivos
-                    .GroupBy(p => p.Grupo ?? "General")
-                    .ToDictionary(g => g.Key, g => g.ToList());
-
-                model.GruposPermisos = gruposPermisos;
+                // Recargar formulario usando método común
+                model = await PrepararFormularioRolAsync(model.Rol);
                 model.PermisosSeleccionados = PermisosSeleccionados ?? new List<int>();
 
                 return View("Form", model);
@@ -221,31 +171,13 @@ namespace Javo2.Controllers.Security
                     return NotFound();
                 }
 
-                // Obtener permisos asignados
-                var permisosIds = rol.Permisos.Select(p => p.PermisoID).ToList();
-
-                // Obtener todos los permisos
-                var allPermisos = await _permisoService.GetAllPermisosAsync();
-                var permisosActivos = allPermisos.Where(p => p.Activo).ToList();
-
-                // Agrupar permisos por grupo
-                var gruposPermisos = permisosActivos
-                    .GroupBy(p => p.Grupo ?? "General")
-                    .ToDictionary(g => g.Key, g => g.ToList());
-
-                var model = new RolFormViewModel
-                {
-                    Rol = rol,
-                    GruposPermisos = gruposPermisos,
-                    PermisosSeleccionados = permisosIds,
-                    EsEdicion = true
-                };
-
+                // Usar método común para preparar formulario
+                var model = await PrepararFormularioRolAsync(rol, esEdicion: true);
                 return View("Form", model);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al preparar formulario de edición de rol");
+                LogError(ex, "Error al preparar formulario de edición de rol");
                 return View("Error");
             }
         }
@@ -263,26 +195,17 @@ namespace Javo2.Controllers.Security
 
             try
             {
-                // Agregar logs para depuración
-                _logger.LogInformation("Iniciando edición de rol - POST, ID: {RolID}", id);
-                _logger.LogInformation("Permisos seleccionados: {Count}", PermisosSeleccionados?.Count ?? 0);
+                LogInfo("Iniciando edición de rol - POST, ID: {RolID}", id);
+                LogInfo("Permisos seleccionados: {Count}", PermisosSeleccionados?.Count ?? 0);
 
-                // Ignorar la validación del ModelState para las propiedades del ViewModel
-                // y validar manualmente lo que necesitamos
                 if (string.IsNullOrWhiteSpace(model.Rol?.Nombre))
                 {
                     ModelState.AddModelError("Rol.Nombre", "El nombre del rol es obligatorio");
-                    _logger.LogWarning("Error de validación: El nombre del rol es obligatorio");
+                    LogWarning("Error de validación: El nombre del rol es obligatorio");
 
-                    var allPermisos = await _permisoService.GetAllPermisosAsync();
-                    var permisosActivos = allPermisos.Where(p => p.Activo).ToList();
-                    var gruposPermisos = permisosActivos
-                        .GroupBy(p => p.Grupo ?? "General")
-                        .ToDictionary(g => g.Key, g => g.ToList());
-
-                    model.GruposPermisos = gruposPermisos;
+                    // Recargar formulario usando método común
+                    model = await PrepararFormularioRolAsync(model.Rol, esEdicion: true);
                     model.PermisosSeleccionados = PermisosSeleccionados ?? new List<int>();
-                    model.EsEdicion = true;
                     return View("Form", model);
                 }
 
@@ -306,46 +229,20 @@ namespace Javo2.Controllers.Security
                 // Actualizar rol
                 await _rolService.UpdateRolAsync(originalRol);
 
-                // Actualizar permisos
-                // 1. Obtener permisos actuales
-                var permisosActuales = originalRol.Permisos.Select(p => p.PermisoID).ToList();
+                // Usar método común para actualizar permisos
+                await ProcesarAsignacionPermisosRolAsync(id, PermisosSeleccionados ?? new List<int>());
 
-                // 2. Calcular permisos a eliminar y a agregar
-                var permisosSeleccionados = PermisosSeleccionados ?? new List<int>();
-                var permisosEliminar = permisosActuales.Except(permisosSeleccionados).ToList();
-                var permisosAgregar = permisosSeleccionados.Except(permisosActuales).ToList();
-
-                // 3. Eliminar permisos
-                foreach (var permisoID in permisosEliminar)
-                {
-                    _logger.LogInformation("Quitando permiso {PermisoID} del rol {RolID}", permisoID, id);
-                    await _rolService.QuitarPermisoAsync(id, permisoID);
-                }
-
-                // 4. Agregar permisos
-                foreach (var permisoID in permisosAgregar)
-                {
-                    _logger.LogInformation("Agregando permiso {PermisoID} al rol {RolID}", permisoID, id);
-                    await _rolService.AsignarPermisoAsync(id, permisoID);
-                }
-
-                TempData["Success"] = "Rol actualizado correctamente";
+                SetSuccessMessage("Rol actualizado correctamente");
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar rol: {Message}", ex.Message);
+                LogError(ex, "Error al actualizar rol: {Message}", ex.Message);
                 ModelState.AddModelError(string.Empty, "Error al actualizar rol: " + ex.Message);
 
-                var allPermisos = await _permisoService.GetAllPermisosAsync();
-                var permisosActivos = allPermisos.Where(p => p.Activo).ToList();
-                var gruposPermisos = permisosActivos
-                    .GroupBy(p => p.Grupo ?? "General")
-                    .ToDictionary(g => g.Key, g => g.ToList());
-
-                model.GruposPermisos = gruposPermisos;
+                // Recargar formulario usando método común
+                model = await PrepararFormularioRolAsync(model.Rol, esEdicion: true);
                 model.PermisosSeleccionados = PermisosSeleccionados ?? new List<int>();
-                model.EsEdicion = true;
 
                 return View("Form", model);
             }
@@ -357,43 +254,30 @@ namespace Javo2.Controllers.Security
         {
             try
             {
-                var rol = await _rolService.GetRolByIDAsync(id);
-                if (rol == null)
-                {
-                    return NotFound();
-                }
-
-                // No permitir eliminar roles del sistema
-                if (rol.EsSistema)
-                {
-                    TempData["Error"] = "No se pueden eliminar roles del sistema";
+                // Usar método común de validación
+                if (!await ValidarRolParaEliminacionAsync(id))
                     return RedirectToAction(nameof(Index));
-                }
 
-                // Obtener permisos del rol
-                var permisosIds = rol.Permisos.Select(p => p.PermisoID).ToList();
-                var permisos = new List<Permiso>();
+                var rol = await _rolService.GetRolByIDAsync(id);
+                var permisos = await _permisoService.GetAllPermisosAsync();
+                var permisosRol = new List<Permiso>();
 
-                foreach (var permisoId in permisosIds)
+                foreach (var rolPermiso in rol.Permisos)
                 {
-                    var permiso = await _permisoService.GetPermisoByIDAsync(permisoId);
+                    var permiso = permisos.FirstOrDefault(p => p.PermisoID == rolPermiso.PermisoID);
                     if (permiso != null)
                     {
-                        permisos.Add(permiso);
+                        permisosRol.Add(permiso);
                     }
                 }
 
-                var model = new RolDetailsViewModel
-                {
-                    Rol = rol,
-                    Permisos = permisos
-                };
-
+                // Usar método común para crear ViewModel
+                var model = CrearRolDetailsViewModel(rol, permisosRol);
                 return View(model);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al preparar eliminación de rol");
+                LogError(ex, "Error al preparar eliminación de rol");
                 return View("Error");
             }
         }
@@ -406,29 +290,18 @@ namespace Javo2.Controllers.Security
         {
             try
             {
-                var rol = await _rolService.GetRolByIDAsync(id);
-                if (rol == null)
-                {
-                    return NotFound();
-                }
-
-                // No permitir eliminar roles del sistema
-                if (rol.EsSistema)
-                {
-                    TempData["Error"] = "No se pueden eliminar roles del sistema";
+                // Usar método común de validación
+                if (!await ValidarRolParaEliminacionAsync(id))
                     return RedirectToAction(nameof(Index));
-                }
 
                 await _rolService.DeleteRolAsync(id);
-                TempData["Success"] = "Rol eliminado correctamente";
+                SetSuccessMessage("Rol eliminado correctamente");
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar rol: {Message}", ex.Message);
-                TempData["Error"] = "Error al eliminar rol: " + ex.Message;
+                LogError(ex, "Error al eliminar rol: {Message}", ex.Message);
+                SetErrorMessage("Error al eliminar rol: " + ex.Message);
                 return RedirectToAction(nameof(Index));
             }
         }
-    }
-}

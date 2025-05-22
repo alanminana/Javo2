@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Javo2.Services
+namespace Javo2.Services.Client
 {
     public class GaranteService : JsonDataService<Garante>, IGaranteService
     {

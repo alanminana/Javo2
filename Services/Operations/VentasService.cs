@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Javo2.Helpers;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Javo2.Services
+namespace Javo2.Services.Operations
 {
     public class VentaService : IVentaService
     {

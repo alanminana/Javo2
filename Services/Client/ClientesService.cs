@@ -10,7 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Javo2.Services
+namespace Javo2.Services.Client
 {
     public class ClienteService : JsonDataService<Cliente>, IClienteService, IClienteSearchService
     {

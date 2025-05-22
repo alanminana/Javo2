@@ -3,14 +3,11 @@ using AutoMapper;
 using Javo2.DTOs;
 using Javo2.IServices;
 using Javo2.Models;
-using Javo2.Services;
-using Javo2.ViewModels;
 using Javo2.ViewModels.Operaciones.Catalogo;
 using Javo2.ViewModels.Operaciones.Productos;
 using Javo2.ViewModels.Operaciones.Stock;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -20,7 +17,7 @@ using System.Threading.Tasks;
 namespace Javo2.Controllers.Catalog
 {
     [Authorize(Policy = "PermisoPolitica")]
-    public class ProductosController : ProductosBaseController
+    public class ProductosController : CatalogBaseController
     {
         private readonly IStockService _stockService;
         private readonly IAjustePrecioService _ajustePrecioService;
@@ -34,7 +31,7 @@ namespace Javo2.Controllers.Catalog
             IAjustePrecioService ajustePrecioService,
             IMapper mapper,
             ILogger<ProductosController> logger
-        ) : base(productoService, productSearchService, catalogoService, auditoriaService, mapper, logger)
+        ) : base(productoService, catalogoService, productSearchService, auditoriaService, mapper, logger)
         {
             _stockService = stockService;
             _ajustePrecioService = ajustePrecioService;
@@ -93,18 +90,9 @@ namespace Javo2.Controllers.Catalog
             {
                 var model = new ProductosViewModel();
 
-                // Cargar listas desplegables
-                model.Rubros = await _productSearchService.GetRubrosSelectListAsync();
+                // Usar el método común para cargar dropdowns
+                await PopulateProductDropdownsAsync(model);
 
-                // Seleccionar explícitamente el primer rubro
-                if (model.Rubros.Any())
-                {
-                    model.SelectedRubroID = int.Parse(model.Rubros.First().Value);
-                    // Cargar explícitamente los subrubros del primer rubro
-                    model.SubRubros = await _productSearchService.GetSubRubrosSelectListAsync(model.SelectedRubroID);
-                }
-
-                model.Marcas = await _productSearchService.GetMarcasSelectListAsync();
                 return View("Form", model);
             }
             catch (Exception ex)
@@ -128,7 +116,7 @@ namespace Javo2.Controllers.Catalog
             if (!ModelState.IsValid)
             {
                 LogModelStateErrors();
-                await PopulateDropdownsAsync(model);
+                await PopulateProductDropdownsAsync(model);
                 return View("Form", model);
             }
 
@@ -154,7 +142,7 @@ namespace Javo2.Controllers.Catalog
                 if (!await _productSearchService.ValidateProductAsync(producto))
                 {
                     ModelState.AddModelError("", "Por favor, verifique que el rubro, subrubro y marca sean válidos");
-                    await PopulateDropdownsAsync(model);
+                    await PopulateProductDropdownsAsync(model);
                     return View("Form", model);
                 }
 
@@ -171,7 +159,7 @@ namespace Javo2.Controllers.Catalog
                     );
                 }
 
-                // Registrar auditoría
+                // Usar método común de auditoría
                 await RegistrarAuditoriaProductoAsync(
                     "Create",
                     producto.ProductoID,
@@ -186,7 +174,7 @@ namespace Javo2.Controllers.Catalog
             {
                 LogError(ex, "Error al crear producto");
                 ModelState.AddModelError(string.Empty, ex.Message);
-                await PopulateDropdownsAsync(model);
+                await PopulateProductDropdownsAsync(model);
                 return View("Form", model);
             }
         }
@@ -203,7 +191,7 @@ namespace Javo2.Controllers.Catalog
                 if (producto == null) return NotFound();
 
                 var model = _mapper.Map<ProductosViewModel>(producto);
-                await PopulateDropdownsAsync(model);
+                await PopulateProductDropdownsAsync(model);
                 return View("Form", model);
             }
             catch (Exception ex)
@@ -227,7 +215,7 @@ namespace Javo2.Controllers.Catalog
             if (!ModelState.IsValid)
             {
                 LogModelStateErrors();
-                await PopulateDropdownsAsync(model);
+                await PopulateProductDropdownsAsync(model);
                 return View("Form", model);
             }
 
@@ -252,11 +240,10 @@ namespace Javo2.Controllers.Catalog
                 producto.ModificadoPor = model.ModificadoPor;
 
                 // Validar relaciones
-                // Validar relaciones
                 if (!await _productSearchService.ValidateProductAsync(producto))
                 {
                     ModelState.AddModelError("", "Por favor, verifique que el rubro, subrubro y marca sean válidos");
-                    await PopulateDropdownsAsync(model);
+                    await PopulateProductDropdownsAsync(model);
                     return View("Form", model);
                 }
 
@@ -273,7 +260,7 @@ namespace Javo2.Controllers.Catalog
                     );
                 }
 
-                // Registrar auditoría
+                // Usar método común de auditoría
                 await RegistrarAuditoriaProductoAsync(
                     "Update",
                     model.ProductoID,
@@ -288,7 +275,7 @@ namespace Javo2.Controllers.Catalog
             {
                 LogError(ex, "Error al actualizar producto");
                 ModelState.AddModelError(string.Empty, ex.Message);
-                await PopulateDropdownsAsync(model);
+                await PopulateProductDropdownsAsync(model);
                 return View("Form", model);
             }
         }
@@ -327,7 +314,7 @@ namespace Javo2.Controllers.Catalog
 
                 await _productoService.DeleteProductoAsync(id);
 
-                // Registrar auditoría
+                // Usar método común de auditoría
                 await RegistrarAuditoriaProductoAsync("Delete", id, nombre);
 
                 SetSuccessMessage("Producto eliminado exitosamente");
@@ -390,6 +377,7 @@ namespace Javo2.Controllers.Catalog
         }
 
         // GET: Productos/FilterProductos
+        // GET: Productos/FilterProductos
         [HttpGet]
         [Authorize(Policy = "Permission:productos.ver")]
         public async Task<IActionResult> FilterProductos(string filterType, string filterValue)
@@ -417,10 +405,7 @@ namespace Javo2.Controllers.Catalog
                         break;
                 }
 
-                var productos = await _productSearchService.FilterProductsAsync(filters);
-                var productosVM = _mapper.Map<IEnumerable<ProductosViewModel>>(productos);
-
-                return PartialView("_ProductosTable", productosVM);
+                return await FilterProductsAsync(filters);
             }
             catch (Exception ex)
             {
@@ -434,17 +419,7 @@ namespace Javo2.Controllers.Catalog
         [Authorize(Policy = "Permission:catalogo.ver")]
         public async Task<IActionResult> FilterRubros(string term)
         {
-            try
-            {
-                var rubros = await _productSearchService.FilterRubrosAsync(term);
-                var rubrosVm = _mapper.Map<IEnumerable<RubroViewModel>>(rubros);
-                return PartialView("~/Views/Catalogo/_RubrosTable.cshtml", rubrosVm);
-            }
-            catch (Exception ex)
-            {
-                LogError(ex, "Error en FilterRubros");
-                return Json(new { error = "Error al filtrar rubros" });
-            }
+            return await FilterRubrosAsync(term);
         }
 
         // GET: Productos/FilterMarcas
@@ -452,17 +427,7 @@ namespace Javo2.Controllers.Catalog
         [Authorize(Policy = "Permission:catalogo.ver")]
         public async Task<IActionResult> FilterMarcas(string term)
         {
-            try
-            {
-                var marcas = await _productSearchService.FilterMarcasAsync(term);
-                var marcasVm = _mapper.Map<IEnumerable<MarcaViewModel>>(marcas);
-                return PartialView("~/Views/Catalogo/_MarcasTable.cshtml", marcasVm);
-            }
-            catch (Exception ex)
-            {
-                LogError(ex, "Error en FilterMarcas");
-                return Json(new { error = "Error al filtrar marcas" });
-            }
+            return await FilterMarcasAsync(term);
         }
 
         #endregion
@@ -510,7 +475,7 @@ namespace Javo2.Controllers.Catalog
             int cantidadActual = stockItem?.CantidadDisponible ?? 0;
             int diferencia = model.NuevaCantidad - cantidadActual;
 
-            // Actualizar stock
+            // Usar método común de la clase base
             return await HandleStockUpdateAsync(model.ProductoID, diferencia, model.Motivo);
         }
 
@@ -570,7 +535,7 @@ namespace Javo2.Controllers.Catalog
                     descripcion ?? "Ajuste rápido desde listado de productos"
                 );
 
-                // Registrar auditoría
+                // Usar método común de auditoría
                 await RegistrarAuditoriaAjustePrecioAsync(
                     "UpdatePrices",
                     ids.ToArray(),
@@ -593,35 +558,48 @@ namespace Javo2.Controllers.Catalog
 
         #endregion
 
-        #region Métodos Auxiliares
+        #region Métodos API comunes
 
-        // Auxiliar: poblado de dropdowns
-        private async Task PopulateDropdownsAsync(ProductosViewModel model)
+        [HttpGet]
+        public async Task<IActionResult> GetSubRubros(int rubroId)
         {
-            // Cargar rubros si no existen
-            model.Rubros = await _productSearchService.GetRubrosSelectListAsync();
+            return await GetSubRubrosAsync(rubroId);
+        }
 
-            // Cargar marcas
-            model.Marcas = await _productSearchService.GetMarcasSelectListAsync();
+        [HttpPost]
+        [Authorize(Policy = "Permission:productos.ver")]
+        public async Task<IActionResult> BuscarProducto(string codigoProducto)
+        {
+            return await BuscarProductoPorCodigoAsync(codigoProducto);
+        }
 
-            // Cargar subrubros del rubro seleccionado
-            if (model.SelectedRubroID > 0)
+        [HttpGet]
+        [Authorize(Policy = "Permission:productos.ver")]
+        public async Task<IActionResult> Filter(ProductoFilterDtoViewModel filters)
+        {
+            try
             {
-                LogInfo($"Cargando subrubros para RubroID: {model.SelectedRubroID}");
-                model.SubRubros = await _productSearchService.GetSubRubrosSelectListAsync(model.SelectedRubroID);
-                LogInfo($"SubRubros cargados: {model.SubRubros.Count()}");
+                var dto = new ProductoFilterDto
+                {
+                    Nombre = filters.Nombre,
+                    Categoria = filters.Categoria,
+                    PrecioMinimo = filters.PrecioMinimo,
+                    PrecioMaximo = filters.PrecioMaximo,
+                    Codigo = filters.Codigo,
+                    Rubro = filters.Rubro,
+                    SubRubro = filters.SubRubro,
+                    Marca = filters.Marca
+                };
+
+                return await FilterProductsAsync(dto);
             }
-            else if (model.Rubros.Any())
+            catch (Exception ex)
             {
-                // Si no hay rubro seleccionado pero hay rubros disponibles, seleccionar el primero
-                model.SelectedRubroID = int.Parse(model.Rubros.First().Value);
-                model.SubRubros = await _productSearchService.GetSubRubrosSelectListAsync(model.SelectedRubroID);
-            }
-            else
-            {
-                model.SubRubros = new List<SelectListItem>();
+                LogError(ex, "Error al filtrar productos: {Filtros}", filters);
+                return PartialView("_ProductosTable", new List<ProductosViewModel>());
             }
         }
+
         #endregion
     }
 }

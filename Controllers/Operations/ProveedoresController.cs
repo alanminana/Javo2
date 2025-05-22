@@ -1,4 +1,4 @@
-﻿// Controllers/ProveedoresController.cs
+﻿// Controllers/Operations/ProveedoresController.cs
 using Microsoft.AspNetCore.Mvc;
 using Javo2.IServices;
 using Javo2.IServices.Common;
@@ -11,36 +11,30 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
-using Javo2.Controllers.Base;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Javo2.IServices.Authentication;
-using Microsoft.Extensions.DependencyInjection;
+using Javo2.Services.Operations;
 
 namespace Javo2.Controllers.Operations
 {
     [Authorize]
-    public class ProveedoresController : BaseController
+    public class ProveedoresController : OperationsBaseController
     {
-        private readonly new ILogger<ProveedoresController> _logger;
         private readonly IProveedorService _proveedorService;
-        private readonly IProductoService _productoService;
-        private readonly IMapper _mapper;
-        private readonly IDropdownService _dropdownService;
+        private readonly CompraWorkflowStateManager _workflowManager;
 
         public ProveedoresController(
-            ILogger<ProveedoresController> logger,
-            IPermissionManagerService permissionManager,
             IProveedorService proveedorService,
             IProductoService productoService,
+            IClienteService clienteService,
+            IAuditoriaService auditoriaService,
+            IDropdownService dropdownService,
+            CompraWorkflowStateManager workflowManager,
             IMapper mapper,
-            IDropdownService dropdownService)
-            : base(logger, permissionManager)
+            ILogger<ProveedoresController> logger)
+            : base(productoService, clienteService, auditoriaService, dropdownService, mapper, logger)
         {
-            _logger = logger;
             _proveedorService = proveedorService;
-            _productoService = productoService;
-            _mapper = mapper;
-            _dropdownService = dropdownService;
+            _workflowManager = workflowManager;
         }
 
         #region Métodos de Proveedores
@@ -57,7 +51,7 @@ namespace Javo2.Controllers.Operations
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al cargar proveedores");
+                LogError(ex, "Error al cargar proveedores");
                 return View("Error");
             }
         }
@@ -76,7 +70,7 @@ namespace Javo2.Controllers.Operations
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al cargar detalles del proveedor");
+                LogError(ex, "Error al cargar detalles del proveedor");
                 return View("Error");
             }
         }
@@ -105,11 +99,20 @@ namespace Javo2.Controllers.Operations
                 var proveedor = _mapper.Map<Proveedor>(viewModel);
                 await _proveedorService.CreateProveedorAsync(proveedor);
 
+                // Usar método común de auditoría
+                await RegistrarAuditoriaOperacionAsync(
+                    "Proveedor",
+                    "Create",
+                    proveedor.ProveedorID,
+                    $"Proveedor creado: {proveedor.Nombre}"
+                );
+
+                SetSuccessMessage("Proveedor creado exitosamente");
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear proveedor");
+                LogError(ex, "Error al crear proveedor");
                 ModelState.AddModelError(string.Empty, $"Error al crear el proveedor: {ex.Message}");
                 return View("Form", viewModel);
             }
@@ -129,7 +132,7 @@ namespace Javo2.Controllers.Operations
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al cargar proveedor para editar");
+                LogError(ex, "Error al cargar proveedor para editar");
                 return View("Error");
             }
         }
@@ -150,11 +153,20 @@ namespace Javo2.Controllers.Operations
                 var proveedor = _mapper.Map<Proveedor>(viewModel);
                 await _proveedorService.UpdateProveedorAsync(proveedor);
 
+                // Usar método común de auditoría
+                await RegistrarAuditoriaOperacionAsync(
+                    "Proveedor",
+                    "Update",
+                    proveedor.ProveedorID,
+                    $"Proveedor actualizado: {proveedor.Nombre}"
+                );
+
+                SetSuccessMessage("Proveedor actualizado exitosamente");
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar proveedor");
+                LogError(ex, "Error al actualizar proveedor");
                 ModelState.AddModelError(string.Empty, $"Error al actualizar el proveedor: {ex.Message}");
                 return View("Form", viewModel);
             }
@@ -174,7 +186,7 @@ namespace Javo2.Controllers.Operations
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al cargar proveedor para eliminar");
+                LogError(ex, "Error al cargar proveedor para eliminar");
                 return View("Error");
             }
         }
@@ -186,13 +198,23 @@ namespace Javo2.Controllers.Operations
         {
             try
             {
+                var proveedor = await _proveedorService.GetProveedorByIDAsync(id);
+                if (proveedor == null) return NotFound();
+
+                string nombre = proveedor.Nombre;
                 await _proveedorService.DeleteProveedorAsync(id);
+
+                // Usar método común de auditoría
+                await RegistrarAuditoriaOperacionAsync("Proveedor", "Delete", id, $"Proveedor eliminado: {nombre}");
+
+                SetSuccessMessage("Proveedor eliminado exitosamente");
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar proveedor");
-                return View("Error");
+                LogError(ex, "Error al eliminar proveedor");
+                SetErrorMessage("Error al eliminar proveedor: " + ex.Message);
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -212,7 +234,7 @@ namespace Javo2.Controllers.Operations
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al cargar compras");
+                LogError(ex, "Error al cargar compras");
                 return View("Error");
             }
         }
@@ -239,7 +261,7 @@ namespace Javo2.Controllers.Operations
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al cargar detalles de compra");
+                LogError(ex, "Error al cargar detalles de compra");
                 return View("Error");
             }
         }
@@ -267,17 +289,18 @@ namespace Javo2.Controllers.Operations
                     }
                 }
 
-                // Cargar listas de opciones
-                await CargarOpcionesParaCompraAsync(model);
+                // Usar método común para cargar opciones
+                await CargarOpcionesCompraAsync(model);
 
                 return View("FormCompra", model);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al inicializar formulario de compra");
+                LogError(ex, "Error al inicializar formulario de compra");
                 return View("Error");
             }
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Permission:proveedores.crear")]
@@ -290,14 +313,23 @@ namespace Javo2.Controllers.Operations
                     return View("FormCompra", model);
 
                 await _proveedorService.CreateCompraAsync(compra);
-                TempData["Success"] = "Compra creada exitosamente.";
+
+                // Usar método común de auditoría
+                await RegistrarAuditoriaOperacionAsync(
+                    "Compra",
+                    "Create",
+                    compra.CompraID,
+                    $"Compra creada: {compra.NumeroFactura}, Total: {compra.PrecioTotal}"
+                );
+
+                SetSuccessMessage("Compra creada exitosamente.");
                 return RedirectToAction(nameof(Compras));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear compra");
+                LogError(ex, "Error al crear compra");
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al crear la compra: " + ex.Message);
-                await CargarOpcionesParaCompraAsync(model);
+                await CargarOpcionesCompraAsync(model);
                 return View("FormCompra", model);
             }
         }
@@ -313,10 +345,9 @@ namespace Javo2.Controllers.Operations
 
                 var model = _mapper.Map<CompraProveedorViewModel>(compra);
 
-                // Verificar si la compra está en estado Completada o Cancelada
-                if (compra.Estado == EstadoCompra.Completada || compra.Estado == EstadoCompra.Cancelada)
+                // Usar método común para validar estado
+                if (!ValidarEstadoParaEdicion(compra.Estado, new[] { EstadoCompra.Borrador, EstadoCompra.Confirmada }, "compra"))
                 {
-                    TempData["Error"] = "No se puede editar una compra completada o cancelada.";
                     return RedirectToAction(nameof(DetallesCompra), new { id });
                 }
 
@@ -327,13 +358,13 @@ namespace Javo2.Controllers.Operations
                     model.NombreProveedor = proveedor.Nombre;
                 }
 
-                await CargarOpcionesParaCompraAsync(model);
+                await CargarOpcionesCompraAsync(model);
 
                 return View("FormCompra", model);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al cargar compra para edición");
+                LogError(ex, "Error al cargar compra para edición");
                 return View("Error");
             }
         }
@@ -348,15 +379,14 @@ namespace Javo2.Controllers.Operations
                 if (!ModelState.IsValid)
                 {
                     LogModelStateErrors();
-                    await CargarOpcionesParaCompraAsync(model);
+                    await CargarOpcionesCompraAsync(model);
                     return View("FormCompra", model);
                 }
 
-                // Validar que haya productos
-                if (model.ProductosCompra == null || !model.ProductosCompra.Any())
+                // Usar método común de validación
+                if (!ValidarProductosEnOperacion(model.ProductosCompra, "compra"))
                 {
-                    ModelState.AddModelError("", "Debe agregar al menos un producto a la compra");
-                    await CargarOpcionesParaCompraAsync(model);
+                    await CargarOpcionesCompraAsync(model);
                     return View("FormCompra", model);
                 }
 
@@ -364,30 +394,38 @@ namespace Javo2.Controllers.Operations
                 var compraOriginal = await _proveedorService.GetCompraByIDAsync(model.CompraID);
                 if (compraOriginal == null) return NotFound();
 
-                if (compraOriginal.Estado == EstadoCompra.Completada || compraOriginal.Estado == EstadoCompra.Cancelada)
+                // Usar método común para validar estado
+                if (!ValidarEstadoParaEdicion(compraOriginal.Estado, new[] { EstadoCompra.Borrador, EstadoCompra.Confirmada }, "compra"))
                 {
-                    TempData["Error"] = "No se puede editar una compra completada o cancelada.";
                     return RedirectToAction(nameof(DetallesCompra), new { id = model.CompraID });
                 }
 
                 // Convertir ViewModel a modelo
                 var compra = _mapper.Map<CompraProveedor>(model);
-                compra.TotalProductos = compra.ProductosCompra.Sum(p => p.Cantidad);
-                compra.PrecioTotal = compra.ProductosCompra.Sum(p => p.PrecioTotal);
+                compra.TotalProductos = CalcularCantidadTotalProductos(compra.ProductosCompra, p => p.Cantidad);
+                compra.PrecioTotal = CalcularTotalOperacion(compra.ProductosCompra, p => p.PrecioTotal);
                 compra.Usuario = User.Identity?.Name ?? "Desconocido";
                 compra.Estado = Enum.Parse<EstadoCompra>(model.Estado);
 
                 // Actualizar compra
                 await _proveedorService.UpdateCompraAsync(compra);
 
-                TempData["Success"] = "Compra actualizada exitosamente.";
+                // Usar método común de auditoría
+                await RegistrarAuditoriaOperacionAsync(
+                    "Compra",
+                    "Update",
+                    compra.CompraID,
+                    $"Compra actualizada: {compra.NumeroFactura}, Total: {compra.PrecioTotal}"
+                );
+
+                SetSuccessMessage("Compra actualizada exitosamente.");
                 return RedirectToAction(nameof(Compras));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar compra");
+                LogError(ex, "Error al actualizar compra");
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al actualizar la compra: " + ex.Message);
-                await CargarOpcionesParaCompraAsync(model);
+                await CargarOpcionesCompraAsync(model);
                 return View("FormCompra", model);
             }
         }
@@ -400,6 +438,12 @@ namespace Javo2.Controllers.Operations
             {
                 var compra = await _proveedorService.GetCompraByIDAsync(id);
                 if (compra == null) return NotFound();
+
+                // Usar método común para validar estado
+                if (!ValidarEstadoParaEliminacion(compra.Estado, new[] { EstadoCompra.Borrador }, "compra"))
+                {
+                    return RedirectToAction(nameof(DetallesCompra), new { id });
+                }
 
                 var model = _mapper.Map<CompraProveedorViewModel>(compra);
 
@@ -414,7 +458,7 @@ namespace Javo2.Controllers.Operations
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al cargar compra para eliminación");
+                LogError(ex, "Error al cargar compra para eliminación");
                 return View("Error");
             }
         }
@@ -426,14 +470,28 @@ namespace Javo2.Controllers.Operations
         {
             try
             {
+                var compra = await _proveedorService.GetCompraByIDAsync(id);
+                if (compra == null) return NotFound();
+
+                // Usar método común para validar estado
+                if (!ValidarEstadoParaEliminacion(compra.Estado, new[] { EstadoCompra.Borrador }, "compra"))
+                {
+                    return RedirectToAction(nameof(DetallesCompra), new { id });
+                }
+
+                string numeroFactura = compra.NumeroFactura;
                 await _proveedorService.DeleteCompraAsync(id);
-                TempData["Success"] = "Compra eliminada exitosamente.";
+
+                // Usar método común de auditoría
+                await RegistrarAuditoriaOperacionAsync("Compra", "Delete", id, $"Compra eliminada: {numeroFactura}");
+
+                SetSuccessMessage("Compra eliminada exitosamente.");
                 return RedirectToAction(nameof(Compras));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar compra");
-                TempData["Error"] = "Ocurrió un error al eliminar la compra: " + ex.Message;
+                LogError(ex, "Error al eliminar compra");
+                SetErrorMessage("Ocurrió un error al eliminar la compra: " + ex.Message);
                 return RedirectToAction(nameof(Compras));
             }
         }
@@ -443,18 +501,16 @@ namespace Javo2.Controllers.Operations
         [Authorize(Policy = "Permission:proveedores.editar")]
         public async Task<IActionResult> ProcesarCompra(int id)
         {
-            try
-            {
-                await _proveedorService.ProcesarCompraAsync(id);
-                TempData["Success"] = "Compra procesada exitosamente.";
-                return RedirectToAction(nameof(DetallesCompra), new { id });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al procesar compra");
-                TempData["Error"] = "Ocurrió un error al procesar la compra: " + ex.Message;
-                return RedirectToAction(nameof(DetallesCompra), new { id });
-            }
+            return await CambiarEstadoOperacionAsync(
+                id,
+                EstadoCompra.EnProceso,
+                _proveedorService.GetCompraByIDAsync,
+                async (compra, estado) => {
+                    await _proveedorService.ProcesarCompraAsync(id);
+                    return true;
+                },
+                "Compra"
+            );
         }
 
         [HttpPost]
@@ -462,18 +518,16 @@ namespace Javo2.Controllers.Operations
         [Authorize(Policy = "Permission:proveedores.editar")]
         public async Task<IActionResult> CompletarCompra(int id)
         {
-            try
-            {
-                await _proveedorService.CompletarCompraAsync(id);
-                TempData["Success"] = "Compra completada exitosamente.";
-                return RedirectToAction(nameof(DetallesCompra), new { id });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al completar compra");
-                TempData["Error"] = "Ocurrió un error al completar la compra: " + ex.Message;
-                return RedirectToAction(nameof(DetallesCompra), new { id });
-            }
+            return await CambiarEstadoOperacionAsync(
+                id,
+                EstadoCompra.Completada,
+                _proveedorService.GetCompraByIDAsync,
+                async (compra, estado) => {
+                    await _proveedorService.CompletarCompraAsync(id);
+                    return true;
+                },
+                "Compra"
+            );
         }
 
         [HttpPost]
@@ -481,173 +535,81 @@ namespace Javo2.Controllers.Operations
         [Authorize(Policy = "Permission:proveedores.editar")]
         public async Task<IActionResult> CancelarCompra(int id)
         {
-            try
-            {
-                await _proveedorService.CancelarCompraAsync(id);
-                TempData["Success"] = "Compra cancelada exitosamente.";
-                return RedirectToAction(nameof(DetallesCompra), new { id });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al cancelar compra");
-                TempData["Error"] = "Ocurrió un error al cancelar la compra: " + ex.Message;
-                return RedirectToAction(nameof(DetallesCompra), new { id });
-            }
+            return await CambiarEstadoOperacionAsync(
+                id,
+                EstadoCompra.Cancelada,
+                _proveedorService.GetCompraByIDAsync,
+                async (compra, estado) => {
+                    await _proveedorService.CancelarCompraAsync(id);
+                    return true;
+                },
+                "Compra"
+            );
         }
 
         [HttpPost]
         [Authorize(Policy = "Permission:proveedores.ver")]
         public async Task<IActionResult> BuscarProducto(string codigoProducto)
         {
-            try
-            {
-                var producto = await _productoService.GetProductoByCodigoAsync(codigoProducto);
-                if (producto == null)
-                    return Json(new { success = false, message = "Producto no encontrado." });
-
-                return Json(new
-                {
-                    success = true,
-                    data = new
-                    {
-                        productoID = producto.ProductoID,
-                        codigoBarra = producto.CodigoBarra,
-                        codigoAlfa = producto.CodigoAlfa,
-                        nombreProducto = producto.Nombre,
-                        marca = producto.Marca?.Nombre ?? "",
-                        cantidad = 1,
-                        precioUnitario = producto.PCosto,
-                        precioTotal = producto.PCosto
-                    }
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al buscar producto");
-                return Json(new { success = false, message = "Error al buscar el producto." });
-            }
+            // Usar método común de la clase base
+            return await BuscarProductoPorCodigoAsync(codigoProducto);
         }
+
         [HttpPost]
         [Authorize(Policy = "Permission:proveedores.ver")]
         public async Task<IActionResult> SearchProducts(string term, bool forPurchase = false)
         {
-            try
-            {
-                if (string.IsNullOrEmpty(term) || term.Length < 2)
-                    return Json(new List<object>());
-
-                var productos = await _productoService.GetAllProductosAsync();
-                var query = productos.Where(p =>
-                    p.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase) ||
-                    p.CodigoAlfa.Contains(term, StringComparison.OrdinalIgnoreCase) ||
-                    p.CodigoBarra.Contains(term, StringComparison.OrdinalIgnoreCase) ||
-                    p.Marca != null && p.Marca.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase));
-
-                if (forPurchase)
-                {
-                    return Json(query.Take(20).Select(p => new {
-                        id = p.ProductoID,
-                        name = p.Nombre,
-                        codigo = p.CodigoAlfa,
-                        marca = p.Marca?.Nombre ?? "Sin marca",
-                        precio = p.PCosto
-                    }));
-                }
-                else
-                {
-                    return Json(query.Take(10).Select(p => new {
-                        label = p.Nombre,
-                        value = p.ProductoID,
-                        marca = p.Marca?.Nombre ?? "Sin marca"
-                    }));
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al buscar productos");
-                return Json(new List<object>());
-            }
+            // Usar método común de la clase base
+            return await BuscarProductosAsync(term, forPurchase);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Filter(string filterField, string filterValue)
+        {
+            return await FiltrarEntidadesAsync<Proveedor, ProveedoresViewModel>(
+                _proveedorService.GetProveedoresAsync,
+                (proveedores, field, value) => AplicarFiltroProveedores(proveedores, field, value),
+                filterField,
+                filterValue,
+                "_ProveedoresTable"
+            );
+        }
+
+        #endregion
+
+        #region Métodos Auxiliares
+
         // Método común para validar y preparar compras
-        private async Task<(bool isValid, CompraProveedor? compra)> PrepararCompraAsync(CompraProveedorViewModel model)
+        private async Task<(bool isValid, CompraProveedor compra)> PrepararCompraAsync(CompraProveedorViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 LogModelStateErrors();
-                await CargarOpcionesParaCompraAsync(model);
+                await CargarOpcionesCompraAsync(model);
                 return (false, null);
             }
 
-            if (model.ProductosCompra == null || !model.ProductosCompra.Any())
+            // Usar método común de validación
+            if (!ValidarProductosEnOperacion(model.ProductosCompra, "compra"))
             {
-                ModelState.AddModelError("", "Debe agregar al menos un producto a la compra");
-                await CargarOpcionesParaCompraAsync(model);
+                await CargarOpcionesCompraAsync(model);
                 return (false, null);
             }
 
             var compra = _mapper.Map<CompraProveedor>(model);
-            compra.TotalProductos = compra.ProductosCompra.Sum(p => p.Cantidad);
-            compra.PrecioTotal = compra.ProductosCompra.Sum(p => p.PrecioTotal);
+            compra.TotalProductos = CalcularCantidadTotalProductos(compra.ProductosCompra, p => p.Cantidad);
+            compra.PrecioTotal = CalcularTotalOperacion(compra.ProductosCompra, p => p.PrecioTotal);
             compra.Usuario = User.Identity?.Name ?? "Desconocido";
             compra.Estado = Enum.Parse<EstadoCompra>(model.Estado);
 
             return (true, compra);
         }
 
-
         // Método auxiliar para cargar opciones de compra
-        private async Task CargarOpcionesParaCompraAsync(CompraProveedorViewModel model)
+        private async Task CargarOpcionesCompraAsync(CompraProveedorViewModel model)
         {
-            // Formas de pago (usamos lista estática para mantener la simplicidad)
-            model.FormasPago = new List<SelectListItem>
-            {
-                new SelectListItem { Value = "1", Text = "Contado" },
-                new SelectListItem { Value = "2", Text = "Tarjeta de Crédito" },
-                new SelectListItem { Value = "3", Text = "Tarjeta de Débito" },
-                new SelectListItem { Value = "4", Text = "Transferencia" },
-                new SelectListItem { Value = "5", Text = "Pago Virtual" },
-                new SelectListItem { Value = "6", Text = "Crédito Personal" },
-                new SelectListItem { Value = "7", Text = "Cheque" }
-
-            };
-
-            // Bancos (usamos lista estática porque parece que IDropdownService no tiene GetBancosAsync)
-            model.Bancos = new List<SelectListItem>
-            {
-                new SelectListItem { Value = "1", Text = "Banco Nación" },
-                new SelectListItem { Value = "2", Text = "Banco Provincia" },
-                new SelectListItem { Value = "3", Text = "Banco Santander" },
-                new SelectListItem { Value = "4", Text = "Banco Galicia" },
-                new SelectListItem { Value = "5", Text = "BBVA" },
-                new SelectListItem { Value = "6", Text = "HSBC" }
-            };
-
-            // Tipos de tarjeta
-            model.TipoTarjetaOptions = new List<SelectListItem>
-            {
-                new SelectListItem { Value = "Visa", Text = "Visa" },
-                new SelectListItem { Value = "MasterCard", Text = "MasterCard" },
-                new SelectListItem { Value = "American Express", Text = "American Express" },
-                new SelectListItem { Value = "Naranja", Text = "Naranja" }
-            };
-
-            // Cuotas
-            model.CuotasOptions = new List<SelectListItem>
-            {
-                new SelectListItem { Value = "1", Text = "1 cuota" },
-                new SelectListItem { Value = "3", Text = "3 cuotas" },
-                new SelectListItem { Value = "6", Text = "6 cuotas" },
-                new SelectListItem { Value = "12", Text = "12 cuotas" }
-            };
-
-            // Entidades electrónicas
-            model.EntidadesElectronicas = new List<SelectListItem>
-            {
-                new SelectListItem { Value = "MercadoPago", Text = "MercadoPago" },
-                new SelectListItem { Value = "Todo Pago", Text = "Todo Pago" },
-                new SelectListItem { Value = "PayPal", Text = "PayPal" }
-            };
+            // Usar método común para cargar formas de pago
+            await CargarOpcionesFormasPagoAsync(model);
 
             // Cargar lista de proveedores
             var proveedores = await _proveedorService.GetProveedoresAsync();
@@ -658,34 +620,20 @@ namespace Javo2.Controllers.Operations
             });
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Filter(string filterField, string filterValue)
+        private IEnumerable<Proveedor> AplicarFiltroProveedores(IEnumerable<Proveedor> proveedores, string filterField, string filterValue)
         {
-            try
-            {
-                var proveedores = await _proveedorService.GetProveedoresAsync();
-                var viewModels = _mapper.Map<IEnumerable<ProveedoresViewModel>>(proveedores);
+            if (string.IsNullOrEmpty(filterValue))
+                return proveedores;
 
-                if (!string.IsNullOrEmpty(filterValue))
-                {
-                    viewModels = filterField switch
-                    {
-                        "nombre" => viewModels.Where(p => p.Nombre.Contains(filterValue, StringComparison.OrdinalIgnoreCase)),
-                        "producto" => viewModels.Where(p => p.ProductosAsignadosNombres != null &&
-                                                          p.ProductosAsignadosNombres.Any(n => n.Contains(filterValue, StringComparison.OrdinalIgnoreCase))),
-                        "marca" => viewModels.Where(p => p.ProductosAsignadosMarcas != null &&
-                                                       p.ProductosAsignadosMarcas.Any(m => m.Contains(filterValue, StringComparison.OrdinalIgnoreCase))),
-                        _ => viewModels,
-                    };
-                }
-
-                return PartialView("_ProveedoresTable", viewModels);
-            }
-            catch (Exception ex)
+            return filterField switch
             {
-                _logger.LogError(ex, "Error al filtrar proveedores");
-                return PartialView("_ProveedoresTable", new List<ProveedoresViewModel>());
-            }
+                "nombre" => proveedores.Where(p => p.Nombre.Contains(filterValue, StringComparison.OrdinalIgnoreCase)),
+                "producto" => proveedores.Where(p => p.ProductosAsignadosNombres != null &&
+                                                    p.ProductosAsignadosNombres.Any(n => n.Contains(filterValue, StringComparison.OrdinalIgnoreCase))),
+                "marca" => proveedores.Where(p => p.ProductosAsignadosMarcas != null &&
+                                                 p.ProductosAsignadosMarcas.Any(m => m.Contains(filterValue, StringComparison.OrdinalIgnoreCase))),
+                _ => proveedores,
+            };
         }
 
         #endregion

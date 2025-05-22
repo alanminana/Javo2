@@ -7,7 +7,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Javo2.Services
+namespace Javo2.Services.Finance
 {
     public class AjustesTemporalesBackgroundService : BackgroundService
     {

@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Javo2.Helpers;
 
-namespace Javo2.Services
+namespace Javo2.Services.Operations
 {
     public class CotizacionService : ICotizacionService
     {

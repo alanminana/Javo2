@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Javo2.Helpers;
 
-namespace Javo2.Services
+namespace Javo2.Services.Catalog
 {
     public class ProductoService : IProductoService
     {
@@ -335,8 +335,8 @@ namespace Javo2.Services
                 query = query.Where(p => p.Nombre.Contains(filters.Nombre, StringComparison.OrdinalIgnoreCase));
 
             if (!string.IsNullOrEmpty(filters.Codigo))
-                query = query.Where(p => (p.CodigoBarra != null && p.CodigoBarra.Contains(filters.Codigo, StringComparison.OrdinalIgnoreCase))
-                                      || (p.CodigoAlfa != null && p.CodigoAlfa.Contains(filters.Codigo, StringComparison.OrdinalIgnoreCase)));
+                query = query.Where(p => p.CodigoBarra != null && p.CodigoBarra.Contains(filters.Codigo, StringComparison.OrdinalIgnoreCase)
+                                      || p.CodigoAlfa != null && p.CodigoAlfa.Contains(filters.Codigo, StringComparison.OrdinalIgnoreCase));
 
             if (!string.IsNullOrEmpty(filters.Marca))
                 query = query.Where(p => p.Marca != null && p.Marca.Nombre.Contains(filters.Marca, StringComparison.OrdinalIgnoreCase));
@@ -361,7 +361,7 @@ namespace Javo2.Services
             _logger.LogInformation("AdjustPricesAsync: {Count} productos, {Porcentaje}% {Tipo}",
                 productIDs.Count(), porcentaje, isAumento ? "Aumento" : "Descuento");
 
-            decimal factor = isAumento ? (1 + porcentaje / 100m) : (1 - porcentaje / 100m);
+            decimal factor = isAumento ? 1 + porcentaje / 100m : 1 - porcentaje / 100m;
 
             lock (_lock)
             {
@@ -402,8 +402,8 @@ namespace Javo2.Services
             {
                 // Primero buscar por código exacto
                 var producto = _productos.FirstOrDefault(p =>
-                    (p.CodigoAlfa != null && p.CodigoAlfa.ToLower() == codigo) ||
-                    (p.CodigoBarra != null && p.CodigoBarra.ToLower() == codigo));
+                    p.CodigoAlfa != null && p.CodigoAlfa.ToLower() == codigo ||
+                    p.CodigoBarra != null && p.CodigoBarra.ToLower() == codigo);
 
                 // Solo si no se encuentra por código, intentar buscar por nombre
                 if (producto == null)
@@ -445,8 +445,8 @@ namespace Javo2.Services
             {
                 var productos = _productos
                     .Where(p => p.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase) ||
-                               (p.Marca != null && p.Marca.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase)) ||
-                               (p.Rubro != null && p.Rubro.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase)))
+                               p.Marca != null && p.Marca.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                               p.Rubro != null && p.Rubro.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase))
                     .AsEnumerable();
                 return Task.FromResult(productos);
             }

@@ -1,5 +1,4 @@
-﻿// Controllers/UsuariosController.cs
-using Javo2.Controllers.Base;
+﻿// Controllers/Security/UsuariosController.cs
 using Javo2.IServices.Authentication;
 using Javo2.Models.Authentication;
 using Javo2.ViewModels.Authentication;
@@ -14,20 +13,17 @@ using System.Threading.Tasks;
 
 namespace Javo2.Controllers.Security
 {
-    [Authorize]  // Fuerza que el usuario esté autenticado
-    public class UsuariosController : BaseController
+    [Authorize]
+    public class UsuariosController : SecurityBaseController
     {
-        private readonly IUsuarioService _usuarioService;
-        private readonly IRolService _rolService;
-
         public UsuariosController(
             IUsuarioService usuarioService,
             IRolService rolService,
+            IPermisoService permisoService,
+            IPermissionManagerService permissionManager,
             ILogger<UsuariosController> logger)
-            : base(logger)
+            : base(usuarioService, rolService, permisoService, permissionManager, logger)
         {
-            _usuarioService = usuarioService;
-            _rolService = rolService;
         }
 
         // GET: Usuarios
@@ -63,7 +59,7 @@ namespace Javo2.Controllers.Security
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener la lista de usuarios");
+                LogError(ex, "Error al obtener la lista de usuarios");
                 return View("Error");
             }
         }
@@ -87,22 +83,17 @@ namespace Javo2.Controllers.Security
                         roles.Add(rol);
                 }
 
-                var model = new UsuarioDetailsViewModel
-                {
-                    Usuario = usuario,
-                    Roles = roles
-                };
-
+                // Usar método común para crear ViewModel
+                var model = CrearUsuarioDetailsViewModel(usuario, roles);
                 return View(model);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener detalles del usuario");
+                LogError(ex, "Error al obtener detalles del usuario");
                 return View("Error");
             }
         }
 
-        // GET: Usuarios/Create
         // GET: Usuarios/Create
         [HttpGet]
         [Authorize(Policy = "Permission:usuarios.crear")]
@@ -110,28 +101,15 @@ namespace Javo2.Controllers.Security
         {
             try
             {
-                _logger.LogInformation("Preparando formulario de creación de usuario");
+                LogInfo("Preparando formulario de creación de usuario");
 
-                var roles = await _rolService.GetAllRolesAsync();
-                var rolesItems = roles.Select(r => new SelectListItem
-                {
-                    Value = r.RolID.ToString(),
-                    Text = r.Nombre
-                }).ToList();
-
-                var model = new UsuarioFormViewModel
-                {
-                    Usuario = new Usuario { Activo = true },
-                    RolesDisponibles = rolesItems,
-                    RolesSeleccionados = new List<int>(),
-                    EsEdicion = false
-                };
-
+                // Usar método común para preparar formulario
+                var model = await PrepararFormularioUsuarioAsync();
                 return View("Form", model);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al preparar formulario de creación de usuario");
+                LogError(ex, "Error al preparar formulario de creación de usuario");
                 return View("Error");
             }
         }
@@ -144,92 +122,38 @@ namespace Javo2.Controllers.Security
         {
             try
             {
-                _logger.LogInformation("Iniciando creación de usuario: {NombreUsuario}", model.Usuario?.NombreUsuario);
+                LogInfo("Iniciando creación de usuario: {NombreUsuario}", model.Usuario?.NombreUsuario);
 
-                var roles = await _rolService.GetAllRolesAsync();
-                var rolesItems = roles.Select(r => new SelectListItem
+                // Usar método común de validación
+                if (!await ValidarDatosUsuarioAsync(model, esEdicion: false))
                 {
-                    Value = r.RolID.ToString(),
-                    Text = r.Nombre
-                }).ToList();
-
-                model.RolesDisponibles = rolesItems;
-                model.RolesSeleccionados = RolesSeleccionados ?? new List<int>();
-
-                bool isValid = true;
-                if (model.Usuario == null)
-                {
-                    ModelState.AddModelError("Usuario", "La información del usuario es obligatoria");
-                    isValid = false;
-                }
-                else
-                {
-                    if (string.IsNullOrEmpty(model.Usuario.NombreUsuario))
-                    {
-                        ModelState.AddModelError("Usuario.NombreUsuario", "El nombre de usuario es obligatorio");
-                        isValid = false;
-                    }
-                    if (string.IsNullOrEmpty(model.Usuario.Email))
-                    {
-                        ModelState.AddModelError("Usuario.Email", "El email es obligatorio");
-                        isValid = false;
-                    }
-                }
-
-                if (string.IsNullOrEmpty(model.Contraseña))
-                {
-                    ModelState.AddModelError("Contraseña", "La contraseña es obligatoria");
-                    isValid = false;
-                }
-                else if (model.Contraseña.Length < 6)
-                {
-                    ModelState.AddModelError("Contraseña", "La contraseña debe tener al menos 6 caracteres");
-                    isValid = false;
-                }
-
-                if (string.IsNullOrEmpty(model.ConfirmarContraseña))
-                {
-                    ModelState.AddModelError("ConfirmarContraseña", "La confirmación de contraseña es obligatoria");
-                    isValid = false;
-                }
-                else if (model.Contraseña != model.ConfirmarContraseña)
-                {
-                    ModelState.AddModelError("ConfirmarContraseña", "Las contraseñas no coinciden");
-                    isValid = false;
-                }
-
-                if (!isValid)
+                    model = await PrepararFormularioUsuarioAsync(model.Usuario);
+                    model.RolesSeleccionados = RolesSeleccionados ?? new List<int>();
                     return View("Form", model);
+                }
 
                 model.Usuario.CreadoPor = User.Identity?.Name ?? "Sistema";
                 var result = await _usuarioService.CreateUsuarioAsync(model.Usuario, model.Contraseña);
                 if (!result)
                     throw new Exception("No se pudo crear el usuario");
 
+                // Usar método común para asignar roles
                 if (RolesSeleccionados != null && RolesSeleccionados.Any())
                 {
-                    foreach (var rolId in RolesSeleccionados)
-                        await _usuarioService.AsignarRolAsync(model.Usuario.UsuarioID, rolId);
+                    await ProcesarAsignacionRolesUsuarioAsync(model.Usuario.UsuarioID, RolesSeleccionados);
                 }
 
-                TempData["Success"] = "Usuario creado correctamente";
+                SetSuccessMessage("Usuario creado correctamente");
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear usuario: {Message}", ex.Message);
+                LogError(ex, "Error al crear usuario: {Message}", ex.Message);
                 ModelState.AddModelError(string.Empty, "Error al crear usuario: " + ex.Message);
 
-                var roles = await _rolService.GetAllRolesAsync();
-                var rolesItems = roles.Select(r => new SelectListItem
-                {
-                    Value = r.RolID.ToString(),
-                    Text = r.Nombre
-                }).ToList();
-
-                model.RolesDisponibles = rolesItems;
+                // Recargar formulario usando método común
+                model = await PrepararFormularioUsuarioAsync(model.Usuario);
                 model.RolesSeleccionados = RolesSeleccionados ?? new List<int>();
-                model.EsEdicion = false;
 
                 return View("Form", model);
             }
@@ -246,28 +170,13 @@ namespace Javo2.Controllers.Security
                 if (usuario == null)
                     return NotFound();
 
-                var roles = await _rolService.GetAllRolesAsync();
-                var rolesItems = roles.Select(r => new SelectListItem
-                {
-                    Value = r.RolID.ToString(),
-                    Text = r.Nombre
-                }).ToList();
-
-                var selected = usuario.Roles.Select(r => r.RolID).ToList();
-
-                var model = new UsuarioFormViewModel
-                {
-                    Usuario = usuario,
-                    RolesDisponibles = rolesItems,
-                    RolesSeleccionados = selected,
-                    EsEdicion = true
-                };
-
+                // Usar método común para preparar formulario
+                var model = await PrepararFormularioUsuarioAsync(usuario, esEdicion: true);
                 return View("Form", model);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al preparar formulario de edición de usuario");
+                LogError(ex, "Error al preparar formulario de edición de usuario");
                 return View("Error");
             }
         }
@@ -283,18 +192,11 @@ namespace Javo2.Controllers.Security
 
             try
             {
-                if (!ModelState.IsValid)
+                // Usar método común de validación
+                if (!await ValidarDatosUsuarioAsync(model, esEdicion: true))
                 {
-                    var roles = await _rolService.GetAllRolesAsync();
-                    var rolesItems = roles.Select(r => new SelectListItem
-                    {
-                        Value = r.RolID.ToString(),
-                        Text = r.Nombre
-                    }).ToList();
-
-                    model.RolesDisponibles = rolesItems;
+                    model = await PrepararFormularioUsuarioAsync(model.Usuario, esEdicion: true);
                     model.RolesSeleccionados = RolesSeleccionados ?? new List<int>();
-                    model.EsEdicion = true;
                     return View("Form", model);
                 }
 
@@ -302,34 +204,21 @@ namespace Javo2.Controllers.Security
                 if (!result)
                     throw new Exception("No se pudo actualizar el usuario");
 
-                var usuario = await _usuarioService.GetUsuarioByIDAsync(id);
-                var actuales = usuario.Roles.Select(r => r.RolID).ToList();
-                var rolesAEliminar = actuales.Except(RolesSeleccionados ?? new List<int>()).ToList();
-                var rolesAAgregar = (RolesSeleccionados ?? new List<int>()).Except(actuales).ToList();
+                // Usar método común para actualizar roles
+                await ProcesarAsignacionRolesUsuarioAsync(id, RolesSeleccionados ?? new List<int>());
 
-                foreach (var rolId in rolesAEliminar)
-                    await _usuarioService.QuitarRolAsync(id, rolId);
-                foreach (var rolId in rolesAAgregar)
-                    await _usuarioService.AsignarRolAsync(id, rolId);
-
-                TempData["Success"] = "Usuario actualizado correctamente";
+                SetSuccessMessage("Usuario actualizado correctamente");
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar usuario: {Message}", ex.Message);
+                LogError(ex, "Error al actualizar usuario: {Message}", ex.Message);
                 ModelState.AddModelError(string.Empty, "Error al actualizar usuario: " + ex.Message);
 
-                var roles = await _rolService.GetAllRolesAsync();
-                var rolesItems = roles.Select(r => new SelectListItem
-                {
-                    Value = r.RolID.ToString(),
-                    Text = r.Nombre
-                }).ToList();
-
-                model.RolesDisponibles = rolesItems;
+                // Recargar formulario usando método común
+                model = await PrepararFormularioUsuarioAsync(model.Usuario, esEdicion: true);
                 model.RolesSeleccionados = RolesSeleccionados ?? new List<int>();
-                model.EsEdicion = true;
+
                 return View("Form", model);
             }
         }
@@ -353,17 +242,13 @@ namespace Javo2.Controllers.Security
                         roles.Add(rol);
                 }
 
-                var model = new UsuarioDetailsViewModel
-                {
-                    Usuario = usuario,
-                    Roles = roles
-                };
-
+                // Usar método común para crear ViewModel
+                var model = CrearUsuarioDetailsViewModel(usuario, roles);
                 return View(model);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al preparar eliminación de usuario");
+                LogError(ex, "Error al preparar eliminación de usuario");
                 return View("Error");
             }
         }
@@ -380,13 +265,13 @@ namespace Javo2.Controllers.Security
                 if (!result)
                     throw new Exception("No se pudo eliminar el usuario");
 
-                TempData["Success"] = "Usuario eliminado correctamente";
+                SetSuccessMessage("Usuario eliminado correctamente");
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar usuario: {Message}", ex.Message);
-                TempData["Error"] = "Error al eliminar usuario: " + ex.Message;
+                LogError(ex, "Error al eliminar usuario: {Message}", ex.Message);
+                SetErrorMessage("Error al eliminar usuario: " + ex.Message);
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -401,20 +286,18 @@ namespace Javo2.Controllers.Security
             {
                 var result = await _usuarioService.ToggleEstadoAsync(id);
                 if (!result)
-                    return Json(new { success = false, message = "No se pudo actualizar el estado del usuario" });
+                    return JsonError("No se pudo actualizar el estado del usuario");
 
                 var usuario = await _usuarioService.GetUsuarioByIDAsync(id);
-                return Json(new
-                {
-                    success = true,
-                    message = $"Usuario {(usuario.Activo ? "activado" : "desactivado")} correctamente",
-                    estado = usuario.Activo
-                });
+                return JsonSuccess(
+                    $"Usuario {(usuario.Activo ? "activado" : "desactivado")} correctamente",
+                    new { estado = usuario.Activo }
+                );
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al cambiar estado de usuario");
-                return Json(new { success = false, message = "Error al cambiar estado del usuario: " + ex.Message });
+                LogError(ex, "Error al cambiar estado de usuario");
+                return JsonError("Error al cambiar estado del usuario: " + ex.Message);
             }
         }
     }

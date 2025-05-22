@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System;
 using Javo2.Helpers;
 
-namespace Javo2.Services
+namespace Javo2.Services.Reporting
 {
     public class AuditoriaService : IAuditoriaService
     {
@@ -50,7 +50,7 @@ namespace Javo2.Services
             lock (_lock)
             {
                 var reg = _registros.FirstOrDefault(r => r.ID == id);
-                return Task.FromResult<AuditoriaRegistro?>(reg);
+                return Task.FromResult(reg);
             }
         }
 

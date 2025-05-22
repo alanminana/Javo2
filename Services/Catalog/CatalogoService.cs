@@ -10,7 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Javo2.Helpers;
 
-namespace Javo2.Services
+namespace Javo2.Services.Catalog
 {
     public class CatalogoService : ICatalogoService
     {
@@ -121,7 +121,7 @@ namespace Javo2.Services
         {
             lock (_lock)
             {
-                return Task.FromResult<IEnumerable<Rubro>>(_rubros.AsEnumerable());
+                return Task.FromResult(_rubros.AsEnumerable());
             }
         }
 
@@ -322,7 +322,7 @@ namespace Javo2.Services
         {
             lock (_lock)
             {
-                return Task.FromResult<IEnumerable<Marca>>(_marcas.AsEnumerable());
+                return Task.FromResult(_marcas.AsEnumerable());
             }
         }
 

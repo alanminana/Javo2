@@ -1,12 +1,13 @@
 ﻿// Controllers/Security/SecurityController.cs
-using Javo2.Controllers.Base;
 using Javo2.Data.Seeders;
 using Javo2.Filters.ExceptionHandling;
 using Javo2.IServices.Authentication;
 using Javo2.Models.Authentication;
+using Javo2.Services.Security;
 using Javo2.ViewModels.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -16,18 +17,20 @@ using System.Threading.Tasks;
 namespace Javo2.Controllers.Security
 {
     [Authorize]
-    public class SecurityController : BaseController
+    public class SecurityController : SecurityBaseController
     {
-        private readonly IPermissionManagerService _permissionManager;
-        private readonly IUsuarioService _usuarioService;
+        private readonly ISecurityManagementService _securityManagementService;
 
         public SecurityController(
-            IPermissionManagerService permissionManager,
             IUsuarioService usuarioService,
-            ILogger<SecurityController> logger) : base(logger)
+            IRolService rolService,
+            IPermisoService permisoService,
+            IPermissionManagerService permissionManager,
+            ISecurityManagementService securityManagementService,
+            ILogger<SecurityController> logger)
+            : base(usuarioService, rolService, permisoService, permissionManager, logger)
         {
-            _permissionManager = permissionManager;
-            _usuarioService = usuarioService;
+            _securityManagementService = securityManagementService;
         }
 
         #region Dashboard de Seguridad
@@ -37,40 +40,30 @@ namespace Javo2.Controllers.Security
         {
             try
             {
-                // Obtener estadísticas para el dashboard
-                var usuarios = await _usuarioService.GetAllUsuariosAsync();
-                var roles = await _permissionManager.GetAllRolesAsync();
-                var permisos = await _permissionManager.GetAllPermissionsAsync();
+                var dashboardData = await _securityManagementService.ObtenerDatosDashboardAsync();
 
                 var viewModel = new SecurityDashboardViewModel
                 {
-                    TotalUsuarios = usuarios.Count(),
-                    UsuariosActivos = usuarios.Count(u => u.Activo),
-                    TotalRoles = roles.Count(),
-                    TotalPermisos = permisos.Count(),
-                    UltimosUsuariosRegistrados = usuarios
-                        .OrderByDescending(u => u.FechaCreacion)
-                        .Take(5)
+                    TotalUsuarios = dashboardData.TotalUsuarios,
+                    UsuariosActivos = dashboardData.UsuariosActivos,
+                    TotalRoles = dashboardData.TotalRoles,
+                    TotalPermisos = dashboardData.TotalPermisos,
+                    UltimosUsuariosRegistrados = dashboardData.UltimosUsuariosRegistrados
                         .Select(u => new UsuarioSimpleViewModel
                         {
                             UsuarioID = u.UsuarioID,
                             NombreUsuario = u.NombreUsuario,
-                            NombreCompleto = $"{u.Nombre} {u.Apellido}",
+                            NombreCompleto = u.NombreCompleto,
                             FechaCreacion = u.FechaCreacion
-                        })
-                        .ToList(),
-                    UltimosAccesos = usuarios
-                        .Where(u => u.UltimoAcceso.HasValue)
-                        .OrderByDescending(u => u.UltimoAcceso)
-                        .Take(5)
+                        }).ToList(),
+                    UltimosAccesos = dashboardData.UltimosAccesos
                         .Select(u => new UsuarioSimpleViewModel
                         {
                             UsuarioID = u.UsuarioID,
                             NombreUsuario = u.NombreUsuario,
-                            NombreCompleto = $"{u.Nombre} {u.Apellido}",
+                            NombreCompleto = u.NombreCompleto,
                             UltimoAcceso = u.UltimoAcceso
-                        })
-                        .ToList()
+                        }).ToList()
                 };
 
                 return View(viewModel);
@@ -97,7 +90,7 @@ namespace Javo2.Controllers.Security
         [Authorize(Policy = "Permission:permisos.ver")]
         public async Task<IActionResult> DetallesPermiso(int id)
         {
-            var permisos = await _permissionManager.GetAllPermissionsAsync();
+            var permisos = await _permisoService.GetAllPermisosAsync();
             var permiso = permisos.FirstOrDefault(p => p.PermisoID == id);
             if (permiso == null) return NotFound();
             return View(permiso);
@@ -119,13 +112,9 @@ namespace Javo2.Controllers.Security
             if (!ModelState.IsValid)
                 return View("FormPermiso", permiso);
 
-            var permisos = await _permissionManager.GetAllPermissionsAsync();
-            var existente = permisos.FirstOrDefault(p => p.Codigo == permiso.Codigo);
-            if (existente != null)
-            {
-                ModelState.AddModelError("Codigo", "Ya existe un permiso con este código");
+            // Usar método común de validación
+            if (!await ValidarCodigoPermisoUnicoAsync(permiso.Codigo))
                 return View("FormPermiso", permiso);
-            }
 
             var result = await _permissionManager.CreateOrUpdatePermissionAsync(permiso);
             if (!result)
@@ -142,9 +131,10 @@ namespace Javo2.Controllers.Security
         [Authorize(Policy = "Permission:permisos.editar")]
         public async Task<IActionResult> EditarPermiso(int id)
         {
-            var permisos = await _permissionManager.GetAllPermissionsAsync();
+            var permisos = await _permisoService.GetAllPermisosAsync();
             var permiso = permisos.FirstOrDefault(p => p.PermisoID == id);
             if (permiso == null) return NotFound();
+
             if (permiso.EsSistema)
             {
                 SetErrorMessage("No se pueden editar permisos del sistema");
@@ -163,21 +153,19 @@ namespace Javo2.Controllers.Security
             if (!ModelState.IsValid)
                 return View("FormPermiso", permiso);
 
-            var permisos = await _permissionManager.GetAllPermissionsAsync();
+            var permisos = await _permisoService.GetAllPermisosAsync();
             var original = permisos.FirstOrDefault(p => p.PermisoID == id);
             if (original == null) return NotFound();
+
             if (original.EsSistema)
             {
                 SetErrorMessage("No se pueden editar permisos del sistema");
                 return RedirectToAction(nameof(Permisos));
             }
 
-            var existente = permisos.FirstOrDefault(p => p.Codigo == permiso.Codigo && p.PermisoID != id);
-            if (existente != null)
-            {
-                ModelState.AddModelError("Codigo", "Ya existe un permiso con este código");
+            // Usar método común de validación
+            if (!await ValidarCodigoPermisoUnicoAsync(permiso.Codigo, id))
                 return View("FormPermiso", permiso);
-            }
 
             permiso.EsSistema = original.EsSistema;
             var result = await _permissionManager.CreateOrUpdatePermissionAsync(permiso);
@@ -195,14 +183,12 @@ namespace Javo2.Controllers.Security
         [Authorize(Policy = "Permission:permisos.eliminar")]
         public async Task<IActionResult> EliminarPermiso(int id)
         {
-            var permisos = await _permissionManager.GetAllPermissionsAsync();
-            var permiso = permisos.FirstOrDefault(p => p.PermisoID == id);
-            if (permiso == null) return NotFound();
-            if (permiso.EsSistema)
-            {
-                SetErrorMessage("No se pueden eliminar permisos del sistema");
+            // Usar método común de validación
+            if (!await ValidarPermisoParaEliminacionAsync(id))
                 return RedirectToAction(nameof(Permisos));
-            }
+
+            var permisos = await _permisoService.GetAllPermisosAsync();
+            var permiso = permisos.FirstOrDefault(p => p.PermisoID == id);
             return View(permiso);
         }
 
@@ -211,14 +197,9 @@ namespace Javo2.Controllers.Security
         [Authorize(Policy = "Permission:permisos.eliminar")]
         public async Task<IActionResult> EliminarPermisoConfirmado(int id)
         {
-            var permisos = await _permissionManager.GetAllPermissionsAsync();
-            var permiso = permisos.FirstOrDefault(p => p.PermisoID == id);
-            if (permiso == null) return NotFound();
-            if (permiso.EsSistema)
-            {
-                SetErrorMessage("No se pueden eliminar permisos del sistema");
+            // Usar método común de validación
+            if (!await ValidarPermisoParaEliminacionAsync(id))
                 return RedirectToAction(nameof(Permisos));
-            }
 
             var result = await _permissionManager.DeletePermissionAsync(id);
             if (!result)
@@ -240,7 +221,7 @@ namespace Javo2.Controllers.Security
             if (!result)
                 return JsonError("No se pudo cambiar el estado del permiso");
 
-            var permisos = await _permissionManager.GetAllPermissionsAsync();
+            var permisos = await _permisoService.GetAllPermisosAsync();
             var permiso = permisos.FirstOrDefault(p => p.PermisoID == id);
             if (permiso == null)
                 return JsonError("Permiso no encontrado");
@@ -259,7 +240,7 @@ namespace Javo2.Controllers.Security
         [Authorize(Policy = "Permission:roles.ver")]
         public async Task<IActionResult> Roles()
         {
-            var roles = await _permissionManager.GetAllRolesAsync();
+            var roles = await _rolService.GetAllRolesAsync();
             return View(roles);
         }
 
@@ -267,11 +248,11 @@ namespace Javo2.Controllers.Security
         [Authorize(Policy = "Permission:roles.ver")]
         public async Task<IActionResult> DetallesRol(int id)
         {
-            var rol = await _permissionManager.GetRoleByIdAsync(id);
+            var rol = await _rolService.GetRolByIDAsync(id);
             if (rol == null)
                 return NotFound();
 
-            var permisos = await _permissionManager.GetAllPermissionsAsync();
+            var permisos = await _permisoService.GetAllPermisosAsync();
             var permisosRol = new List<Permiso>();
 
             foreach (var rolPermiso in rol.Permisos)
@@ -283,12 +264,8 @@ namespace Javo2.Controllers.Security
                 }
             }
 
-            var model = new RolDetailsViewModel
-            {
-                Rol = rol,
-                Permisos = permisosRol
-            };
-
+            // Usar método común para crear ViewModel
+            var model = CrearRolDetailsViewModel(rol, permisosRol);
             return View(model);
         }
 
@@ -296,22 +273,8 @@ namespace Javo2.Controllers.Security
         [Authorize(Policy = "Permission:roles.crear")]
         public async Task<IActionResult> CrearRol()
         {
-            var permisos = await _permissionManager.GetAllPermissionsAsync();
-            var permisosActivos = permisos.Where(p => p.Activo).ToList();
-
-            // Agrupar permisos por grupo
-            var gruposPermisos = permisosActivos
-                .GroupBy(p => p.Grupo ?? "General")
-                .ToDictionary(g => g.Key, g => g.ToList());
-
-            var model = new RolFormViewModel
-            {
-                Rol = new Rol { EsSistema = false },
-                GruposPermisos = gruposPermisos,
-                PermisosSeleccionados = new List<int>(),
-                EsEdicion = false
-            };
-
+            // Usar método común para preparar formulario
+            var model = await PrepararFormularioRolAsync();
             return View("FormRol", model);
         }
 
@@ -323,14 +286,7 @@ namespace Javo2.Controllers.Security
             if (string.IsNullOrWhiteSpace(model.Rol?.Nombre))
             {
                 ModelState.AddModelError("Rol.Nombre", "El nombre del rol es obligatorio");
-
-                var permisos = await _permissionManager.GetAllPermissionsAsync();
-                var permisosActivos = permisos.Where(p => p.Activo).ToList();
-                var gruposPermisos = permisosActivos
-                    .GroupBy(p => p.Grupo ?? "General")
-                    .ToDictionary(g => g.Key, g => g.ToList());
-
-                model.GruposPermisos = gruposPermisos;
+                model = await PrepararFormularioRolAsync(model.Rol);
                 model.PermisosSeleccionados = PermisosSeleccionados ?? new List<int>();
                 return View("FormRol", model);
             }
@@ -340,31 +296,22 @@ namespace Javo2.Controllers.Security
             {
                 Nombre = model.Rol.Nombre,
                 Descripcion = model.Rol.Descripcion,
-                EsSistema = false // Los roles creados manualmente nunca son del sistema
+                EsSistema = false
             };
 
-            var result = await _permissionManager.CreateOrUpdateRoleAsync(rol);
-            if (!result)
+            var rolId = await _rolService.CreateRolAsync(rol);
+            if (rolId <= 0)
             {
                 ModelState.AddModelError(string.Empty, "Error al crear el rol");
-
-                var permisos = await _permissionManager.GetAllPermissionsAsync();
-                var permisosActivos = permisos.Where(p => p.Activo).ToList();
-                var gruposPermisos = permisosActivos
-                    .GroupBy(p => p.Grupo ?? "General")
-                    .ToDictionary(g => g.Key, g => g.ToList());
-
-                model.GruposPermisos = gruposPermisos;
+                model = await PrepararFormularioRolAsync(model.Rol);
                 model.PermisosSeleccionados = PermisosSeleccionados ?? new List<int>();
                 return View("FormRol", model);
             }
 
-            // Obtener el ID del rol recién creado
-            var roles = await _permissionManager.GetAllRolesAsync();
-            var rolCreado = roles.FirstOrDefault(r => r.Nombre == rol.Nombre);
-            if (rolCreado != null && PermisosSeleccionados != null && PermisosSeleccionados.Any())
+            // Usar método común para asignar permisos
+            if (PermisosSeleccionados != null && PermisosSeleccionados.Any())
             {
-                await _permissionManager.AssignPermissionsToRoleAsync(rolCreado.RolID, PermisosSeleccionados);
+                await ProcesarAsignacionPermisosRolAsync(rolId, PermisosSeleccionados);
             }
 
             SetSuccessMessage("Rol creado correctamente");
@@ -375,30 +322,12 @@ namespace Javo2.Controllers.Security
         [Authorize(Policy = "Permission:roles.editar")]
         public async Task<IActionResult> EditarRol(int id)
         {
-            var rol = await _permissionManager.GetRoleByIdAsync(id);
+            var rol = await _rolService.GetRolByIDAsync(id);
             if (rol == null)
                 return NotFound();
 
-            // Obtener permisos asignados
-            var permisosIds = rol.Permisos.Select(p => p.PermisoID).ToList();
-
-            // Obtener todos los permisos
-            var permisos = await _permissionManager.GetAllPermissionsAsync();
-            var permisosActivos = permisos.Where(p => p.Activo).ToList();
-
-            // Agrupar permisos por grupo
-            var gruposPermisos = permisosActivos
-                .GroupBy(p => p.Grupo ?? "General")
-                .ToDictionary(g => g.Key, g => g.ToList());
-
-            var model = new RolFormViewModel
-            {
-                Rol = rol,
-                GruposPermisos = gruposPermisos,
-                PermisosSeleccionados = permisosIds,
-                EsEdicion = true
-            };
-
+            // Usar método común para preparar formulario
+            var model = await PrepararFormularioRolAsync(rol, esEdicion: true);
             return View("FormRol", model);
         }
 
@@ -413,24 +342,15 @@ namespace Javo2.Controllers.Security
             if (string.IsNullOrWhiteSpace(model.Rol?.Nombre))
             {
                 ModelState.AddModelError("Rol.Nombre", "El nombre del rol es obligatorio");
-
-                var permisos = await _permissionManager.GetAllPermissionsAsync();
-                var permisosActivos = permisos.Where(p => p.Activo).ToList();
-                var gruposPermisos = permisosActivos
-                    .GroupBy(p => p.Grupo ?? "General")
-                    .ToDictionary(g => g.Key, g => g.ToList());
-
-                model.GruposPermisos = gruposPermisos;
+                model = await PrepararFormularioRolAsync(model.Rol, esEdicion: true);
                 model.PermisosSeleccionados = PermisosSeleccionados ?? new List<int>();
-                model.EsEdicion = true;
                 return View("FormRol", model);
             }
 
-            var originalRol = await _permissionManager.GetRoleByIdAsync(id);
+            var originalRol = await _rolService.GetRolByIDAsync(id);
             if (originalRol == null)
                 return NotFound();
 
-            // Si es un rol del sistema, solo permitir cambiar la descripción
             // Si es un rol del sistema, solo permitir cambiar la descripción
             if (originalRol.EsSistema)
             {
@@ -443,25 +363,17 @@ namespace Javo2.Controllers.Security
             }
 
             // Actualizar rol
-            var result = await _permissionManager.CreateOrUpdateRoleAsync(originalRol);
+            var result = await _rolService.UpdateRolAsync(originalRol);
             if (!result)
             {
                 ModelState.AddModelError(string.Empty, "Error al actualizar el rol");
-
-                var permisos = await _permissionManager.GetAllPermissionsAsync();
-                var permisosActivos = permisos.Where(p => p.Activo).ToList();
-                var gruposPermisos = permisosActivos
-                    .GroupBy(p => p.Grupo ?? "General")
-                    .ToDictionary(g => g.Key, g => g.ToList());
-
-                model.GruposPermisos = gruposPermisos;
+                model = await PrepararFormularioRolAsync(model.Rol, esEdicion: true);
                 model.PermisosSeleccionados = PermisosSeleccionados ?? new List<int>();
-                model.EsEdicion = true;
                 return View("FormRol", model);
             }
 
-            // Actualizar permisos
-            await _permissionManager.AssignPermissionsToRoleAsync(id, PermisosSeleccionados ?? new List<int>());
+            // Usar método común para actualizar permisos
+            await ProcesarAsignacionPermisosRolAsync(id, PermisosSeleccionados ?? new List<int>());
 
             SetSuccessMessage("Rol actualizado correctamente");
             return RedirectToAction(nameof(Roles));
@@ -471,19 +383,12 @@ namespace Javo2.Controllers.Security
         [Authorize(Policy = "Permission:roles.eliminar")]
         public async Task<IActionResult> EliminarRol(int id)
         {
-            var rol = await _permissionManager.GetRoleByIdAsync(id);
-            if (rol == null)
-                return NotFound();
-
-            // No permitir eliminar roles del sistema
-            if (rol.EsSistema)
-            {
-                SetErrorMessage("No se pueden eliminar roles del sistema");
+            // Usar método común de validación
+            if (!await ValidarRolParaEliminacionAsync(id))
                 return RedirectToAction(nameof(Roles));
-            }
 
-            // Obtener permisos del rol
-            var permisos = await _permissionManager.GetAllPermissionsAsync();
+            var rol = await _rolService.GetRolByIDAsync(id);
+            var permisos = await _permisoService.GetAllPermisosAsync();
             var permisosRol = new List<Permiso>();
 
             foreach (var rolPermiso in rol.Permisos)
@@ -495,12 +400,8 @@ namespace Javo2.Controllers.Security
                 }
             }
 
-            var model = new RolDetailsViewModel
-            {
-                Rol = rol,
-                Permisos = permisosRol
-            };
-
+            // Usar método común para crear ViewModel
+            var model = CrearRolDetailsViewModel(rol, permisosRol);
             return View(model);
         }
 
@@ -509,18 +410,11 @@ namespace Javo2.Controllers.Security
         [Authorize(Policy = "Permission:roles.eliminar")]
         public async Task<IActionResult> EliminarRolConfirmado(int id)
         {
-            var rol = await _permissionManager.GetRoleByIdAsync(id);
-            if (rol == null)
-                return NotFound();
-
-            // No permitir eliminar roles del sistema
-            if (rol.EsSistema)
-            {
-                SetErrorMessage("No se pueden eliminar roles del sistema");
+            // Usar método común de validación
+            if (!await ValidarRolParaEliminacionAsync(id))
                 return RedirectToAction(nameof(Roles));
-            }
 
-            var result = await _permissionManager.DeleteRoleAsync(id);
+            var result = await _rolService.DeleteRolAsync(id);
             if (!result)
             {
                 SetErrorMessage("Error al eliminar el rol");
@@ -546,24 +440,23 @@ namespace Javo2.Controllers.Security
         {
             try
             {
-                // Obtener las dependencias del contenedor
-                var permisoService = HttpContext.RequestServices.GetRequiredService<IPermisoService>();
-                var rolService = HttpContext.RequestServices.GetRequiredService<IRolService>();
-                var loggerFactory = HttpContext.RequestServices.GetRequiredService<ILoggerFactory>();
-                var permissionLogger = loggerFactory.CreateLogger<PermissionSeeder>();
-
-                var seeder = new PermissionSeeder(permisoService, rolService, permissionLogger);
-                await seeder.SeedAsync();
-
-                SetSuccessMessage("Permisos recargados correctamente");
-                return RedirectToAction(nameof(Dashboard));
+                var result = await _securityManagementService.RecargarPermisosAsync();
+                if (result)
+                {
+                    SetSuccessMessage("Permisos recargados correctamente");
+                }
+                else
+                {
+                    SetErrorMessage("Error al recargar permisos");
+                }
             }
             catch (Exception ex)
             {
                 LogError(ex, "Error al recargar permisos");
                 SetErrorMessage("Error al recargar permisos: " + ex.Message);
-                return RedirectToAction(nameof(Dashboard));
             }
+
+            return RedirectToAction(nameof(Dashboard));
         }
 
         [Authorize(Roles = "Administrador")]
@@ -581,54 +474,27 @@ namespace Javo2.Controllers.Security
         [AllowAnonymous]
         public async Task<IActionResult> VerificarPermisos()
         {
-            try
+            // Usar método común de verificación
+            var result = await VerificarPermisosUsuarioAsync();
+
+            if (!result.Success)
             {
-                var username = User.Identity.Name;
-                if (string.IsNullOrEmpty(username))
-                {
-                    return Json(new { success = false, message = "Usuario no autenticado" });
-                }
-
-                var usuario = await _usuarioService.GetUsuarioByNombreUsuarioAsync(username);
-                if (usuario == null)
-                {
-                    return Json(new { success = false, message = "Usuario no encontrado" });
-                }
-
-                var roles = new List<string>();
-                foreach (var usuarioRol in usuario.Roles)
-                {
-                    var rol = await _permissionManager.GetRoleByIdAsync(usuarioRol.RolID);
-                    if (rol != null)
-                    {
-                        roles.Add(rol.Nombre);
-                    }
-                }
-
-                var permisos = await _usuarioService.GetPermisosUsuarioAsync(usuario.UsuarioID);
-                var permisosLista = permisos.Select(p => p.Codigo).ToList();
-
-                var tienePermisoDashboard = permisosLista.Contains("securitydashboard.ver");
-
-                return Json(new
-                {
-                    success = true,
-                    usuario = new
-                    {
-                        username = usuario.NombreUsuario,
-                        nombre = $"{usuario.Nombre} {usuario.Apellido}",
-                        roles = roles,
-                        tieneRolAdmin = roles.Any(r => r.Equals("Administrador", StringComparison.OrdinalIgnoreCase)),
-                        permisos = permisosLista,
-                        tienePermisoDashboard = tienePermisoDashboard
-                    }
-                });
+                return Json(new { success = false, message = result.Message });
             }
-            catch (Exception ex)
+
+            return Json(new
             {
-                LogError(ex, "Error al verificar permisos");
-                return Json(new { success = false, message = ex.Message });
-            }
+                success = true,
+                usuario = new
+                {
+                    username = result.Usuario.Username,
+                    nombre = result.Usuario.Nombre,
+                    roles = result.Usuario.Roles,
+                    tieneRolAdmin = result.Usuario.TieneRolAdmin,
+                    permisos = result.Usuario.Permisos,
+                    tienePermisoDashboard = result.Usuario.TienePermisoDashboard
+                }
+            });
         }
 
         [AllowAnonymous]
@@ -636,51 +502,19 @@ namespace Javo2.Controllers.Security
         {
             try
             {
-                var resultados = new List<string>();
+                // Usar método común de reparación
+                var result = await RepararPermisosAdministradorAsync();
 
-                // 1. Encontrar el rol Administrador
-                var roles = await _permissionManager.GetAllRolesAsync();
-                var rolAdmin = roles.FirstOrDefault(r => r.Nombre.Equals("Administrador", StringComparison.OrdinalIgnoreCase));
+                var content = "<h1>Resultados de la reparación de permisos</h1><ul>" +
+                    string.Join("", result.Messages.Select(r => $"<li>{r}</li>")) +
+                    "</ul>";
 
-                if (rolAdmin == null)
+                if (result.Success)
                 {
-                    return Content("Error: No se encontró el rol Administrador");
+                    content += "<p><strong>IMPORTANTE:</strong> Es necesario cerrar sesión y volver a iniciar para aplicar los cambios de permisos</p>";
                 }
 
-                resultados.Add($"Rol Administrador encontrado con ID: {rolAdmin.RolID}");
-
-                // 2. Obtener todos los permisos disponibles
-                var permisos = await _permissionManager.GetAllPermissionsAsync();
-                resultados.Add($"Encontrados {permisos.Count()} permisos en total");
-
-                // 3. Obtener permisos actuales del administrador
-                var permisosAdmin = rolAdmin.Permisos?.Select(p => p.PermisoID).ToList() ?? new List<int>();
-                resultados.Add($"El administrador tiene actualmente {permisosAdmin.Count} permisos asignados");
-
-                // 4. Encontrar permisos faltantes
-                var permisosFaltantes = permisos
-                    .Where(p => !permisosAdmin.Contains(p.PermisoID))
-                    .ToList();
-
-                resultados.Add($"Permisos faltantes: {permisosFaltantes.Count}");
-
-                // 5. Asignar todos los permisos faltantes
-                if (permisosFaltantes.Any())
-                {
-                    await _permissionManager.AssignPermissionsToRoleAsync(
-                        rolAdmin.RolID,
-                        permisosFaltantes.Select(p => p.PermisoID)
-                    );
-
-                    resultados.Add($"Se han asignado {permisosFaltantes.Count} permisos faltantes");
-                }
-
-                resultados.Add("IMPORTANTE: Es necesario cerrar sesión y volver a iniciar para aplicar los cambios de permisos");
-
-                return Content("<h1>Resultados de la reparación de permisos</h1><ul>" +
-                    string.Join("", resultados.Select(r => $"<li>{r}</li>")) +
-                    "</ul><p><strong>IMPORTANTE:</strong> Es necesario cerrar sesión y volver a iniciar para aplicar los cambios de permisos</p>",
-                    "text/html");
+                return Content(content, "text/html");
             }
             catch (Exception ex)
             {

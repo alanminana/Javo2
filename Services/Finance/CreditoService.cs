@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Javo2.Services
+namespace Javo2.Services.Finance
 {
     public class CreditoService : ICreditoService
     {
@@ -176,7 +176,7 @@ namespace Javo2.Services
 
             // Ajustar recargo según número de cuotas
             // A más cuotas, mayor recargo
-            decimal factorCuotas = 1 + ((decimal)numeroCuotas / 24); // 24 cuotas como máximo estándar
+            decimal factorCuotas = 1 + (decimal)numeroCuotas / 24; // 24 cuotas como máximo estándar
 
             return recargoBase * factorCuotas;
         }

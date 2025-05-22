@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Javo2.Services
+namespace Javo2.Services.Common
 {
     public class EmailService : IEmailService
     {

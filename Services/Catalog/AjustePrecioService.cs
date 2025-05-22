@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Javo2.Services
+namespace Javo2.Services.Catalog
 {
     public class JsonDataService : IAjustePrecioService
     {
@@ -73,7 +73,7 @@ namespace Javo2.Services
             var ajusteHistorico = new AjustePrecioHistorico
             {
                 FechaAjuste = DateTime.Now,
-                UsuarioAjuste = System.Threading.Thread.CurrentPrincipal?.Identity?.Name ?? "Sistema",
+                UsuarioAjuste = Thread.CurrentPrincipal?.Identity?.Name ?? "Sistema",
                 Porcentaje = porcentaje,
                 EsAumento = esAumento,
                 Descripcion = descripcion,
@@ -81,7 +81,7 @@ namespace Javo2.Services
             };
 
             var detalles = new List<AjustePrecioDetalle>();
-            var factor = esAumento ? (1 + porcentaje / 100m) : (1 - porcentaje / 100m);
+            var factor = esAumento ? 1 + porcentaje / 100m : 1 - porcentaje / 100m;
 
             foreach (var id in productoIDs)
             {
@@ -252,7 +252,7 @@ namespace Javo2.Services
             var ajusteHistorico = new AjustePrecioHistorico
             {
                 FechaAjuste = DateTime.Now,
-                UsuarioAjuste = System.Threading.Thread.CurrentPrincipal?.Identity?.Name ?? "Sistema",
+                UsuarioAjuste = Thread.CurrentPrincipal?.Identity?.Name ?? "Sistema",
                 Porcentaje = porcentaje,
                 EsAumento = esAumento,
                 Descripcion = descripcion,
@@ -402,7 +402,7 @@ namespace Javo2.Services
             }
 
             // Aplicar el ajuste a los productos
-            var factor = ajuste.EsAumento ? (1 + ajuste.Porcentaje / 100m) : (1 - ajuste.Porcentaje / 100m);
+            var factor = ajuste.EsAumento ? 1 + ajuste.Porcentaje / 100m : 1 - ajuste.Porcentaje / 100m;
 
             foreach (var detalle in ajuste.Detalles)
             {

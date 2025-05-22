@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System;
 
-namespace Javo2.Services
+namespace Javo2.Services.inventory
 {
     public class StockService : IStockService
     {

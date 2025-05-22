@@ -1,5 +1,6 @@
-﻿// Controllers/Admin/ConfiguracionController.cs
+﻿// Controllers/settings/ConfiguracionController.cs
 using Javo2.Controllers.Base;
+using Javo2.Controllers.Security;
 using Javo2.IServices;
 using Javo2.IServices.Authentication;
 using Javo2.Models;
@@ -18,24 +19,20 @@ using System.Threading.Tasks;
 namespace Javo2.Controllers.settings
 {
     [Authorize]
-    public class ConfiguracionController : BaseController
+    public class ConfiguracionController : SecurityBaseController
     {
         private readonly IConfiguracionService _configuracionService;
-        private readonly IUsuarioService _usuarioService;
-        private readonly IRolService _rolService;
-        private readonly IPermisoService _permisoService;
 
         public ConfiguracionController(
             IConfiguracionService configuracionService,
             IUsuarioService usuarioService,
             IRolService rolService,
             IPermisoService permisoService,
-            ILogger<ConfiguracionController> logger) : base(logger)
+            IPermissionManagerService permissionManager,
+            ILogger<ConfiguracionController> logger)
+            : base(usuarioService, rolService, permisoService, permissionManager, logger)
         {
             _configuracionService = configuracionService;
-            _usuarioService = usuarioService;
-            _rolService = rolService;
-            _permisoService = permisoService;
         }
 
         #region Configuración del Sistema
@@ -76,7 +73,7 @@ namespace Javo2.Controllers.settings
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al cargar configuraciones");
+                LogError(ex, "Error al cargar configuraciones");
                 return View("Error");
             }
         }
@@ -97,7 +94,7 @@ namespace Javo2.Controllers.settings
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al cargar configuración para editar");
+                LogError(ex, "Error al cargar configuración para editar");
                 return View("Error");
             }
         }
@@ -113,12 +110,12 @@ namespace Javo2.Controllers.settings
             try
             {
                 await _configuracionService.SaveAsync(configuracion);
-                TempData["Success"] = "Configuración actualizada correctamente.";
+                SetSuccessMessage("Configuración actualizada correctamente.");
                 return RedirectToAction(nameof(Index), new { modulo = configuracion.Modulo });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar configuración");
+                LogError(ex, "Error al actualizar configuración");
                 ModelState.AddModelError("", "Ocurrió un error al guardar la configuración.");
                 return View(configuracion);
             }
@@ -143,7 +140,7 @@ namespace Javo2.Controllers.settings
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al cargar configuración inicial");
+                LogError(ex, "Error al cargar configuración inicial");
                 return View("Error");
             }
         }
@@ -191,7 +188,7 @@ namespace Javo2.Controllers.settings
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error en la configuración inicial");
+                LogError(ex, "Error en la configuración inicial");
                 ModelState.AddModelError(string.Empty,
                     "Ocurrió un error al crear el usuario administrador: " + ex.Message);
                 return View(model);
@@ -229,7 +226,7 @@ namespace Javo2.Controllers.settings
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al cargar diagnóstico");
+                LogError(ex, "Error al cargar diagnóstico");
                 return View("Error");
             }
         }
@@ -238,49 +235,27 @@ namespace Javo2.Controllers.settings
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> VerificarPermisos()
         {
-            try
+            // Usar método común de la clase base SecurityBaseController
+            var result = await VerificarPermisosUsuarioAsync();
+
+            if (!result.Success)
             {
-                var username = User.Identity.Name;
-                var usuario = await _usuarioService.GetUsuarioByNombreUsuarioAsync(username);
-                if (usuario == null)
-                {
-                    return new JsonResult(new { success = false, message = "Usuario no encontrado" });
-                }
-
-                var roles = new List<string>();
-                foreach (var usuarioRol in usuario.Roles)
-                {
-                    var rol = await _rolService.GetRolByIDAsync(usuarioRol.RolID);
-                    if (rol != null)
-                    {
-                        roles.Add(rol.Nombre);
-                    }
-                }
-
-                var permisos = await _usuarioService.GetPermisosUsuarioAsync(usuario.UsuarioID);
-                var permisosLista = permisos.Select(p => p.Codigo).ToList();
-
-                var tienePermisoDashboard = permisosLista.Contains("securitydashboard.ver");
-
-                return new JsonResult(new
-                {
-                    success = true,
-                    usuario = new
-                    {
-                        username = usuario.NombreUsuario,
-                        nombre = $"{usuario.Nombre} {usuario.Apellido}",
-                        roles,
-                        tieneRolAdmin = roles.Any(r => r.Equals("Administrador", StringComparison.OrdinalIgnoreCase)),
-                        permisos = permisosLista,
-                        tienePermisoDashboard
-                    }
-                });
+                return new JsonResult(new { success = false, message = result.Message });
             }
-            catch (Exception ex)
+
+            return new JsonResult(new
             {
-                _logger.LogError(ex, "Error al verificar permisos");
-                return new JsonResult(new { success = false, message = ex.Message });
-            }
+                success = true,
+                usuario = new
+                {
+                    username = result.Usuario.Username,
+                    nombre = result.Usuario.Nombre,
+                    roles = result.Usuario.Roles,
+                    tieneRolAdmin = result.Usuario.TieneRolAdmin,
+                    permisos = result.Usuario.Permisos,
+                    tienePermisoDashboard = result.Usuario.TienePermisoDashboard
+                }
+            });
         }
 
         [HttpGet]
@@ -304,7 +279,7 @@ namespace Javo2.Controllers.settings
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al verificar conexiones");
+                LogError(ex, "Error al verificar conexiones");
                 return Json(new { success = false, message = ex.Message });
             }
         }
@@ -327,7 +302,7 @@ namespace Javo2.Controllers.settings
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener estado del sistema");
+                LogError(ex, "Error al obtener estado del sistema");
                 return View("Error");
             }
         }
@@ -351,13 +326,13 @@ namespace Javo2.Controllers.settings
             try
             {
                 // Implementar lógica para limpiar datos temporales caducados
-                TempData["Success"] = "Limpieza de datos completada correctamente";
+                SetSuccessMessage("Limpieza de datos completada correctamente");
                 return RedirectToAction(nameof(Mantenimiento));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al limpiar datos caducados");
-                TempData["Error"] = "Error al limpiar datos: " + ex.Message;
+                LogError(ex, "Error al limpiar datos caducados");
+                SetErrorMessage("Error al limpiar datos: " + ex.Message);
                 return RedirectToAction(nameof(Mantenimiento));
             }
         }
@@ -370,13 +345,13 @@ namespace Javo2.Controllers.settings
             try
             {
                 // Implementar lógica para optimizar la base de datos
-                TempData["Success"] = "Optimización de base de datos completada correctamente";
+                SetSuccessMessage("Optimización de base de datos completada correctamente");
                 return RedirectToAction(nameof(Mantenimiento));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al optimizar base de datos");
-                TempData["Error"] = "Error al optimizar base de datos: " + ex.Message;
+                LogError(ex, "Error al optimizar base de datos");
+                SetErrorMessage("Error al optimizar base de datos: " + ex.Message);
                 return RedirectToAction(nameof(Mantenimiento));
             }
         }
