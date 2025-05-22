@@ -561,23 +561,7 @@ namespace Javo2.Controllers.Operations
 
         #endregion
 
-        #region Métodos comunes y búsqueda
-
-        [HttpPost]
-        [Authorize(Policy = "Permission:ventas.ver")]
-        public async Task<IActionResult> BuscarClientePorDNI(int dni)
-        {
-            // Usar método común de la clase base
-            return await BuscarClientePorDNIAsync(dni);
-        }
-
-        [HttpPost]
-        [Authorize(Policy = "Permission:ventas.ver")]
-        public async Task<IActionResult> BuscarProducto(string codigoProducto)
-        {
-            // Usar método común de la clase base
-            return await BuscarProductoPorCodigoAsync(codigoProducto);
-        }
+ 
 
         #endregion
 

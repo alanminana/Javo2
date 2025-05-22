@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Javo2.Controllers.Operations
 {
-    public abstract class OperationsBaseController : BaseController
+    public abstract class OperationsBaseController : BaseController, IOperationController
     {
         protected readonly IProductoService _productoService;
         protected readonly IClienteService _clienteService;
@@ -40,7 +40,9 @@ namespace Javo2.Controllers.Operations
 
         #region Búsqueda común de productos
 
-        protected async Task<IActionResult> BuscarProductoPorCodigoAsync(string codigoProducto)
+        #region Implementación de IOperationController
+
+        public virtual async Task<IActionResult> BuscarProductoPorCodigoAsync(string codigoProducto)
         {
             try
             {
@@ -83,6 +85,87 @@ namespace Javo2.Controllers.Operations
                 return JsonError("Error al buscar el producto.");
             }
         }
+
+        public virtual async Task<IActionResult> BuscarClientePorDNIAsync(int dni)
+        {
+            try
+            {
+                LogInfo("Buscando cliente por DNI: {DNI}", dni);
+
+                var cliente = await _clienteService.GetClienteByDNIAsync(dni);
+                if (cliente == null)
+                {
+                    return JsonError("Cliente no encontrado con ese DNI.");
+                }
+
+                // Determinar si el cliente puede usar crédito
+                decimal saldoDisponible = cliente.AptoCredito ? cliente.SaldoDisponible : 0;
+
+                return JsonSuccess(null, new
+                {
+                    clienteID = cliente.ClienteID,
+                    dni = cliente.DNI,
+                    nombre = $"{cliente.Nombre} {cliente.Apellido}",
+                    telefono = cliente.Telefono,
+                    domicilio = $"{cliente.Calle} {cliente.NumeroCalle}",
+                    localidad = cliente.Localidad,
+                    celular = cliente.Celular,
+                    limiteCredito = cliente.LimiteCreditoInicial,
+                    saldo = cliente.Saldo,
+                    saldoDisponible,
+                    aptoCredito = cliente.AptoCredito,
+                    email = cliente.Email
+                });
+            }
+            catch (Exception ex)
+            {
+                LogError(ex, "Error al buscar cliente por DNI: {DNI}", dni);
+                return JsonError("Error al buscar el cliente.");
+            }
+        }
+
+        public virtual async Task<IActionResult> BuscarProductosAsync(string term, bool forPurchase = false)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(term) || term.Length < 2)
+                    return Json(new List<object>());
+
+                var productos = await _productoService.GetAllProductosAsync();
+                var query = productos.Where(p =>
+                    p.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                    p.CodigoAlfa.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                    p.CodigoBarra.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                    (p.Marca != null && p.Marca.Nombre.Contains(term, StringComparison.OrdinalIgnoreCase)));
+
+                if (forPurchase)
+                {
+                    return Json(query.Take(20).Select(p => new {
+                        id = p.ProductoID,
+                        name = p.Nombre,
+                        codigo = p.CodigoAlfa,
+                        marca = p.Marca?.Nombre ?? "Sin marca",
+                        precio = p.PCosto
+                    }));
+                }
+                else
+                {
+                    return Json(query.Take(10).Select(p => new {
+                        label = p.Nombre,
+                        value = p.ProductoID,
+                        marca = p.Marca?.Nombre ?? "Sin marca",
+                        precio = p.PContado
+                    }));
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex, "Error al buscar productos");
+                return Json(new List<object>());
+            }
+        }
+
+        #endregion
 
         protected async Task<IActionResult> BuscarProductosAsync(string term, bool forPurchase = false)
         {

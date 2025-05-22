@@ -289,25 +289,7 @@ namespace Javo2.Controllers.Operations
             return await BuscarProductosAsync(term);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetPrecioProducto(int id)
-        {
-            try
-            {
-                var producto = await _productoService.GetProductoByIDAsync(id);
-                if (producto == null)
-                {
-                    return JsonError("Producto no encontrado");
-                }
-                return JsonSuccess(null, new { precio = producto.PContado });
-            }
-            catch (Exception ex)
-            {
-                LogError(ex, "Error al obtener precio de producto");
-                return JsonError(ex.Message);
-            }
-        }
-
+     
         #endregion
     }
 }

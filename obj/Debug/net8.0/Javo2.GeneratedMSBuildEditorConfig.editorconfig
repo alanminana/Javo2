@@ -56,20 +56,8 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxBY2Nlc3NEZW5pZWQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/github/Javo2/Views/Auth/CambiarContraseña.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxDYW1iaWFyQ29udHJhc2XDsWEuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/github/Javo2/Views/Auth/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxMb2dpbi5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/github/Javo2/Views/Auth/OlvideContraseña.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxPbHZpZGVDb250cmFzZcOxYS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/github/Javo2/Views/Auth/ResetearContraseña.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxSZXNldGVhckNvbnRyYXNlw7FhLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/github/Javo2/Views/Auth/ResetExitoso.cshtml]
@@ -78,58 +66,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/github/Javo2/Views/Auth/TokenInvalido.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxUb2tlbkludmFsaWRvLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/github/Javo2/Views/CatalogoProductos/CreateMarca.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcQ3JlYXRlTWFyY2EuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/github/Javo2/Views/CatalogoProductos/CreateRubro.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcQ3JlYXRlUnVicm8uY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/github/Javo2/Views/CatalogoProductos/DeleteMarca.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcRGVsZXRlTWFyY2EuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/github/Javo2/Views/CatalogoProductos/DeleteRubro.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcRGVsZXRlUnVicm8uY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/github/Javo2/Views/CatalogoProductos/EditMarca.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcRWRpdE1hcmNhLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/github/Javo2/Views/CatalogoProductos/EditRubro.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcRWRpdFJ1YnJvLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/github/Javo2/Views/CatalogoProductos/EditSubRubros.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcRWRpdFN1YlJ1YnJvcy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/github/Javo2/Views/CatalogoProductos/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcSW5kZXguY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/github/Javo2/Views/CatalogoProductos/_MarcaForm.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcX01hcmNhRm9ybS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/github/Javo2/Views/CatalogoProductos/_MarcasTable.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcX01hcmNhc1RhYmxlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/github/Javo2/Views/CatalogoProductos/_ProductosTable.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcX1Byb2R1Y3Rvc1RhYmxlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/github/Javo2/Views/CatalogoProductos/_RubroForm.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcX1J1YnJvRm9ybS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/github/Javo2/Views/CatalogoProductos/_RubrosTable.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ29Qcm9kdWN0b3NcX1J1YnJvc1RhYmxlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/github/Javo2/Views/Catalogo/CreateMarca.cshtml]
@@ -182,10 +118,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/github/Javo2/Views/Clientes/AsignarGarante.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZXNcQXNpZ25hckdhcmFudGUuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/github/Javo2/Views/Clientes/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZXNcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/github/Javo2/Views/Clientes/Details.cshtml]
@@ -256,10 +188,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3JlZGl0b1xDb25maWd1cmFjaW9uLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/github/Javo2/Views/Credito/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3JlZGl0b1xEZWxldGUuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/github/Javo2/Views/Credito/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3JlZGl0b1xEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -270,10 +198,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/github/Javo2/Views/Credito/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3JlZGl0b1xJbmRleC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/github/Javo2/Views/DevolucionGarantia/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGV2b2x1Y2lvbkdhcmFudGlhXERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/github/Javo2/Views/DevolucionGarantia/Details.cshtml]
@@ -312,10 +236,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGVyZmlsXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/github/Javo2/Views/Permisos/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGVybWlzb3NcRGVsZXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/github/Javo2/Views/Permisos/Form.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGVybWlzb3NcRm9ybS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -326,10 +246,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/github/Javo2/Views/Productos/AjusteStock.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdG9zXEFqdXN0ZVN0b2NrLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/github/Javo2/Views/Productos/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdG9zXERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/github/Javo2/Views/Productos/Details.cshtml]
@@ -370,10 +286,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/github/Javo2/Views/Proveedores/Compras.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmVlZG9yZXNcQ29tcHJhcy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/github/Javo2/Views/Proveedores/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmVlZG9yZXNcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/github/Javo2/Views/Proveedores/Details.cshtml]
@@ -539,6 +451,10 @@ build_metadata.AdditionalFiles.CssScope = b-9ddmk9hojc
 [D:/github/Javo2/Views/Shared/_FilterForm.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9GaWx0ZXJGb3JtLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = b-6omdjz0xv1
+
+[D:/github/Javo2/Views/Shared/_GenericDelete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9HZW5lcmljRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = b-dbj250xwov
 
 [D:/github/Javo2/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s

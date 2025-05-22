@@ -1,4 +1,5 @@
 ﻿// Controllers/Base/ValidationBaseController.cs
+using Javo2.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
@@ -217,6 +218,175 @@ namespace Javo2.Controllers.Base
 
             await HandleValidationFailureAsync(model, viewName, reloadDataAction);
             return false;
+        }
+
+        #endregion
+    }
+    #region Validaciones de Negocio Específicas
+
+/// <summary>
+/// Valida stock disponible - Se usa en VentasController, DevolucionGarantiaController
+/// </summary>
+protected async Task<bool> ValidateStockAvailableAsync(int productoId, int cantidadRequerida, IProductoService productoService)
+        {
+            try
+            {
+                var producto = await productoService.GetProductoByIDAsync(productoId);
+                if (producto == null)
+                {
+                    ModelState.AddModelError("", $"Producto con ID {productoId} no encontrado");
+                    return false;
+                }
+
+                var stockDisponible = producto.StockItem?.CantidadDisponible ?? 0;
+                if (stockDisponible < cantidadRequerida)
+                {
+                    ModelState.AddModelError("", $"Stock insuficiente para {producto.Nombre}. Disponible: {stockDisponible}, Requerido: {cantidadRequerida}");
+                    return false;
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LogError(ex, "Error validando stock para producto {ProductoId}", productoId);
+                ModelState.AddModelError("", "Error al validar disponibilidad de stock");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Valida estado de entidad para operación - Se usa en TODOS los controllers de operaciones
+        /// </summary>
+        protected bool ValidateEntityState<TEnum>(TEnum currentState, TEnum[] allowedStates, string entityName, string operation) where TEnum : Enum
+        {
+            if (!allowedStates.Contains(currentState))
+            {
+                var allowedStatesText = string.Join(", ", allowedStates.Select(s => s.ToString()));
+                ModelState.AddModelError("", $"No se puede {operation} {entityName} en estado {currentState}. Estados permitidos: {allowedStatesText}");
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Valida forma de pago - Se usa en VentasController, CotizacionController
+        /// </summary>
+        protected bool ValidatePaymentMethod(string formaPago, string tipoTarjeta = null, string banco = null)
+        {
+            if (string.IsNullOrEmpty(formaPago))
+            {
+                ModelState.AddModelError("FormaPago", "La forma de pago es requerida");
+                return false;
+            }
+
+            switch (formaPago.ToLower())
+            {
+                case "tarjeta":
+                case "tarjeta crédito":
+                case "tarjeta débito":
+                    if (string.IsNullOrEmpty(tipoTarjeta))
+                    {
+                        ModelState.AddModelError("TipoTarjeta", "Debe especificar el tipo de tarjeta");
+                        return false;
+                    }
+                    if (string.IsNullOrEmpty(banco))
+                    {
+                        ModelState.AddModelError("Banco", "Debe especificar el banco");
+                        return false;
+                    }
+                    break;
+                case "transferencia":
+                    if (string.IsNullOrEmpty(banco))
+                    {
+                        ModelState.AddModelError("Banco", "Debe especificar el banco para la transferencia");
+                        return false;
+                    }
+                    break;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Valida cantidades en operaciones - Se usa en ComprasController, VentasController, etc.
+        /// </summary>
+        protected bool ValidateQuantities<T>(IEnumerable<T> items, Func<T, int> quantitySelector, string itemName = "items")
+        {
+            if (items == null || !items.Any())
+            {
+                ModelState.AddModelError("", $"Debe incluir al menos un {itemName}");
+                return false;
+            }
+
+            var invalidItems = items.Where(item => quantitySelector(item) <= 0).ToList();
+            if (invalidItems.Any())
+            {
+                ModelState.AddModelError("", $"Las cantidades deben ser mayores a cero para todos los {itemName}");
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Valida relaciones de catálogo - Se usa en ProductosController
+        /// </summary>
+        protected bool ValidateCatalogRelations(int? rubroId, int? subRubroId, int? marcaId)
+        {
+            if (!rubroId.HasValue || rubroId.Value <= 0)
+            {
+                ModelState.AddModelError("RubroID", "Debe seleccionar un rubro");
+                return false;
+            }
+
+            if (subRubroId.HasValue && subRubroId.Value > 0 && (!rubroId.HasValue || rubroId.Value <= 0))
+            {
+                ModelState.AddModelError("SubRubroID", "No puede seleccionar un subrubro sin seleccionar un rubro");
+                return false;
+            }
+
+            return true;
+        }
+
+        #endregion
+
+        #region Helpers de Validación Asíncrona
+
+        /// <summary>
+        /// Ejecuta múltiples validaciones y retorna el resultado consolidado
+        /// </summary>
+        protected async Task<bool> ExecuteValidationsAsync(params Func<Task<bool>>[] validations)
+        {
+            var results = await Task.WhenAll(validations.Select(v => v()));
+            return results.All(r => r);
+        }
+
+        /// <summary>
+        /// Valida y prepara modelo para operación
+        /// </summary>
+        protected async Task<(bool isValid, T processedModel)> ValidateAndPrepareModelAsync<T>(
+            T model,
+            Func<T, Task> prepareAction = null,
+            params Func<Task<bool>>[] additionalValidations) where T : class
+        {
+            if (!ModelState.IsValid)
+            {
+                return (false, model);
+            }
+
+            var additionalValidationsResult = await ExecuteValidationsAsync(additionalValidations);
+            if (!additionalValidationsResult)
+            {
+                return (false, model);
+            }
+
+            if (prepareAction != null)
+            {
+                await prepareAction(model);
+            }
+
+            return (true, model);
         }
 
         #endregion

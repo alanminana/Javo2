@@ -547,21 +547,7 @@ namespace Javo2.Controllers.Operations
             );
         }
 
-        [HttpPost]
-        [Authorize(Policy = "Permission:proveedores.ver")]
-        public async Task<IActionResult> BuscarProducto(string codigoProducto)
-        {
-            // Usar método común de la clase base
-            return await BuscarProductoPorCodigoAsync(codigoProducto);
-        }
-
-        [HttpPost]
-        [Authorize(Policy = "Permission:proveedores.ver")]
-        public async Task<IActionResult> SearchProducts(string term, bool forPurchase = false)
-        {
-            // Usar método común de la clase base
-            return await BuscarProductosAsync(term, forPurchase);
-        }
+    
 
         [HttpPost]
         public async Task<IActionResult> Filter(string filterField, string filterValue)
