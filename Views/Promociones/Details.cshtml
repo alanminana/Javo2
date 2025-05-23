@@ -1,42 +1,63 @@
-﻿@model Javo2.ViewModels.Operaciones.Clientes.ClientesViewModel
-
+﻿@model Javo2.ViewModels.Operaciones.Promociones.PromocionViewModel
 @{
-    ViewBag.Title = "Detalles del Cliente";
+    ViewBag.Title = "Detalles de la Promoción";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2 class="mb-4">@ViewBag.Title</h2>
+<section class="container-fluid py-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">@ViewBag.Title</h1>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.PromocionID" class="btn btn-primary btn-sm">
+                <i class="bi bi-pencil-square me-1"></i> Editar
+            </a>
+            <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left me-1"></i> Volver
+            </a>
+        </div>
+    </div>
 
-<div class="card p-4">
-    <dl class="row">
-        <dt class="col-sm-3">ID</dt>
-        <dd class="col-sm-9">@Model.ClienteID</dd>
+    <div class="card bg-dark text-light">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">ID</dt>
+                <dd class="col-sm-9">@Model.PromocionID</dd>
 
-        <dt class="col-sm-3">Nombre</dt>
-        <dd class="col-sm-9">@Model.NombreCliente</dd>
+                <dt class="col-sm-3">Nombre</dt>
+                <dd class="col-sm-9">@Model.Nombre</dd>
 
-      
+                <dt class="col-sm-3">Descripción</dt>
+                <dd class="col-sm-9">@Model.Descripcion</dd>
 
-        <dt class="col-sm-3">Estado</dt>
-        <dd class="col-sm-9">
-            @if (Model.Activo)
-            {
-                <span class="badge bg-success">Activo</span>
-            }
-            else
-            {
-                <span class="badge bg-danger">Inactivo</span>
-            }
-        </dd>
-    </dl>
-</div>
+                <dt class="col-sm-3">Porcentaje</dt>
+                <dd class="col-sm-9">@Model.Porcentaje%</dd>
 
-<!-- Botones de Acción -->
-<div class="mt-3">
-    <a asp-action="Edit" asp-route-id="@Model.ClienteID" class="btn btn-primary me-2">
-        <i class="bi bi-pencil-square me-2"></i> Editar
-    </a>
-    <a asp-action="Index" class="btn btn-secondary">
-        <i class="bi bi-arrow-left me-2"></i> Volver al Listado
-    </a>
-</div>
+                <dt class="col-sm-3">Tipo</dt>
+                <dd class="col-sm-9">
+                    <span class="badge @(Model.EsAumento ? "bg-danger" : "bg-success")">
+                        @(Model.EsAumento ? "Aumento" : "Descuento")
+                    </span>
+                </dd>
+
+                <dt class="col-sm-3">Estado</dt>
+                <dd class="col-sm-9">
+                    <span class="badge @(Model.Activa ? "bg-success" : "bg-secondary")">
+                        @(Model.Activa ? "Activa" : "Inactiva")
+                    </span>
+                </dd>
+
+                @if (Model.FechaInicio.HasValue)
+                {
+                    <dt class="col-sm-3">Fecha Inicio</dt>
+                    <dd class="col-sm-9">@Model.FechaInicio.Value.ToString("dd/MM/yyyy")</dd>
+                }
+
+                @if (Model.FechaFin.HasValue)
+                {
+                    <dt class="col-sm-3">Fecha Fin</dt>
+                    <dd class="col-sm-9">@Model.FechaFin.Value.ToString("dd/MM/yyyy")</dd>
+                }
+            </dl>
+        </div>
+    </div>
+</section>

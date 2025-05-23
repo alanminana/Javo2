@@ -1,0 +1,20 @@
+﻿@model Javo2.ViewModels.Operaciones.Catalogo.MarcaViewModel
+@{
+    ViewData["EntityName"] = "Marca";
+    ViewData["IsEdit"] = Model.ID > 0;
+    ViewData["FormAction"] = Model.ID > 0 ? "EditMarca" : "CreateMarca";
+    Layout = "~/Views/Shared/_CrudForm.cshtml";
+}
+
+<input type="hidden" asp-for="ID" />
+
+<div class="mb-4">
+    <label asp-for="Nombre" class="form-label text-light">Nombre de la Marca</label>
+    <input asp-for="Nombre" class="form-control bg-secondary text-light" />
+    <span asp-validation-for="Nombre" class="invalid-feedback d-block"></span>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script src="~/js/modules/catalogo.js"></script>
+}

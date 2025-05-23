@@ -1,0 +1,60 @@
+﻿@{
+    var entityName = ViewData["EntityName"]?.ToString() ?? "Entidades";
+    var createAction = ViewData["CreateAction"]?.ToString() ?? "Create";
+    var createPermission = ViewData["CreatePermission"]?.ToString();
+    var showFilters = ViewData["ShowFilters"] as bool? ?? true;
+}
+
+<section class="container-fluid py-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">@entityName</h1>
+        @if (!string.IsNullOrEmpty(createPermission))
+        {
+            <a asp-action="@createAction" class="btn btn-success btn-sm" require-permission="@createPermission">
+                <i class="bi bi-plus-circle me-1"></i> Crear @entityName.TrimEnd('s')
+            </a>
+        }
+        else
+        {
+            <a asp-action="@createAction" class="btn btn-success btn-sm">
+                <i class="bi bi-plus-circle me-1"></i> Crear @entityName.TrimEnd('s')
+            </a>
+        }
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (showFilters)
+    {
+        <div class="card shadow-sm bg-dark text-light mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Filtros</h5>
+            </div>
+            <div class="card-body">
+                @RenderSection("Filters", required: false)
+            </div>
+        </div>
+    }
+
+    <div class="card shadow-sm bg-dark text-light">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+</section>

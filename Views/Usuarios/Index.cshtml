@@ -1,126 +1,66 @@
-﻿@* Views/Usuarios/Index.cshtml *@
-@model IEnumerable<Javo2.Models.Authentication.Usuario>
+﻿@model IEnumerable<Javo2.Models.Authentication.Usuario>
 @{
-    ViewData["Title"] = "Gestión de Usuarios";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["EntityName"] = "Usuarios";
+    ViewData["CreateAction"] = "Create";
+    ViewData["CreatePermission"] = "usuarios.crear";
+    Layout = "~/Views/Shared/_EntityTable.cshtml";
 }
 
-<section class="container-fluid py-3">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h2 mb-0">@ViewData["Title"]</h1>
-        <a asp-action="Create" class="btn btn-success btn-sm" require-permission="usuarios.crear">
-            <i class="bi bi-person-plus me-1"></i> Crear Usuario
-        </a>
-    </div>
-
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="bi bi-check-circle me-2"></i> @TempData["Success"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+@section Filters {
+    <form class="row g-3">
+        <div class="col-md-4">
+            <input type="text" name="search" class="form-control bg-secondary text-light" placeholder="Buscar usuario..." />
         </div>
-    }
-
-    @if (TempData["Error"] != null)
-    {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="bi bi-exclamation-triangle me-2"></i> @TempData["Error"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        <div class="col-md-3">
+            <select name="estado" class="form-select bg-secondary text-light">
+                <option value="">Todos</option>
+                <option value="true">Activos</option>
+                <option value="false">Inactivos</option>
+            </select>
         </div>
-    }
-
-    <div class="card shadow-sm bg-dark text-light">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover table-dark align-middle mb-0">
-                    <thead class="bg-secondary text-light">
-                        <tr>
-                            <th>Usuario</th>
-                            <th>Nombre</th>
-                            <th>Email</th>
-                            <th>Roles</th>
-                            <th>Estado</th>
-                            <th>Último acceso</th>
-                            <th class="text-center">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>@item.NombreUsuario</td>
-                                <td>@item.Nombre @item.Apellido</td>
-                                <td>@item.Email</td>
-                                <td>
-                                    <span class="small">@(String.Join(", ", item.Roles.Count))</span>
-                                </td>
-                                <td>
-                                    @if (item.Activo)
-                                    {
-                                        <span class="badge bg-success">Activo</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-danger">Inactivo</span>
-                                    }
-                                </td>
-                                <td>
-                                    @(item.UltimoAcceso.HasValue ? item.UltimoAcceso.Value.ToString("dd/MM/yyyy HH:mm") : "Nunca")
-                                </td>
-                                <td class="text-center">
-                                    <div class="btn-group" role="group">
-                                        <a asp-action="Edit" asp-route-id="@item.UsuarioID" class="btn btn-sm btn-outline-primary" title="Editar" require-permission="usuarios.editar">
-                                            <i class="bi bi-pencil-square"></i>
-                                        </a>
-                                        <a asp-action="Details" asp-route-id="@item.UsuarioID" class="btn btn-sm btn-outline-info" title="Detalles" require-permission="usuarios.ver">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                        <a asp-action="Delete" asp-route-id="@item.UsuarioID" class="btn btn-sm btn-outline-danger" title="Eliminar" require-permission="usuarios.eliminar">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
-                                        <button type="button" class="btn btn-sm btn-outline-warning toggle-estado"
-                                                data-id="@item.UsuarioID" data-estado="@item.Activo.ToString().ToLower()"
-                                                title="@(item.Activo ? "Desactivar" : "Activar")" require-permission="usuarios.editar">
-                                            <i class="bi @(item.Activo ? "bi-toggle-on" : "bi-toggle-off")"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-search me-1"></i>Filtrar
+            </button>
         </div>
-    </div>
-</section>
+    </form>
+}
 
-<!-- Modal para confirmar cambio de estado -->
-<div class="modal fade" id="estadoModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content bg-dark text-light">
-            <div class="modal-header">
-                <h5 class="modal-title" id="estadoModalLabel">Cambiar estado de usuario</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body">
-                <p id="estadoModalMessage">¿Está seguro que desea cambiar el estado de este usuario?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" id="confirmEstadoBtn">Confirmar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
+<table class="table table-hover table-dark align-middle mb-0">
+    <thead class="bg-secondary text-light">
+        <tr>
+            <th>Usuario</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Roles</th>
+            <th>Estado</th>
+            <th>Último acceso</th>
+            <th class="text-center">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.NombreUsuario</td>
+                <td>@item.Nombre @item.Apellido</td>
+                <td>@item.Email</td>
+                <td><span class="small">@item.Roles.Count roles</span></td>
+                <td>
+                    <span class="badge @(item.Activo ? "bg-success" : "bg-danger")">
+                        @(item.Activo ? "Activo" : "Inactivo")
+                    </span>
+                </td>
+                <td>@(item.UltimoAcceso?.ToString("dd/MM/yyyy HH:mm") ?? "Nunca")</td>
+                <td class="text-center">
+                    @await Html.PartialAsync("_ActionButtons", (item.UsuarioID, "Usuarios", "", "", ""))
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 @section Scripts {
-    @{
-
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-        <script src="~/js/modules/usuarios-permisos.js"></script>
-
-
-    }
-
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script src="~/js/modules/usuarios-permisos.js"></script>
 }
