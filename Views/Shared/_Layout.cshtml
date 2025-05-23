@@ -259,21 +259,16 @@ new { Ctrl = "Credito", Action = "Configuracion", Icon = "calculator", Text = "C
         console.log(message, data || '');
     };
 </script>
-<script src="~/js/utils/app.js"></script>
-<script src="~/js/utils/app.js"></script>
-<script src="~/js/components/products.js"></script>
-<script src="~/js/components/permissions.js"></script>
-< src="~/js/components/tables.js"></script>
-    <script src="~/js/utils/app.js"></script>
+    <script src="~/js/modules/products.js asp-append-version="true"></script>
+    <script src="~/js/utils/app.js" asp-append-version="true"></script>
     <script src="~/js/modules/permissions.js" asp-append-version="true"></script>
     <script src="~/js/modules/forms.js" asp-append-version="true"></script>
     <script src="~/js/modules/tables.js" asp-append-version="true"></script>
 
-    <!-- Controladores -->
-    <script src="~/js/productos-controller.js" asp-append-version="true"></script>
-    <script src="~/js/ventas-controller.js" asp-append-version="true"></script>
-    <script src="~/js/proveedores-controller.js" asp-append-version="true"></script>
-    <script src="~/js/clientes-controller.js" asp-append-version="true"></script>
+    <script src="~/js/modules/productos-controller.js" asp-append-version="true"></script>
+    <script src="~/js/modules/ventas-controller.js" asp-append-version="true"></script>
+    <script src="~/js/modules/proveedores-controller.js" asp-append-version="true"></script>
+    <script src="~/js/modules/clientes-controller.js" asp-append-version="true"></script>
 
     <!-- Módulos específicos -->
     <script src="~/js/modules/producto-form.js" asp-append-version="true"></script>

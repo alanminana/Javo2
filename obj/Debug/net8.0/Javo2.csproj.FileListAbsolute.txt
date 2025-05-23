@@ -123,3 +123,10 @@ D:\github\Javo2\obj\Debug\net8.0\Javo2.genruntimeconfig.cache
 D:\github\Javo2\obj\Debug\net8.0\ref\Javo2.dll
 D:\github\Javo2\bin\Debug\net8.0\Data\configuracion_credito.json
 D:\github\Javo2\bin\Debug\net8.0\Data\criterios_credito.json
+D:\github\Javo2\obj\Debug\net8.0\scopedcss\Views\Shared\_Alerts.cshtml.rz.scp.css
+D:\github\Javo2\obj\Debug\net8.0\scopedcss\Views\Shared\_AuthLayoutBase.cshtml.rz.scp.css
+D:\github\Javo2\obj\Debug\net8.0\scopedcss\Views\Shared\_CrudForm.cshtml.rz.scp.css
+D:\github\Javo2\obj\Debug\net8.0\scopedcss\Views\Shared\_DetailsView.cshtml.rz.scp.css
+D:\github\Javo2\obj\Debug\net8.0\scopedcss\Views\Shared\_EntityTable.cshtml.rz.scp.css
+D:\github\Javo2\obj\Debug\net8.0\scopedcss\Views\Shared\_ProductosTable.cshtml.rz.scp.css
+D:\github\Javo2\obj\Debug\net8.0\scopedcss\Views\Shared\_SummaryCards.cshtml.rz.scp.css

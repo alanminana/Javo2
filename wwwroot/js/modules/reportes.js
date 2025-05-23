@@ -1,61 +1,36 @@
-﻿// reportes.js - Módulo para reportes y gráficos
-(function (window, $) {
-    'use strict';
+﻿// wwwroot/js/modules/reportes.js
+import { initChart } from '../utils/chart-helper.js';
+import { ajaxGet } from '../utils/app.js';
+import { notify } from '../utils/app.js';
 
-    var App = window.App = window.App || {};
-
-    App.reportes = {
-        setupCharts: function () {
-            const colors = {
-                ventas: 'rgba(54,162,235,0.6)',
-                productos: 'rgba(255,159,64,0.6)'
-            };
-
-            const initChart = (id, type, labels, data, bg) => {
-                const canvas = document.getElementById(id);
-                if (!canvas) return;
-
-                // **Destruye instancia previa si existe**
-                const existing = Chart.getChart(canvas);
-                if (existing) {
-                    existing.destroy();
-                }
-
-                const ctx = canvas.getContext('2d');
-                new Chart(ctx, {
-                    type,
-                    data: {
-                        labels,
-                        datasets: [{
-                            data,
-                            backgroundColor: bg,
-                            borderColor: bg.replace('0.6', '1'),
-                            borderWidth: 2
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { position: 'bottom' }
-                        }
-                    }
-                });
-            };
-
-            initChart('ventasChart', 'line', ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'], [2000, 3000, 4000, 3500, 5000, 6000], colors.ventas);
-            initChart('productosChart', 'bar', ['Prod A', 'Prod B', 'Prod C', 'Prod D', 'Prod E'], [120, 95, 80, 60, 45], colors.productos);
-        },
-
-        init: function () {
-            // Solo corre una vez por carga de página
-            this.setupCharts();
+const reportes = {
+    async setupCharts() {
+        try {
+            const ventasData = await ajaxGet('/Reportes/GetVentasMensuales');
+            initChart('#ventasChart', {
+                type: 'line',
+                data: { labels: ventasData.labels, datasets: [{ data: ventasData.values, backgroundColor: ventasData.bg, borderColor: ventasData.border, borderWidth: 2 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+            });
+        } catch (e) {
+            console.error('Error cargando datos de ventas:', e);
+            notify.error('No se pudieron cargar los datos de ventas');
         }
-    };
 
-    // Arranca cuando el DOM esté listo
-    $(function () {
-        App.reportes.init();
-    });
+        try {
+            const productosData = await ajaxGet('/Reportes/GetRankingProductos');
+            initChart('#productosChart', {
+                type: 'bar',
+                data: { labels: productosData.labels, datasets: [{ data: productosData.values, backgroundColor: productosData.bg, borderColor: productosData.border, borderWidth: 2 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+            });
+        } catch (e) {
+            console.error('Error cargando datos de productos:', e);
+            notify.error('No se pudieron cargar los datos de productos');
+        }
+    },
 
-})(window, jQuery);
+    init() { document.addEventListener('DOMContentLoaded', () => this.setupCharts()); }
+};
+
+export default reportes;

@@ -1,70 +1,89 @@
-﻿// permissions.js - Módulo para manejo de permisos
-(function (window, $) {
-    'use strict';
+﻿// wwwroot/js/components/permissions.js
 
-    var App = window.App = window.App || {};
+/**
+ * Componente para manejar visibilidad y habilitación de elementos según permisos de usuario.
+ *
+ * Reemplaza al antiguo permissions.js sin depender de jQuery ni de un objeto global.
+ */
+export const permissions = {
+    // Cache interno de permisos { [code]: boolean }
+    cache: {},
 
-    App.permissions = {
-        cache: {},
+    /**
+     * Inicializa la lógica de permisos: oculta/deshabilita elementos que requieran permisos.
+     * Debe ejecutarse en DOMContentLoaded.
+     */
+    init() {
+        // Carga inicial de permisos desde dataset si está presente
+        this._loadInitialPermissions();
 
-        init: function () {
-            this.setupPermissionElements();
-        },
-
-        // Configurar elementos basados en permisos
-        setupPermissionElements: function () {
-            // Ocultar elementos que requieren permisos
-            document.querySelectorAll('[data-require-permission]').forEach(function (element) {
-                const permission = element.getAttribute('data-require-permission');
-                if (!App.permissions.hasPermission(permission)) {
-                    element.style.display = 'none';
-                }
-            });
-
-            // Deshabilitar botones que requieren permisos
-            document.querySelectorAll('button[data-require-permission]').forEach(function (button) {
-                const permission = button.getAttribute('data-require-permission');
-                if (!App.permissions.hasPermission(permission)) {
-                    button.disabled = true;
-                    button.classList.add('disabled');
-                }
-            });
-
-            // Quitar eventos de elementos sin permiso
-            document.querySelectorAll('[data-require-permission]').forEach(function (element) {
-                const permission = element.getAttribute('data-require-permission');
-                if (!App.permissions.hasPermission(permission)) {
-                    // Clonar y reemplazar para eliminar eventos
-                    const clone = element.cloneNode(true);
-                    element.parentNode.replaceChild(clone, element);
-                }
-            });
-        },
-
-        // Verificar si el usuario tiene un permiso
-        hasPermission: function (permissionCode) {
-            if (this.cache[permissionCode] !== undefined) {
-                return this.cache[permissionCode];
+        // Procesa elementos con data-require-permission
+        document.querySelectorAll('[data-require-permission]').forEach(el => {
+            const code = el.getAttribute('data-require-permission');
+            if (!this.hasPermission(code)) {
+                // Ocultar
+                el.style.display = 'none';
+                // Deshabilitar
+                el.disabled = true;
+                // Reemplaza nodo para quitar listeners
+                const clone = el.cloneNode(true);
+                el.parentNode.replaceChild(clone, el);
             }
+        });
 
-            // Intentar obtener del elemento data
-            const permData = document.getElementById('userPermissions');
-            if (permData && permData.dataset.permissions) {
-                try {
-                    const permissions = JSON.parse(permData.dataset.permissions);
-                    const result = permissions.includes(permissionCode);
-                    this.cache[permissionCode] = result;
-                    return result;
-                } catch (e) {
-                    console.error('Error al parsear permisos:', e);
-                }
+        // Procesa elementos con data-permission-code (inclusión directa)
+        document.querySelectorAll('[data-permission-code]').forEach(el => {
+            const code = el.getAttribute('data-permission-code');
+            if (!this.hasPermission(code)) {
+                el.remove();
             }
+        });
+    },
 
-            // Fallback: buscar en elementos específicos
-            const hasDirectPermission = document.querySelector(`[data-permission-code="${permissionCode}"]`) !== null;
-            this.cache[permissionCode] = hasDirectPermission;
-            return hasDirectPermission;
+    /**
+     * Verifica si el usuario tiene el permiso indicado.
+     * @param {string} code - Código de permiso a comprobar.
+     * @returns {boolean}
+     */
+    hasPermission(code) {
+        // Retorna si está cacheado
+        if (this.cache[code] !== undefined) {
+            return this.cache[code];
         }
-    };
 
-})(window, jQuery);
+        // Si se cargaron permisos iniciales
+        if (this.initialPermissions) {
+            const allowed = this.initialPermissions.includes(code);
+            this.cache[code] = allowed;
+            return allowed;
+        }
+
+        // Fallback: buscar elemento con data-permission-code
+        const direct = !!document.querySelector(`[data-permission-code="${code}"]`);
+        this.cache[code] = direct;
+        return direct;
+    },
+
+    /**
+     * Carga permisos iniciales desde un elemento con id "userPermissions" y data-permissions
+     * Formato esperado: <div id="userPermissions" data-permissions='["perm1","perm2"]'></div>
+     */
+    _loadInitialPermissions() {
+        const permEl = document.getElementById('userPermissions');
+        if (!permEl) return;
+
+        try {
+            const perms = JSON.parse(permEl.dataset.permissions);
+            if (Array.isArray(perms)) {
+                this.initialPermissions = perms;
+                // Poblamos cache inicialmente
+                perms.forEach(code => { this.cache[code] = true; });
+            }
+        } catch (e) {
+            console.error('Error parsing user permissions:', e);
+        }
+    }
+};
+
+// Auto-inicialización
+document.addEventListener('DOMContentLoaded', () => permissions.init());

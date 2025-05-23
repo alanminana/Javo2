@@ -54,20 +54,41 @@
     "CodigoBarra": "176032993",
     "Nombre": "1234",
     "Descripcion": null,
-    "PCosto": 120,
-    "PContado": 180.0,
-    "PLista": 122.40,
+    "PCosto": 72.872064,
+    "PContado": 109.31,
+    "PLista": 74.33,
     "RubroID": 1,
     "Rubro": {
-      "ID": 0,
-      "Nombre": "",
-      "SubRubros": []
+      "ID": 1,
+      "Nombre": "Electr\u00F3nica",
+      "SubRubros": [
+        {
+          "ID": 1,
+          "Nombre": "Televisores",
+          "RubroID": 1,
+          "Rubro": {
+            "ID": 0,
+            "Nombre": "",
+            "SubRubros": []
+          }
+        },
+        {
+          "ID": 2,
+          "Nombre": "Computadoras",
+          "RubroID": 1,
+          "Rubro": {
+            "ID": 0,
+            "Nombre": "",
+            "SubRubros": []
+          }
+        }
+      ]
     },
     "SubRubroID": 1,
     "SubRubro": {
-      "ID": 0,
-      "Nombre": "",
-      "RubroID": 0,
+      "ID": 1,
+      "Nombre": "Televisores",
+      "RubroID": 1,
       "Rubro": {
         "ID": 0,
         "Nombre": "",
@@ -75,10 +96,13 @@
       }
     },
     "MarcaID": 2,
-    "Marca": null,
+    "Marca": {
+      "ID": 2,
+      "Nombre": "Marca B"
+    },
     "PorcentajeIva": 21,
-    "FechaMod": "2025-05-20T17:30:15.1084554-03:00",
-    "FechaModPrecio": "2025-05-20T17:30:15.108456-03:00",
+    "FechaMod": "2025-05-23T12:36:54.4641384-03:00",
+    "FechaModPrecio": "2025-05-23T12:36:54.455692-03:00",
     "Entregable": false,
     "NoListar": false,
     "Proveedor": {
@@ -95,6 +119,59 @@
     "EstadoComentario": "",
     "DeudaTotal": 0,
     "Estado": 0,
-    "StockItem": null
+    "StockItem": {
+      "StockItemID": 2,
+      "ProductoID": 2,
+      "CantidadDisponible": 4,
+      "Producto": {
+        "ProductoID": 0,
+        "CodigoAlfa": "",
+        "CodigoBarra": "",
+        "Nombre": "",
+        "Descripcion": "",
+        "PCosto": 0,
+        "PContado": 0,
+        "PLista": 0,
+        "RubroID": 0,
+        "Rubro": {
+          "ID": 0,
+          "Nombre": "",
+          "SubRubros": []
+        },
+        "SubRubroID": 0,
+        "SubRubro": {
+          "ID": 0,
+          "Nombre": "",
+          "RubroID": 0,
+          "Rubro": {
+            "ID": 0,
+            "Nombre": "",
+            "SubRubros": []
+          }
+        },
+        "MarcaID": 0,
+        "Marca": null,
+        "PorcentajeIva": 21,
+        "FechaMod": "2025-04-23T18:12:19.8512856Z",
+        "FechaModPrecio": "2025-04-23T18:12:19.8512866Z",
+        "Entregable": false,
+        "NoListar": false,
+        "Proveedor": {
+          "ProveedorID": 0,
+          "Nombre": "",
+          "Direccion": "",
+          "Telefono": "",
+          "Email": "",
+          "CondicionesPago": "",
+          "ProductosAsignados": []
+        },
+        "Usuario": "",
+        "ModificadoPor": "",
+        "EstadoComentario": "",
+        "DeudaTotal": 0,
+        "Estado": 0,
+        "StockItem": null
+      }
+    }
   }
 ]

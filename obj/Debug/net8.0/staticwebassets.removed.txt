@@ -1,0 +1,16 @@
+D:\github\Javo2\wwwroot\js\clientes-controller.js
+D:\github\Javo2\wwwroot\js\core-bundle.min.js
+D:\github\Javo2\wwwroot\js\debug-fix.js
+D:\github\Javo2\wwwroot\js\modules\auth.js
+D:\github\Javo2\wwwroot\js\modules\catalogo.js
+D:\github\Javo2\wwwroot\js\modules\compra-form.js
+D:\github\Javo2\wwwroot\js\modules\cotizacion-form.js
+D:\github\Javo2\wwwroot\js\modules\devolucion-form.js
+D:\github\Javo2\wwwroot\js\modules\entrega-productos.js
+D:\github\Javo2\wwwroot\js\modules\forms.js
+D:\github\Javo2\wwwroot\js\modules\producto-form.js
+D:\github\Javo2\wwwroot\js\modules\proveedor-form.js
+D:\github\Javo2\wwwroot\js\modules\venta-form.js
+D:\github\Javo2\wwwroot\js\productos-controller.js
+D:\github\Javo2\wwwroot\js\proveedores-controller.js
+D:\github\Javo2\wwwroot\js\ventas-controller.js

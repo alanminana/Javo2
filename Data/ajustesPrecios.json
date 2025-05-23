@@ -80,13 +80,13 @@
         "PListaPosterior": 74.33
       }
     ],
-    "Revertido": false,
-    "FechaReversion": null,
-    "UsuarioReversion": "",
+    "Revertido": true,
+    "FechaReversion": "2025-05-23T12:36:54.4878406-03:00",
+    "UsuarioReversion": "Sistema",
     "EsTemporal": true,
     "FechaInicio": "2025-05-11T13:21:11.5",
     "FechaFin": "2025-05-22T13:21:11.449",
     "TipoAjusteTemporal": "Hot Sale",
-    "EstadoTemporal": 2
+    "EstadoTemporal": 3
   }
 ]

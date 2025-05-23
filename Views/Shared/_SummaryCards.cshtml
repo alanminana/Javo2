@@ -1,0 +1,17 @@
+﻿@model IEnumerable<(string Title, string Value, string Icon, string CssClass, string ClickAction)>
+
+<div class="summary-cards mb-4" role="region">
+    @foreach (var card in Model)
+    {
+        <div class="summary-card @(!string.IsNullOrEmpty(card.ClickAction) ? "summary-click" : "")"
+             @(!string.IsNullOrEmpty(card.ClickAction) ? $"onclick=\"{card.ClickAction}\"" : "")
+             @(!string.IsNullOrEmpty(card.ClickAction) ? "style=\"cursor:pointer;\"" : "")>
+            @if (!string.IsNullOrEmpty(card.Icon))
+            {
+                <i class="bi bi-@card.Icon @card.CssClass mb-2"></i>
+            }
+            <h5>@card.Title</h5>
+            <p class="display-6">@card.Value</p>
+        </div>
+    }
+</div>

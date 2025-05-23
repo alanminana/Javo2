@@ -2,6 +2,14 @@
 @{
     ViewBag.Title = "Ventas y Cotizaciones";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    // Declaración previa de ventasSummary
+    var ventasSummary = new List<(string Title, string Value, string Icon, string CssClass, string ClickAction)>
+    {
+        ("Total Ventas", Model.Ventas.Count().ToString(), "cart-fill", "", ""),
+        ("Pendientes Entrega", Model.Ventas.Count(v => v.Estado == "PendienteDeEntrega").ToString(), "truck", "", $"location.href='{Url.Action("EntregaProductos")}';"),
+        ("Total Facturado", Model.Ventas.Sum(v => v.PrecioTotal).ToString("C"), "file-earmark-excel", "", "")
+    };
 }
 
 <section class="container-fluid py-3">
@@ -39,21 +47,8 @@
         <!-- Tab Ventas -->
         <div class="tab-pane fade @(ViewBag.ActiveTab == "ventas" ? "show active" : "")" id="ventas" role="tabpanel" aria-labelledby="ventas-tab">
             <!-- Resumen de Ventas -->
-            <div class="summary-cards mb-4" role="region" aria-label="Resumen de Ventas">
-                <div class="summary-card">
-                    <h5>Total Ventas</h5>
-                    <p class="display-6">@Model.Ventas.Count()</p>
-                </div>
-                <div class="summary-card summary-click" onclick="location.href='@Url.Action("EntregaProductos")'" style="cursor:pointer;">
-                    <h5>Pendientes Entrega</h5>
-                    <p class="display-6">@Model.Ventas.Count(v => v.Estado == "PendienteDeEntrega")</p>
-                    <small>Click para gestionar</small>
-                </div>
-                <div class="summary-card">
-                    <h5>Total Facturado</h5>
-                    <p class="display-6">@Model.Ventas.Sum(v => v.PrecioTotal).ToString("C")</p>
-                </div>
-            </div>
+                       @await Html.PartialAsync("_SummaryCards", ventasSummary)
+
 
             <!-- Filtros y exportación -->
             <div class="card mb-4 shadow-sm bg-dark text-light p-3">

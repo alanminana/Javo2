@@ -432,13 +432,13 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/github/Javo2/Views/Shared/_ActionButtons - Copia (2).cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BY3Rpb25CdXR0b25zIC0gQ29waWEgKDIpLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = b-gtl42ccnyb
-
 [D:/github/Javo2/Views/Shared/_ActionButtons.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BY3Rpb25CdXR0b25zLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = b-nlmf65n1j5
+
+[D:/github/Javo2/Views/Shared/_Alerts.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BbGVydHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-u2xt8y4ntj
 
 [D:/github/Javo2/Views/Shared/_AuthLayoutBase.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BdXRoTGF5b3V0QmFzZS5jc2h0bWw=
@@ -455,6 +455,10 @@ build_metadata.AdditionalFiles.CssScope = b-7t0op722z3
 [D:/github/Javo2/Views/Shared/_ConfNav.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Db25mTmF2LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = b-rol0url5oz
+
+[D:/github/Javo2/Views/Shared/_CrudForm.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9DcnVkRm9ybS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = b-e1fzuau2eh
 
 [D:/github/Javo2/Views/Shared/_DetailsView.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9EZXRhaWxzVmlldy5jc2h0bWw=
@@ -487,6 +491,10 @@ build_metadata.AdditionalFiles.CssScope = b-ag907eex51
 [D:/github/Javo2/Views/Shared/_SecurityNav.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9TZWN1cml0eU5hdi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = b-z5ze1vfqhb
+
+[D:/github/Javo2/Views/Shared/_SummaryCards.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9TdW1tYXJ5Q2FyZHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-ii20q6o1eu
 
 [D:/github/Javo2/Views/Shared/_UserInfo.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Vc2VySW5mby5jc2h0bWw=
