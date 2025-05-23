@@ -1,5 +1,7 @@
-﻿import { loadDropdown } from '../utils/dropdown.js';
-import { ajaxPost, showModal, bindEnter } from '../utils/utils.js';
+﻿// modules/cliente-form.js
+import { loadDropdown } from '../utils/dropdown.js';
+import { ajaxPost } from '../utils/app.js';
+import { showModal, bindEnter } from '../utils/bind-helpers.js';
 
 const clienteForm = {
     init() {
@@ -12,22 +14,24 @@ const clienteForm = {
     initProvinciasCiudades() {
         const provSelector = '#provincias';
         const citySelector = '#ciudades';
-        // Cargar provincias al iniciar (asumiendo provincias está precargado en HTML)
-        document.querySelector(provSelector)
-            .addEventListener('change', () => {
-                const provinciaID = document.querySelector(provSelector).value;
-                loadDropdown('/Clientes/GetCiudades', { provinciaID }, citySelector, { placeholder: 'Seleccione ciudad...' });
+
+        const provEl = document.querySelector(provSelector);
+        if (provEl) {
+            provEl.addEventListener('change', () => {
+                const provinciaID = provEl.value;
+                loadDropdown('/Clientes/GetCiudades', { provinciaID }, citySelector,
+                    { placeholder: 'Seleccione ciudad...' });
             });
 
-        // Trigger inicial si hay valor por defecto
-        const initialProv = document.querySelector(provSelector).value;
-        if (initialProv) {
-            loadDropdown('/Clientes/GetCiudades', { provinciaID: initialProv }, citySelector, { placeholder: 'Seleccione ciudad...' });
+            const initialProv = provEl.value;
+            if (initialProv) {
+                loadDropdown('/Clientes/GetCiudades', { provinciaID: initialProv }, citySelector,
+                    { placeholder: 'Seleccione ciudad...' });
+            }
         }
     },
 
     initCreditoFields() {
-        // Ejemplo: mostrar/ocultar campos de crédito según checkbox
         const chkCredito = document.querySelector('#tieneCredito');
         const creditoFields = document.querySelector('#creditoFields');
         if (!chkCredito || !creditoFields) return;
@@ -41,10 +45,13 @@ const clienteForm = {
 
     initGarante() {
         const btn = document.querySelector('#cambiarGarante');
-        btn?.addEventListener('click', () => {
-            const id = document.querySelector('#ClienteID')?.value;
-            if (id) window.location.href = `/Clientes/AsignarGarante?clienteID=${id}`;
-        });
+        if (btn) {
+            btn.addEventListener('click', () => {
+                const idEl = document.querySelector('#ClienteID');
+                const id = idEl?.value;
+                if (id) window.location.href = `/Clientes/AsignarGarante?clienteID=${id}`;
+            });
+        }
     },
 
     bindEnterSubmit() {
@@ -55,8 +62,10 @@ const clienteForm = {
     async submitForm() {
         const form = document.querySelector('#clienteForm');
         if (!form) return;
+
         const data = {};
         new FormData(form).forEach((v, k) => data[k] = v);
+
         try {
             await ajaxPost(form.action, data);
             showModal('#successModal', 'Cliente guardado correctamente');
@@ -66,7 +75,5 @@ const clienteForm = {
     }
 };
 
-// Auto-inicialización
 document.addEventListener('DOMContentLoaded', () => clienteForm.init());
-
 export default clienteForm;

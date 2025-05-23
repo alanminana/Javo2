@@ -1,5 +1,4 @@
-﻿
-// wwwroot/js/modules/usuarios-permisos.js
+﻿// wwwroot/js/modules/usuarios-permisos.js
 import { setupStateToggle } from '../utils/state-toggle.js';
 
 const userPerms = {
@@ -17,4 +16,3 @@ const userPerms = {
 
 document.addEventListener('DOMContentLoaded', () => userPerms.init());
 export default userPerms;
-

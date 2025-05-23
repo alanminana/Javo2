@@ -1,28 +1,29 @@
-﻿export async function loadDropdown(url, params, selector, { placeholder = 'Seleccione...' } = {}) {
-    const selectEl = document.querySelector(selector);
-    if (!selectEl) return;
+﻿// utils/confirm-action.js
+import { ajaxPost } from './app.js';
+import { notify } from './app.js';
 
-    // Vaciar y agregar opción placeholder
-    selectEl.innerHTML = '';
-    const placeholderOption = document.createElement('option');
-    placeholderOption.value = '';
-    placeholderOption.textContent = placeholder;
-    selectEl.appendChild(placeholderOption);
+/**
+ * Muestra confirmación y ejecuta callback si acepta.
+ */
+export async function confirmAction(message, callback) {
+    if (confirm(message)) {
+        await callback();
+    }
+}
 
-    // Construir query string
-    const query = new URLSearchParams(params).toString();
-    try {
-        const response = await fetch(`${url}?${query}`);
-        if (!response.ok) throw new Error(response.statusText);
-        const items = await response.json();
-
-        items.forEach(item => {
-            const opt = document.createElement('option');
-            opt.value = item.id;
-            opt.textContent = item.nombre || item.text || item.value;
-            selectEl.appendChild(opt);
-        });
-    } catch (err) {
-        console.error('Error cargando dropdown:', err);
+/**
+ * Confirmación con POST automático.
+ */
+export async function confirmPost(message, url, data, { onSuccess, onError } = {}) {
+    if (confirm(message)) {
+        try {
+            const result = await ajaxPost(url, data);
+            if (onSuccess) onSuccess(result);
+            return result;
+        } catch (e) {
+            console.error('Error en confirmPost:', e);
+            if (onError) onError(e);
+            throw e;
+        }
     }
 }
