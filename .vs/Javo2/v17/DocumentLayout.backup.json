@@ -3,20 +3,64 @@
   "WorkspaceRootPath": "D:\\github\\Javo2\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\modules\\reportes.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\modules\\reportes.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\utils\\chart-helper.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\utils\\chart-helper.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\modules\\cliente-form.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\modules\\cliente-form.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\modules\\inventory.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\modules\\inventory.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\modules\\operations.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\modules\\operations.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\modules\\sales.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\modules\\sales.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\utils\\bind-helpers.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\utils\\bind-helpers.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\utils\\state-toggle.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\utils\\state-toggle.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\utils\\product-search.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\utils\\product-search.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\utils\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\utils\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\modules\\usuarios-permisos.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\modules\\usuarios-permisos.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\utils\\password-validator.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\utils\\password-validator.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\modules\\operations.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\modules\\operations.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\utils\\confirm-action.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\utils\\confirm-action.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\utils\\client-search.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\utils\\client-search.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\utils\\chart-helper.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\utils\\chart-helper.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\modules\\reportes.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\modules\\reportes.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\modules\\proveedores.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
@@ -31,48 +75,20 @@
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\utils\\auth.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\modules\\usuarios-permisos.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\modules\\usuarios-permisos.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\utils\\state-toggle.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\utils\\state-toggle.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\utils\\payment-toggle.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\utils\\payment-toggle.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\modules\\sales.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\modules\\sales.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\utils\\client-search.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\utils\\client-search.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\utils\\forms.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\utils\\forms.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\utils\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\utils\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\modules\\tables.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\modules\\tables.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\modules\\inventory.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\modules\\inventory.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\utils\\dropdown.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\utils\\dropdown.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|d:\\github\\javo2\\wwwroot\\js\\modules\\cliente-form.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{CB925930-C9B2-4632-812C-A735B05842B5}|Javo2.csproj|solutionrelative:wwwroot\\js\\modules\\cliente-form.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     }
   ],
   "DocumentGroupContainers": [
@@ -82,33 +98,84 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "reportes.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\reportes.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\reportes.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\reportes.js",
-              "RelativeToolTip": "wwwroot\\js\\modules\\reportes.js",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAAACEAAAACAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-23T19:18:36.247Z",
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "D:\\github\\Javo2\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "D:\\github\\Javo2\\Views\\Shared\\_Layout.cshtml*",
+              "RelativeToolTip": "Views\\Shared\\_Layout.cshtml*",
+              "ViewState": "AgIAALUAAAAAAAAAAAAAAM0AAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-23T19:34:58.908Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "chart-helper.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\chart-helper.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\utils\\chart-helper.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\utils\\chart-helper.js",
-              "RelativeToolTip": "wwwroot\\js\\utils\\chart-helper.js",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAABAAAAAAAAAA==",
+              "DocumentIndex": 5,
+              "Title": "bind-helpers.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\bind-helpers.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\utils\\bind-helpers.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\utils\\bind-helpers.js",
+              "RelativeToolTip": "wwwroot\\js\\utils\\bind-helpers.js",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAB4AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-23T19:18:15.154Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-23T19:27:20.266Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "product-search.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\product-search.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\utils\\product-search.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\utils\\product-search.js",
+              "RelativeToolTip": "wwwroot\\js\\utils\\product-search.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-23T19:26:39.001Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "usuarios-permisos.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\usuarios-permisos.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\usuarios-permisos.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\usuarios-permisos.js",
+              "RelativeToolTip": "wwwroot\\js\\modules\\usuarios-permisos.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-23T19:08:11.114Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "password-validator.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\password-validator.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\utils\\password-validator.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\utils\\password-validator.js",
+              "RelativeToolTip": "wwwroot\\js\\utils\\password-validator.js",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-23T19:06:54.159Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "sales.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\sales.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\sales.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\sales.js",
+              "RelativeToolTip": "wwwroot\\js\\modules\\sales.js",
+              "ViewState": "AgIAACkAAAAAAAAAAAAAAEEAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-23T18:55:14.774Z"
             },
             {
               "$type": "Document",
@@ -118,27 +185,74 @@
               "RelativeDocumentMoniker": "wwwroot\\js\\modules\\operations.js",
               "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\operations.js",
               "RelativeToolTip": "wwwroot\\js\\modules\\operations.js",
-              "ViewState": "AgIAAEEAAAAAAAAAAAAAAFkAAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAAFQAAAAAAAAAAAAAAGwAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-23T19:12:48.784Z",
+              "WhenOpened": "2025-05-23T19:12:48.784Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "cliente-form.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\cliente-form.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\cliente-form.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\cliente-form.js",
+              "RelativeToolTip": "wwwroot\\js\\modules\\cliente-form.js",
+              "ViewState": "AgIAAEgAAAAAAAAAAAAAAE4AAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-23T17:35:07.949Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "proveedores.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\proveedores.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\proveedores.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\proveedores.js",
-              "RelativeToolTip": "wwwroot\\js\\modules\\proveedores.js",
-              "ViewState": "AgIAAD8AAAAAAAAAAAAAAFcAAAAZAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "inventory.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\inventory.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\inventory.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\inventory.js",
+              "RelativeToolTip": "wwwroot\\js\\modules\\inventory.js",
+              "ViewState": "AgIAAGcAAAAAAAAAAAAAAH8AAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-23T19:12:28.245Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-23T18:28:48.9Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 11,
+              "Title": "confirm-action.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\confirm-action.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\utils\\confirm-action.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\utils\\confirm-action.js",
+              "RelativeToolTip": "wwwroot\\js\\utils\\confirm-action.js",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAAABwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-23T19:25:48.816Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "chart-helper.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\chart-helper.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\utils\\chart-helper.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\utils\\chart-helper.js",
+              "RelativeToolTip": "wwwroot\\js\\utils\\chart-helper.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-23T19:18:15.154Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "reportes.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\reportes.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\reportes.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\reportes.js",
+              "RelativeToolTip": "wwwroot\\js\\modules\\reportes.js",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAACEAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-23T19:18:36.247Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
               "Title": "auth.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\auth.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\utils\\auth.js",
@@ -146,38 +260,11 @@
               "RelativeToolTip": "wwwroot\\js\\utils\\auth.js",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAAB4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-23T19:09:06.036Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-23T19:09:06.036Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "usuarios-permisos.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\usuarios-permisos.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\usuarios-permisos.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\usuarios-permisos.js",
-              "RelativeToolTip": "wwwroot\\js\\modules\\usuarios-permisos.js",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-23T19:08:11.114Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "password-validator.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\password-validator.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\utils\\password-validator.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\utils\\password-validator.js",
-              "RelativeToolTip": "wwwroot\\js\\utils\\password-validator.js",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-23T19:06:54.159Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 6,
               "Title": "state-toggle.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\state-toggle.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\utils\\state-toggle.js",
@@ -185,107 +272,11 @@
               "RelativeToolTip": "wwwroot\\js\\utils\\state-toggle.js",
               "ViewState": "AgIAAAwAAAAAAAAAAAAAACQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-23T19:06:10.688Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-23T19:06:10.688Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "sales.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\sales.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\sales.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\sales.js",
-              "RelativeToolTip": "wwwroot\\js\\modules\\sales.js",
-              "ViewState": "AgIAAEMAAAAAAAAAAAAAAFsAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-23T18:55:14.774Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "payment-toggle.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\payment-toggle.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\utils\\payment-toggle.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\utils\\payment-toggle.js",
-              "RelativeToolTip": "wwwroot\\js\\utils\\payment-toggle.js",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-23T18:54:54.806Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "client-search.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\client-search.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\utils\\client-search.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\utils\\client-search.js",
-              "RelativeToolTip": "wwwroot\\js\\utils\\client-search.js",
-              "ViewState": "AgIAABAAAAAAAAAAAAAAACgAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-23T18:54:45.524Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "tables.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\tables.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\tables.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\tables.js",
-              "RelativeToolTip": "wwwroot\\js\\modules\\tables.js",
-              "ViewState": "AgIAAFoAAAAAAAAAAAAAAHIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-23T18:41:12.48Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "permissions.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\permissions.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\permissions.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\permissions.js",
-              "RelativeToolTip": "wwwroot\\js\\modules\\permissions.js",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-23T18:31:34.669Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "inventory.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\inventory.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\inventory.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\inventory.js",
-              "RelativeToolTip": "wwwroot\\js\\modules\\inventory.js",
-              "ViewState": "AgIAAFwAAAAAAAAAAAAAAHQAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-23T18:28:48.9Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "forms.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\forms.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\utils\\forms.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\utils\\forms.js",
-              "RelativeToolTip": "wwwroot\\js\\utils\\forms.js",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAAACMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-23T18:08:06.051Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 8,
               "Title": "app.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\app.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\utils\\app.js",
@@ -293,12 +284,83 @@
               "RelativeToolTip": "wwwroot\\js\\utils\\app.js",
               "ViewState": "AgIAAB4AAAAAAAAAAAAAADYAAAADAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-23T17:47:10.81Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-23T17:47:10.81Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "proveedores.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\proveedores.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\proveedores.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\proveedores.js",
+              "RelativeToolTip": "wwwroot\\js\\modules\\proveedores.js",
+              "ViewState": "AgIAAD8AAAAAAAAAAAAAAFcAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-23T19:12:28.245Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "client-search.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\client-search.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\utils\\client-search.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\utils\\client-search.js",
+              "RelativeToolTip": "wwwroot\\js\\utils\\client-search.js",
+              "ViewState": "AgIAABAAAAAAAAAAAAAAACgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-23T18:54:45.524Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "payment-toggle.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\payment-toggle.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\utils\\payment-toggle.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\utils\\payment-toggle.js",
+              "RelativeToolTip": "wwwroot\\js\\utils\\payment-toggle.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-23T18:54:54.806Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "tables.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\tables.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\tables.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\tables.js",
+              "RelativeToolTip": "wwwroot\\js\\modules\\tables.js",
+              "ViewState": "AgIAAFoAAAAAAAAAAAAAAHIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-23T18:41:12.48Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 16,
+              "Title": "permissions.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\permissions.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\permissions.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\permissions.js",
+              "RelativeToolTip": "wwwroot\\js\\modules\\permissions.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-23T18:31:34.669Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "forms.js",
+              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\forms.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\utils\\forms.js",
+              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\utils\\forms.js",
+              "RelativeToolTip": "wwwroot\\js\\utils\\forms.js",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAAACMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-23T18:08:06.051Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
               "Title": "dropdown.js",
               "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\utils\\dropdown.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\utils\\dropdown.js",
@@ -306,21 +368,7 @@
               "RelativeToolTip": "wwwroot\\js\\utils\\dropdown.js",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAABsAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-23T17:44:52.564Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "cliente-form.js",
-              "DocumentMoniker": "D:\\github\\Javo2\\wwwroot\\js\\modules\\cliente-form.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\modules\\cliente-form.js",
-              "ToolTip": "D:\\github\\Javo2\\wwwroot\\js\\modules\\cliente-form.js",
-              "RelativeToolTip": "wwwroot\\js\\modules\\cliente-form.js",
-              "ViewState": "AgIAADAAAAAAAAAAAAAAAEgAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-23T17:35:07.949Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-23T17:44:52.564Z"
             }
           ]
         }
