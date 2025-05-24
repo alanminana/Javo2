@@ -112,7 +112,7 @@
               "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
               "ToolTip": "D:\\github\\Javo2\\Views\\Shared\\_Layout.cshtml",
               "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
-              "ViewState": "AgIAALUAAAAAAAAAAAAAAM0AAAAHAAAAAAAAAA==",
+              "ViewState": "AgIAADAAAAAAAAAAAAAhwD0AAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-05-23T19:34:58.908Z",
               "EditorCaption": ""
@@ -199,8 +199,7 @@
               "RelativeToolTip": "wwwroot\\js\\modules\\cliente-form.js",
               "ViewState": "AgIAAEgAAAAAAAAAAAAAAE4AAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-23T17:35:07.949Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-23T17:35:07.949Z"
             },
             {
               "$type": "Document",
